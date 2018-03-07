@@ -1,3 +1,3 @@
-# MetaMorphosis
+# Metamorphosis
 
-Hello World
+A customizable blog and community social network service.
