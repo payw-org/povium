@@ -1,3 +1,3 @@
 # Metamorphosis
 
-A customizable blog and community social network service.
+Plan.md를 읽으세요.
