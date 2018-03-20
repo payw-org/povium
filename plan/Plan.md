@@ -44,7 +44,7 @@
 # p.s.
 근데 문서편집기능이 왜이리 없는거같지,, 폰트사이즈도 html써야되나\
 (해민) ㅁㅊ 창재 .md 마크다운 파일이라 마크다운 문법으로 편집하면 됨\
-https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf\
+https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf
 
 # p.s.2
 굳; 답글 잘읽음 햄 근데 나 내일부터 휴가임.\
