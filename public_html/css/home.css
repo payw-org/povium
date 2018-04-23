@@ -1,5 +1,6 @@
 .home-search-area {
     text-align: center;
+    padding-top: 2rem;
 }
 
 .home-search-input {
@@ -10,9 +11,15 @@
     font-size: 1rem;
     width: 0;
     transition: width .2s ease;
+    cursor: pointer;
+}
+
+.home-search-input:active {
+    cursor: text;
 }
 
 .home-search-input:focus {
+    cursor: text;
     width: 15rem;
     max-width: calc(100% - 40px);
     margin: auto;

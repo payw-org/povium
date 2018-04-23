@@ -5,3 +5,14 @@
     top: 0;
     width: 100%;
 }
+
+#gn-backface {
+    background-color: #fff;
+    height: 60px;
+}
+
+#gn-container {
+    max-width: 1400px;
+    margin: auto;
+    height: 60px;
+}
