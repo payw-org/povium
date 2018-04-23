@@ -22,8 +22,10 @@ html {
 body {
     margin: 0;
     padding: 0;
+    font-family: 'JHM Pro', sans-serif;
 }
 
 button, input {
     outline: none;
+    font-family: inherit;
 }
