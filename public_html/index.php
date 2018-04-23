@@ -7,6 +7,6 @@
 <body>
 	<main id="povium-main">
 		<h1 class="title">Povium</h1>
-		<p class="manifesto">Publish your dream.</p>
+		<p class="manifesto">Post your vision.</p>
 	</main>
 </body>
