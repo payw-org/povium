@@ -1,0 +1,7 @@
+#globalnav {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
