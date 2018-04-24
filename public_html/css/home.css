@@ -10,7 +10,7 @@
     border-radius: 50px;
     font-size: 1rem;
     width: 0;
-    transition: width .2s ease;
+    transition: width .4s cubic-bezier(1, -0.13, 0, 1.23);
     cursor: pointer;
 }
 
