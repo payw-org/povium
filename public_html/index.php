@@ -12,8 +12,38 @@
 		<div class="home-search-area">
 			<div class="home-search-input-wrapper">
 				<div class="magnifier"></div>
-				<input class="home-search-input" type="text" name="" value="" placeholder="검색" />
+				<input class="home-search-input" type="text" name="" value="" placeholder="검색" autocomplete="off" />
 			</div>
+		</div>
+		<div id="home-content">
+			<section id="hot">
+				<h1 class="section-title">Hot</h1>
+				<div class="hot-post-scroll">
+					<ol class="hot-post-container">
+						<li class="hot-post">
+							
+						</li>
+						<li class="hot-post">
+
+						</li>
+						<li class="hot-post">
+
+						</li>
+						<li class="hot-post">
+
+						</li>
+						<li class="hot-post">
+
+						</li>
+						<li class="hot-post">
+
+						</li>
+					</ol>
+					<div class="arrow-right">
+						>
+					</div>
+				</div>
+			</section>
 		</div>
 	</main>
 	<script src="js/home.js"></script>

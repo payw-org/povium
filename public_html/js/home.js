@@ -1,6 +1,7 @@
 window.onload = function() {
     //
     (function (window, document, undefined) {
+        'use strict';
 
         function deactiveHomeSearch() {
             //
@@ -18,19 +19,31 @@ window.onload = function() {
                 // Start searching when input is active
             } else {
                 searchElm.classList.add('active');
+                searchElm.querySelector('.home-search-input').focus();
             }
         }
-        document.querySelector('.home-search-input-wrapper .magnifier').addEventListener('click', activeHomeSearch, false);
 
-        // document.querySelector('body').addEventListener('click', function (event) {
-        //     var clickedTarget = event.target;
-        //     console.log(clickedTarget);
-        //     if (!clickedTarget.classList.contains('home-search-input-wrapper')) {
-        //         deactiveHomeSearch();
-        //     }
+        document.addEventListener('click', function (event) {
+            var clickedTarget = event.target;
+
+            // If click magnifier icon
+            // activate search
+            if (clickedTarget.classList.contains('magnifier')) {
+                if (clickedTarget.parentElement.classList.contains('active')) {
+                    // Do search
+                } else {
+                    activeHomeSearch();
+                }
+            } else if (!clickedTarget.classList.contains('home-search-input')
+            && !clickedTarget.classList.contains('home-search-input-wrapper')) {
+                // Click outside the search area
+                // deactivate search input
+                deactiveHomeSearch();
+            }
+        });
+
         //
-        //
-        // });
+        Number(getComputedStyle(document.body, "").fontSize.match(/(\d*(\.\d*)?)px/)[1]);
 
     }(window, document));
 };
