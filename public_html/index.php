@@ -10,7 +10,10 @@
 	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/global-inclusion/globalnav/globalnav.php'; ?>
 	<main id="home-main">
 		<div class="home-search-area">
-			<input class="home-search-input" type="text" name="" value="" />
+			<div class="home-search-input-wrapper">
+				<div class="magnifier"></div>
+				<input class="home-search-input" type="text" name="" value="" placeholder="검색" />
+			</div>
 		</div>
 	</main>
 	<script src="js/home.js"></script>

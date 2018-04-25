@@ -31,3 +31,13 @@ button, input {
     font-family: inherit;
     color: inherit;
 }
+
+::-moz-selection {
+    background-color: #4a35f6;
+    color: #fff;
+}
+
+::selection {
+    background-color: #4a35f6;
+    color: #fff;
+}
