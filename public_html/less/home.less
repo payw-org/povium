@@ -1,6 +1,6 @@
 // out: ../css/home.built.css, sourcemap: false, compress: false
 
-@import "../global-inclusion/less/global";
+@import "../global-inclusion/less/global-variables";
 
 /* Home search */
 .home-search-area {
@@ -65,7 +65,9 @@
 
 /* Home Content */
 #home-content {
-
+    #hot {
+        width: calc(~'100% - 40px');
+    }
 }
 
 .section-title {
@@ -82,6 +84,7 @@
 .hot-post-container {
     position: relative;
     top: 17px;
+    padding-top: 20px;
     padding-bottom: 3rem;
     white-space: nowrap;
     overflow-x: auto;
