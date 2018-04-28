@@ -60,9 +60,6 @@
   min-width: 0;
 }
 /* Home Content */
-#home-content #hot {
-  width: calc(100% - 40px);
-}
 .section-title {
   font-size: 2rem;
 }
@@ -98,12 +95,6 @@
   border-radius: 10px;
   display: inline-block;
   margin: 0 1rem;
-}
-.hot-post-container .hot-post:first-child {
-  margin-left: 0;
-}
-.hot-post-container .hot-post:last-child {
-  margin-right: 0;
 }
 .hot-post-container::-webkit-scrollbar {
   width: 0 !important;

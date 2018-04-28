@@ -1,6 +1,6 @@
-// out: ../css/globalnav.built.css, sourcemap: false, compress: false
-
 @import "../../less/global-variables";
+
+@globalnav-height: 60px;
 
 #globalnav {
     position: -webkit-sticky;
@@ -13,13 +13,13 @@
 
 #gn-backface {
     background-color: #fff;
-    height: 55px;
+    height: @globalnav-height;
 }
 
 #gn-container {
     max-width: 1400px;
     margin: auto;
-    height: 60px;
+    height: @globalnav-height;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -28,7 +28,7 @@
 }
 
 #gn-logo-wrapper {
-    width: 100px;
+    width: 120px;
     height: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
