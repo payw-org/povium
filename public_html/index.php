@@ -21,7 +21,12 @@
 				<div class="hot-post-scroll">
 					<ol class="hot-post-container">
 						<li class="hot-post">
-
+							<div class="post-main-image">
+								<img src="/images/post-test-img-2.jpg" alt="">
+							</div>
+							<div class="post-detail">
+								<h2 class="title">Learning javascript.</h2>
+							</div>
 						</li>
 						<li class="hot-post">
 

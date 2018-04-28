@@ -8,12 +8,12 @@
 }
 #gn-backface {
   background-color: #fff;
-  height: 60px;
+  height: 50px;
 }
 #gn-container {
   max-width: 1400px;
   margin: auto;
-  height: 60px;
+  height: 50px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -21,7 +21,7 @@
   justify-content: space-around;
 }
 #gn-logo-wrapper {
-  width: 120px;
+  width: 110px;
   height: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
