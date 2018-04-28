@@ -39,9 +39,7 @@
 
 						</li>
 					</ol>
-					<div class="arrow-right">
-						>
-					</div>
+					<!-- <div class="arrow-right"></div> -->
 				</div>
 			</section>
 		</div>

@@ -56,12 +56,12 @@
   -ms-flex: 1;
   flex: 1;
   cursor: text;
-  line-height: 1;
   min-width: 0;
 }
 /* Home Content */
 .section-title {
   font-size: 2rem;
+  margin-left: 30px;
 }
 .hot-post-scroll {
   position: relative;
@@ -95,6 +95,12 @@
   border-radius: 10px;
   display: inline-block;
   margin: 0 1rem;
+}
+.hot-post-container .hot-post:first-child {
+  margin-left: 30px;
+}
+.hot-post-container .hot-post:last-child {
+  margin-right: 30px;
 }
 .hot-post-container::-webkit-scrollbar {
   width: 0 !important;

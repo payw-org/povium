@@ -59,8 +59,12 @@
     -ms-flex: 1;
     flex: 1;
     cursor: text;
-    line-height: 1;
+    // line-height: 1;
     min-width: 0;
+}
+
+.home-search-input::placeholder {
+    // line-height: 1;
 }
 
 /* Home Content */
@@ -72,6 +76,7 @@
 
 .section-title {
     font-size: 2rem;
+    margin-left: 30px;
 }
 
 .hot-post-scroll {
@@ -107,13 +112,13 @@
         margin: 0 1rem;
     }
 
-    // .hot-post:first-child {
-    //     margin-left: 0;
-    // }
-    //
-    // .hot-post:last-child {
-    //     margin-right: 0;
-    // }
+    .hot-post:first-child {
+        margin-left: 30px;
+    }
+
+    .hot-post:last-child {
+        margin-right: 30px;
+    }
 }
 
 .hot-post-container::-webkit-scrollbar {
