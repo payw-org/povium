@@ -98,6 +98,16 @@
   vertical-align: top;
   margin: 0 1rem;
   overflow: hidden;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: -webkit-transform .2s ease;
+  transition: -webkit-transform .2s ease;
+  -o-transition: transform .2s ease;
+  transition: transform .2s ease;
+  transition: transform .2s ease, -webkit-transform .2s ease;
 }
 .hot-post-container .hot-post .post-main-image {
   width: 100%;
@@ -119,6 +129,11 @@
 }
 .hot-post-container .hot-post:last-child {
   margin-right: 30px;
+}
+.hot-post:active {
+  -webkit-transform: scale(0.95);
+  -ms-transform: scale(0.95);
+  transform: scale(0.95);
 }
 .hot-post-container > * {
   white-space: normal;

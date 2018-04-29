@@ -29,10 +29,20 @@
 							</div>
 						</li>
 						<li class="hot-post">
-
+							<div class="post-main-image">
+								<img src="/images/post-test-img.gif" alt="">
+							</div>
+							<div class="post-detail">
+								<h2 class="title">PHP gets better.</h2>
+							</div>
 						</li>
 						<li class="hot-post">
-
+							<div class="post-main-image">
+								<img src="/images/post-test-img-3.png" alt="">
+							</div>
+							<div class="post-detail">
+								<h2 class="title">Learning javascript.</h2>
+							</div>
 						</li>
 						<li class="hot-post">
 

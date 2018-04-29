@@ -113,6 +113,9 @@
         vertical-align: top;
         margin: 0 1rem;
         overflow: hidden;
+        cursor: pointer;
+        user-select: none;
+        transition: transform .2s ease;
 
         .post-main-image {
             width: 100%;
@@ -139,6 +142,10 @@
     .hot-post:last-child {
         margin-right: 30px;
     }
+}
+
+.hot-post:active {
+    transform: scale(.95);
 }
 
 .hot-post-container > * {
