@@ -1,0 +1,110 @@
+@import "../../less/global-variables";
+
+@globalnav-height: 50px;
+
+#globalnav {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+#gn-backface {
+    background-color: #fff;
+    height: @globalnav-height;
+    border-bottom: 1px solid @white-blue;
+}
+
+#gn-container {
+    max-width: 1400px;
+    margin: auto;
+    height: @globalnav-height;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    position: relative;
+}
+
+#gn-logo-wrapper {
+    width: 110px;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+#gn-home-link {
+    display: block;
+    width: 100%;
+    height: 30px;
+    background-image: url('/images/pv-landscape.svg');
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+// globalnav
+#gn-search {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(50% - 100px);
+    height: 100%;
+    margin-left: 15px;
+}
+
+#gn-search-input-wrapper {
+    height: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+#gn-search-ui {
+    padding: 0;
+    width: 100%;
+    max-width: 35px;
+    display: flex;
+    height: 35px;
+    background-color: @white-blue;
+    border-radius: 50px;
+    overflow: hidden;
+    transition: max-width .4s cubic-bezier(1, -0.13, 0, 1.23), padding .4s cubic-bezier(1, -0.13, 0, 1.23);
+
+    &.active {
+        width: 100%;
+        max-width: 200px;
+        padding-right: 17px;
+    }
+
+    .magnifier {
+        background-image: url('/images/magnifier.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 50% auto;
+        min-width: 35px;
+        height: 35px;
+        cursor: pointer;
+        transition: transform .2s ease;
+
+        &:active {
+            transform: scale(.9);
+        }
+    }
+}
+
+#gn-search-input {
+    background: none;
+    border: none;
+    height: 100%;
+    font-size: 15px;
+    min-width: 0;
+    flex: 1;
+}
