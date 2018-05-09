@@ -12,7 +12,7 @@ $(document).ready(function($) {
         $('#globalnav').removeClass('search-active');
     }
 
-    $('#gn-search .magnifier').on('click', function () {
+    $('#gn-search .magnifier').on('click', function() {
         if ($('#globalnav').hasClass('search-active')) {
             // 검색
             console.warn('검색 시작');
@@ -21,7 +21,7 @@ $(document).ready(function($) {
         }
     })
 
-    $(window).on('click', function (e) {
+    $(window).on('click', function(e) {
         var clickedTarget = e.target;
         if (!clickedTarget.classList.contains('magnifier') && clickedTarget.id !== 'gn-search-input') {
             foldSearchInput();
