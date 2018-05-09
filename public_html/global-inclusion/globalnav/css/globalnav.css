@@ -53,17 +53,18 @@
 }
 #gn-search {
   z-index: 1;
-  width: 35px;
+  width: 65px;
   position: absolute;
-  left: 15px;
+  padding: 0 15px;
+  left: 0;
   top: 0;
   height: 100%;
-  -webkit-transition: width 0.8s cubic-bezier(1, 0, 0, 1), padding 0.8s cubic-bezier(1, 0, 0, 1);
-  -o-transition: width 0.8s cubic-bezier(1, 0, 0, 1), padding 0.8s cubic-bezier(1, 0, 0, 1);
-  transition: width 0.8s cubic-bezier(1, 0, 0, 1), padding 0.8s cubic-bezier(1, 0, 0, 1);
+  -webkit-transition: width 0.8s cubic-bezier(1, 0, 0, 1);
+  -o-transition: width 0.8s cubic-bezier(1, 0, 0, 1);
+  transition: width 0.8s cubic-bezier(1, 0, 0, 1);
 }
 .search-active #gn-search {
-  width: calc(100% - 30px);
+  width: 100%;
 }
 #gn-search-input-wrapper {
   width: 100%;
@@ -93,7 +94,7 @@
   background-image: url('/images/magnifier.svg');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 18px 18px;
+  background-size: 17.5px 17.5px;
   min-width: 35px;
   height: 35px;
   cursor: pointer;
