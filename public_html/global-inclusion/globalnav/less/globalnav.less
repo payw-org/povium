@@ -1,9 +1,9 @@
 @import "../../less/global-variables";
 
-@globalnav-height: 3rem;
-@logo-width: @globalnav-height * 2.2;
-@search-size: @globalnav-height * 0.7;
-@search-margin: @globalnav-height * 0.3;
+@globalnav-height: 60px;
+@logo-width: floor(@globalnav-height * 2.2);
+@search-size: floor(@globalnav-height * 0.7);
+@search-margin: floor(@globalnav-height * 0.3);
 
 #globalnav {
     position: sticky;
@@ -20,7 +20,7 @@
 }
 
 #gn-container {
-    max-width: 40rem;
+    max-width: 800px;
     margin: auto;
     height: @globalnav-height;
     display: flex;
@@ -45,7 +45,7 @@
     margin: auto;
     height: 30px;
     background-image: url('/images/pv-landscape.svg');
-    background-size: 6.4rem auto;
+    // background-size: 95% auto;
     background-repeat: no-repeat;
     background-position: center;
     transition: transform @pvm-animation, opacity @pvm-animation;
@@ -95,7 +95,7 @@
         background-image: url('/images/magnifier.svg');
         background-repeat: no-repeat;
         background-position: center;
-        background-size: @search-size / 2 @search-size / 2;
+        background-size: floor(@search-size / 2) floor(@search-size / 2);
         min-width: @search-size;
         height: @search-size;
         cursor: pointer;
@@ -111,13 +111,13 @@
     background: none;
     border: none;
     height: 100%;
-    font-size: @search-size / 2.5;
+    font-size: floor(@search-size / 2.5);
     min-width: 0;
     flex: 1;
     margin-left: -20rem;
     transition: margin @pvm-animation;
 
     .search-active & {
-        margin-left: @search-size / 2;
+        margin-left: floor(@search-size / 2);
     }
 }

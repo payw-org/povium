@@ -21,6 +21,12 @@ $(document).ready(function($) {
         }
     })
 
+	$('#gn-search-input').on('keydown', function(e) {
+		if (e.which === 27) {
+			foldSearchInput();
+		}
+	})
+
     $(window).on('click', function(e) {
         var clickedTarget = e.target;
         if (!clickedTarget.classList.contains('magnifier') && clickedTarget.id !== 'gn-search-input') {
