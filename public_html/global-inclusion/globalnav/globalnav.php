@@ -8,10 +8,10 @@
                         <div class="magnifier"></div>
                     </div>
     			</div>
-    		</div>
-            <div id="gn-logo-wrapper">
-                <a id="gn-home-link" href="/"></a>
-            </div>
-        </div>
+      		</div>
+              <div id="gn-logo-wrapper">
+                  <a id="gn-home-link" href="/"></a>
+              </div>
+          </div>
     </div>
 </nav>
