@@ -4,7 +4,7 @@
             <div id="gn-search">
     			<div id="gn-search-input-wrapper">
                     <div id="gn-search-ui">
-        				<input id="gn-search-input" type="text" name="" value="" placeholder="검색" autocomplete="off">
+        				<input id="gn-search-input" type="text" name="" value="" placeholder="검색어를 입력하세요." autocomplete="off">
                         <div class="magnifier"></div>
                     </div>
     			</div>
