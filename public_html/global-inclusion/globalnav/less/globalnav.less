@@ -3,6 +3,7 @@
 @globalnav-height: 50px;
 
 #globalnav {
+    position: -webkit-sticky;
     position: sticky;
     left: 0;
     top: 0;
@@ -13,14 +14,17 @@
 #gn-backface {
     background-color: #fff;
     height: @globalnav-height;
-    // border-bottom: 1px solid @white-blue;
+    border-bottom: 1px solid @white-blue;
 }
 
 #gn-container {
-    max-width: 1000px;
+    max-width: 1400px;
     margin: auto;
     height: @globalnav-height;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -ms-flex-pack: distribute;
     justify-content: space-around;
     position: relative;
 }
@@ -44,31 +48,19 @@
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-position: center;
-    transition: transform @pvm-animation, opacity @pvm-animation;
-
-    .search-active & {
-        transform: translateX(100px) scale(.3);
-        opacity: 0;
-    }
 }
 
 // globalnav
 #gn-search {
-    z-index: 1;
-    width: 35px;
     position: absolute;
-    left: 15px;
+    left: 0;
     top: 0;
+    width: calc(50% - 100px);
     height: 100%;
-    transition: width @pvm-animation, padding @pvm-animation;
-
-    .search-active & {
-        width: calc(100% - 30px);
-    }
+    margin-left: 15px;
 }
 
 #gn-search-input-wrapper {
-    width: 100%;
     height: 100%;
     display: flex;
     justify-content: left;
@@ -78,11 +70,19 @@
 #gn-search-ui {
     padding: 0;
     width: 100%;
+    max-width: 35px;
     display: flex;
     height: 35px;
     background-color: @white-blue;
     border-radius: 50px;
     overflow: hidden;
+    transition: max-width .4s cubic-bezier(1, -0.13, 0, 1.23), padding .4s cubic-bezier(1, -0.13, 0, 1.23);
+
+    &.active {
+        width: 100%;
+        max-width: 200px;
+        padding-right: 17px;
+    }
 
     .magnifier {
         background-image: url('/images/magnifier.svg');
@@ -95,7 +95,7 @@
         transition: transform .2s ease;
 
         &:active {
-            transform: scale(.8);
+            transform: scale(.9);
         }
     }
 }
@@ -107,10 +107,4 @@
     font-size: 15px;
     min-width: 0;
     flex: 1;
-    margin-left: -50vw;
-    transition: margin @pvm-animation;
-
-    .search-active & {
-        margin-left: 17px;
-    }
 }
