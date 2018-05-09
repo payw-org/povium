@@ -1,8 +1,9 @@
 @import "../../less/global-variables";
 
-@globalnav-height: 50px;
-@search-size: 35px;
-@search-margin: 15px;
+@globalnav-height: 3rem;
+@logo-width: @globalnav-height * 2.2;
+@search-size: @globalnav-height * 0.7;
+@search-margin: @globalnav-height * 0.3;
 
 #globalnav {
     position: sticky;
@@ -19,7 +20,7 @@
 }
 
 #gn-container {
-    max-width: 800px;
+    max-width: 40rem;
     margin: auto;
     height: @globalnav-height;
     display: flex;
@@ -28,7 +29,7 @@
 }
 
 #gn-logo-wrapper {
-    width: 110px;
+    width: @logo-width;
     height: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -40,7 +41,8 @@
 
 #gn-home-link {
     display: block;
-    width: 100%;
+    width: calc(100% - 10px);
+    margin: auto;
     height: 30px;
     background-image: url('/images/pv-landscape.svg');
     background-size: 100% auto;
@@ -49,7 +51,7 @@
     transition: transform @pvm-animation, opacity @pvm-animation;
 
     .search-active & {
-        transform: translateX(100px) scale(.3);
+        transform: translateX(100px) scale(0);
         opacity: 0;
     }
 }
@@ -109,13 +111,13 @@
     background: none;
     border: none;
     height: 100%;
-    font-size: 15px;
+    font-size: @search-size / 2.5;
     min-width: 0;
     flex: 1;
     margin-left: -50vw;
     transition: margin @pvm-animation;
 
     .search-active & {
-        margin-left: 17px;
+        margin-left: @search-size / 2;
     }
 }

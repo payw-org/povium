@@ -12,9 +12,10 @@ $(document).ready(function($) {
         $('#globalnav').removeClass('search-active');
     }
 
-    $('#gn-search-ui .magnifier').on('click', function () {
-        if ($(this).hasClass('search-active')) {
+    $('#gn-search .magnifier').on('click', function () {
+        if ($('#globalnav').hasClass('search-active')) {
             // 검색
+            console.warn('검색 시작');
         } else {
             expandSearchInput();
         }
