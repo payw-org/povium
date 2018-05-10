@@ -8,6 +8,10 @@
 						<div class="magnifier"></div>
 					</div>
 				</div>
+
+				<aside id="gn-search-result">
+
+				</aside>
 			</div>
 			<div id="gn-logo-wrapper">
 				<a id="gn-home-link" href="/"></a>
