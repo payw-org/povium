@@ -1,0 +1,16 @@
+{
+	"search_result": [
+		{
+			"keyword": "Apple",
+			"link": "https://www.apple.com/"
+		},
+		{
+			"keyword": "Google",
+			"link": "https://www.google.com/"
+		},
+		{
+			"keyword": "Microsoft",
+			"link": "https://www.microsoft.com/"
+		}
+	]
+}
