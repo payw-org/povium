@@ -50,6 +50,10 @@ li {
   margin: 0;
   list-style: none;
 }
+a {
+  text-decoration: none;
+  color: inherit;
+}
 ::-moz-selection {
   background-color: #4a35f6;
   color: #fff;

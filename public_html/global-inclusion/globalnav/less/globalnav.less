@@ -4,6 +4,7 @@
 @logo-width: floor(@globalnav-height * 2.2);
 @search-size: floor(@globalnav-height * 0.7);
 @search-margin: floor(@globalnav-height * 0.3);
+@search-font-size: floor(@search-size / 2.5);
 
 #globalnav {
     position: sticky;
@@ -111,7 +112,7 @@
     background: none;
     border: none;
     height: 100%;
-    font-size: floor(@search-size / 2.5);
+    font-size: @search-font-size;
     min-width: 0;
     flex: 1;
     margin-left: -20rem;
@@ -122,6 +123,35 @@
     }
 }
 
-#gn-search-result {
+#gn-search-result-view {
+	display: none;
+	width: 100%;
+	background-color: @white-blue;
+	border-radius: 10px;
+	// height: 100px;
 
+	&.active {
+		display: block;
+	}
+
+	#gn-sr-list {
+		padding: 10px 0;
+
+		.gn-sr-link {
+			display: block;
+		}
+
+		.gn-sr-item {
+			padding: 10px floor(@search-size / 2);
+			font-size: floor(@search-size / 2.5);
+
+			&:hover {
+				background-color: @dark-white-blue;
+			}
+
+			&:active {
+				background-color: darken(@dark-white-blue, 3%);
+			}
+		}
+	}
 }

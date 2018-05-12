@@ -1,4 +1,4 @@
-$(document).ready(function($) {
+window.onload = function() {
 
     'use strict';
 
@@ -10,9 +10,26 @@ $(document).ready(function($) {
 
     function foldSearchInput() {
         $('#globalnav').removeClass('search-active');
+		$('#gn-search-result').removeClass('active');
     }
 
+	function loadSearchResult(searchResult) {
+
+	}
+
+	// globalnav 검색창에 입력을 시작할 때
+	$('#gn-search-input').on('keyup', function() {
+		var $searchResultWindow = $('#gn-search-result-view');
+		var keyword = $(this).val();
+		if (keyword !== "") {
+			$searchResultWindow.addClass('active');
+		} else {
+			$searchResultWindow.removeClass('active');
+		}
+	})
+
     $('#gn-search .magnifier').on('click', function() {
+		console.log("dfdf");
         if ($('#globalnav').hasClass('search-active')) {
             // 검색
             console.warn('검색 시작');
@@ -34,4 +51,4 @@ $(document).ready(function($) {
         }
     })
 
-})
+}
