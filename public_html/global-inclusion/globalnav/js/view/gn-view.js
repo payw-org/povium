@@ -6,26 +6,26 @@ jQuery(document).ready(function($) {
 		}
 	})
 
-    var globalNav = new Vue({
+	var globalNav = new Vue({
 
-        el: '#globalnav',
+		el: '#globalnav',
 
-        data: {
+		data: {
 
-            searchResults: [
+			searchResults: [
 				{
-                    "keyword": "Apple",
-                    "link": "https://www.apple.com/"
-                },
-                {
-                    "keyword": "Google",
-                    "link": "https://www.google.com/"
-                },
-                {
-                    "keyword": "Microsoft",
-                    "link": "https://www.microsoft.com/"
-                }
-            ],
+					"keyword": "Apple",
+					"link": "https://www.apple.com/"
+				},
+				{
+					"keyword": "Google",
+					"link": "https://www.google.com/"
+				},
+				{
+					"keyword": "Microsoft",
+					"link": "https://www.microsoft.com/"
+				}
+			],
 
 			searchKeyword: "",
 
@@ -34,14 +34,14 @@ jQuery(document).ready(function($) {
 				isSearchResultActive: false
 			}
 
-        },
+		},
 
-        methods: {
+		methods: {
 
-            expandSearchInput: function() {
+			expandSearchInput: function() {
 				this.classFlags.isSearchActive = true;
 				this.$el.querySelector('#gn-search-input').focus();
-            },
+			},
 
 			foldSearchInput: function() {
 				this.classFlags.isSearchActive = false;
@@ -63,14 +63,14 @@ jQuery(document).ready(function($) {
 
 			handleMagnifierClick: function() {
 				if ($(this.$el).hasClass('search-active')) {
-		            // 검색
-		            console.warn('검색 시작');
-		        } else {
-		            this.expandSearchInput();
-		        }
+					// 검색
+					console.warn('검색 시작');
+				} else {
+					this.expandSearchInput();
+				}
 			}
 
-        }
-    })
+		}
+	})
 
 });
