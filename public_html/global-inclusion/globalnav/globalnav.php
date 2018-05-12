@@ -4,7 +4,7 @@
 			<div id="gn-search">
 				<div id="gn-search-input-wrapper">
 					<div id="gn-search-ui">
-						<input v-on:keyup="handleSearchInput($event)" v-model="searchKeyword" id="gn-search-input" type="text" name="" value="" placeholder="검색어를 입력하세요." autocomplete="off">
+						<input v-on:keyup="handleSearchInput($event)" v-model="searchKeyword" id="gn-search-input" type="text" name="" value="" placeholder="" autocomplete="off">
 						<div v-on:click="handleMagnifierClick" class="magnifier"></div>
 					</div>
 				</div>

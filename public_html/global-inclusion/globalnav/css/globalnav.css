@@ -39,17 +39,19 @@
   background-image: url('/images/pv-landscape.svg');
   background-repeat: no-repeat;
   background-position: center;
-  -webkit-transition: opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  transition: opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  -o-transition: transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  transition: transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  transition: transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
+  -webkit-transition: opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-filter 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
+  transition: opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-filter 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
+  -o-transition: transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), filter 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
+  transition: transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), filter 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
+  transition: transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), filter 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-filter 0.5s cubic-bezier(0.6, 0.36, 0.23, 0.98);
 }
 .search-active #gn-home-link {
-  -webkit-transform: translateX(100px) scale(0);
-  -ms-transform: translateX(100px) scale(0);
-  transform: translateX(100px) scale(0);
+  -webkit-transform: translateX(200px) scaleX(0);
+  -ms-transform: translateX(200px) scaleX(0);
+  transform: translateX(200px) scaleX(0);
   opacity: 0;
+  -webkit-filter: blur(20px);
+  filter: blur(20px);
 }
 #gn-search {
   z-index: 1;

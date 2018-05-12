@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
 	$(document).on('click', function(e) {
-		if (!document.querySelector('#gn-search').contains(e.target)) {
+		if (!document.querySelector('#gn-search-ui').contains(e.target)) {
 			globalNav.foldSearchInput();
 		}
 	})

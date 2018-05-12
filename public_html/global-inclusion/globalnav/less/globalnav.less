@@ -49,11 +49,12 @@
     // background-size: 95% auto;
     background-repeat: no-repeat;
     background-position: center;
-    transition: transform @pvm-animation, opacity @pvm-animation;
+    transition: transform @pvm-animation, opacity @pvm-animation, filter @pvm-animation;
 
     .search-active & {
-        transform: translateX(100px) scale(0);
+        transform: translateX(200px) scaleX(0);
         opacity: 0;
+		filter: blur(20px);
     }
 }
 
