@@ -4,7 +4,7 @@
 @logo-width: floor(@globalnav-height * 2.2);
 @search-size: floor(@globalnav-height * 0.7);
 @search-margin: floor(@globalnav-height * 0.3);
-@search-font-size: floor(@search-size / 2.5);
+@search-font-size: floor(@search-size / 2.5) + 1;
 
 #globalnav {
     position: sticky;
@@ -97,7 +97,7 @@
         background-image: url('/images/magnifier.svg');
         background-repeat: no-repeat;
         background-position: center;
-        background-size: floor(@search-size / 2) floor(@search-size / 2);
+        background-size: floor(@search-size / 2.3) floor(@search-size / 2.3);
         min-width: @search-size;
         height: @search-size;
         cursor: pointer;
