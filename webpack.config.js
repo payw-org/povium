@@ -5,11 +5,11 @@ module.exports = {
 	mode: "production",
 	entry: {
 		'povium': [
-			path.resolve(__dirname, 'public_html/js/index.js')
+			path.resolve(__dirname, 'public_html/js/povium.js')
 		]
 	},
 	output: {
-		filename: '[name].js',
+		filename: '[name].bundle.js',
 		path: path.resolve(__dirname, 'public_html/js')
 	},
 	resolve: {
