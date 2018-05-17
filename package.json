@@ -1,0 +1,27 @@
+{
+  "name": "povium",
+  "version": "1.0.0",
+  "description": "Plan.md를 읽으세요.",
+  "private": true,
+  "main": "public_html/",
+  "dependencies": {
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DesignAndDevelop/Povium.git"
+  },
+  "keywords": [],
+  "author": "povium",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DesignAndDevelop/Povium/issues"
+  },
+  "homepage": "https://github.com/DesignAndDevelop/Povium#readme"
+}

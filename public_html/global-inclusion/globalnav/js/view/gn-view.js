@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+$(document).ready(function() {
 
 	$(document).on('click', function(e) {
 		if (!document.querySelector('#gn-search-ui').contains(e.target)) {
