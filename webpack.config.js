@@ -23,5 +23,11 @@ module.exports = {
 			jQuery: path.resolve(__dirname, 'public_html/global-inclusion/js/lib/jquery.min.js'),
 			Vue: path.resolve(__dirname, 'public_html/global-inclusion/js/lib/vue.js')
 		})
-	]
+	],
+	module: {
+		rules: [{
+			test: /\.less$/,
+			loader: 'less-loader' // compile LESS to CSS
+		}]
+	}
 }
