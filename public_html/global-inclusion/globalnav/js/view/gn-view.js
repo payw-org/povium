@@ -1,7 +1,9 @@
 $(document).ready(function() {
 	
 	$(document).on('click', function(e) {
-		if (!document.querySelector('#gn-search-ui').contains(e.target)) {
+		if (!document.querySelector('#gn-search-ui').contains(e.target) &&
+			!document.querySelector('#gn-search-result-view').contains(e.target)
+		) {
 			globalNav.foldSearchInput();
 		}
 	})
@@ -48,6 +50,7 @@ $(document).ready(function() {
 			foldSearchInput: function() {
 				this.classFlags.isSearchActive = false;
 				this.classFlags.isSearchResultActive = false;
+				this.currentItem = "";
 			},
 			
 			handleSearchInputKeyUp: function(e) {
@@ -56,6 +59,8 @@ $(document).ready(function() {
 					return;
 				} else if (e.which === 38) {
 					// Arrow up key
+					console.log('pressed up key');
+					e.preventDefault();
 					if (this.currentItem === "") {
 						this.currentItem = this.searchResults[this.searchResults.length - 1];
 					} else {
@@ -66,6 +71,10 @@ $(document).ready(function() {
 						this.currentItem = this.searchResults[nextIndex];
 					}
 				} else if (e.which === 40) {
+					// Arrow down key
+					console.log('pressed down key');
+					e.preventDefault();
+					document.querySelector('#gn-search-input').focus();
 					if (this.currentItem === "") {
 						this.currentItem = this.searchResults[0];
 					} else {
@@ -74,7 +83,7 @@ $(document).ready(function() {
 							nextIndex = 0;
 						}
 						this.currentItem = this.searchResults[nextIndex];
-					}
+					}					
 				} else if (e.which === 13) {
 					var hovered = document.querySelector('.gn-sr-link.hover');
 					if (hovered) {
