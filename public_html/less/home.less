@@ -1,0 +1,58 @@
+@import "../global-inclusion/less/_global-variables";
+@import "../global-inclusion/less/_global-mixins";
+
+#popular {
+	.post-container {
+		// background: rgb(150, 150, 150);
+		white-space: nowrap;
+		overflow-x: scroll;
+		padding: 30px 0;
+
+		.post {
+			width: 300px;
+			background: #fff;
+			border-radius: 10px;
+			overflow: hidden;
+			display: inline-block;
+			vertical-align: top;
+			margin-left: 20px;
+			box-shadow: 0 5px 20px rgba(0, 0, 0, .2);
+
+			&:last-child {
+				margin-right: 20px;
+			}
+
+			.img {
+				display: block;
+				width: 100%;
+			}
+
+			.manifesto {
+				padding: 20px;
+				white-space: initial;
+
+				.title {
+					.pvm-text-5;
+					display: block;
+					font-weight: 700;
+				}
+				.contents {
+					.pvm-text-3;
+					font-weight: 400;
+					margin-top: 7px;
+				}
+				
+				.creator-and-view {
+					.pvm-text-2;
+					margin-top: 20px;
+					display: flex;
+					justify-content: space-between;
+					
+					.creator {
+						font-weight: 700;
+					}
+				}
+			}
+		}
+	}
+}

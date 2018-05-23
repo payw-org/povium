@@ -1,0 +1,71 @@
+.no-tap-highlight-color {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.pvm-text-1 {
+  font-size: 10px;
+}
+.pvm-text-2 {
+  font-size: 15px;
+}
+.pvm-text-3 {
+  font-size: 20px;
+}
+.pvm-text-4 {
+  font-size: 25px;
+}
+.pvm-text-5 {
+  font-size: 30px;
+}
+.pvm-text-6 {
+  font-size: 35px;
+}
+#popular .post-container {
+  white-space: nowrap;
+  overflow-x: scroll;
+  padding: 30px 0;
+}
+#popular .post-container .post {
+  width: 300px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 20px;
+  -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+#popular .post-container .post:last-child {
+  margin-right: 20px;
+}
+#popular .post-container .post .img {
+  display: block;
+  width: 100%;
+}
+#popular .post-container .post .manifesto {
+  padding: 20px;
+  white-space: initial;
+}
+#popular .post-container .post .manifesto .title {
+  font-size: 30px;
+  display: block;
+  font-weight: 700;
+}
+#popular .post-container .post .manifesto .contents {
+  font-size: 20px;
+  font-weight: 400;
+  margin-top: 7px;
+}
+#popular .post-container .post .manifesto .creator-and-view {
+  font-size: 15px;
+  margin-top: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+#popular .post-container .post .manifesto .creator-and-view .creator {
+  font-weight: 700;
+}

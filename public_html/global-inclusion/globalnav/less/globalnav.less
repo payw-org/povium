@@ -1,133 +1,161 @@
-@import "../../less/global-variables";
+@import "../../less/_global-variables";
+@import "../../less/_global-mixins";
 
 @globalnav-height: 60px;
 @logo-width: floor(@globalnav-height * 2.2);
 @search-size: floor(@globalnav-height * 0.7);
 @search-margin: floor(@globalnav-height * 0.3);
-@search-font-size: floor(@search-size / 2.5);
+@search-font-size: floor(@search-size / 2.5) + 1;
 
 #globalnav {
-    position: sticky;
-    left: 0;
-    top: 0;
-    width: 100%;
-    z-index: 9999;
+	position: -webkit-sticky;
+	position: sticky;
+	left: 0;
+	top: 0;
+	width: 100%;
+	z-index: 9999;
+
+	.no-tap-highlight-color
 }
 
 #gn-backface {
-    background-color: #fff;
-    height: @globalnav-height;
-    // border-bottom: 1px solid @white-blue;
+	background-color: rgba(255, 255, 255, 1);
+	height: @globalnav-height;
+	// border-bottom: 1px solid @white-blue;
 }
 
 #gn-container {
-    max-width: 800px;
-    margin: auto;
-    height: @globalnav-height;
-    display: flex;
-    justify-content: space-around;
-    position: relative;
+	max-width: 800px;
+	margin: auto;
+	height: @globalnav-height;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-pack: distribute;
+		justify-content: space-around;
+	position: relative;
 }
 
 #gn-logo-wrapper {
-    width: @logo-width;
-    height: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+	width: @logo-width;
+	height: 100%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+		-ms-flex-align: center;
+			align-items: center;
 }
 
 #gn-home-link {
-    display: block;
-    width: 100%;
-    margin: auto;
-    height: 30px;
-    background-image: url('/images/pv-landscape.svg');
-    // background-size: 95% auto;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: transform @pvm-animation, opacity @pvm-animation;
+	display: block;
+	width: 100%;
+	margin: auto;
+	height: 30px;
+	background-image: url('/assets/images/pv-landscape.svg');
+	// background-size: 95% auto;
+	background-repeat: no-repeat;
+	background-position: center;
+	-webkit-transition: opacity @pvm-animation, -webkit-transform @pvm-animation, -webkit-filter @pvm-animation;
+	transition: opacity @pvm-animation, -webkit-transform @pvm-animation, -webkit-filter @pvm-animation;
+	transition: transform @pvm-animation, opacity @pvm-animation, filter @pvm-animation;
+	transition: transform @pvm-animation, opacity @pvm-animation, filter @pvm-animation, -webkit-transform @pvm-animation, -webkit-filter @pvm-animation;
 
-    .search-active & {
-        transform: translateX(100px) scale(0);
-        opacity: 0;
-    }
+	.search-active & {
+		-webkit-transform: translateX(200px) scale(0);
+				transform: translateX(200px) scale(0);
+		opacity: 0;
+		// -webkit-filter: blur(20px);
+		// 		filter: blur(20px);
+	}
 }
-
-
 
 // globalnav search
 #gn-search {
-    z-index: 1;
-    width: @search-size + @search-margin * 2;
-    position: absolute;
-    padding: 0 @search-margin;
-    left: 0;
-    top: 0;
-    height: 100%;
-    transition: width @pvm-animation;
+	z-index: 1;
+	width: @search-size + @search-margin * 2;
+	position: absolute;
+	padding: 0 @search-margin;
+	left: 0;
+	top: 0;
+	height: 100%;
+	-webkit-transition: width @pvm-animation;
+	transition: width @pvm-animation;
 
-    .search-active & {
-        width: 100%;
-    }
+	.search-active & {
+		width: 100%;
+	}
 }
 
 #gn-search-input-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: left;
-    align-items: center;
+	width: 100%;
+	height: 100%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: left;
+		-ms-flex-pack: left;
+			justify-content: left;
+	-webkit-box-align: center;
+		-ms-flex-align: center;
+			align-items: center;
 }
 
 #gn-search-ui {
-    padding: 0;
-    width: 100%;
-    display: flex;
-    height: @search-size;
-    background-color: @white-blue;
-    border-radius: 50px;
-    overflow: hidden;
+	padding: 0;
+	width: 100%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	height: @search-size;
+	background-color: @white-blue;
+	border-radius: 50px;
+	overflow: hidden;
 
-    .magnifier {
-        background-image: url('/images/magnifier.svg');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: floor(@search-size / 2) floor(@search-size / 2);
-        min-width: @search-size;
-        height: @search-size;
-        cursor: pointer;
-        transition: transform .2s ease;
+	.magnifier {
+		background-image: url('/assets/images/magnifier.svg');
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: floor(@search-size / 2.3) floor(@search-size / 2.3);
+		min-width: @search-size;
+		height: @search-size;
+		cursor: default;
+		-webkit-transition: -webkit-transform .2s ease;
+		transition: -webkit-transform .2s ease;
+		transition: transform .2s ease;
+		transition: transform .2s ease, -webkit-transform .2s ease;
 
-        &:active {
-            transform: scale(.8);
-        }
-    }
+		&:active {
+			-webkit-transform: scale(.8);
+					transform: scale(.8);
+		}
+	}
 }
 
 #gn-search-input {
-    background: none;
-    border: none;
-    height: 100%;
-    font-size: @search-font-size;
-    min-width: 0;
-    flex: 1;
-    margin-left: -20rem;
-    transition: margin @pvm-animation;
+	background: none;
+	border: none;
+	height: 100%;
+	line-height: 1.2;
+	font-size: @search-font-size;
+	min-width: 0;
+	-webkit-box-flex: 1;
+		-ms-flex: 1;
+			flex: 1;
+	margin-left: -20rem;
+	-webkit-transition: margin @pvm-animation;
+	transition: margin @pvm-animation;
 
-    .search-active & {
-        margin-left: floor(@search-size / 2);
-    }
+	.search-active & {
+		margin-left: floor(@search-size / 2);
+	}
 }
 
 #gn-search-result-view {
 	display: none;
 	width: 100%;
 	background-color: @white-blue;
-	border-radius: 10px;
+	border-radius: 20px;
 	// height: 100px;
 
 	&.active {
@@ -135,23 +163,23 @@
 	}
 
 	#gn-sr-list {
-		padding: 10px 0;
+		padding: 20px 0;
 
 		.gn-sr-link {
 			display: block;
+
+			&.hover .gn-sr-item {
+				background-color: @dark-white-blue;
+			}
+
+			&.hover:active .gn-sr-item {
+				background-color: darken(@dark-white-blue, 3%);
+			}
 		}
 
 		.gn-sr-item {
 			padding: 10px floor(@search-size / 2);
 			font-size: floor(@search-size / 2.5);
-
-			&:hover {
-				background-color: @dark-white-blue;
-			}
-
-			&:active {
-				background-color: darken(@dark-white-blue, 3%);
-			}
 		}
 	}
 }
