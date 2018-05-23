@@ -23,7 +23,7 @@
 						<p class="contents">Contents placeholder. dddddddddd</p>
 						<div class="creator-and-view">
 							<a class="creator" href="">Creator</a>
-							<span class="view-count">1234</span>
+							<span class="view-count">1234 viewed</span>
 						</div>
 					</div>
 				</div>
