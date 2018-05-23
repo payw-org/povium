@@ -55,10 +55,13 @@ $(document).ready(function() {
 			
 			handleSearchInputKeyUp: function(e) {
 				if (e.which === 27) {
+					// esc키 눌렀을 때
+					// 검색창 닫기
 					this.foldSearchInput();
 					return;
 				} else if (e.which === 38) {
-					// Arrow up key
+					// 위키 눌렀을 때
+					// 검색어 목록 이동
 					console.log('pressed up key');
 					e.preventDefault();
 					if (this.currentItem === "") {
@@ -71,7 +74,7 @@ $(document).ready(function() {
 						this.currentItem = this.searchResults[nextIndex];
 					}
 				} else if (e.which === 40) {
-					// Arrow down key
+					// 아래키 눌렀을 때
 					console.log('pressed down key');
 					e.preventDefault();
 					document.querySelector('#gn-search-input').focus();

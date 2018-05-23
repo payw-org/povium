@@ -19,7 +19,7 @@
 }
 
 #gn-backface {
-	background-color: #fff;
+	background-color: rgba(255, 255, 255, 1);
 	height: @globalnav-height;
 	// border-bottom: 1px solid @white-blue;
 }
@@ -52,7 +52,7 @@
 	width: 100%;
 	margin: auto;
 	height: 30px;
-	background-image: url('/images/pv-landscape.svg');
+	background-image: url('/assets/images/pv-landscape.svg');
 	// background-size: 95% auto;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -62,15 +62,13 @@
 	transition: transform @pvm-animation, opacity @pvm-animation, filter @pvm-animation, -webkit-transform @pvm-animation, -webkit-filter @pvm-animation;
 
 	.search-active & {
-		-webkit-transform: translateX(200px) scaleX(0);
-				transform: translateX(200px) scaleX(0);
+		-webkit-transform: translateX(200px) scale(0);
+				transform: translateX(200px) scale(0);
 		opacity: 0;
-		-webkit-filter: blur(20px);
-				filter: blur(20px);
+		// -webkit-filter: blur(20px);
+		// 		filter: blur(20px);
 	}
 }
-
-
 
 // globalnav search
 #gn-search {
@@ -115,13 +113,13 @@
 	overflow: hidden;
 
 	.magnifier {
-		background-image: url('/images/magnifier.svg');
+		background-image: url('/assets/images/magnifier.svg');
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: floor(@search-size / 2.3) floor(@search-size / 2.3);
 		min-width: @search-size;
 		height: @search-size;
-		cursor: pointer;
+		cursor: default;
 		-webkit-transition: -webkit-transform .2s ease;
 		transition: -webkit-transform .2s ease;
 		transition: transform .2s ease;
