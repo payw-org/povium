@@ -1,26 +1,8 @@
 .no-tap-highlight-color {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
-.bacon {
-  width: 100%;
-}
-@media only screen and (max-width: 450px) {
-  .bacon {
-    float: left;
-    margin-top: 10px;
-  }
-}
-/* Outputted css */
-.bacon {
-  width: 100%;
-}
-@media only screen and (max-width: 450px) {
-  .bacon {
-    float: left;
-    margin-top: 10px;
-  }
-}
 #popular {
+  position: relative;
   overflow-y: hidden;
   padding-top: 30px;
 }
@@ -28,7 +10,7 @@
   white-space: nowrap;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
-  padding: 13px 0 30px;
+  padding: calc(2rem - 17px) 0 2rem;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -38,98 +20,95 @@
   font-size: 0;
 }
 #popular .post-container .post {
-  width: 300px;
+  width: 17rem;
   background: #fff;
   border-radius: 10px;
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
-  margin-left: 30px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
+  margin-left: 2rem;
+  -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2);
+  cursor: default;
   -webkit-transition: all .3s ease;
   -o-transition: all .3s ease;
   transition: all .3s ease;
 }
 #popular .post-container .post:last-child {
-  margin-right: 30px;
+  margin-right: 2rem;
 }
 #popular .post-container .post:active,
 #popular .post-container .post:hover:active {
   -webkit-transform: scale(0.95);
   -ms-transform: scale(0.95);
   transform: scale(0.95);
-  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.2);
 }
 #popular .post-container .post:hover {
-  -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.3);
 }
 #popular .post-container .post .img {
   display: block;
   width: 100%;
 }
 #popular .post-container .post .manifesto {
-  padding: 20px;
+  padding: 1rem;
   white-space: initial;
 }
 #popular .post-container .post .manifesto .title {
-  font-size: 30px;
   display: block;
+  font-size: 1.7rem;
   font-weight: 700;
-}
-@media only screen and (max-width: 768px) {
-  #popular .post-container .post .manifesto .title {
-    font-size: 24px;
-  }
-}
-@media only screen and (min-width: 1441px) {
-  #popular .post-container .post .manifesto .title {
-    font-size: 36px;
-  }
+  line-height: 1;
 }
 #popular .post-container .post .manifesto .contents {
-  font-size: 20px;
+  display: block;
+  font-size: 1.2rem;
   font-weight: 400;
-  margin-top: 7px;
-}
-@media only screen and (max-width: 768px) {
-  #popular .post-container .post .manifesto .contents {
-    font-size: 16px;
-  }
-}
-@media only screen and (min-width: 1441px) {
-  #popular .post-container .post .manifesto .contents {
-    font-size: 24px;
-  }
+  margin-top: 1rem;
+  line-height: 1;
 }
 #popular .post-container .post .manifesto .creator-and-view {
-  font-size: 15px;
-  margin-top: 20px;
+  margin-top: 1.5rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  font-size: .87rem;
   font-weight: 500;
 }
-@media only screen and (max-width: 768px) {
-  #popular .post-container .post .manifesto .creator-and-view {
-    font-size: 12px;
-  }
+#popular .post-container .post .manifesto .creator-and-view .creator:hover {
+  text-decoration: underline;
 }
-@media only screen and (min-width: 1441px) {
-  #popular .post-container .post .manifesto .creator-and-view {
-    font-size: 18px;
-  }
+#popular .post-container:hover + .next {
+  opacity: .8;
+}
+#popular .next {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50px;
+  border: none;
+  background-color: #f3f3f7;
+  opacity: 0;
+  -webkit-transition: opacity .2s ease;
+  -o-transition: opacity .2s ease;
+  transition: opacity .2s ease;
+}
+#popular .next:hover {
+  opacity: .8;
 }
 .section-title {
   font-size: 35px;
-  max-width: 1000px;
+  max-width: 60rem;
   margin: auto;
+  margin-left: 2rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -151,6 +130,6 @@
   background-size: 80% 80%;
   background-position: center;
   vertical-align: top;
-  width: 35px;
-  margin-right: 10px;
+  width: 2rem;
+  margin-right: .6rem;
 }

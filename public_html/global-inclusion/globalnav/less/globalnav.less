@@ -42,9 +42,7 @@
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-align: center;
-		-ms-flex-align: center;
-			align-items: center;
+	align-items: center;
 }
 
 #gn-home-link {
@@ -56,14 +54,10 @@
 	// background-size: 95% auto;
 	background-repeat: no-repeat;
 	background-position: center;
-	-webkit-transition: opacity @pvm-animation, -webkit-transform @pvm-animation, -webkit-filter @pvm-animation;
-	transition: opacity @pvm-animation, -webkit-transform @pvm-animation, -webkit-filter @pvm-animation;
 	transition: transform @pvm-animation, opacity @pvm-animation, filter @pvm-animation;
-	transition: transform @pvm-animation, opacity @pvm-animation, filter @pvm-animation, -webkit-transform @pvm-animation, -webkit-filter @pvm-animation;
 
 	.search-active & {
-		-webkit-transform: translateX(200px) scale(0);
-				transform: translateX(200px) scale(0);
+		transform: translateX(200px) scale(0);
 		opacity: 0;
 		// -webkit-filter: blur(20px);
 		// 		filter: blur(20px);
@@ -79,7 +73,6 @@
 	left: 0;
 	top: 0;
 	height: 100%;
-	-webkit-transition: width @pvm-animation;
 	transition: width @pvm-animation;
 
 	.search-active & {
@@ -93,12 +86,8 @@
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-pack: left;
-		-ms-flex-pack: left;
-			justify-content: left;
-	-webkit-box-align: center;
-		-ms-flex-align: center;
-			align-items: center;
+	justify-content: left;
+	align-items: center;
 }
 
 #gn-search-ui {
@@ -120,14 +109,10 @@
 		min-width: @search-size;
 		height: @search-size;
 		cursor: default;
-		-webkit-transition: -webkit-transform .2s ease;
-		transition: -webkit-transform .2s ease;
 		transition: transform .2s ease;
-		transition: transform .2s ease, -webkit-transform .2s ease;
 
 		&:active {
-			-webkit-transform: scale(.8);
-					transform: scale(.8);
+			transform: scale(.8);
 		}
 	}
 }
@@ -139,11 +124,8 @@
 	line-height: 1.2;
 	font-size: @search-font-size;
 	min-width: 0;
-	-webkit-box-flex: 1;
-		-ms-flex: 1;
-			flex: 1;
+	flex: 1;
 	margin-left: -20rem;
-	-webkit-transition: margin @pvm-animation;
 	transition: margin @pvm-animation;
 
 	.search-active & {
