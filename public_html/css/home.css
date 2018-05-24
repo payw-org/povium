@@ -25,6 +25,7 @@
 #popular .post-container {
   white-space: nowrap;
   overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
   padding: 13px 0 30px;
   -webkit-user-select: none;
   -moz-user-select: none;
