@@ -19,39 +19,44 @@
 .pvm-text-6 {
   font-size: 35px;
 }
+#popular {
+  overflow-y: hidden;
+}
 #popular .post-container {
   white-space: nowrap;
   overflow-x: scroll;
-  padding: 30px 0;
+  padding: 13px 0 30px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  position: relative;
+  top: 17px;
 }
 #popular .post-container .post {
   width: 300px;
-  background: #fff;
+  background: #f8f8fb;
   border-radius: 10px;
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
-  margin-left: 20px;
-  -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  -webkit-transition: -webkit-transform .4s ease;
-  transition: -webkit-transform .4s ease;
-  -o-transition: transform .4s ease;
-  transition: transform .4s ease;
-  transition: transform .4s ease, -webkit-transform .4s ease;
+  margin-left: 30px;
+  cursor: default;
+  -webkit-transition: all .2s ease;
+  -o-transition: all .2s ease;
+  transition: all .2s ease;
+}
+#popular .post-container .post:last-child {
+  margin-right: 30px;
 }
 #popular .post-container .post:active {
   -webkit-transform: scale(0.95);
   -ms-transform: scale(0.95);
   transform: scale(0.95);
 }
-#popular .post-container .post:last-child {
-  margin-right: 20px;
+#popular .post-container .post:hover {
+  -webkit-box-shadow: 0 0 0px 4px #766cff;
+  box-shadow: 0 0 0px 4px #766cff;
 }
 #popular .post-container .post .img {
   display: block;

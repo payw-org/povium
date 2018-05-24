@@ -2,31 +2,40 @@
 @import "../global-inclusion/less/_global-mixins";
 
 #popular {
+	overflow-y: hidden;
+
 	.post-container {
 		// background: rgb(150, 150, 150);
 		white-space: nowrap;
 		overflow-x: scroll;
-		padding: 30px 0;
+		padding: 13px 0 30px;
 		user-select: none;
+		position: relative;
+		top: 17px;
 
 		.post {
 			width: 300px;
-			background: #fff;
+			background: @white-blue;
 			border-radius: 10px;
 			overflow: hidden;
 			display: inline-block;
 			vertical-align: top;
-			margin-left: 20px;
-			box-shadow: 0 5px 20px rgba(0, 0, 0, .2);
-			cursor: pointer;
-			transition: transform .4s ease;
+			margin-left: 30px;
+			// box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
+			cursor: default;
+			transition: all .2s ease;
+
+			&:last-child {
+				margin-right: 30px;
+			}
 
 			&:active {
 				transform: scale(.95);
+				// box-shadow: 0 3px 5px rgba(0,0,0,.1);
 			}
 
-			&:last-child {
-				margin-right: 20px;
+			&:hover {
+				box-shadow: 0 0 0px 4px #766cff;
 			}
 
 			.img {
