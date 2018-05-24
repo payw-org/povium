@@ -5,7 +5,7 @@
 	<title>Povium | Post your vision.</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/global-inclusion/global-css.php'; ?>
-	<link rel="stylesheet" href="css/home.css?v=2">
+	<link rel="stylesheet" href="css/home.css?v=1">
 	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/global-inclusion/global-script.php'; ?>
 </head>
 <body>
