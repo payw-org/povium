@@ -3,6 +3,7 @@
 
 #popular {
 	overflow-y: hidden;
+	padding-top: 30px;
 
 	.post-container {
 		// background: rgb(150, 150, 150);
@@ -13,30 +14,31 @@
 		user-select: none;
 		position: relative;
 		top: 17px;
+		font-size: 0;
 
 		.post {
 			width: 300px;
-			background: @white-blue;
+			background: #fff;
 			border-radius: 10px;
 			overflow: hidden;
 			display: inline-block;
 			vertical-align: top;
 			margin-left: 30px;
-			// box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
-			cursor: default;
-			transition: all .2s ease;
+			box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+			cursor: pointer;
+			transition: all .3s ease;
 
 			&:last-child {
 				margin-right: 30px;
 			}
 
-			&:active {
+			&:active, &:hover:active {
 				transform: scale(.95);
-				// box-shadow: 0 3px 5px rgba(0,0,0,.1);
+				box-shadow: 0 3px 5px rgba(0,0,0,.2);
 			}
 
 			&:hover {
-				box-shadow: 0 0 0px 4px #766cff;
+				box-shadow: 0 5px 25px rgba(0,0,0,.3);
 			}
 
 			.img {
@@ -67,6 +69,26 @@
 					font-weight: 500;
 				}
 			}
+		}
+	}
+}
+
+.section-title {
+	.pvm-text-6;
+	max-width: 1000px;
+	margin: auto;
+	display: flex;
+
+	&.popular {
+		&::before {
+			content: "";
+			background-image: url("/assets/images/flare.svg");
+			background-repeat: no-repeat;
+			background-size: 80% 80%;
+			background-position: center;
+			vertical-align: top;
+			width: 35px;
+			margin-right: 10px;
 		}
 	}
 }

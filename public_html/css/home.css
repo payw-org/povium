@@ -1,26 +1,28 @@
 .no-tap-highlight-color {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
-.pvm-text-1 {
-  font-size: 10px;
+.bacon {
+  width: 100%;
 }
-.pvm-text-2 {
-  font-size: 15px;
+@media only screen and (max-width: 450px) {
+  .bacon {
+    float: left;
+    margin-top: 10px;
+  }
 }
-.pvm-text-3 {
-  font-size: 20px;
+/* Outputted css */
+.bacon {
+  width: 100%;
 }
-.pvm-text-4 {
-  font-size: 25px;
-}
-.pvm-text-5 {
-  font-size: 30px;
-}
-.pvm-text-6 {
-  font-size: 35px;
+@media only screen and (max-width: 450px) {
+  .bacon {
+    float: left;
+    margin-top: 10px;
+  }
 }
 #popular {
   overflow-y: hidden;
+  padding-top: 30px;
 }
 #popular .post-container {
   white-space: nowrap;
@@ -33,31 +35,37 @@
   user-select: none;
   position: relative;
   top: 17px;
+  font-size: 0;
 }
 #popular .post-container .post {
   width: 300px;
-  background: #f8f8fb;
+  background: #fff;
   border-radius: 10px;
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
   margin-left: 30px;
-  cursor: default;
-  -webkit-transition: all .2s ease;
-  -o-transition: all .2s ease;
-  transition: all .2s ease;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  -webkit-transition: all .3s ease;
+  -o-transition: all .3s ease;
+  transition: all .3s ease;
 }
 #popular .post-container .post:last-child {
   margin-right: 30px;
 }
-#popular .post-container .post:active {
+#popular .post-container .post:active,
+#popular .post-container .post:hover:active {
   -webkit-transform: scale(0.95);
   -ms-transform: scale(0.95);
   transform: scale(0.95);
+  -webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
 }
 #popular .post-container .post:hover {
-  -webkit-box-shadow: 0 0 0px 4px #766cff;
-  box-shadow: 0 0 0px 4px #766cff;
+  -webkit-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
 }
 #popular .post-container .post .img {
   display: block;
@@ -72,10 +80,30 @@
   display: block;
   font-weight: 700;
 }
+@media only screen and (max-width: 768px) {
+  #popular .post-container .post .manifesto .title {
+    font-size: 24px;
+  }
+}
+@media only screen and (min-width: 1441px) {
+  #popular .post-container .post .manifesto .title {
+    font-size: 36px;
+  }
+}
 #popular .post-container .post .manifesto .contents {
   font-size: 20px;
   font-weight: 400;
   margin-top: 7px;
+}
+@media only screen and (max-width: 768px) {
+  #popular .post-container .post .manifesto .contents {
+    font-size: 16px;
+  }
+}
+@media only screen and (min-width: 1441px) {
+  #popular .post-container .post .manifesto .contents {
+    font-size: 24px;
+  }
 }
 #popular .post-container .post .manifesto .creator-and-view {
   font-size: 15px;
@@ -87,4 +115,42 @@
   -ms-flex-pack: justify;
   justify-content: space-between;
   font-weight: 500;
+}
+@media only screen and (max-width: 768px) {
+  #popular .post-container .post .manifesto .creator-and-view {
+    font-size: 12px;
+  }
+}
+@media only screen and (min-width: 1441px) {
+  #popular .post-container .post .manifesto .creator-and-view {
+    font-size: 18px;
+  }
+}
+.section-title {
+  font-size: 35px;
+  max-width: 1000px;
+  margin: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+@media only screen and (max-width: 768px) {
+  .section-title {
+    font-size: 28px;
+  }
+}
+@media only screen and (min-width: 1441px) {
+  .section-title {
+    font-size: 42px;
+  }
+}
+.section-title.popular::before {
+  content: "";
+  background-image: url("/assets/images/flare.svg");
+  background-repeat: no-repeat;
+  background-size: 80% 80%;
+  background-position: center;
+  vertical-align: top;
+  width: 35px;
+  margin-right: 10px;
 }

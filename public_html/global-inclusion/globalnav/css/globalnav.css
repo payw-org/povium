@@ -1,23 +1,24 @@
 .no-tap-highlight-color {
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
-.pvm-text-1 {
-  font-size: 10px;
+.bacon {
+  width: 100%;
 }
-.pvm-text-2 {
-  font-size: 15px;
+@media only screen and (max-width: 450px) {
+  .bacon {
+    float: left;
+    margin-top: 10px;
+  }
 }
-.pvm-text-3 {
-  font-size: 20px;
+/* Outputted css */
+.bacon {
+  width: 100%;
 }
-.pvm-text-4 {
-  font-size: 25px;
-}
-.pvm-text-5 {
-  font-size: 30px;
-}
-.pvm-text-6 {
-  font-size: 35px;
+@media only screen and (max-width: 450px) {
+  .bacon {
+    float: left;
+    margin-top: 10px;
+  }
 }
 #globalnav {
   position: -webkit-sticky;
@@ -108,7 +109,7 @@
   display: -ms-flexbox;
   display: flex;
   height: 42px;
-  background-color: #f8f8fb;
+  background-color: #f3f3f7;
   border-radius: 50px;
   overflow: hidden;
 }
@@ -155,7 +156,7 @@
 #gn-search-result-view {
   display: none;
   width: 100%;
-  background-color: #f8f8fb;
+  background-color: #f3f3f7;
   border-radius: 20px;
 }
 #gn-search-result-view.active {
@@ -168,10 +169,10 @@
   display: block;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover .gn-sr-item {
-  background-color: #eeeef5;
+  background-color: #eaeaf1;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover:active .gn-sr-item {
-  background-color: #e5e5f0;
+  background-color: #e1e1eb;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-item {
   padding: 10px 21px;

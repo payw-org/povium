@@ -1,3 +1,25 @@
+.no-tap-highlight-color {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.bacon {
+  width: 100%;
+}
+@media only screen and (max-width: 450px) {
+  .bacon {
+    float: left;
+    margin-top: 10px;
+  }
+}
+/* Outputted css */
+.bacon {
+  width: 100%;
+}
+@media only screen and (max-width: 450px) {
+  .bacon {
+    float: left;
+    margin-top: 10px;
+  }
+}
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -10,13 +32,14 @@ html {
 * {
   margin: 0;
   padding: 0;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 body {
   margin: 0;
   padding: 0;
   font-family: 'JHM Pro', sans-serif;
-  color: #333;
+  color: #222;
   overflow-x: hidden;
 }
 button,
