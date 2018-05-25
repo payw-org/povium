@@ -11,10 +11,11 @@
 		white-space: nowrap;
 		overflow-x: scroll;
 		-webkit-overflow-scrolling: touch;
-		padding: calc(2rem - 17px) 0 2rem;
+		// padding: calc(2rem - 17px) 0 2rem;
 		user-select: none;
 		position: relative;
 		top: 17px;
+		margin-top: -17px;
 		font-size: 0;
 
 		.post {
@@ -24,7 +25,7 @@
 			overflow: hidden;
 			display: inline-block;
 			vertical-align: top;
-			margin-left: 2rem;
+			margin: 1.6rem 0 2.4rem 2rem;
 			box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .2);
 			cursor: default;
 			transition: all .3s ease;
@@ -106,7 +107,7 @@
 	.pvm-text-6;
 	max-width: 60rem;
 	margin: auto;
-	margin-left: 2rem;
+	padding-left: 2rem;
 	display: flex;
 
 	&.popular {
