@@ -97,9 +97,9 @@
   border: none;
   background-color: #f3f3f7;
   opacity: 0;
-  -webkit-transition: opacity .2s ease;
-  -o-transition: opacity .2s ease;
-  transition: opacity .2s ease;
+  -webkit-transition: opacity .3s ease;
+  -o-transition: opacity .3s ease;
+  transition: opacity .3s ease;
 }
 #popular .next:hover {
   opacity: .8;
