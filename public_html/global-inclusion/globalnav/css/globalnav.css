@@ -35,12 +35,17 @@
   -ms-flex-align: center;
   align-items: center;
 }
+@media only screen and (max-width: 768px) {
+  #gn-logo-wrapper {
+    width: 27px;
+  }
+}
 #gn-home-link {
   display: block;
   width: 100%;
   margin: auto;
   height: 30px;
-  background-image: url('/assets/images/pv-landscape.svg');
+  background-image: url('/assets/images/pvm-landscape.svg');
   background-repeat: no-repeat;
   background-position: center;
   -webkit-transition: opacity 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-filter 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
@@ -54,6 +59,11 @@
   -ms-transform: translateX(200px) scale(0);
   transform: translateX(200px) scale(0);
   opacity: 0;
+}
+@media only screen and (max-width: 768px) {
+  #gn-home-link {
+    background-image: url('/assets/images/pvm-icon.svg');
+  }
 }
 #gn-search {
   z-index: 1;
