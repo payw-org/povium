@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	
-	$(window).on('click', function(e) {
+	$(window).on('click touchstart', function(e) {
 		if (!document.querySelector('#gn-search-ui').contains(e.target) &&
 			!document.querySelector('#gn-search-result-view').contains(e.target)
 		) {

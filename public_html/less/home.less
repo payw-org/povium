@@ -20,13 +20,13 @@
 
 		.post {
 			width: 17rem;
-			background: #fff;
+			background: @white-blue;
 			border-radius: 10px;
 			overflow: hidden;
 			display: inline-block;
 			vertical-align: top;
-			margin: 1.6rem 0 2.4rem 2rem;
-			box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .2);
+			margin: .3rem 0 .3rem 2rem;
+			// box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .2);
 			cursor: default;
 			transition: all .3s ease;
 
@@ -34,13 +34,15 @@
 				margin-right: 2rem;
 			}
 
-			&:active, &:hover:active {
-				transform: scale(.95);
-				box-shadow: 0 .2rem .3rem rgba(0,0,0,.2);
+			&:hover {
+				// box-shadow: 0 .4rem 2rem rgba(0,0,0,.3);
+				box-shadow: 0 0 0 .3rem @pvm-purple;
+				background: #fff;
 			}
 
-			&:hover {
-				box-shadow: 0 .4rem 2rem rgba(0,0,0,.3);
+			&:active {
+				transform: scale(.95);
+				// box-shadow: 0 .2rem .3rem rgba(0,0,0,.2);
 			}
 
 			.img {
@@ -80,22 +82,23 @@
 			}
 		}
 
-		&:hover + .next {
+		&:hover .next {
 			opacity: .8;
 		}
 	}
 
 	.next {
 		position: absolute;
-		right: 2rem;
+		right: 1.5rem;
 		top: 50%;
 		width: 3.5rem;
 		height: 3.5rem;
 		border-radius: 50px;
 		border: none;
-		background-color: @white-blue;
+		background-color: black;
 		opacity: 0;
 		transition: opacity .3s ease;
+		transform: translateY(-50%);
 
 		&:hover {
 			opacity: .8;
@@ -107,6 +110,7 @@
 	.pvm-text-6;
 	max-width: 60rem;
 	margin: auto;
+	margin-bottom: 1.5rem;
 	padding-left: 2rem;
 	display: flex;
 

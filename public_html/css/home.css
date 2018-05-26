@@ -21,14 +21,12 @@
 }
 #popular .post-container .post {
   width: 17rem;
-  background: #fff;
+  background: #f3f3f7;
   border-radius: 10px;
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
-  margin: 1.6rem 0 2.4rem 2rem;
-  -webkit-box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.2);
+  margin: .3rem 0 .3rem 2rem;
   cursor: default;
   -webkit-transition: all .3s ease;
   -o-transition: all .3s ease;
@@ -37,17 +35,15 @@
 #popular .post-container .post:last-child {
   margin-right: 2rem;
 }
-#popular .post-container .post:active,
-#popular .post-container .post:hover:active {
+#popular .post-container .post:hover {
+  -webkit-box-shadow: 0 0 0 0.3rem #5f42ff;
+  box-shadow: 0 0 0 0.3rem #5f42ff;
+  background: #fff;
+}
+#popular .post-container .post:active {
   -webkit-transform: scale(0.95);
   -ms-transform: scale(0.95);
   transform: scale(0.95);
-  -webkit-box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0.2rem 0.3rem rgba(0, 0, 0, 0.2);
-}
-#popular .post-container .post:hover {
-  -webkit-box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.3);
 }
 #popular .post-container .post .img {
   display: block;
@@ -84,22 +80,25 @@
 #popular .post-container .post .manifesto .creator-and-view .creator:hover {
   text-decoration: underline;
 }
-#popular .post-container:hover + .next {
+#popular .post-container:hover .next {
   opacity: .8;
 }
 #popular .next {
   position: absolute;
-  right: 2rem;
+  right: 1.5rem;
   top: 50%;
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50px;
   border: none;
-  background-color: #f3f3f7;
+  background-color: black;
   opacity: 0;
   -webkit-transition: opacity .3s ease;
   -o-transition: opacity .3s ease;
   transition: opacity .3s ease;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 #popular .next:hover {
   opacity: .8;
@@ -108,6 +107,7 @@
   font-size: 35px;
   max-width: 60rem;
   margin: auto;
+  margin-bottom: 1.5rem;
   padding-left: 2rem;
   display: -webkit-box;
   display: -ms-flexbox;

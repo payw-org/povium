@@ -14,16 +14,17 @@
 		<section id="popular">
 			<h1 class="section-title popular">Popular</h1>
 			<div class="post-container">
+				<!-- <button class="next"></button> -->
 				<?php
 				for ($i = 0; $i < 5; $i++) {
 				?>
 				<div class="post">
 					<img class="img" src="assets/images/post-test-img-2.jpg" alt="">
 					<div class="manifesto">
-						<h1 class="title">Title placeholder</h1>
-						<p class="contents">Contents placeholder</p>
+						<h1 class="title">Title placeholder <?php echo $i+1; ?></h1>
+						<p class="contents">Contents placeholder <?php echo $i + 1; ?></p>
 						<div class="creator-and-view">
-							<a class="creator" href="">Creator</a>
+							<a class="creator" href="">Creator<?php echo $i + 1; ?></a>
 							<span class="view-count">1234 viewed</span>
 						</div>
 					</div>
@@ -32,7 +33,6 @@
 				}
 				?>
 			</div>
-			<button class="next"></button>
 		</section>
 	</main>
 	<script src="/js/home.js"></script>
