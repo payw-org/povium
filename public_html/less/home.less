@@ -10,6 +10,7 @@
 		// background: rgb(150, 150, 150);
 		white-space: nowrap;
 		overflow-x: scroll;
+		overflow-y: hidden;
 		-webkit-overflow-scrolling: touch;
 		// padding: calc(2rem - 17px) 0 2rem;
 		user-select: none;
@@ -21,14 +22,15 @@
 		.post {
 			width: 17rem;
 			background: @white-blue;
-			border-radius: 10px;
+			border-radius: 1rem;
 			overflow: hidden;
 			display: inline-block;
 			vertical-align: top;
 			margin: .3rem 0 .3rem 2rem;
 			// box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .2);
 			cursor: default;
-			transition: all .3s ease;
+			transition: all .2s ease;
+			user-select: none;
 
 			&:last-child {
 				margin-right: 2rem;
@@ -37,17 +39,22 @@
 			&:hover {
 				// box-shadow: 0 .4rem 2rem rgba(0,0,0,.3);
 				box-shadow: 0 0 0 .3rem @pvm-purple;
+				// border: .3rem solid @pvm-purple;
 				background: #fff;
 			}
 
 			&:active {
 				transform: scale(.95);
+				overflow: hidden;
 				// box-shadow: 0 .2rem .3rem rgba(0,0,0,.2);
 			}
 
 			.img {
+				border-radius: 1rem 1rem 0 0;
 				display: block;
 				width: 100%;
+				pointer-events: none;
+				user-select: none;
 			}
 
 			.manifesto {

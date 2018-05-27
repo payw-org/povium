@@ -51,6 +51,7 @@ $(document).ready(function() {
 				this.classFlags.isSearchActive = false;
 				this.classFlags.isSearchResultActive = false;
 				this.currentItem = "";
+				this.$el.querySelector('#gn-search-input').blur();
 			},
 			
 			handleSearchInputKeyUp: function(e) {

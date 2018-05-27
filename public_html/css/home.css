@@ -9,7 +9,11 @@
 #popular .post-container {
   white-space: nowrap;
   overflow-x: scroll;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   position: relative;
   font-size: 0;
@@ -17,27 +21,43 @@
 #popular .post-container .post {
   width: 17rem;
   background: #f3f3f7;
-  border-radius: 10px;
+  border-radius: 1rem;
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
   margin: .3rem 0 .3rem 2rem;
   cursor: default;
-  transition: all .3s ease;
+  -webkit-transition: all .2s ease;
+  -o-transition: all .2s ease;
+  transition: all .2s ease;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 #popular .post-container .post:last-child {
   margin-right: 2rem;
 }
 #popular .post-container .post:hover {
+  -webkit-box-shadow: 0 0 0 0.3rem #5f42ff;
   box-shadow: 0 0 0 0.3rem #5f42ff;
   background: #fff;
 }
 #popular .post-container .post:active {
+  -webkit-transform: scale(0.95);
+  -ms-transform: scale(0.95);
   transform: scale(0.95);
+  overflow: hidden;
 }
 #popular .post-container .post .img {
+  border-radius: 1rem 1rem 0 0;
   display: block;
   width: 100%;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 #popular .post-container .post .manifesto {
   padding: 1rem;
@@ -58,7 +78,11 @@
 }
 #popular .post-container .post .manifesto .creator-and-view {
   margin-top: 1.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
   font-size: .87rem;
   font-weight: 500;
@@ -79,7 +103,11 @@
   border: none;
   background-color: black;
   opacity: 0;
+  -webkit-transition: opacity .3s ease;
+  -o-transition: opacity .3s ease;
   transition: opacity .3s ease;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
 #popular .next:hover {
@@ -91,6 +119,8 @@
   margin: auto;
   margin-bottom: 1.5rem;
   padding-left: 2rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 @media only screen and (max-width: 768px) {
