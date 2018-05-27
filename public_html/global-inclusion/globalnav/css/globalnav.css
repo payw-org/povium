@@ -100,7 +100,7 @@
   display: -ms-flexbox;
   display: flex;
   height: 42px;
-  background-color: #f3f3f7;
+  background-color: #f8f8fb;
   border-radius: 50px;
   overflow: hidden;
 }
@@ -144,7 +144,7 @@
 #gn-search-result-view {
   display: none;
   width: 100%;
-  background-color: #f3f3f7;
+  background-color: #f8f8fb;
   border-radius: 20px;
 }
 #gn-search-result-view.active {
@@ -157,10 +157,10 @@
   display: block;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover .gn-sr-item {
-  background-color: #eaeaf1;
+  background-color: #eeeef5;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover:active .gn-sr-item {
-  background-color: #e1e1eb;
+  background-color: #e5e5f0;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-item {
   padding: 10px 21px;

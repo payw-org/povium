@@ -20,12 +20,12 @@
 }
 #popular .post-container .post {
   width: 17rem;
-  background: #f3f3f7;
+  background: #f8f8fb;
   border-radius: 1rem;
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
-  margin: .3rem 0 .3rem 2rem;
+  margin: 0.3rem 0 calc(0.3rem + 17px) 2rem;
   cursor: default;
   -webkit-transition: all .2s ease;
   -o-transition: all .2s ease;

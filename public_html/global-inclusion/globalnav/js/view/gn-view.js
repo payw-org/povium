@@ -44,6 +44,7 @@ $(document).ready(function() {
 			
 			expandSearchInput: function() {
 				this.classFlags.isSearchActive = true;
+				// this.classFlags.isSearchResultActive = true;
 				this.$el.querySelector('#gn-search-input').focus();
 			},
 			
