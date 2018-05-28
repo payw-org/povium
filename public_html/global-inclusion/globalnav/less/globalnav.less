@@ -81,11 +81,14 @@
 	height: 100vh;
 	background: rgba(0, 0, 0, .2);
 	z-index: -1;
-	display: none;
+	visibility: hidden;
+	opacity: 0;
+	transition: all .5s ease;
 }
 
 .search-active #gn-search-backface {
-	display: block;
+	visibility: visible;
+	opacity: 1;
 }
 
 #gn-search {
@@ -154,6 +157,11 @@
 	.search-active & {
 		margin-left: floor(@search-size / 2);
 	}
+
+	&::-webkit-input-placeholder {
+		color: inherit;
+		opacity: .5;
+	}
 }
 
 #gn-search-result-view {
@@ -163,7 +171,7 @@
 	border-radius: 0 0 10px 10px;
 	// position: relative;
 	// top: 1px;
-	border-top: 1px solid rgba(0, 0, 0, .2);
+	border-top: 1px solid @white-blue;
 
 	&.active {
 		display: block;
@@ -178,10 +186,13 @@
 			&.hover .gn-sr-item {
 				background-color: @white-blue;
 				background-color: desaturate(lighten(@pvm-purple, 30%), 10%);
+				background-color: @pvm-purple;
+				color: #fff;
 			}
 
 			&.hover:active .gn-sr-item {
 				background-color: darken(desaturate(lighten(@pvm-purple, 30%), 10%), 5%);
+				background-color: darken(@pvm-purple, 5%);
 			}
 		}
 

@@ -20,12 +20,12 @@
 }
 #popular .post-container .post {
   width: 17rem;
-  background: #f8f8fb;
+  background: #f3f3f7;
   border-radius: 1rem;
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
-  margin: 0.3rem 0 calc(0.3rem + 10px) 2rem;
+  margin: 0.3rem 0 calc(0.3rem + 10px) 1.7rem;
   cursor: default;
   -webkit-transition: all .2s ease;
   -o-transition: all .2s ease;
@@ -39,9 +39,7 @@
   margin-right: 2rem;
 }
 #popular .post-container .post:hover {
-  -webkit-box-shadow: 0 0 0 0.3rem #5f42ff;
-  box-shadow: 0 0 0 0.3rem #5f42ff;
-  background: #fff;
+  color: #5f42ff;
 }
 #popular .post-container .post:active {
   -webkit-transform: scale(0.95);
@@ -118,7 +116,7 @@
   max-width: 60rem;
   margin: auto;
   margin-bottom: 1.5rem;
-  padding-left: 2rem;
+  padding-left: 1.7rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

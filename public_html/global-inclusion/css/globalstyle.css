@@ -69,10 +69,10 @@ a {
   color: inherit;
 }
 ::-moz-selection {
-  background-color: #4a35f6;
+  background-color: #5f42ff;
   color: #fff;
 }
 ::selection {
-  background-color: #4a35f6;
+  background-color: #5f42ff;
   color: #fff;
 }

@@ -48,11 +48,11 @@
   background-image: url('/assets/images/pvm-landscape.svg');
   background-repeat: no-repeat;
   background-position: center;
-  -webkit-transition: opacity 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-filter 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  transition: opacity 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-filter 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  -o-transition: transform 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), filter 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  transition: transform 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), filter 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  transition: transform 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), opacity 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), filter 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-transform 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98), -webkit-filter 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
+  -webkit-transition: opacity 0.7s cubic-bezier(1, 0, 0, 1), -webkit-transform 0.7s cubic-bezier(1, 0, 0, 1), -webkit-filter 0.7s cubic-bezier(1, 0, 0, 1);
+  transition: opacity 0.7s cubic-bezier(1, 0, 0, 1), -webkit-transform 0.7s cubic-bezier(1, 0, 0, 1), -webkit-filter 0.7s cubic-bezier(1, 0, 0, 1);
+  -o-transition: transform 0.7s cubic-bezier(1, 0, 0, 1), opacity 0.7s cubic-bezier(1, 0, 0, 1), filter 0.7s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.7s cubic-bezier(1, 0, 0, 1), opacity 0.7s cubic-bezier(1, 0, 0, 1), filter 0.7s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.7s cubic-bezier(1, 0, 0, 1), opacity 0.7s cubic-bezier(1, 0, 0, 1), filter 0.7s cubic-bezier(1, 0, 0, 1), -webkit-transform 0.7s cubic-bezier(1, 0, 0, 1), -webkit-filter 0.7s cubic-bezier(1, 0, 0, 1);
 }
 .search-active #gn-home-link {
   -webkit-transform: translateX(200px) scale(0);
@@ -73,10 +73,15 @@
   height: 100vh;
   background: rgba(0, 0, 0, 0.2);
   z-index: -1;
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: all .5s ease;
+  -o-transition: all .5s ease;
+  transition: all .5s ease;
 }
 .search-active #gn-search-backface {
-  display: block;
+  visibility: visible;
+  opacity: 1;
 }
 #gn-search {
   z-index: 1;
@@ -86,9 +91,9 @@
   left: 0;
   top: 0;
   height: 100%;
-  -webkit-transition: width 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  -o-transition: width 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  transition: width 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
+  -webkit-transition: width 0.7s cubic-bezier(1, 0, 0, 1);
+  -o-transition: width 0.7s cubic-bezier(1, 0, 0, 1);
+  transition: width 0.7s cubic-bezier(1, 0, 0, 1);
 }
 .search-active #gn-search {
   width: 100%;
@@ -113,7 +118,7 @@
   display: -ms-flexbox;
   display: flex;
   height: 42px;
-  background-color: #f8f8fb;
+  background-color: #f3f3f7;
   border-radius: 50px;
   overflow: hidden;
 }
@@ -147,19 +152,23 @@
   -ms-flex: 1;
   flex: 1;
   margin-left: -20rem;
-  -webkit-transition: margin 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  -o-transition: margin 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
-  transition: margin 0.4s cubic-bezier(0.6, 0.36, 0.23, 0.98);
+  -webkit-transition: margin 0.7s cubic-bezier(1, 0, 0, 1);
+  -o-transition: margin 0.7s cubic-bezier(1, 0, 0, 1);
+  transition: margin 0.7s cubic-bezier(1, 0, 0, 1);
 }
 .search-active #gn-search-input {
   margin-left: 21px;
+}
+#gn-search-input::-webkit-input-placeholder {
+  color: inherit;
+  opacity: .5;
 }
 #gn-search-result-view {
   display: none;
   width: 100%;
   background-color: #fff;
   border-radius: 0 0 10px 10px;
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-top: 1px solid #f3f3f7;
 }
 #gn-search-result-view.active {
   display: block;
@@ -171,11 +180,14 @@
   display: block;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover .gn-sr-item {
-  background-color: #f8f8fb;
+  background-color: #f3f3f7;
   background-color: #e2ddfd;
+  background-color: #5f42ff;
+  color: #fff;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover:active .gn-sr-item {
   background-color: #cdc5fc;
+  background-color: #4928ff;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-item {
   padding: 10px 21px;

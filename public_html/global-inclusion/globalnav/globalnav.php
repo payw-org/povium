@@ -12,7 +12,7 @@
 							type="text"
 							name=""
 							value=""
-							placeholder=""
+							placeholder="앙 깃머지~"
 							autocomplete="off"
 						>
 						<div @click="handleMagnifierClick" class="magnifier"></div>
