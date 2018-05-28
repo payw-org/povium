@@ -65,6 +65,19 @@
     background-image: url('/assets/images/pvm-icon.svg');
   }
 }
+#gn-search-backface {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+  display: none;
+}
+.search-active #gn-search-backface {
+  display: block;
+}
 #gn-search {
   z-index: 1;
   width: 78px;
@@ -144,23 +157,25 @@
 #gn-search-result-view {
   display: none;
   width: 100%;
-  background-color: #f8f8fb;
-  border-radius: 20px;
+  background-color: #fff;
+  border-radius: 0 0 10px 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
 }
 #gn-search-result-view.active {
   display: block;
 }
 #gn-search-result-view #gn-sr-list {
-  padding: 20px 0;
+  padding: 10px 0;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link {
   display: block;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover .gn-sr-item {
-  background-color: #eeeef5;
+  background-color: #f8f8fb;
+  background-color: #e2ddfd;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover:active .gn-sr-item {
-  background-color: #e5e5f0;
+  background-color: #cdc5fc;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-item {
   padding: 10px 21px;

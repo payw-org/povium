@@ -73,6 +73,21 @@
 }
 
 // globalnav search
+#gn-search-backface {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	background: rgba(0, 0, 0, .2);
+	z-index: -1;
+	display: none;
+}
+
+.search-active #gn-search-backface {
+	display: block;
+}
+
 #gn-search {
 	z-index: 1;
 	width: @search-size + @search-margin * 2;
@@ -144,26 +159,29 @@
 #gn-search-result-view {
 	display: none;
 	width: 100%;
-	background-color: @white-blue;
-	border-radius: 20px;
-	// height: 100px;
+	background-color: #fff;
+	border-radius: 0 0 10px 10px;
+	// position: relative;
+	// top: 1px;
+	border-top: 1px solid rgba(0, 0, 0, .2);
 
 	&.active {
 		display: block;
 	}
 
 	#gn-sr-list {
-		padding: 20px 0;
+		padding: 10px 0;
 
 		.gn-sr-link {
 			display: block;
 
 			&.hover .gn-sr-item {
-				background-color: @dark-white-blue;
+				background-color: @white-blue;
+				background-color: desaturate(lighten(@pvm-purple, 30%), 10%);
 			}
 
 			&.hover:active .gn-sr-item {
-				background-color: darken(@dark-white-blue, 3%);
+				background-color: darken(desaturate(lighten(@pvm-purple, 30%), 10%), 5%);
 			}
 		}
 

@@ -1,4 +1,5 @@
 <nav id="globalnav" :class="{ 'search-active': classFlags.isSearchActive }">
+	
 	<div id="gn-backface">
 		<div id="gn-container">
 			<div id="gn-search">
@@ -39,4 +40,6 @@
 			</div>
 		</div>
 	</div>
+	<div id="gn-search-backface"></div>
+
 </nav>
