@@ -12,7 +12,7 @@
 	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/global-inclusion/globalnav/globalnav.php'; ?>
 	<main id="home-main">
 		<section id="popular">
-			<h1 class="section-title popular">핫 뜨거 뜨거 핫</h1>
+			<h1 class="section-title popular">Hot 뜨거 뜨거 Hot</h1>
 			<div class="post-container">
 				<!-- <button class="next"></button> -->
 				<?php
