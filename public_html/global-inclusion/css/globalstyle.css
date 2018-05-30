@@ -1,3 +1,6 @@
+.no-tap-highlight-color {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -5,18 +8,29 @@ html {
   -moz-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  font-size: 62.5%;
+  font-size: 100%;
+}
+@media only screen and (max-width: 768px) {
+  html {
+    font-size: 80%;
+  }
+}
+@media only screen and (min-width: 1441px) {
+  html {
+    font-size: 120%;
+  }
 }
 * {
   margin: 0;
   padding: 0;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 body {
   margin: 0;
   padding: 0;
   font-family: 'JHM Pro', sans-serif;
-  color: #333;
+  color: #222;
   overflow-x: hidden;
 }
 button,
@@ -39,6 +53,7 @@ h5,
 h6 {
   padding: 0;
   margin: 0;
+  font-family: 'JHM Pro', sans-serif;
 }
 ol {
   padding: 0;
@@ -54,10 +69,10 @@ a {
   color: inherit;
 }
 ::-moz-selection {
-  background-color: #4a35f6;
+  background-color: #5f42ff;
   color: #fff;
 }
 ::selection {
-  background-color: #4a35f6;
+  background-color: #5f42ff;
   color: #fff;
 }

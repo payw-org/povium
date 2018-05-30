@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	
-	$(document).on('click', function(e) {
+	$(window).on('click touchstart', function(e) {
 		if (!document.querySelector('#gn-search-ui').contains(e.target) &&
 			!document.querySelector('#gn-search-result-view').contains(e.target)
 		) {
@@ -44,6 +44,7 @@ $(document).ready(function() {
 			
 			expandSearchInput: function() {
 				this.classFlags.isSearchActive = true;
+				// this.classFlags.isSearchResultActive = true;
 				this.$el.querySelector('#gn-search-input').focus();
 			},
 			
@@ -51,6 +52,7 @@ $(document).ready(function() {
 				this.classFlags.isSearchActive = false;
 				this.classFlags.isSearchResultActive = false;
 				this.currentItem = "";
+				this.$el.querySelector('#gn-search-input').blur();
 			},
 			
 			handleSearchInputKeyUp: function(e) {

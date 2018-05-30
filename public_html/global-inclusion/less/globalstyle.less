@@ -1,3 +1,6 @@
+@import "_global-variables";
+@import "_global-mixins";
+
 html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -5,7 +8,14 @@ html {
     -moz-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     text-size-adjust: 100%;
-	font-size: 62.5%; // 62.5% of 16px = 10px
+	font-size: 100%; // 62.5% of 16px = 10px
+
+	.responsive({
+		font-size: 80%;
+	},
+	{
+		font-size: 120%;
+	})
 }
 
 * {
@@ -18,7 +28,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'JHM Pro', sans-serif;
-    color: #333;
+    color: @soft-black;
     overflow-x: hidden;
 }
 
@@ -36,7 +46,8 @@ input::-ms-clear {
 
 p, h1, h2, h3, h4, h5, h6 {
     padding: 0;
-    margin: 0;
+	margin: 0;
+	font-family: 'JHM Pro', sans-serif;
 }
 
 ol {
@@ -56,12 +67,7 @@ a {
 }
 
 // Selection style
-::-moz-selection {
-    background-color: #4a35f6;
-    color: #fff;
-}
-
 ::selection {
-    background-color: #4a35f6;
+    background-color: @pvm-purple;
     color: #fff;
 }
