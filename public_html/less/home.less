@@ -117,11 +117,18 @@
 	margin: auto;
 	margin-bottom: 1.5rem;
 	padding-left: 1.7rem;
-	// display: flex;
+	display: flex;
 
 	&.popular {
 		&::before {
-			content: url('/assets/images/flare.svg');
+			content: "";
+			flex: 1;
+			max-width: 2rem;
+			margin-right: .8rem;
+			background-image: url('/assets/images/flare.svg');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: auto;
 		}
 	}
 }
