@@ -11,8 +11,8 @@
 <body>
 	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/global-inclusion/globalnav/globalnav.php'; ?>
 	<main id="home-main">
-		<section id="popular">
-			<h1 class="section-title popular">Hot 뜨거 뜨거 Hot</h1>
+		<section id="popular" class="post-section">
+			<h1 class="section-title popular">Hot</h1>
 			<div class="post-container">
 				<!-- <button class="next"></button> -->
 				<?php
@@ -32,6 +32,26 @@
 				<?php
 				}
 				?>
+			</div>
+		</section>
+
+		<!-- 사용자 취향대로 선별된 -->
+		<section id="technology" class="post-section narrow">
+			<h1 class="section-title technology">Technology</h1>
+			<div class="hero-container">
+				<div class="col col--featured">
+					<div class="starred">
+						<img class="niche" src="/assets/images/wwdc-2018.jpg" alt="wwdc2018">
+						<div class="cropped">
+							<img class="blurred" src="/assets/images/wwdc-2018.jpg">
+						</div>
+					</div>
+				</div>
+				<div class="col col--list">
+					<ol class="post-container">
+						<li class="post"></li>
+					</ol>
+				</div>
 			</div>
 		</section>
 	</main>

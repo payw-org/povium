@@ -4,7 +4,6 @@
 #popular {
 	position: relative;
 	overflow-y: hidden;
-	padding-top: 1.5rem;
 
 	.post-container {
 		// background: rgb(150, 150, 150);
@@ -51,6 +50,8 @@
 				border-radius: 1rem 1rem 0 0;
 				display: block;
 				width: 100%;
+				height: 10rem;
+				object-fit: cover;
 				pointer-events: none;
 				user-select: none;
 			}
@@ -111,15 +112,24 @@
 	}
 }
 
-.section-title {
-	.pvm-text-6;
-	max-width: 60rem;
-	margin: auto;
-	margin-bottom: 1.5rem;
-	padding-left: 1.7rem;
-	display: flex;
+.post-section {
 
-	&.popular {
+	padding-top: 1.5rem;
+
+	&.narrow {
+		width: calc(100% - 4rem);
+		max-width: 90rem;
+		margin: auto;
+	}
+
+	.section-title {
+		.pvm-text-6;
+		max-width: 60rem;
+		margin: auto;
+		margin-bottom: 1.5rem;
+		padding-left: 1.7rem;
+		display: flex;
+	
 		&::before {
 			content: "";
 			flex: 1;
@@ -129,6 +139,59 @@
 			background-repeat: no-repeat;
 			background-position: center;
 			background-size: auto;
+			position: relative;
+		}
+	
+		&.popular {
+			&::before {
+				background-image: url('/assets/images/flare.svg');
+				top: -.3rem;
+			}
+		}
+	
+		&.technology {
+			&::before {
+				background-image: url('/assets/images/chip.svg');
+				top: .1rem;
+			}
+		}
+	}
+
+	.hero-container {
+		display: flex;
+
+		.col {
+			flex: 1;
+		}
+
+		.col--featured {
+			.starred {
+				width: 100%;
+				position: relative;
+				overflow: hidden;
+
+				.niche {
+					width: 100%;
+				}
+
+				.cropped {
+					position: absolute;
+					right: 0;
+					top: 0;
+					width: 50%;
+					height: 100%;
+					overflow: hidden;
+
+					.blurred {
+						position: absolute;
+						top: 0;
+						right: 0;
+						height: 100%;
+						filter: blur(10px);
+					}
+				}
+
+			}
 		}
 	}
 }

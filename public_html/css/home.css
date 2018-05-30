@@ -4,7 +4,6 @@
 #popular {
   position: relative;
   overflow-y: hidden;
-  padding-top: 1.5rem;
 }
 #popular .post-container {
   white-space: nowrap;
@@ -51,6 +50,9 @@
   border-radius: 1rem 1rem 0 0;
   display: block;
   width: 100%;
+  height: 10rem;
+  -o-object-fit: cover;
+  object-fit: cover;
   pointer-events: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -111,7 +113,15 @@
 #popular .next:hover {
   opacity: .8;
 }
-.section-title {
+.post-section {
+  padding-top: 1.5rem;
+}
+.post-section.narrow {
+  width: calc(100% - 4rem);
+  max-width: 90rem;
+  margin: auto;
+}
+.post-section .section-title {
   font-size: 35px;
   max-width: 60rem;
   margin: auto;
@@ -122,16 +132,16 @@
   display: flex;
 }
 @media only screen and (max-width: 768px) {
-  .section-title {
+  .post-section .section-title {
     font-size: 28px;
   }
 }
 @media only screen and (min-width: 1441px) {
-  .section-title {
+  .post-section .section-title {
     font-size: 42px;
   }
 }
-.section-title.popular::before {
+.post-section .section-title::before {
   content: "";
   -webkit-box-flex: 1;
   -ms-flex: 1;
@@ -142,4 +152,47 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: auto;
+  position: relative;
+}
+.post-section .section-title.popular::before {
+  background-image: url('/assets/images/flare.svg');
+  top: -0.3rem;
+}
+.post-section .section-title.technology::before {
+  background-image: url('/assets/images/chip.svg');
+  top: .1rem;
+}
+.post-section .hero-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.post-section .hero-container .col {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.post-section .hero-container .col--featured .starred {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.post-section .hero-container .col--featured .starred .niche {
+  width: 100%;
+}
+.post-section .hero-container .col--featured .starred .cropped {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+}
+.post-section .hero-container .col--featured .starred .cropped .blurred {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  -webkit-filter: blur(10px);
+  filter: blur(10px);
 }
