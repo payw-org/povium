@@ -117,7 +117,6 @@
   padding-top: 1.5rem;
 }
 .post-section.narrow {
-  width: calc(100% - 4rem);
   max-width: 90rem;
   margin: auto;
 }
@@ -166,6 +165,8 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  width: calc(100% - 3.4rem);
+  margin: auto;
 }
 .post-section .hero-container .col {
   -webkit-box-flex: 1;
