@@ -1,0 +1,30 @@
+{
+	"atomKeymap.promptV3Features": true,
+	"editor.multiCursorModifier": "ctrlCmd",
+	"editor.fontFamily": "SF Mono",
+	"editor.fontSize": 13,
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"window.menuBarVisibility": "toggle",
+	"php.suggest.basic": false,
+	"editor.wordWrap": "on",
+	"editor.smoothScrolling": true,
+	"editor.overviewRulerBorder": false,
+	"workbench.colorCustomizations": {
+		"widget.shadow": "#00000020",
+		"scrollbar.shadow": "#00000000",
+		"dropdown.border": "#ff0000",
+		"editor.selectionHighlightBorder": "#ffffff00",
+		"editor.selectionHighlightBackground": "#ffffff15",
+		"editorOverviewRuler.border": "#00000000",
+		// "contrastBorder": "#00000020"
+		// "sideBar.border": "#00000030",
+		// "editorGroup.border": "#00000030",
+		// "activityBar.border": "#00000030",
+		"tab.border": "#00000000",
+	},
+	"workbench.colorTheme": "One Dark Pro Vivid",
+	"git.autofetch": true,
+	"editor.renderIndentGuides": false,
+	"editor.tabSize": 2
+}
