@@ -291,8 +291,6 @@
   display: block;
 }
 #gn-search-result-view #gn-sr-list .gn-sr-link.hover .gn-sr-item {
-  background-color: #F1F1F2;
-  background-color: #e2ddfd;
   background-color: #5f42ff;
   color: #fff;
 }
