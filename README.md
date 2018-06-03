@@ -1,9 +1,7 @@
 # Povium
 
-Plan.md를 읽으세요.
+포비엄은 어떠한 광고 없이 우수한 퀄리티의 컨텐츠를 취급하는 멀티 출판 플랫폼입니다.
 
-macOS High Sierra 10.13.4
-https://drive.google.com/file/d/1NCYqmwqgbt_PahzmVmiTtYw59lpArjV7/view
+깔끔한 UI와 눈쌀을 찌푸리게 하는 광고 없이 플랫폼을 이용할 수 있으며 누구나 크리에이터가 되어 소설, 시, 만화, 리뷰, 기사, 튜토리얼 등 글과 그림, 영상으로 구성된 다양한 형태의 포스트를 창작하고 업로드할 수 있습니다.
 
-tutorial
-https://techsviewer.com/install-macos-high-sierra-vmware-windows/
+우리는 더 나은 퀄리티의 포스트를 제공하기 위해, 또한 크리에이터에게는 더 좋은 퀄리티의 포스트를 만드는데에 전념할 수 있도록 구독료를 받고 수익을 나누어 줄 계획입니다.

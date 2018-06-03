@@ -59,6 +59,7 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	transition: transform @pvm-animation, opacity @pvm-animation, filter @pvm-animation;
+	will-change: transform, opacity;
 
 	.search-active & {
 		transform: scale(0);
@@ -88,7 +89,8 @@
 		.sign-in, .register {
 			transition: transform @pvm-animation, opacity @pvm-animation;
 			position: relative;
-			padding: 5px;
+			padding: 3px;
+			will-change: transform, opacity;
 
 			&:hover {
 				.bg {
@@ -114,7 +116,7 @@
 				left: 0;
 				bottom: 0;
 				width: 100%;
-				height: 0px;
+				height: 2px;
 				background-color: red;
 				transition: height @pvm-animation;
 				transition-duration: .3s;
@@ -130,16 +132,16 @@
 			transition-delay: .05s;
 
 			.bg {
-				background-color: @pvm-purple;
+				background-color: @pvm-green;
 			}
 		}
 
 		.register {
 			transition-delay: .1s;
-			margin-left: 5px;
+			margin-left: 7px;
 
 			.bg {
-				background-color: @pvm-green;
+				background-color: @pvm-purple;
 			}
 		}
 	}
@@ -152,7 +154,7 @@
 	top: 0;
 	width: 100%;
 	height: 100vh;
-	background: rgba(0, 0, 0, .2);
+	background: rgba(0, 0, 0, .3);
 	z-index: -1;
 	visibility: hidden;
 	opacity: 0;
@@ -173,6 +175,7 @@
 	top: 0;
 	height: 100%;
 	transition: width @pvm-animation;
+	will-change: width;
 
 	.search-active & {
 		width: 100%;
