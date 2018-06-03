@@ -16,7 +16,7 @@
 }
 #popular .post-scroll-view .next,
 #popular .post-scroll-view .previous {
-  z-index: 1;
+  z-index: 10;
   position: absolute;
   top: 50%;
   width: 3rem;
@@ -24,8 +24,8 @@
   border-radius: 50px;
   border: none;
   background-color: #F1F1F2;
-  -webkit-box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.15);
   opacity: 0;
   -webkit-transition: opacity .3s ease, -webkit-transform .1s ease;
   transition: opacity .3s ease, -webkit-transform .1s ease;
@@ -56,12 +56,12 @@
   transform: translateY(-50%) scale(0.9);
 }
 #popular .post-scroll-view .next {
-  right: 1.5rem;
+  right: 2rem;
   background-image: url('/assets/images/right-arrow.svg');
   background-position: 55% 50%;
 }
 #popular .post-scroll-view .previous {
-  left: 1.5rem;
+  left: 2rem;
   background-image: url('/assets/images/left-arrow.svg');
   background-position: 45% 50%;
 }
@@ -91,7 +91,7 @@
   vertical-align: top;
   margin: 0;
   margin-left: 1.7rem;
-  cursor: default;
+  cursor: pointer;
   -webkit-transition: -webkit-transform .2s ease;
   transition: -webkit-transform .2s ease;
   -o-transition: transform .2s ease;

@@ -17,7 +17,7 @@
 		}
 
 		.next, .previous {
-			z-index: 1;
+			z-index: 10;
 			position: absolute;
 			top: 50%;
 			width: 3rem;
@@ -25,7 +25,7 @@
 			border-radius: 50px;
 			border: none;
 			background-color: @white-blue;
-			box-shadow: 0 .7rem 1rem rgba(0,0,0,.2);
+			box-shadow: 0 .7rem 1rem rgba(0,0,0,.15);
 			opacity: 0;
 			transition: opacity .3s ease, transform .1s ease;
 			transform: translateY(-50%);
@@ -49,13 +49,13 @@
 		}
 
 		.next {
-			right: 1.5rem;
+			right: 2rem;
 			background-image: url('/assets/images/right-arrow.svg');
 			background-position: 55% 50%;
 		}
 
 		.previous {
-			left: 1.5rem;
+			left: 2rem;
 			background-image: url('/assets/images/left-arrow.svg');
 			background-position: 45% 50%;
 		}
@@ -83,7 +83,7 @@
 				margin: 0;
 				margin-left: 1.7rem;
 				// box-shadow: 0 .3rem 1rem rgba(0, 0, 0, .2);
-				cursor: default;
+				cursor: pointer;
 				transition: transform .2s ease;
 				user-select: none;
 
@@ -92,7 +92,6 @@
 				}
 
 				&:hover {
-					// box-shadow: 0 0 0 .3rem @pvm-purple;
 					color: @pvm-purple;
 				}
 

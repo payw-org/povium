@@ -53,6 +53,9 @@
   -o-transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
   transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
   transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), filter 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+  -webkit-transition-delay: .1s;
+  -o-transition-delay: .1s;
+  transition-delay: .1s;
   will-change: transform, opacity;
 }
 .search-active #gn-home-link {
@@ -60,6 +63,9 @@
   -ms-transform: scale(0);
   transform: scale(0);
   opacity: 0;
+  -webkit-transition-delay: 0s;
+  -o-transition-delay: 0s;
+  transition-delay: 0s;
 }
 @media only screen and (max-width: 768px) {
   #gn-home-link {
@@ -144,14 +150,24 @@
 #gn-sign-register .container .sign-in .bg {
   background-color: #13edbd;
 }
+.search-active #gn-sign-register .container .sign-in {
+  -webkit-transition-delay: .05s;
+  -o-transition-delay: .05s;
+  transition-delay: .05s;
+}
 #gn-sign-register .container .register {
-  -webkit-transition-delay: .1s;
-  -o-transition-delay: .1s;
-  transition-delay: .1s;
+  -webkit-transition-delay: 0s;
+  -o-transition-delay: 0s;
+  transition-delay: 0s;
   margin-left: 7px;
 }
 #gn-sign-register .container .register .bg {
   background-color: #5f42ff;
+}
+.search-active #gn-sign-register .container .register {
+  -webkit-transition-delay: .1s;
+  -o-transition-delay: .1s;
+  transition-delay: .1s;
 }
 #gn-search-backface {
   position: absolute;
@@ -210,6 +226,12 @@
   background-color: #F1F1F2;
   border-radius: 50px;
   overflow: hidden;
+  -webkit-transition: border-radius 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+  -o-transition: border-radius 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+  transition: border-radius 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+}
+.search-active #gn-search-ui {
+  border-radius: 5px;
 }
 #gn-search-ui .magnifier {
   background-image: url('/assets/images/magnifier.svg');
@@ -256,7 +278,7 @@
   display: none;
   width: 100%;
   background-color: #fff;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 5px 5px;
   border-top: 1px solid #F1F1F2;
 }
 #gn-search-result-view.active {
