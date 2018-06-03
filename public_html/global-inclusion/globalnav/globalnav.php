@@ -19,7 +19,9 @@
 					</div>
 				</div>
 
-				<aside v-bind:class="{ 'active': classFlags.isSearchResultActive }" id="gn-search-result-view">
+				<aside v-bind:class="{ 'active': classFlags.isSearchResultActive }"
+					id="gn-search-result-view"
+				>
 					<ol id="gn-sr-list">
 						<a v-for="item in searchResults"
 							v-bind:href="item.link"
@@ -35,8 +37,22 @@
 					</ol>
 				</aside>
 			</div>
+
 			<div id="gn-logo-wrapper">
 				<a id="gn-home-link" href="/"></a>
+			</div>
+
+			<div id="gn-sign-register">
+				<div class="container">
+					<a href="" class="sign-in" href="">
+						<div class="bg"></div>
+						<span>로그인</span>
+					</a>
+					<a href="" class="register" href="">
+						<div class="bg"></div>
+						<span>회원가입</span>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>

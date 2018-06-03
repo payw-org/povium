@@ -66,16 +66,9 @@
 					font-weight: 700;
 					line-height: 1;
 				}
-				.contents {
-					display: block;
-					font-size: 1.2rem;
-					font-weight: 400;
-					margin-top: 1rem;
-					line-height: 1;
-				}
 				
 				.creator-and-view {
-					margin-top: 1.5rem;
+					margin-top: 1rem;
 					display: flex;
 					justify-content: space-between;
 					font-size: .87rem;
@@ -157,38 +150,46 @@
 	}
 
 	.hero-container {
-		display: flex;
+		display: block;
 		width: calc(100% - 3.4rem);
 		margin: auto;
 
 		.col {
-			flex: 1;
+			display: inline-block;
 		}
 
 		.col--featured {
-			.starred {
+
+			width: 50%;
+
+			.featured {
 				width: 100%;
+				height: 25rem;
 				position: relative;
 				overflow: hidden;
+				border-radius: 1rem;
 
 				.niche {
 					width: 100%;
+					height: 100%;
+					object-fit: cover;
 				}
 
-				.cropped {
+				.content-wrapper {
+					width: 50%;
+					height: 100%;
 					position: absolute;
 					right: 0;
 					top: 0;
-					width: 50%;
-					height: 100%;
-					overflow: hidden;
+					background: rgba(0, 0, 0, .5);
+					padding: 1rem;
+					color: #fff;
 
-					.blurred {
-						position: absolute;
-						top: 0;
-						right: 0;
-						height: 100%;
-						filter: blur(10px);
+					.star {
+						display: block;
+						&::before {
+
+						}
 					}
 				}
 

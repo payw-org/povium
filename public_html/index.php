@@ -12,7 +12,7 @@
 	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/global-inclusion/globalnav/globalnav.php'; ?>
 	<main id="home-main">
 		<section id="popular" class="post-section">
-			<h1 class="section-title popular">Hot</h1>
+			<h1 class="section-title popular">인기 있는 글</h1>
 			<div class="post-container">
 				<!-- <button class="next"></button> -->
 				<?php
@@ -21,8 +21,7 @@
 				<div class="post">
 					<img class="img" src="assets/images/post-test-img-4.png" alt="">
 					<div class="manifesto">
-						<h1 class="title">포스트 제목 <?php echo $i+1; ?></h1>
-						<p class="contents">포스트 내용 <?php echo $i + 1; ?></p>
+						<h1 class="title">제목 <?php echo $i+1; ?></h1>
 						<div class="creator-and-view">
 							<a class="creator" href="">Creator<?php echo $i + 1; ?></a>
 							<span class="view-count">1234 viewed</span>
@@ -35,15 +34,17 @@
 			</div>
 		</section>
 
-		<!-- 사용자 취향대로 선별된 -->
+		<!-- Category : based on user favorites. -->
 		<section id="technology" class="post-section narrow">
 			<h1 class="section-title technology">Technology</h1>
 			<div class="hero-container">
 				<div class="col col--featured">
-					<div class="starred">
+					<div class="featured">
 						<img class="niche" src="/assets/images/wwdc-2018.jpg" alt="wwdc2018">
-						<div class="cropped">
-							<img class="blurred" src="/assets/images/wwdc-2018.jpg">
+						<div class="content-wrapper">
+							<span class="star">인기</span>
+							<h1 class="title">인기글 제목</h1>
+							<p class="copy"></p>
 						</div>
 					</div>
 				</div>
