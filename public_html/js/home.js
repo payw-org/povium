@@ -9,7 +9,7 @@ var popularScrollView = new Vue({
 	data: {
 		remUnit: null,
 		postWidth: null,
-		totalPostNum: 20,
+		totalPostNum: 30,
 		maxPostNum: null,
 		leftOverflowPostNum: 0,
 		rightOverflowPostNum: 0,

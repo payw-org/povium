@@ -230,9 +230,6 @@
   -o-transition: border-radius 0.5s cubic-bezier(0.68, 0.17, 0, 1);
   transition: border-radius 0.5s cubic-bezier(0.68, 0.17, 0, 1);
 }
-.search-active #gn-search-ui {
-  border-radius: 5px;
-}
 #gn-search-ui .magnifier {
   background-image: url('/assets/images/magnifier.svg');
   background-repeat: no-repeat;

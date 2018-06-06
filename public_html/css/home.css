@@ -3,19 +3,13 @@
 }
 #popular {
   position: relative;
-  overflow-y: hidden;
 }
-#popular .post-scroll-view {
-  overflow: hidden;
-  font-size: 0;
+#popular .post-scroll {
   position: relative;
+  overflow-x: hidden;
 }
-#popular .post-scroll-view:hover .next,
-#popular .post-scroll-view:hover .previous {
-  opacity: 1;
-}
-#popular .post-scroll-view .next,
-#popular .post-scroll-view .previous {
+#popular .post-scroll .next,
+#popular .post-scroll .previous {
   z-index: 10;
   position: absolute;
   top: 50%;
@@ -26,7 +20,6 @@
   background-color: #F1F1F2;
   -webkit-box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.15);
   box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.15);
-  opacity: 0;
   -webkit-transition: opacity .3s ease, -webkit-transform .1s ease;
   transition: opacity .3s ease, -webkit-transform .1s ease;
   -o-transition: opacity .3s ease, transform .1s ease;
@@ -38,42 +31,46 @@
   will-change: transform;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 40% 40%;
+  background-size: 30% 30%;
 }
-#popular .post-scroll-view .next.hidden,
-#popular .post-scroll-view .previous.hidden {
+#popular .post-scroll .next.hidden,
+#popular .post-scroll .previous.hidden {
   opacity: 0;
   visibility: hidden;
 }
-#popular .post-scroll-view .next:hover,
-#popular .post-scroll-view .previous:hover {
-  opacity: 1;
-}
-#popular .post-scroll-view .next:active,
-#popular .post-scroll-view .previous:active {
+#popular .post-scroll .next:active,
+#popular .post-scroll .previous:active {
   -webkit-transform: translateY(-50%) scale(0.9);
   -ms-transform: translateY(-50%) scale(0.9);
   transform: translateY(-50%) scale(0.9);
+  opacity: 1;
 }
-#popular .post-scroll-view .next {
+#popular .post-scroll .next {
   right: 2rem;
   background-image: url('/assets/images/right-arrow.svg');
-  background-position: 55% 50%;
+  background-position: 54% 50%;
 }
-#popular .post-scroll-view .previous {
+#popular .post-scroll .previous {
   left: 2rem;
   background-image: url('/assets/images/left-arrow.svg');
-  background-position: 45% 50%;
+  background-position: 46% 50%;
 }
-#popular .post-scroll-view .post-container {
-  display: inline-block;
+#popular .post-scroll:hover .next,
+#popular .post-scroll:hover .previous {
+  opacity: 1;
+}
+#popular .post-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
   white-space: nowrap;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   position: relative;
-  font-size: 0;
   -webkit-transition: -webkit-transform 0.8s cubic-bezier(0.35, 0.59, 0.21, 0.99);
   transition: -webkit-transform 0.8s cubic-bezier(0.35, 0.59, 0.21, 0.99);
   -o-transition: transform 0.8s cubic-bezier(0.35, 0.59, 0.21, 0.99);
@@ -81,40 +78,39 @@
   transition: transform 0.8s cubic-bezier(0.35, 0.59, 0.21, 0.99), -webkit-transform 0.8s cubic-bezier(0.35, 0.59, 0.21, 0.99);
   will-change: transform;
 }
-#popular .post-scroll-view .post-container .post {
-  width: 17.3rem;
-  background: #F1F1F2;
-  border-radius: 5px;
-  border-bottom: 1px solid #dbdbdb;
+#popular .post-container .post {
+  min-width: 17.3rem;
+  border-radius: 10px;
+  border: 1px solid #dbdbdb;
   overflow: hidden;
   display: inline-block;
   vertical-align: top;
   margin: 0;
   margin-left: 1.7rem;
   cursor: pointer;
-  -webkit-transition: -webkit-transform .2s ease;
-  transition: -webkit-transform .2s ease;
-  -o-transition: transform .2s ease;
-  transition: transform .2s ease;
-  transition: transform .2s ease, -webkit-transform .2s ease;
+  -webkit-transition: -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
+  transition: -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
+  -o-transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
-#popular .post-scroll-view .post-container .post:last-child {
+#popular .post-container .post:last-child {
   margin-right: 1.7rem;
 }
-#popular .post-scroll-view .post-container .post:hover {
+#popular .post-container .post:hover {
   color: #5f42ff;
 }
-#popular .post-scroll-view .post-container .post:active {
+#popular .post-container .post:active {
   -webkit-transform: scale(0.95);
   -ms-transform: scale(0.95);
   transform: scale(0.95);
   overflow: hidden;
 }
-#popular .post-scroll-view .post-container .post .img {
+#popular .post-container .post .img {
   border-radius: 5px 5px 0 0;
   display: block;
   width: 100%;
@@ -127,17 +123,17 @@
   -ms-user-select: none;
   user-select: none;
 }
-#popular .post-scroll-view .post-container .post .manifesto {
+#popular .post-container .post .manifesto {
   padding: 1rem;
   white-space: initial;
 }
-#popular .post-scroll-view .post-container .post .manifesto .title {
+#popular .post-container .post .manifesto .title {
   display: block;
   font-size: 1.7rem;
   font-weight: 700;
   line-height: 1;
 }
-#popular .post-scroll-view .post-container .post .manifesto .creator-and-view {
+#popular .post-container .post .manifesto .creator-and-view {
   margin-top: 1rem;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -148,7 +144,7 @@
   font-size: .87rem;
   font-weight: 500;
 }
-#popular .post-scroll-view .post-container .post .manifesto .creator-and-view .creator:hover {
+#popular .post-container .post .manifesto .creator-and-view .creator:hover {
   text-decoration: underline;
 }
 .post-section {
@@ -177,19 +173,6 @@
   .post-section .section-title {
     font-size: 42px;
   }
-}
-.post-section .section-title::before {
-  content: "";
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 2rem;
-  margin-right: .8rem;
-  background-image: url('/assets/images/flare.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto;
-  position: relative;
 }
 .post-section .section-title.popular::before {
   background-image: url('/assets/images/flare.svg');

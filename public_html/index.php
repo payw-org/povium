@@ -12,8 +12,10 @@
 	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/global-inclusion/globalnav/globalnav.php'; ?>
 	<main id="home-main">
 		<section id="popular" class="post-section">
-			<h1 class="section-title popular">인기 포스트</h1>
-			<div class="post-scroll-view">
+			<h1 class="section-title popular">인기 포스트 30</h1>
+
+			<div class="post-scroll">
+
 				<button
 					class="previous"
 					v-bind:class="{ 'hidden': popularPrevBtnHidden }"
@@ -24,16 +26,18 @@
 					v-bind:class="{ 'hidden': popularNextBtnHidden }"
 					@click="initScroll();movePopularLeft()"
 				></button>
+
 				<div
 					class="post-container"
 					v-bind:style="{	transform: popularScrollStyle }"
 					@touchmove="touchScrollMove($event)"
 				>
+
 					<?php
-					for ($i = 0; $i < 20; $i++) {
+					for ($i = 0; $i < 30; $i++) {
 					?>
 					<div class="post">
-						<img class="img" src="assets/images/post-test-img-4.png" alt="">
+						<img class="img" src="http://via.placeholder.com/550x550" alt="">
 						<div class="manifesto">
 							<h1 class="title">제목 <?php echo $i+1; ?></h1>
 							<div class="creator-and-view">
@@ -46,6 +50,7 @@
 					}
 					?>
 				</div>
+
 			</div>
 
 		</section>
