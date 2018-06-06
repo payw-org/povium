@@ -8,7 +8,6 @@
 	.post-scroll {
 
 		position: relative;
-		overflow-x: hidden;
 
 		.next, .previous {
 			z-index: 10;
@@ -18,7 +17,7 @@
 			height: 3rem;
 			border-radius: 50px;
 			border: none;
-			background-color: @white-blue;
+			background-color: #fff;
 			box-shadow: 0 .7rem 1rem rgba(0,0,0,.15);
 			// opacity: 0;
 			transition: opacity .3s ease, transform .1s ease;
@@ -64,14 +63,14 @@
 		white-space: nowrap;
 		user-select: none;
 		position: relative;
-		transition: transform 0.8s cubic-bezier(.35,.59,.21,.99);
+		transition: transform 0.5s cubic-bezier(.35,.59,.21,.99);
 		will-change: transform;
 
 		.post {
 			min-width: 17.3rem;
-			// background: @white-blue;
+			background: @white-blue;
 			border-radius: 10px;
-			border: 1px solid @soft-border-gray;
+			// border: 1px solid @soft-border-gray;
 			overflow: hidden;
 			display: inline-block;
 			vertical-align: top;
@@ -86,7 +85,8 @@
 			}
 
 			&:hover {
-				color: @pvm-purple;
+				// color: @pvm-purple;
+				box-shadow: 0 0 0 .3rem #5f4efb;
 			}
 
 			&:active {
