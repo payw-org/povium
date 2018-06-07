@@ -1,6 +1,35 @@
+// Functions
+function resizePopularPostHeight() {
+	console.log('resizing window');
+	var winWidth = document.body.clientWidth;
+	console.log(winWidth);
+	document.querySelector('#popular .post-scroll').style.height = winWidth / 2.5 + 'px';
+}
+
+function initHomeUI() {
+	resizePopularPostHeight();
+}
+
+
+// Event Listeners
 document.querySelector('body').addEventListener('touchstart', function() {
 	console.log('touched');
 });
+
+window.addEventListener('resize', function() {
+	resizePopularPostHeight();
+});
+
+// Run functions after onload
+initHomeUI();
+
+
+
+
+
+
+
+
 
 var popularScrollView = new Vue({
 

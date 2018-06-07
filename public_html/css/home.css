@@ -6,86 +6,24 @@
 }
 #popular .post-scroll {
   position: relative;
-}
-#popular .post-scroll .next,
-#popular .post-scroll .previous {
-  z-index: 10;
-  position: absolute;
-  top: 50%;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50px;
-  border: none;
-  background-color: #fff;
-  -webkit-box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.15);
-  box-shadow: 0 0.7rem 1rem rgba(0, 0, 0, 0.15);
-  -webkit-transition: opacity .3s ease, -webkit-transform .1s ease;
-  transition: opacity .3s ease, -webkit-transform .1s ease;
-  -o-transition: opacity .3s ease, transform .1s ease;
-  transition: opacity .3s ease, transform .1s ease;
-  transition: opacity .3s ease, transform .1s ease, -webkit-transform .1s ease;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  will-change: transform;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 30% 30%;
-}
-#popular .post-scroll .next.hidden,
-#popular .post-scroll .previous.hidden {
-  opacity: 0;
-  visibility: hidden;
-}
-#popular .post-scroll .next:active,
-#popular .post-scroll .previous:active {
-  -webkit-transform: translateY(-50%) scale(0.9);
-  -ms-transform: translateY(-50%) scale(0.9);
-  transform: translateY(-50%) scale(0.9);
-  opacity: 1;
-}
-#popular .post-scroll .next {
-  right: 2rem;
-  background-image: url('/assets/images/right-arrow.svg');
-  background-position: 54% 50%;
-}
-#popular .post-scroll .previous {
-  left: 2rem;
-  background-image: url('/assets/images/left-arrow.svg');
-  background-position: 46% 50%;
-}
-#popular .post-scroll:hover .next,
-#popular .post-scroll:hover .previous {
-  opacity: 1;
+  max-height: 25rem;
 }
 #popular .post-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  white-space: nowrap;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   position: relative;
-  -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.35, 0.59, 0.21, 0.99);
-  transition: -webkit-transform 0.5s cubic-bezier(0.35, 0.59, 0.21, 0.99);
-  -o-transition: transform 0.5s cubic-bezier(0.35, 0.59, 0.21, 0.99);
-  transition: transform 0.5s cubic-bezier(0.35, 0.59, 0.21, 0.99);
-  transition: transform 0.5s cubic-bezier(0.35, 0.59, 0.21, 0.99), -webkit-transform 0.5s cubic-bezier(0.35, 0.59, 0.21, 0.99);
-  will-change: transform;
+  height: 100%;
+  width: 70vw;
+  margin: auto;
 }
 #popular .post-container .post {
-  min-width: 17.3rem;
-  background: #F1F1F2;
-  border-radius: 10px;
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  display: inline-block;
-  vertical-align: top;
-  margin: 0;
-  margin-left: 1.7rem;
   cursor: pointer;
   -webkit-transition: -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
   transition: -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
@@ -97,13 +35,6 @@
   -ms-user-select: none;
   user-select: none;
 }
-#popular .post-container .post:last-child {
-  margin-right: 1.7rem;
-}
-#popular .post-container .post:hover {
-  -webkit-box-shadow: 0 0 0 .3rem #5f4efb;
-  box-shadow: 0 0 0 .3rem #5f4efb;
-}
 #popular .post-container .post:active {
   -webkit-transform: scale(0.95);
   -ms-transform: scale(0.95);
@@ -111,10 +42,9 @@
   overflow: hidden;
 }
 #popular .post-container .post .img {
-  border-radius: 5px 5px 0 0;
   display: block;
   width: 100%;
-  height: 10rem;
+  height: 100%;
   -o-object-fit: cover;
   object-fit: cover;
   pointer-events: none;
@@ -124,6 +54,9 @@
   user-select: none;
 }
 #popular .post-container .post .manifesto {
+  position: absolute;
+  right: 0;
+  bottom: 0;
   padding: 1rem;
   white-space: initial;
 }

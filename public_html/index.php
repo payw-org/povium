@@ -16,17 +16,6 @@
 
 			<div class="post-scroll">
 
-				<button
-					class="previous"
-					v-bind:class="{ 'hidden': popularPrevBtnHidden }"
-					@click="initScroll();movePopularRight()"
-				></button>
-				<button
-					class="next"
-					v-bind:class="{ 'hidden': popularNextBtnHidden }"
-					@click="initScroll();movePopularLeft()"
-				></button>
-
 				<div
 					class="post-container"
 					v-bind:style="{	transform: popularScrollStyle }"
@@ -34,10 +23,14 @@
 				>
 
 					<?php
-					for ($i = 0; $i < 30; $i++) {
+					$transform_percent = 0;
+					for ($i = 0; $i < 3; $i++) {
 					?>
-					<div class="post">
-						<img class="img" src="http://via.placeholder.com/550x550" alt="">
+					<div
+						class="post"
+						style="transform: translateX(<?php echo $transform_percent . '%'; ?>)"
+					>
+						<img class="img" src="/assets/images/post-test-img-5.png" alt="">
 						<div class="manifesto">
 							<h1 class="title">제목 <?php echo $i+1; ?></h1>
 							<div class="creator-and-view">
@@ -47,6 +40,7 @@
 						</div>
 					</div>
 					<?php
+						$transform_percent += 100;
 					}
 					?>
 				</div>
