@@ -1,110 +1,60 @@
-// Functions
-function resizePopularPostHeight() {
-	console.log('resizing window');
-	var winWidth = document.body.clientWidth;
-	console.log(winWidth);
-	document.querySelector('#popular .post-scroll').style.height = winWidth / 2.5 + 'px';
+class HomeController {
+	constructor() {
+		console.log('A HomeController object has been created.');
+		this.homeView = new HomeView();
+	}
 }
 
-function initHomeUI() {
-	resizePopularPostHeight();
-}
+class HomeView {
+	constructor() {
+		console.log('A HomeView object has been created.');
 
+		// DOM data
 
-// Event Listeners
-document.querySelector('body').addEventListener('touchstart', function() {
-	console.log('touched');
-});
+		this.orgPosX = 0;
+		this.distance = 0;
+		this.slidePos = 0;
+		this.popularPosts = document.querySelectorAll('#popular .post');
+		for (var i = 0; i < this.popularPosts.length; i++) {
+			this.popularPosts[i].addEventListener('touchstart', e => {
+				this.orgPosX = e.touches[0].pageX;
+			});
 
-window.addEventListener('resize', function() {
-	resizePopularPostHeight();
-});
+			this.popularPosts[i].addEventListener('touchmove', e => {
+				document.querySelector('#popular .post-container').classList.add('moving');
+				let newPosX = e.touches[0].pageX;
+				this.distance = newPosX - this.orgPosX;
 
-// Run functions after onload
-initHomeUI();
+				this.popularPosts.forEach((post) => {
+					let percent = post.getAttribute('data-translateX-percent');
+					post.style.transform = 'translateX(calc(' + percent + '% + ' + this.distance + 'px))';
+				});
 
+			});
 
-
-
-
-
-
-
-
-var popularScrollView = new Vue({
-
-	el: '#popular',
-
-	data: {
-		remUnit: null,
-		postWidth: null,
-		totalPostNum: 30,
-		maxPostNum: null,
-		leftOverflowPostNum: 0,
-		rightOverflowPostNum: 0,
-		postNumToScrollLeft: 0,
-		postNumToScrollRight: 0,
-		popularScrollStyle: 'translateX(0)',
-		popularPrevBtnHidden: true,
-		popularNextBtnHidden: true,
-		touchPos: 0
-	},
-
-	methods: {
-		initScroll: function() {
-			this.remUnit = window.getComputedStyle(document.documentElement)['font-size'];
-			this.postWidth = (1.7 + 17.3) * parseFloat(this.remUnit);
-
-			// Get the max number of posts in window.
-			this.maxPostNum = parseInt(window.innerWidth / this.postWidth);
-			this.rightOverflowPostNum = this.totalPostNum - this.maxPostNum - this.leftOverflowPostNum;
-
-			this.postNumToScrollLeft = this.maxPostNum;
-			this.postNumToScrollRight = this.maxPostNum;
-
-			// Calculate the amount of posts to scroll
-			if (this.postNumToScrollLeft > this.leftOverflowPostNum) {
-				this.postNumToScrollLeft = this.leftOverflowPostNum;
-			}
-
-			if (this.postNumToScrollRight > this.rightOverflowPostNum) {
-				this.postNumToScrollRight = this.rightOverflowPostNum;
-			}
-
-
-			if (this.leftOverflowPostNum > 0) {
-				this.popularPrevBtnHidden = false;
-			} else {
-				this.popularPrevBtnHidden = true;
-			}
-			if (this.rightOverflowPostNum > 0) {
-				this.popularNextBtnHidden = false;
-			} else {
-				this.popularNextBtnHidden = true;
-			}
-
-		},
-
-		movePopularLeft: function() {
-			this.leftOverflowPostNum += this.postNumToScrollRight;
-			this.initScroll();
-		},
-
-		movePopularRight: function() {
-			this.leftOverflowPostNum -= this.postNumToScrollLeft;
-			this.initScroll();
-		},
-
-		touchScrollMove: function(e) {
-			console.log(e.touches[0].pageX);
-		}
-	},
-
-	watch: {
-		leftOverflowPostNum: function(val) {
-			this.popularScrollStyle = 'translateX(-' + 19 * this.leftOverflowPostNum + 'rem)';
+			this.popularPosts[i].addEventListener('touchend', e => {
+				document.querySelector('#popular .post-container').classList.remove('moving');
+				this.popularPosts.forEach((post, index) => {
+					if (this.distance <= -50) {
+						index -= 1;
+					} else if (this.distance >= 50) {
+						index += 1;
+					}
+					post.style.transform = 'translateX(' + (index - this.slidePos) * 100 + '%)';
+					post.setAttribute('data-translateX-percent', (index - this.slidePos) * 100);
+				});
+			});
 		}
 	}
-});
 
-popularScrollView.initScroll();
+
+	// Methods
+	initHomeUI() {
+		// Initialize home UI
+		console.log('Initialize home UI');
+	}
+
+
+}
+
+const homeController = new HomeController();

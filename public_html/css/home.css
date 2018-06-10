@@ -7,6 +7,7 @@
 #popular .post-scroll {
   position: relative;
   max-height: 25rem;
+  height: 40vw;
 }
 #popular .post-container {
   -webkit-user-select: none;
@@ -15,31 +16,32 @@
   user-select: none;
   position: relative;
   height: 100%;
-  width: 70vw;
+  width: 80vw;
   margin: auto;
+  -ms-touch-action: pan-x;
+  touch-action: pan-x;
+}
+#popular .post-container.moving .post {
+  -webkit-transition: none;
+  -o-transition: none;
+  transition: none;
 }
 #popular .post-container .post {
   position: absolute;
   display: block;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  cursor: pointer;
+  padding: 0 1vw;
   -webkit-transition: -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
   transition: -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
   -o-transition: transform 0.2s ease, box-shadow 0.2s ease;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   transition: transform 0.2s ease, box-shadow 0.2s ease, -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
+  will-change: transform;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-#popular .post-container .post:active {
-  -webkit-transform: scale(0.95);
-  -ms-transform: scale(0.95);
-  transform: scale(0.95);
-  overflow: hidden;
 }
 #popular .post-container .post .img {
   display: block;
@@ -114,58 +116,4 @@
 .post-section .section-title.technology::before {
   background-image: url('/assets/images/chip.svg');
   top: .1rem;
-}
-.post-section .hero-container {
-  display: block;
-  width: calc(100% - 3.4rem);
-  margin: auto;
-}
-.post-section .hero-container .col {
-  display: inline-block;
-}
-.post-section .hero-container .col--featured {
-  width: 50%;
-}
-.post-section .hero-container .col--featured .featured {
-  width: 100%;
-  height: 25rem;
-  position: relative;
-  overflow: hidden;
-  border-radius: 5px;
-}
-.post-section .hero-container .col--featured .featured .niche {
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-  object-fit: cover;
-}
-.post-section .hero-container .col--featured .featured .content-wrapper {
-  width: 50%;
-  height: 100%;
-  position: absolute;
-  right: 0;
-  top: 0;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  color: #fff;
-}
-.post-section .hero-container .col--featured .featured .content-wrapper .star {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  font-size: 1.2rem;
-  font-weight: 400;
-}
-.post-section .hero-container .col--featured .featured .content-wrapper .star::before {
-  content: '';
-  display: inline-block;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 1rem;
-  margin-right: .3rem;
-  background-image: url('/assets/images/star.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto;
 }

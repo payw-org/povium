@@ -16,19 +16,21 @@
 
 			<div class="post-scroll">
 
-				<div
-					class="post-container"
-					v-bind:style="{	transform: popularScrollStyle }"
-					@touchmove="touchScrollMove($event)"
-				>
+				<div class="post-container">
 
 					<?php
-					$transform_percent = 0;
-					for ($i = 0; $i < 3; $i++) {
+					$total_post_num = 5;
+					$transform_style = 0;
+					for ($i = 0; $i < $total_post_num; $i++) {
+						// if ($i == $total_post_num - 1) {
+						// 	$transform_style = 'translateX(-100%)';
+						// } else {
+							$transform_style = 'translateX(' . $i * 100 . '%)';
+						// }
 					?>
-					<div
-						class="post"
-						style="transform: translateX(<?php echo $transform_percent . '%'; ?>)"
+					<div class="post <?php if ($i == 0) { echo 'current'; } ?>"
+					     style="transform: <?php echo $transform_style; ?>"
+					     data-translateX-percent="<?php echo $i * 100; ?>"
 					>
 						<img class="img" src="/assets/images/post-test-img-5.png" alt="">
 						<div class="manifesto">
@@ -49,28 +51,9 @@
 
 		</section>
 
-		<!-- Category : based on user favorites. -->
-		<section id="technology" class="post-section narrow">
-			<h1 class="section-title technology">Technology</h1>
-			<div class="hero-container">
-				<div class="col col--featured">
-					<div class="featured">
-						<img class="niche" src="/assets/images/wwdc-2018.jpg" alt="wwdc2018">
-						<div class="content-wrapper">
-							<span class="star">흥행</span>
-							<h1 class="title">인기글 제목</h1>
-							<p class="copy"></p>
-						</div>
-					</div>
-				</div>
-				<div class="col col--list">
-					<ol class="post-container">
-						<li class="post"></li>
-					</ol>
-				</div>
-			</div>
-		</section>
+
 	</main>
+	<script src="/global-inclusion/globalnav/js/view/gn-view.js"></script>
 	<script src="/js/home.js"></script>
 </body>
 </html>

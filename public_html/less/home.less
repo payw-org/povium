@@ -9,6 +9,7 @@
 
 		position: relative;
 		max-height: 25rem;
+		height: 40vw;
 
 	}
 
@@ -16,24 +17,23 @@
 		user-select: none;
 		position: relative;
 		height: 100%;
-		width: 70vw;
+		width: 80vw;
 		margin: auto;
+		touch-action: pan-x;
+
+		&.moving .post {
+			transition: none;
+		}
 
 		.post {
 			position: absolute;
 			display: block;
 			width: 100%;
 			height: 100%;
-			// border-radius: 20px;
-			overflow: hidden;
-			cursor: pointer;
+			padding: 0 1vw;
 			transition: transform .2s ease, box-shadow .2s ease;
+			will-change: transform;
 			user-select: none;
-
-			&:active {
-				transform: scale(.95);
-				overflow: hidden;
-			}
 
 			.img {
 				display: block;
@@ -117,65 +117,6 @@
 			&::before {
 				background-image: url('/assets/images/chip.svg');
 				top: .1rem;
-			}
-		}
-	}
-
-	.hero-container {
-		display: block;
-		width: calc(100% - 3.4rem);
-		margin: auto;
-
-		.col {
-			display: inline-block;
-		}
-
-		.col--featured {
-
-			width: 50%;
-
-			.featured {
-				width: 100%;
-				height: 25rem;
-				position: relative;
-				overflow: hidden;
-				border-radius: 5px;
-
-				.niche {
-					width: 100%;
-					height: 100%;
-					object-fit: cover;
-				}
-
-				.content-wrapper {
-					width: 50%;
-					height: 100%;
-					position: absolute;
-					right: 0;
-					top: 0;
-					background: rgba(0, 0, 0, .5);
-					padding: 1rem;
-					color: #fff;
-
-					.star {
-						display: flex;
-						font-size: 1.2rem;
-						font-weight: 400;
-
-						&::before {
-							content: '';
-							display: inline-block;
-							flex: 1;
-							max-width: 1rem;
-							margin-right: .3rem;
-							background-image: url('/assets/images/star.svg');
-							background-repeat: no-repeat;
-							background-position: center;
-							background-size: auto;
-						}
-					}
-				}
-
 			}
 		}
 	}
