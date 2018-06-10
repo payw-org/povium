@@ -14,39 +14,22 @@
 		<section id="popular" class="post-section">
 			<h1 class="section-title popular">인기 포스트 30</h1>
 
-			<div class="post-scroll">
-
-				<div class="post-container">
-
+			<div class="post-view">
+				<div class="guided-view">
+					<div class="post-container">
 					<?php
-					$total_post_num = 5;
-					$transform_style = 0;
-					for ($i = 0; $i < $total_post_num; $i++) {
-						// if ($i == $total_post_num - 1) {
-						// 	$transform_style = 'translateX(-100%)';
-						// } else {
-							$transform_style = 'translateX(' . $i * 100 . '%)';
-						// }
+					for ($i = 0; $i < 10; $i++) {
 					?>
-					<div class="post <?php if ($i == 0) { echo 'current'; } ?>"
-					     style="transform: <?php echo $transform_style; ?>"
-					     data-translateX-percent="<?php echo $i * 100; ?>"
-					>
-						<img class="img" src="/assets/images/post-test-img-5.png" alt="">
-						<div class="manifesto">
-							<h1 class="title">제목 <?php echo $i+1; ?></h1>
-							<div class="creator-and-view">
-								<a class="creator" href="">Creator<?php echo $i + 1; ?></a>
-								<span class="view-count">1234 viewed</span>
+						<div class="post-wrapper">
+							<div class="post">
+
 							</div>
 						</div>
-					</div>
 					<?php
-						$transform_percent += 100;
 					}
 					?>
+					</div>
 				</div>
-
 			</div>
 
 		</section>

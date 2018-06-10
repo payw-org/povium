@@ -4,83 +4,35 @@
 #popular {
   position: relative;
 }
-#popular .post-scroll {
-  position: relative;
-  max-height: 25rem;
-  height: 40vw;
+#popular .post-view {
+  width: 100%;
+  height: 200px;
 }
-#popular .post-container {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
+#popular .post-view .guided-view {
   height: 100%;
-  width: 80vw;
+  width: 100%;
   margin: auto;
-  -ms-touch-action: pan-x;
-  touch-action: pan-x;
+  padding: 0 1.2rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
-#popular .post-container.moving .post {
-  -webkit-transition: none;
-  -o-transition: none;
-  transition: none;
+#popular .post-view .guided-view .post-container {
+  display: inline-block;
+  white-space: nowrap;
+  height: 100%;
+  font-size: 0;
 }
-#popular .post-container .post {
-  position: absolute;
-  display: block;
+#popular .post-view .guided-view .post-container .post-wrapper {
+  display: inline-block;
+  width: calc(100vw - 2.4rem);
+  height: 100%;
+  padding: 0 .5rem;
+}
+#popular .post-view .guided-view .post-container .post-wrapper .post {
   width: 100%;
   height: 100%;
-  padding: 0 1vw;
-  -webkit-transition: -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
-  transition: -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
-  -o-transition: transform 0.2s ease, box-shadow 0.2s ease;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, -webkit-transform 0.2s ease, -webkit-box-shadow 0.2s ease;
-  will-change: transform;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-#popular .post-container .post .img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-  object-fit: cover;
-  pointer-events: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-#popular .post-container .post .manifesto {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  padding: 1rem;
-  white-space: initial;
-}
-#popular .post-container .post .manifesto .title {
-  display: block;
-  font-size: 1.7rem;
-  font-weight: 700;
-  line-height: 1;
-}
-#popular .post-container .post .manifesto .creator-and-view {
-  margin-top: 1rem;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  font-size: .87rem;
-  font-weight: 500;
-}
-#popular .post-container .post .manifesto .creator-and-view .creator:hover {
-  text-decoration: underline;
+  background: red;
 }
 .post-section {
   padding-top: 2.5rem;

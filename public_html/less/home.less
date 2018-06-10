@@ -5,75 +5,44 @@
 #popular {
 	position: relative;
 
-	.post-scroll {
+	.post-view {
 
-		position: relative;
-		max-height: 25rem;
-		height: 40vw;
+		width: 100%;
+		height: 200px;
 
-	}
+		.guided-view {
 
-	.post-container {
-		user-select: none;
-		position: relative;
-		height: 100%;
-		width: 80vw;
-		margin: auto;
-		touch-action: pan-x;
-
-		&.moving .post {
-			transition: none;
-		}
-
-		.post {
-			position: absolute;
-			display: block;
-			width: 100%;
 			height: 100%;
-			padding: 0 1vw;
-			transition: transform .2s ease, box-shadow .2s ease;
-			will-change: transform;
-			user-select: none;
+			width: 100%;
+			margin: auto;
+			padding: 0 1.2rem;
+			overflow-x: auto;
+			overflow-y: hidden;
+			-webkit-overflow-scrolling: touch;
 
-			.img {
-				display: block;
-				width: 100%;
+			.post-container {
+
+				display: inline-block;
+				white-space: nowrap;
 				height: 100%;
-				object-fit: cover;
-				pointer-events: none;
-				user-select: none;
-			}
+				font-size: 0;
 
-			.manifesto {
-				position: absolute;
-				right: 0;
-				bottom: 0;
-				padding: 1rem;
-				white-space: initial;
+				.post-wrapper {
 
-				.title {
-					display: block;
-					font-size: 1.7rem;
-					font-weight: 700;
-					line-height: 1;
-				}
+					display: inline-block;
+					width: calc(100vw - 2.4rem);
+					height: 100%;
+					padding: 0 .5rem;
 
-				.creator-and-view {
-					margin-top: 1rem;
-					display: flex;
-					justify-content: space-between;
-					font-size: .87rem;
-					font-weight: 500;
-
-					.creator:hover {
-						text-decoration: underline;
+					.post {
+						width: 100%;
+						height: 100%;
+						background: red;
 					}
 				}
 			}
 		}
-
 	}
-
 }
 
 .post-section {
