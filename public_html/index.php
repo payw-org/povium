@@ -12,16 +12,16 @@
 	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/global-inclusion/globalnav/globalnav.php'; ?>
 	<main id="home-main">
 		<section id="popular" class="post-section">
-			<h1 class="section-title popular">인기 포스트 30</h1>
+			<!-- <h1 class="section-title popular">인기 포스트 30</h1> -->
 
 			<div class="post-view">
 				<div class="guided-view">
-					<div class="post-container">
+					<div class="post-container" data-post-pos="0">
 					<?php
 					for ($i = 0; $i < 10; $i++) {
 					?>
 						<div class="post-wrapper">
-							<div class="post">
+							<div class="post <?php if ($i ==0) echo 'current'; ?>">
 
 							</div>
 						</div>
@@ -33,12 +33,10 @@
 			</div>
 
 		</section>
-		<button type="button" name="button" onclick="scrollTest()">scroll animation</button>
 
 
 	</main>
 	<script src="/global-inclusion/globalnav/js/view/gn-view.js"></script>
-	<script src="/js/anime.js"></script>
 	<script src="/js/home.js"></script>
 </body>
 </html>

@@ -8,35 +8,53 @@
 	.post-view {
 
 		width: 100%;
-		height: 200px;
+		height: 50vw;
+		max-height: 20rem;
+		min-height: 200px;
 
 		.guided-view {
 
 			height: 100%;
-			width: 100%;
+			width: 70vw;
 			margin: auto;
-			padding: 0 1.2rem;
-			overflow-x: auto;
-			overflow-y: hidden;
+
+			.responsive({
+				width: calc(100% - 40px);
+			},
+			{
+				width: 50vw;
+			});
 
 			.post-container {
 
-				display: inline-block;
-				white-space: nowrap;
+				display: flex;
+				flex-wrap: nowrap;
 				height: 100%;
 				font-size: 0;
+				transition: transform .3s ease;
+				will-change: transform;
+
+				&.moving {
+					transition: none;
+				}
 
 				.post-wrapper {
 
-					display: inline-block;
-					width: calc(100vw - 2.4rem);
+					display: block;
+					min-width: 100%;
 					height: 100%;
 					padding: 0 .5rem;
 
 					.post {
-						width: 100%;
 						height: 100%;
-						background: red;
+						margin: auto;
+						background: #138dc2;
+						transition: transform .2s ease;
+						border-radius: 20px;
+
+						&:active {
+							transform: scale(.97);
+						}
 					}
 				}
 			}
