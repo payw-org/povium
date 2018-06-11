@@ -15,7 +15,6 @@
   padding: 0 1.2rem;
   overflow-x: auto;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
 }
 #popular .post-view .guided-view .post-container {
   display: inline-block;

@@ -9,12 +9,12 @@ class HomeView {
 	constructor() {
 		console.log('A HomeView object has been created.');
 
-		// DOM data
 
-		this.orgPosX = 0;
-		this.distance = 0;
-		this.slidePos = 0;
-		this.popularPosts = document.querySelectorAll('#popular .post');
+		document.querySelector('#popular .guided-view').addEventListener('scroll', function() {
+			console.log(this.scrollLeft);
+		});
+
+
 	}
 
 
@@ -28,3 +28,10 @@ class HomeView {
 }
 
 const homeController = new HomeController();
+
+anime({
+	targets: '.post-container',
+	translateX: 200,
+	duration: 2000,
+	update: () => document.querySelector('.post-container').scroll(200, 0)
+});

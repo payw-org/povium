@@ -33,10 +33,12 @@
 			</div>
 
 		</section>
+		<button type="button" name="button" onclick="scrollTest()">scroll animation</button>
 
 
 	</main>
 	<script src="/global-inclusion/globalnav/js/view/gn-view.js"></script>
+	<script src="/js/anime.js"></script>
 	<script src="/js/home.js"></script>
 </body>
 </html>
