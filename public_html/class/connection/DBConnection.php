@@ -1,13 +1,11 @@
 <?php
-/*
+
+/**
 * Class DBConnection
 * Create a database connection using PDO
+*
 * @author fairyhooni
-*
-* Instructions for use:
-*
-* require_once('settings.config.php');				// Define db configuration arrays here
-* require_once('db-connection.php');             	// Include this file
+* @license MIT
 *
 */
 
@@ -17,7 +15,7 @@ class DBConnection{
 	* array('driver' => '', 'host' => '', 'dbname' => '', 'username' => '', 'password' => '', 'opt' => '')
 	* @var array
 	*/
-	private $_config;
+	private $config;
 
 
 	/**
@@ -30,10 +28,10 @@ class DBConnection{
 	/**
 	* [__construct description]
 	* Opens the database connection using PDO
-	* @param array $config [array of database connection parameters]
+	* @param array $config
 	*/
 	public function __construct(array $config){
-		$this->_config = $config;
+		$this->config = $config;
 		$this->getPDOConnection();
 	}
 
@@ -53,12 +51,12 @@ class DBConnection{
 	*/
 	private function getPDOConnection(){
 		if($this->conn == NULL){
-			$dsn = "" . $this->_config['driver'] .
-			":host=" . $this->_config['host'] .
-			";dbname=" . $this->_config['dbname'];
+			$dsn = "" . $this->config['driver'] .
+			":host=" . $this->config['host'] .
+			";dbname=" . $this->config['dbname'];
 
 			try{
-				$this->conn = new PDO($dsn, $this->_config['username'], $this->_config['password'], $this->_config['opt']);
+				$this->conn = new PDO($dsn, $this->config['username'], $this->config['password'], $this->config['opt']);
 			}catch(PDOException $e){
 				echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
 			}
