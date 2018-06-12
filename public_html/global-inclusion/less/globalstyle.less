@@ -11,10 +11,10 @@ html {
 	font-size: 100%; // 62.5% of 16px = 10px
 
 	.responsive({
-		font-size: 80%;
+		font-size: 85%;
 	},
 	{
-		font-size: 120%;
+		font-size: 115%;
 	});
 }
 
@@ -44,6 +44,29 @@ button, input {
     padding: 0;
 		background: none;
 		border: none;
+}
+
+input {
+	background: @white-blue;
+	display: block;
+	border-radius: 1rem;
+	padding: 0;
+	font-size: 1.2rem;
+	cursor: default;
+	transition: background .1s ease;
+
+	&:hover {
+		background: darken(@white-blue, 1%);
+	}
+
+	&:focus {
+		cursor: text;
+		background: @dark-white-blue;
+	}
+
+	&:active {
+
+	}
 }
 
 input::-ms-clear {

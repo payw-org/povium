@@ -1,0 +1,30 @@
+.no-tap-highlight-color {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+#register-main {
+  padding-top: 2.5rem;
+  width: calc(100% - 3.4rem);
+  max-width: 40rem;
+  margin: auto;
+  text-align: center;
+}
+.introduce-header h1 {
+  font-size: 2.5rem;
+}
+.introduce-header p {
+  font-size: 1.3rem;
+  font-weight: 300;
+  margin-top: .6rem;
+  color: #777777;
+}
+.provider {
+  padding-top: 1rem;
+}
+.provider input {
+  padding: 1rem 1.5rem;
+  width: 100%;
+  margin: auto;
+  margin-top: 1rem;
+  max-width: 25rem;
+  text-align: center;
+}

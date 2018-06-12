@@ -12,12 +12,12 @@ html {
 }
 @media only screen and (max-width: 768px) {
   html {
-    font-size: 80%;
+    font-size: 85%;
   }
 }
 @media only screen and (min-width: 1441px) {
   html {
-    font-size: 120%;
+    font-size: 115%;
   }
 }
 * {
@@ -45,6 +45,24 @@ input {
   padding: 0;
   background: none;
   border: none;
+}
+input {
+  background: #F1F1F2;
+  display: block;
+  border-radius: 1rem;
+  padding: 0;
+  font-size: 1.2rem;
+  cursor: default;
+  -webkit-transition: background .1s ease;
+  -o-transition: background .1s ease;
+  transition: background .1s ease;
+}
+input:hover {
+  background: #eeeef0;
+}
+input:focus {
+  cursor: text;
+  background: #e9e9eb;
 }
 input::-ms-clear {
   display: none;
