@@ -25,11 +25,11 @@
 
 			<div id="gn-sign-register">
 				<div class="container">
-					<a href="" class="sign-in" href="">
+					<a href="/login" class="sign-in">
 						<div class="bg"></div>
 						<span>로그인</span>
 					</a>
-					<a href="" class="register" href="">
+					<a href="/register" class="register">
 						<div class="bg"></div>
 						<span>회원가입</span>
 					</a>

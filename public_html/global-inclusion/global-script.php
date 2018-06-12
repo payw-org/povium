@@ -10,3 +10,6 @@
 <!-- Production -->
 <!-- Include the line below after bundling with webpack. -->
 <!-- <script src="/js/povium.bundle.js"></script> -->
+
+<!-- Global Navigation -->
+<script src="/global-inclusion/globalnav/js/view/gn-view.js"></script>

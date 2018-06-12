@@ -17,6 +17,7 @@ class HomeView {
 		this.postMax = 10;
 
 		this.popPostContainer.addEventListener('touchstart', (e) => {
+			this.dist = 0;
 			this.orgPageX = e.touches[0].pageX;
 			this.popPostContainer.classList.add('moving');
 		})
@@ -41,6 +42,7 @@ class HomeView {
 		this.mouseFlag = 0;
 
 		this.popPostContainer.addEventListener('mousedown', (e) => {
+			this.dist = 0;
 			this.mouseFlag = 1;
 			this.orgPageX = e.pageX;
 			this.popPostContainer.classList.add('moving');
@@ -53,6 +55,7 @@ class HomeView {
 		})
 
 		window.addEventListener('mouseup', (e) => {
+			if (!this.mouseFlag) return;
 			this.mouseFlag = 0;
 			let postPos = Number(this.popPostContainer.getAttribute('data-post-pos'));
 			if (this.dist < 0 && postPos < this.postMax - 1) {

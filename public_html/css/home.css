@@ -39,6 +39,7 @@
   transition: transform .3s ease;
   transition: transform .3s ease, -webkit-transform .3s ease;
   will-change: transform;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 #popular .post-view .guided-view .post-container.moving {
   -webkit-transition: none;
@@ -54,7 +55,7 @@
 #popular .post-view .guided-view .post-container .post-wrapper .post {
   height: 100%;
   margin: auto;
-  background: #138dc2;
+  background: #006dfe;
   -webkit-transition: -webkit-transform .2s ease;
   transition: -webkit-transform .2s ease;
   -o-transition: transform .2s ease;
