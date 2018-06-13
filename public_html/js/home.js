@@ -14,7 +14,7 @@ class HomeView {
 
 		this.orgPageX = 0;
 		this.dist = 0;
-		this.postMax = 10;
+		this.postMax = document.querySelectorAll('#popular .post').length;
 
 		this.popPostContainer.addEventListener('touchstart', (e) => {
 			this.dist = 0;
@@ -87,7 +87,7 @@ class HomeView {
 const homeController = new HomeController();
 
 
-// TweenMax.to(".guided-view", 1, {
-// 	x:100,
-// 	ease: Bounce.easeOut
-// })
+TweenMax.to(".guided-view", 3, {
+	x:0,
+	ease: Expo.easeInOut
+})

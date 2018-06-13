@@ -8,7 +8,8 @@ class RegisterView {
 
 		// Event listeners
 		this.userNameDOM.addEventListener("focusout", function() {
-			
+			var r = new XMLHttpRequest();
+			r.open("POST", "", true);
 		})
 
 	}
@@ -22,8 +23,3 @@ class RegisterController {
 
 let registerController = new RegisterController();
 
-
-// 'regexp' => [
-// 	'userid_regexp' => '/^[a-z0-9-]{3,40}$/',
-// 	'userpw_regexp' => '/^\S*(?=\S{8,50})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[0-9])\S*$/'
-// ],
