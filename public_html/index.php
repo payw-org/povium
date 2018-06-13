@@ -15,9 +15,8 @@ $title = [
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
-		<title>Povium | Post your vision.</title>
 		<?php include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-meta.php"; ?>
+		<title>Povium | 좋은 글, 세상을 바꾸는 힘.</title>
 		<?php include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-css.php"; ?>
 		<link rel="stylesheet" href="css/home.css?v=1">
 	</head>

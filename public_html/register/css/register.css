@@ -35,7 +35,7 @@
 .provider input,
 .provider button {
   padding: .7rem 1rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 .provider input {
   text-align: center;
@@ -43,4 +43,7 @@
 }
 .provider input:focus {
   color: inherit;
+}
+.provider button {
+  margin-top: 2rem;
 }

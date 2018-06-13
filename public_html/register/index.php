@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 	<head>
 		<?php include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-meta.php"; ?>
-		<title>회원가입</title>
+		<title>Povium | 회원가입</title>
 		<?php include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-css.php"; ?>
 		<link rel="stylesheet" href="css/register.css">
 	</head>

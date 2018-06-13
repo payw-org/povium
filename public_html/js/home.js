@@ -2,7 +2,6 @@ class HomeController {
 	constructor() {
 		console.log('A HomeController object has been created.');
 		this.homeView = new HomeView();
-		this.homeView.autoFlick();
 	}
 }
 
@@ -10,19 +9,22 @@ class HomeView {
 	constructor() {
 		console.log('A HomeView object has been created.');
 
+		// DOM elements
+		this.popPostContainer = document.querySelector('#popular .post-container');
+
+		// Class variables
+		this.orgPageX = 0;
+		this.orgPageY = 0;
+		this.dist = 0;
+		this.postMax = document.querySelectorAll('#popular .post').length;
+
 		// Initializing post view
 		TweenMax.to(".guided-view", 3, {
 			x:0,
 			ease: Power4.easeInOut
 		})
 
-		// DOM elements
-		this.popPostContainer = document.querySelector('#popular .post-container');
-
-		this.orgPageX = 0;
-		this.orgPageY = 0;
-		this.dist = 0;
-		this.postMax = document.querySelectorAll('#popular .post').length;
+		this.autoFlick();
 
 
 		// Touch events on popular posts

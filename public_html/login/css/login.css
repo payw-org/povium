@@ -1,14 +1,31 @@
+.no-tap-highlight-color {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
 #login-main {
   text-align: center;
 }
-#login-main h1 {
-  font-size: 2rem;
+.header {
+  margin-top: 2.5rem;
+  margin-bottom: 2rem;
+}
+.header img {
+  width: 6rem;
+}
+.header h1 {
+  font-size: 2.5rem;
+  margin-top: 1rem;
+  font-weight: 700;
 }
 .auth-form {
   max-width: 20rem;
   margin: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #F1F1F2;
 }
 .auth-form > input {
   text-align: center;
   margin-top: 1rem;
+}
+.auth-form > button {
+  margin-top: 2rem;
 }
