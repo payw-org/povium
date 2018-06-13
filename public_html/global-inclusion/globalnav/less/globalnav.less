@@ -8,14 +8,13 @@
 @search-font-size: floor(@search-size / 2.5) + 1;
 
 #globalnav {
-	position: sticky;
+	position: fixed;
 	left: 0;
 	top: 0;
 	width: 100%;
 	z-index: 9999;
 	user-select: none;
-
-	.no-tap-highlight-color
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 
 #gn-backface {
@@ -115,7 +114,7 @@
 				left: 0;
 				bottom: 0;
 				width: 100%;
-				height: 2px;
+				height: 0px;
 				background-color: red;
 				transition: height @pvm-animation;
 				transition-duration: .3s;
@@ -202,10 +201,18 @@
 	width: 100%;
 	display: flex;
 	height: @search-size;
-	background-color: @white-blue;
+	// background-color: @white-blue;
 	border-radius: 50px;
 	overflow: hidden;
-	transition: border-radius @pvm-animation;
+	transition: border-radius @pvm-animation, background-color .2s ease;
+
+	.search-active & {
+		background-color: @white-blue;
+	}
+
+	&:hover {
+		background-color: @white-blue;
+	}
 
 	.magnifier {
 		background: none;
@@ -215,7 +222,7 @@
 		background-size: floor(@search-size / 2.3) floor(@search-size / 2.3);
 		min-width: @search-size;
 		height: @search-size;
-		cursor: default;
+		cursor: pointer;
 		transition: transform .2s ease;
 
 		&:active {

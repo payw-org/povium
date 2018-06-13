@@ -73,11 +73,6 @@
   top: 0;
   bottom: 0;
 }
-#popular .post-view .guided-view .post-container .post-wrapper:active {
-  -webkit-transform: scale(0.95);
-  -ms-transform: scale(0.95);
-  transform: scale(0.95);
-}
 #popular .post-view .guided-view .post-container .post-wrapper .post {
   position: relative;
   height: 100%;
@@ -109,7 +104,7 @@
 }
 #popular .post-view .guided-view .post-container .post-wrapper .post .post-contents h1 {
   position: relative;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 500;
   top: 20%;
 }

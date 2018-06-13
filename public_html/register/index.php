@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 	<head>
-		<meta charset="utf-8">
-		<title>회원가입</title>
 		<?php include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-meta.php"; ?>
+		<title>회원가입</title>
 		<?php include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-css.php"; ?>
 		<link rel="stylesheet" href="css/register.css">
 	</head>

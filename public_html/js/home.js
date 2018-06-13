@@ -10,23 +10,34 @@ class HomeView {
 	constructor() {
 		console.log('A HomeView object has been created.');
 
-		// DOM elms
+		// Initializing post view
+		TweenMax.to(".guided-view", 3, {
+			x:0,
+			ease: Power4.easeInOut
+		})
+
+		// DOM elements
 		this.popPostContainer = document.querySelector('#popular .post-container');
 
 		this.orgPageX = 0;
+		this.orgPageY = 0;
 		this.dist = 0;
 		this.postMax = document.querySelectorAll('#popular .post').length;
 
+
+		// Touch events on popular posts
 		this.popPostContainer.addEventListener('touchstart', (e) => {
 			this.dist = 0;
 			this.orgPageX = e.touches[0].pageX;
-
+			this.orgPageY = e.touches[0].pageY;
 		})
 
 		this.popPostContainer.addEventListener('touchmove', (e) => {
+			e.preventDefault();
 			clearInterval(this.autoFlickInterval);
 			this.popPostContainer.classList.add('moving');
 			this.dist = e.touches[0].pageX - this.orgPageX;
+			this.distY = e.touches[0].pageX - this
 			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.dist + 'px),0,0)';
 		})
 
@@ -42,6 +53,9 @@ class HomeView {
 			this.autoFlick();
 		})
 
+
+
+		// Mouse pointer events on popular posts
 		this.mouseFlag = 0;
 
 		this.popPostContainer.addEventListener('mousedown', (e) => {
@@ -72,6 +86,7 @@ class HomeView {
 			this.autoFlick();
 		})
 
+
 	}
 
 
@@ -97,12 +112,11 @@ class HomeView {
 		}, 3000);
 	}
 
+	// For testing
+	stopAutoFlick() {
+		clearInterval(this.autoFlickInterval);
+	}
+
 }
 
 const homeController = new HomeController();
-
-
-TweenMax.to(".guided-view", 3, {
-	x:0,
-	ease: Power4.easeInOut
-})

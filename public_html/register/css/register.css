@@ -2,13 +2,14 @@
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 #register-main {
-  padding: 2.5rem 0;
+  padding-bottom: 2.5rem;
   width: calc(100% - 3.4rem);
   max-width: 30rem;
   margin: auto;
   text-align: center;
 }
 .introduce-header {
+  margin-top: 2.5rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid #F1F1F2;
 }
