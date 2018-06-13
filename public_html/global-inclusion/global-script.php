@@ -13,3 +13,6 @@
 
 <!-- Global Navigation -->
 <script src="/global-inclusion/globalnav/js/view/gn-view.js"></script>
+
+<!-- GSAP Animation Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>

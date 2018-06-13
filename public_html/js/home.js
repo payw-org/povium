@@ -85,3 +85,9 @@ class HomeView {
 }
 
 const homeController = new HomeController();
+
+
+// TweenMax.to(".guided-view", 1, {
+// 	x:100,
+// 	ease: Bounce.easeOut
+// })

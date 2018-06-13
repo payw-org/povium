@@ -12,12 +12,15 @@
 
 		<main id="register-main">
 			<div class="introduce-header">
+				<img class="header-icon" src="/assets/images/writing.svg" alt="">
 				<h1>좋은 글, 세상을 바꾸는 힘.</h1>
-				<p>지금 참여하고 수익도 얻으세요.</p>
+				<p>지금 가입하여 한 달 동안 무료로<br>모든 프리미엄 포스트를 읽어보세요.</p>
 			</div>
 			<div class="provider">
-				<input type="text" name="" value="" placeholder="아이디">
-				<input type="text" name="" value="" placeholder="패스워드">
+				<input class="user-id input-basic" type="text" placeholder="사용자 이름" autocomplete="off" spellcheck="false">
+				<input class="email input-basic" type="email" placeholder="이메일 주소" autocomplete="off" spellcheck="false">
+				<input class="password input-basic" type="password" placeholder="패스워드" autocomplete="off" spellcheck="false">
+				<button class="btn-violet">가입하기</button>
 			</div>
 		</main>
 
