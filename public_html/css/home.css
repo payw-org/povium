@@ -17,6 +17,7 @@
   -webkit-transform: translateX(-700%);
   -ms-transform: translateX(-700%);
   transform: translateX(-700%);
+  will-change: transform;
 }
 @media only screen and (max-width: 768px) {
   #popular .post-view .guided-view {
@@ -49,6 +50,9 @@
   -o-transition: none;
   transition: none;
 }
+#popular .post-view .guided-view .post-container.moving .post-link {
+  pointer-events: none;
+}
 #popular .post-view .guided-view .post-container .post-wrapper {
   display: block;
   min-width: 100%;
@@ -59,6 +63,15 @@
   -o-transition: transform .2s ease;
   transition: transform .2s ease;
   transition: transform .2s ease, -webkit-transform .2s ease;
+  position: relative;
+}
+#popular .post-view .guided-view .post-container .post-wrapper .post-link {
+  cursor: default;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 #popular .post-view .guided-view .post-container .post-wrapper:active {
   -webkit-transform: scale(0.95);

@@ -34,6 +34,7 @@ $title = [
 						for ($i = 0; $i < 6; $i++) {
 						?>
 							<li class="post-wrapper">
+								<a class="post-link" href="/register"></a>
 								<div class="post">
 									<img class="hero" src="/assets/images/sets/<?php echo $i + 1; ?>.jpg" alt="">
 									<div class="post-contents">

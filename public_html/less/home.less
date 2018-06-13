@@ -17,8 +17,8 @@
 			height: 100%;
 			width: 70vw;
 			margin: auto;
-			// transition: width .1s ease;
 			transform: translateX(-700%);
+			will-change: transform;
 
 			.responsive({
 				width: calc(100% - 40px);
@@ -39,6 +39,10 @@
 
 				&.moving {
 					transition: none;
+
+					.post-link {
+						pointer-events: none;
+					}
 				}
 
 				.post-wrapper {
@@ -48,6 +52,16 @@
 					height: 100%;
 					padding: 0 .5rem;
 					transition: transform .2s ease;
+					position: relative;
+
+					.post-link {
+						cursor: default;
+						position: absolute;
+						left: 0;
+						right: 0;
+						top: 0;
+						bottom: 0;
+					}
 
 					&:active {
 						transform: scale(.95);
