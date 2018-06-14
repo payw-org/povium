@@ -50,6 +50,12 @@ input {
   border: none;
   display: block;
 }
+button:focus {
+  outline: none;
+}
+button::-moz-focus-inner {
+  border: 0;
+}
 .btn-violet {
   font-size: 1.2rem;
   font-weight: 400;

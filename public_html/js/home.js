@@ -11,24 +11,29 @@ class HomeView {
 
 		// DOM elements
 		this.popPostContainer = document.querySelector('#popular .post-container');
+		this.popPostWrappers = document.querySelectorAll('#popular .post-wrapper');
 
 		// Class variables
 		this.orgPageX = 0;
-		this.orgPageY = 0;
 		this.dist = 0;
 		this.postMax = document.querySelectorAll('#popular .post').length;
+		this.isAutoFlicking = 0;
 
 		// Initializing post view
-		TweenMax.to(".guided-view", 3, {
-			x:0,
-			ease: Power4.easeInOut
-		})
+		// TweenMax.to(".guided-view", 3, {
+		// 	x:0,
+		// 	ease: Power4.easeInOut
+		// })
 
-		this.autoFlick();
+		setTimeout(() => {
+			this.autoFlick();
+		}, 2000);
 
 
 		// Touch events on popular posts
 		this.popPostContainer.addEventListener('touchstart', (e) => {
+			e.preventDefault();
+			this.stopAutoFlick();
 			this.dist = 0;
 			this.orgPageX = e.touches[0].pageX;
 			this.orgPageY = e.touches[0].pageY;
@@ -36,10 +41,8 @@ class HomeView {
 
 		this.popPostContainer.addEventListener('touchmove', (e) => {
 			e.preventDefault();
-			clearInterval(this.autoFlickInterval);
 			this.popPostContainer.classList.add('moving');
 			this.dist = e.touches[0].pageX - this.orgPageX;
-			this.distY = e.touches[0].pageX - this
 			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.dist + 'px),0,0)';
 		})
 
@@ -61,6 +64,9 @@ class HomeView {
 		this.mouseFlag = 0;
 
 		this.popPostContainer.addEventListener('mousedown', (e) => {
+			e.preventDefault();
+			this.stopAutoFlick();
+			e.target.parentElement.classList.add('active');
 			this.dist = 0;
 			this.mouseFlag = 1;
 			this.orgPageX = e.pageX;
@@ -68,7 +74,7 @@ class HomeView {
 
 		window.addEventListener('mousemove', (e) => {
 			if (!this.mouseFlag) return;
-			clearInterval(this.autoFlickInterval);
+			e.preventDefault();
 			this.popPostContainer.classList.add('moving');
 			this.dist = e.pageX - this.orgPageX;
 			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.dist + 'px),0,0)';
@@ -76,6 +82,9 @@ class HomeView {
 
 		window.addEventListener('mouseup', (e) => {
 			if (!this.mouseFlag) return;
+			this.popPostWrappers.forEach(function(value, index, array) {
+				array[index].classList.remove('active');
+			});
 			this.mouseFlag = 0;
 			let postPos = Number(this.popPostContainer.getAttribute('data-post-pos'));
 			if (this.dist < 0 && postPos < this.postMax - 1) {
@@ -104,6 +113,11 @@ class HomeView {
 	}
 
 	autoFlick() {
+		if (this.isAutoFlicking) {
+			return;
+		} else {
+			this.isAutoFlicking = 1;
+		}
 		let start = Number(this.popPostContainer.getAttribute('data-post-pos'));
 		this.autoFlickInterval = setInterval(() => {
 			start += 1;
@@ -116,6 +130,7 @@ class HomeView {
 
 	// For testing
 	stopAutoFlick() {
+		this.isAutoFlicking = 0;
 		clearInterval(this.autoFlickInterval);
 	}
 
