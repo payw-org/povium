@@ -42,30 +42,35 @@ class Auth{
 
 	/**
 	 * [login description]
-	 * @param  string $user_id
+	 * @param  string $identifier [user_id or email]
 	 * @param  string $user_pw
 	 * @param  bool $remember [flag for auto login]
 	 * @return array	['err' is an error flag. 'msg' is an error message.]
 	 */
-	public function login($user_id, $user_pw, $remember){
+	public function login($identifier, $user_pw, $remember){
 		$return = array('err' => true, 'msg' => '');
 
 
-		$valid_user_id = $this->validateUserId($user_id);
-		$valid_user_pw = $this->validateUserPw($user_pw);
-
+		$valid_user_id = $this->validateUserId($identifier);
 		if($valid_user_id['err']){				//	invalid user id
-			$return['msg'] = $this->config['msg']['account_incorrect'];
+			$valid_email = $this->validateEmail($identifier);
+			if($valid_email['err']){
+				$return['msg'] = $this->config['msg']['account_incorrect'];
 
-			return $return;
-		}elseif($valid_user_pw['err']){			//	invalid user pw
+				return $return;
+			}
+		}
+
+
+		$valid_user_pw = $this->validateUserPw($user_pw);
+		if($valid_user_pw['err']){			//	invalid user pw
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
 
-		$uid = $this->getUID($user_id);
+		$uid = $this->getUID($identifier);
 		if(!$uid){						//	unregistered user id
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
@@ -129,12 +134,48 @@ class Auth{
 			$return['msg'] = $this->config['msg']['userid_short'];
 
 			return $return;
-		}elseif(strlen($user_id) > (int)$this->config['len']['userid_max_length']){
+		}
+
+		if(strlen($user_id) > (int)$this->config['len']['userid_max_length']){
 			$return['msg'] = $this->config['msg']['userid_long'];
 
 			return $return;
-		}elseif(!preg_match($this->config['regexp']['userid_regexp'], $user_id)){
+		}
+
+		if(!preg_match($this->config['regexp']['userid_regexp'], $user_id)){
 			$return['msg'] = $this->config['msg']['userid_invalid'];
+
+			return $return;
+		}
+
+		$return['err'] = false;
+
+		return $return;
+	}
+
+
+	/**
+	 * [validateEmail description]
+	 * @param  string $email
+	 * @return array 'err' is an error flag. 'msg' is an error message.
+	 */
+	public function validateEmail($email){
+		$return = array('err' => true, 'msg' => '');
+
+		if(strlen($email) < (int)$this->config['len']['email_min_length']){
+			$return['msg'] = $this->config['msg']['email_short'];
+
+			return $return;
+		}
+
+		if(strlen($email) > (int)$this->config['len']['email_max_length']){
+			$return['msg'] = $this->config['msg']['email_long'];
+
+			return $return;
+		}
+
+		if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+			$return['msg'] = $this->config['msg']['email_invalid'];
 
 			return $return;
 		}
@@ -157,11 +198,15 @@ class Auth{
 			$return['msg'] = $this->config['msg']['userpw_short'];
 
 			return $return;
-		}elseif(strlen($user_pw) > (int)$this->config['len']['userpw_max_length']){
+		}
+
+		if(strlen($user_pw) > (int)$this->config['len']['userpw_max_length']){
 			$return['msg'] = $this->config['msg']['userpw_long'];
 
 			return $return;
-		}elseif(!preg_match($this->config['regexp']['userpw_regexp'], $user_pw)){
+		}
+
+		if(!preg_match($this->config['regexp']['userpw_regexp'], $user_pw)){
 			$return['msg'] = $this->config['msg']['userpw_invalid'];
 
 			return $return;
@@ -175,12 +220,12 @@ class Auth{
 
 	/**
 	 * [getUID description]
-	 * @param  string $user_id
+	 * @param  string $identifier
 	 * @return int or false
 	 */
-	public function getUID($user_id){
-		$stmt = $this->conn->prepare("SELECT id FROM {$this->config['table_users']} WHERE user_id = :user_id");
-		$stmt->execute([':user_id' => $user_id]);
+	public function getUID($identifier){
+		$stmt = $this->conn->prepare("SELECT id FROM {$this->config['table_users']} WHERE user_id = :user_id OR email = :email");
+		$stmt->execute([':user_id' => $identifier, ':email' => $identifier]);
 
 		if($stmt->rowCount() == 0){
 			return false;
@@ -196,7 +241,7 @@ class Auth{
 	 * @return array or false
 	 */
 	public function getBaseUser($uid){
-		$stmt = $this->conn->prepare("SELECT id, user_id, user_pw, isactive FROM {$this->config['table_users']} WHERE id = :id");
+		$stmt = $this->conn->prepare("SELECT id, user_id, email, user_pw, isactive FROM {$this->config['table_users']} WHERE id = :id");
 		$stmt->execute([':id' => $uid]);
 
 		if($stmt->rowCount() == 0){

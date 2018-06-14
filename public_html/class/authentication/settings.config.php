@@ -35,6 +35,9 @@ return [
 		'userid_min_length' => 3,
 		'userid_max_length' => 40,
 
+		'email_min_length' => 6,
+		'email_max_length' => 50,
+
 		'userpw_min_length' => 8,
 		'userpw_max_length' => 50
 	],
@@ -51,6 +54,10 @@ return [
 		'userid_short' => '3자 이상으로 입력해주세요.',
 		'userid_long' => '40자 이하로 입력해주세요.',
 		'userid_invalid' => '3~40자 영문 소문자, 숫자와 하이픈을 사용할 수 있습니다.',
+
+		'email_short' => '6자 이상으로 입력해주세요.',
+		'email_long' => '50자 이하로 입력해주세요.',
+		'email_invalid' => '유효하지 않은 이메일 형식입니다.',
 
 		'userpw_short' => '8자 이상으로 입력해주세요.',
 		'userpw_long' => '50자 이하로 입력해주세요.',
