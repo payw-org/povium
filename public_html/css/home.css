@@ -95,20 +95,26 @@
 }
 #popular .post-view .guided-view .post-container .post-wrapper .post .post-contents {
   position: absolute;
+  max-height: 100%;
   left: 0;
   right: 0;
-  top: 0;
   bottom: 0;
-  padding: 20px;
+  padding: .8rem;
   background: rgba(0, 0, 0, 0.5);
   color: #fff;
   text-align: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 #popular .post-view .guided-view .post-container .post-wrapper .post .post-contents h1 {
-  position: relative;
-  font-size: 2rem;
+  font-size: 1.7rem;
   font-weight: 500;
-  top: 20%;
+}
+#popular .post-view .guided-view .post-container .post-wrapper .post .post-contents .writer-name {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-top: .3rem;
 }
 .post-section {
   padding-top: 2.5rem;

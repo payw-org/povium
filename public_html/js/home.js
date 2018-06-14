@@ -25,14 +25,14 @@ class HomeView {
 		// 	ease: Power4.easeInOut
 		// })
 
-		setTimeout(() => {
+		// setTimeout(() => {
 			this.autoFlick();
-		}, 2000);
+		// }, 2000);
 
 
 		// Touch events on popular posts
 		this.popPostContainer.addEventListener('touchstart', (e) => {
-			e.preventDefault();
+			// e.preventDefault();
 			this.stopAutoFlick();
 			this.dist = 0;
 			this.orgPageX = e.touches[0].pageX;
@@ -63,6 +63,7 @@ class HomeView {
 		// Mouse pointer events on popular posts
 		this.mouseFlag = 0;
 
+		// Fire event when mouse down on popular posts
 		this.popPostContainer.addEventListener('mousedown', (e) => {
 			e.preventDefault();
 			this.stopAutoFlick();
@@ -72,6 +73,7 @@ class HomeView {
 			this.orgPageX = e.pageX;
 		})
 
+		// Fire event when mouse move on popular posts
 		window.addEventListener('mousemove', (e) => {
 			if (!this.mouseFlag) return;
 			e.preventDefault();
@@ -80,6 +82,7 @@ class HomeView {
 			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.dist + 'px),0,0)';
 		})
 
+		// Fire event when mouse up on popular posts
 		window.addEventListener('mouseup', (e) => {
 			if (!this.mouseFlag) return;
 			this.popPostWrappers.forEach(function(value, index, array) {
@@ -96,6 +99,11 @@ class HomeView {
 			this.flickPostTo(postPos);
 			this.autoFlick();
 		})
+
+		// this.popPostContainer.addEventListener('mouseover', (e) => {
+		// 	console.log('mouseover on popular posts');
+		//
+		// })
 
 
 	}

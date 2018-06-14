@@ -26,7 +26,9 @@
 	max-width: 20rem;
 	margin: auto;
 	padding-top: 1rem;
+	padding-bottom: 1rem;
 	border-top: 1px solid @white-blue;
+	border-bottom: 1px solid @white-blue;
 
 	& > input {
 		text-align: center;
@@ -35,5 +37,29 @@
 
 	& > button {
 		margin-top: 2rem;
+	}
+
+	.auto-login {
+
+		user-select: none;
+		margin-top: 1rem;
+
+		label {
+			vertical-align: middle;
+		}
+	}
+}
+
+.pro {
+	display: block;
+	margin-top: 1rem;
+
+	a {
+		color: @pvm-purple;
+		font-weight: 500;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 }

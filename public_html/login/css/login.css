@@ -20,7 +20,9 @@
   max-width: 20rem;
   margin: auto;
   padding-top: 1rem;
+  padding-bottom: 1rem;
   border-top: 1px solid #F1F1F2;
+  border-bottom: 1px solid #F1F1F2;
 }
 .auth-form > input {
   text-align: center;
@@ -28,4 +30,25 @@
 }
 .auth-form > button {
   margin-top: 2rem;
+}
+.auth-form .auto-login {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-top: 1rem;
+}
+.auth-form .auto-login label {
+  vertical-align: middle;
+}
+.pro {
+  display: block;
+  margin-top: 1rem;
+}
+.pro a {
+  color: #5f42ff;
+  font-weight: 500;
+}
+.pro a:hover {
+  text-decoration: underline;
 }

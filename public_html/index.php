@@ -2,12 +2,16 @@
 
 
 $title = [
-	"장어덮밥을 먹을 수 없게 된다면?",
+	"장어덮밥을 먹을 수 없게 된다면?<br>그럼 불고기 덮밥을 먹으면 되지!",
 	"'동네다움'을 지킬 수 있는 방법",
 	"여행하며 '현금 관리'를 잘 하는 방법",
 	"필름카메라의 번거러움이 좋다",
 	"가짜 어른 구별하는 힘을 기르는 방법",
 	"사진을 시작한 사람들이 앓는다는 '장비병'"
+];
+
+$writer = [
+	"박진둘", "장준끼", "장햄", "청춘나지훈", "조경상병훈", "쿠형"
 ]
 
 ?>
@@ -24,7 +28,6 @@ $title = [
 		<?php include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/globalnav/globalnav.php"; ?>
 		<main id="home-main">
 			<section id="popular" class="post-section">
-				<!-- <h1 class="section-title popular">인기 포스트 30</h1> -->
 
 				<div class="post-view">
 					<div class="guided-view">
@@ -38,6 +41,7 @@ $title = [
 									<img class="hero" src="/assets/images/sets/<?php echo $i + 1; ?>.jpg" alt="">
 									<div class="post-contents">
 										<h1><?php echo $title[$i]; ?></h1>
+										<span class="writer-name">- <?php echo $writer[$i]; ?> -</span>
 									</div>
 								</div>
 							</li>

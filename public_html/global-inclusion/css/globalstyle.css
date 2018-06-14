@@ -112,13 +112,47 @@ button::-moz-focus-inner {
   -ms-transform: scale(0.97);
   transform: scale(0.97);
 }
+.input-wrapper {
+  position: relative;
+  -webkit-transition: padding .2s ease;
+  -o-transition: padding .2s ease;
+  transition: padding .2s ease;
+}
+.input-wrapper .placeholder {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  -ms-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  font-size: 1.1rem;
+  color: #808080;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: left .2s ease, top .2s ease, -webkit-transform .33s ease;
+  transition: left .2s ease, top .2s ease, -webkit-transform .33s ease;
+  -o-transition: transform .33s ease, left .2s ease, top .2s ease;
+  transition: transform .33s ease, left .2s ease, top .2s ease;
+  transition: transform .33s ease, left .2s ease, top .2s ease, -webkit-transform .33s ease;
+}
+.input-wrapper .placeholder.fixed {
+  font-size: .9rem;
+  -webkit-transform: scale(0.95);
+  -ms-transform: scale(0.95);
+  transform: scale(0.95);
+  left: 0;
+  top: -1.4rem;
+}
 .input-basic {
   width: 100%;
   background: #F1F1F2;
   display: block;
   border-radius: .5rem;
   padding: .7rem 1rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: default;
   -webkit-transition: background .2s ease, color .2s ease;
   -o-transition: background .2s ease, color .2s ease;
@@ -131,6 +165,14 @@ button::-moz-focus-inner {
 .input-basic:focus {
   cursor: text;
   background: #e9e9eb;
+}
+.input-basic:focus + .placeholder {
+  font-size: .9rem;
+  -webkit-transform: scale(0.95);
+  -ms-transform: scale(0.95);
+  transform: scale(0.95);
+  left: 0;
+  top: -1.4rem;
 }
 input::-ms-clear {
   display: none;
@@ -166,6 +208,12 @@ img {
   user-select: none;
   pointer-events: none;
 }
+label {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 ::-moz-selection {
   background-color: #5f42ff;
   color: #fff;
@@ -178,33 +226,52 @@ img {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-color: #fafafa;
-  border: 1px solid #cacece;
-  -webkit-box-shadow: inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+  background-color: #F1F1F2;
+  -webkit-transition: background .2s ease;
+  -o-transition: background .2s ease;
+  transition: background .2s ease;
   padding: 9px;
-  border-radius: 3px;
+  border-radius: 4px;
   display: inline-block;
-  vertical-align: middel;
+  vertical-align: middle;
   position: relative;
+  margin-right: 3px;
+}
+.checkbox-violet:hover {
+  background: #eeeef0;
 }
 .checkbox-violet:active,
 .checkbox-violet:checked:active {
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+  background: #e9e9eb;
+}
+.checkbox-violet:after {
+  content: "";
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform .1s ease;
+  transition: -webkit-transform .1s ease;
+  -o-transition: transform .1s ease;
+  transition: transform .1s ease;
+  transition: transform .1s ease, -webkit-transform .1s ease;
+  background: #5f42ff;
+  -webkit-transform-origin: center;
+  -ms-transform-origin: center;
+  transform-origin: center;
+  font-size: 12px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border-radius: 2px;
+  color: #5f42ff;
 }
 .checkbox-violet:checked {
-  background-color: #e9ecee;
-  border: 1px solid #adb8c0;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
-  color: #99a1a7;
+  color: #5f42ff;
 }
 .checkbox-violet:checked:after {
-  content: '\2714';
-  font-size: 14px;
-  position: absolute;
-  top: 0px;
-  left: 3px;
-  color: #99a1a7;
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
 }
