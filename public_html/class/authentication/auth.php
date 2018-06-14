@@ -41,12 +41,12 @@ class Auth{
 
 
 	/**
-	 * [login description]
-	 * @param  string $identifier [user_id or email]
-	 * @param  string $user_pw
-	 * @param  bool $remember [flag for auto login]
-	 * @return array	['err' is an error flag. 'msg' is an error message.]
-	 */
+	* [login description]
+	* @param  string $identifier [user_id or email]
+	* @param  string $user_pw
+	* @param  bool $remember [flag for auto login]
+	* @return array	['err' is an error flag. 'msg' is an error message.]
+	*/
 	public function login($identifier, $user_pw, $remember){
 		$return = array('err' => true, 'msg' => '');
 
@@ -155,10 +155,10 @@ class Auth{
 
 
 	/**
-	 * [validateEmail description]
-	 * @param  string $email
-	 * @return array 'err' is an error flag. 'msg' is an error message.
-	 */
+	* [validateEmail description]
+	* @param  string $email
+	* @return array 'err' is an error flag. 'msg' is an error message.
+	*/
 	public function validateEmail($email){
 		$return = array('err' => true, 'msg' => '');
 
@@ -187,10 +187,10 @@ class Auth{
 
 
 	/**
-	 * [validateUserPw description]
-	 * @param  string $user_pw
-	 * @return array ['err' is an error flag. 'msg' is an error message.]
-	 */
+	* [validateUserPw description]
+	* @param  string $user_pw
+	* @return array ['err' is an error flag. 'msg' is an error message.]
+	*/
 	public function validateUserPw($user_pw){
 		$return = array('err' => true, 'msg' => '');
 
@@ -219,10 +219,10 @@ class Auth{
 
 
 	/**
-	 * [getUID description]
-	 * @param  string $identifier
-	 * @return int or false
-	 */
+	* [getUID description]
+	* @param  string $identifier
+	* @return int or false
+	*/
 	public function getUID($identifier){
 		$stmt = $this->conn->prepare("SELECT id FROM {$this->config['table_users']} WHERE user_id = :user_id OR email = :email");
 		$stmt->execute([':user_id' => $identifier, ':email' => $identifier]);
@@ -236,10 +236,10 @@ class Auth{
 
 
 	/**
-	 * [getBaseUser description]
-	 * @param  int $uid
-	 * @return array or false
-	 */
+	* [getBaseUser description]
+	* @param  int $uid
+	* @return array or false
+	*/
 	public function getBaseUser($uid){
 		$stmt = $this->conn->prepare("SELECT id, user_id, email, user_pw, isactive FROM {$this->config['table_users']} WHERE id = :id");
 		$stmt->execute([':id' => $uid]);
@@ -253,12 +253,12 @@ class Auth{
 
 
 	/**
-	 * [getUser description]
-	 * @param  int  $uid
-	 * @param  boolean $with_pw [if it is true, return with user_pw.]
-	 * @return array
-	 * @return bool false
-	 */
+	* [getUser description]
+	* @param  int  $uid
+	* @param  boolean $with_pw [if it is true, return with user_pw.]
+	* @return array
+	* @return bool false
+	*/
 	public function getUser($uid, $with_pw=false){
 		$stmt = $this->conn->prepare("SELECT * FROM {$this->config['table_users']} WHERE id = :id");
 		$stmt->execute([':id' => $uid]);
@@ -278,33 +278,33 @@ class Auth{
 
 
 	/**
-	 * [generateRandomHash description]
-	 * @param  int $len [length of random hash (real length is $len * 2)]
-	 * @return string
-	 */
+	* [generateRandomHash description]
+	* @param  int $len [length of random hash (real length is $len * 2)]
+	* @return string
+	*/
 	public function generateRandomHash($len){
 		return bin2hex(openssl_random_pseudo_bytes($len));
 	}
 
 
 	/**
-	 * [getPasswordHash description]
-	 * @param  string $raw_pw
-	 * @return string
-	 */
+	* [getPasswordHash description]
+	* @param  string $raw_pw
+	* @return string
+	*/
 	protected function getPasswordHash($raw_pw){
 		return password_hash($raw_pw, PASSWORD_DEFAULT, $this->config['pw_hash_options']);
 	}
 
 
 	/**
-	 * [passwordVerifyWithRehash description]
-	 * Verify password and rehash if hash options is changed.
-	 * @param  string $raw_pw [description]
-	 * @param  string $hash   [description]
-	 * @param  int $uid    [description]
-	 * @return bool         [if password match, return true.]
-	 */
+	* [passwordVerifyWithRehash description]
+	* Verify password and rehash if hash options is changed.
+	* @param  string $raw_pw [description]
+	* @param  string $hash   [description]
+	* @param  int $uid    [description]
+	* @return bool         [if password match, return true.]
+	*/
 	protected function passwordVerifyWithRehash($raw_pw, $hash, $uid){
 		if(!password_verify($raw_pw, $hash)){
 			return false;
@@ -322,13 +322,13 @@ class Auth{
 
 
 	/**
-	 * [addSessionAndCookie description]
-	 * Creates a session for a specified uid
-	 * Creates cookie and table record about token for auto login
-	 * @param int $uid
-	 * @param bool $remember [flag for auto login]
-	 * @return bool
-	 */
+	* [addSessionAndCookie description]
+	* Creates a session for a specified uid
+	* Creates cookie and table record about token for auto login
+	* @param int $uid
+	* @param bool $remember [flag for auto login]
+	* @return bool
+	*/
 	protected function addSessionAndCookie($uid, $remember){
 		$_SESSION['uid'] = $uid;
 		$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET last_login_dt = :last_login_dt WHERE id = :id");
@@ -342,7 +342,7 @@ class Auth{
 			$validator = hash('sha256', strtok(':'));
 
 			$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_tokens']} (selector, validator, uid, expire)
-											VALUES (:selector, :validator, :uid, :expire)");
+			VALUES (:selector, :validator, :uid, :expire)");
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
 			$query_params = [
 				':selector' => $selector,
@@ -363,12 +363,12 @@ class Auth{
 
 
 	/**
-	 * [isLoggedIn description]
-	 * Check if visitor is logged in.
-	 * Check if auto login is possible.
-	 * If possible, log in automatically.
-	 * @return boolean
-	 */
+	* [isLoggedIn description]
+	* Check if visitor is logged in.
+	* Check if auto login is possible.
+	* If possible, log in automatically.
+	* @return boolean
+	*/
 	public function isLoggedIn(){
 		if($this->checkSession()){
 			return true;
@@ -385,9 +385,9 @@ class Auth{
 
 
 	/**
-	 * [checkSession description]
-	 * @return boolean
-	 */
+	* [checkSession description]
+	* @return boolean
+	*/
 	private function checkSession(){
 		if(!isset($_SESSION['uid'])){
 			return false;
@@ -398,12 +398,12 @@ class Auth{
 
 
 	/**
-	 * [checkCookie description]
-	 * Check cookie for auto login
-	 * Authenticate token
-	 * @return int uid for auto login
-	 * @return boolean false if auto login fails.
-	 */
+	* [checkCookie description]
+	* Check cookie for auto login
+	* Authenticate token
+	* @return int uid for auto login
+	* @return boolean false if auto login fails.
+	*/
 	private function checkCookie(){
 		if(!isset($_COOKIE['auth_token'])){
 			return false;
@@ -412,7 +412,7 @@ class Auth{
 		$token = $_COOKIE['auth_token'];			//	token = selector:validator
 
 		$selector = strtok($token, ':');
-		$validator = hash('sha256', strtoke(':'));
+		$validator = hash('sha256', strtok(':'));
 
 		if(!$token_info = $this->getTokenInfo($selector)){		//	if selector invalid
 			setcookie('auth_token', "", time() - 3600);
@@ -441,11 +441,11 @@ class Auth{
 
 
 	/**
-	 * [getTokenInfo description]
-	 * @param  string $selector
-	 * @return array token info dictionary
-	 * @return bool false if token is not selected
-	 */
+	* [getTokenInfo description]
+	* @param  string $selector
+	* @return array token info dictionary
+	* @return bool false if token is not selected
+	*/
 	private function getTokenInfo($selector){
 		$stmt = $this->conn->prepare("SELECT * FROM {$this->config['table_tokens']} WHERE selector = :selector");
 		$stmt->execute([':selector' => $selector]);
@@ -459,11 +459,11 @@ class Auth{
 
 
 	/**
-	 * [getCurrentUser description]
-	 * Get current user's info from database
-	 * @return array user info dictionary
-	 * @return bool false if no current user
-	 */
+	* [getCurrentUser description]
+	* Get current user's info from database
+	* @return array user info dictionary
+	* @return bool false if no current user
+	*/
 	public function getCurrentUser(){
 		return $this->getUser($_SESSION['uid']);
 	}
