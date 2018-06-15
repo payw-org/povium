@@ -49,12 +49,12 @@ class Auth{
 	*/
 	public function login($identifier, $user_pw, $remember){
 		$return = array('err' => true, 'msg' => '');
-
+		
 
 		$valid_user_id = $this->validateUserId($identifier);
 		if($valid_user_id['err']){				//	invalid user id
 			$valid_email = $this->validateEmail($identifier);
-			if($valid_email['err']){
+			if($valid_email['err']){			//	invalid email
 				$return['msg'] = $this->config['msg']['account_incorrect'];
 
 				return $return;
@@ -112,14 +112,35 @@ class Auth{
 	}
 
 
+
+	/**
+	* [logout description]
+	* delete session about authentication
+	* delete cookie about auto login
+	* delete table record about auto login
+	* @return void
+	*/
 	public function logout(){
+		unset($_SESSION['uid']);
 
+		if(isset($_COOKIE['auth_token'])){				//	if auto login cookie is set
+			$token = $_COOKIE['auth_token'];			//	token = selector:validator
+
+			$selector = strtok($token, ':');
+			$validator = hash('sha256', strtok(':'));
+
+			if($token_info = $this->getTokenInfo($selector)){		//	if table record found
+				if(hash_equals($validator, $token_info['validator'])){		//	if the cookie matches the record
+					$stmt = $this->conn->prepare("DELETE FROM {$this->config['table_tokens']} WHERE id = :id");
+					$stmt->execute([':id' => $token_info['id']]);
+				}
+			}
+
+			setcookie('auth_token', "", time() - 3600);
+			unset($_COOKIE['auth_token']);
+		}
 	}
 
-
-	public function register(){
-
-	}
 
 
 	/**
@@ -292,7 +313,7 @@ class Auth{
 	* @param  string $raw_pw
 	* @return string
 	*/
-	protected function getPasswordHash($raw_pw){
+	private function getPasswordHash($raw_pw){
 		return password_hash($raw_pw, PASSWORD_DEFAULT, $this->config['pw_hash_options']);
 	}
 
@@ -305,7 +326,7 @@ class Auth{
 	* @param  int $uid    [description]
 	* @return bool         [if password match, return true.]
 	*/
-	protected function passwordVerifyWithRehash($raw_pw, $hash, $uid){
+	private function passwordVerifyWithRehash($raw_pw, $hash, $uid){
 		if(!password_verify($raw_pw, $hash)){
 			return false;
 		}
@@ -329,7 +350,7 @@ class Auth{
 	* @param bool $remember [flag for auto login]
 	* @return bool
 	*/
-	protected function addSessionAndCookie($uid, $remember){
+	private function addSessionAndCookie($uid, $remember){
 		$_SESSION['uid'] = $uid;
 		$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET last_login_dt = :last_login_dt WHERE id = :id");
 		$stmt->execute([':last_login_dt' => date("Y-m-d H:i:s", time()), ':id' => $uid]);
@@ -416,12 +437,14 @@ class Auth{
 
 		if(!$token_info = $this->getTokenInfo($selector)){		//	if selector invalid
 			setcookie('auth_token', "", time() - 3600);
+			unset($_COOKIE['auth_token']);
 
 			return false;
 		}
 
 		if(!hash_equals($validator, $token_info['validator'])){			//	if validator invalid
 			setcookie('auth_token', "", time() - 3600);
+			unset($_COOKIE['auth_token']);
 			$stmt = $this->conn->prepare("DELETE FROM {$this->config['table_tokens']} WHERE id = :id");
 			$stmt->execute([':id' => $token_info['id']]);
 
@@ -430,6 +453,7 @@ class Auth{
 
 		if(strtotime($token_info['expire']) < time()){				//	if token has already expired
 			setcookie('auth_token', "", time() - 3600);
+			unset($_COOKIE['auth_token']);
 			$stmt = $this->conn->prepare("DELETE FROM {$this->config['table_tokens']} WHERE id = :id");
 			$stmt->execute([':id' => $token_info['id']]);
 
