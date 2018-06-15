@@ -31,7 +31,7 @@
 					</a>
 					<a href="/register" class="register">
 						<div class="bg"></div>
-						<span>시작하기</span>
+						<span>회원가입</span>
 					</a>
 				</div>
 			</div>

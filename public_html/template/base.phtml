@@ -5,20 +5,14 @@
 
 		<?php
 		// Meta tags included globally
-		// if ($this->isConfigSet("head_meta") && $this->getConfig("head_meta")
-		//     || !($this->isConfigSet("head_meta"))) {
-		// 	include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-meta.php";
-		// }
-		$this->basis("head_meta", $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-meta.php");
+		$this->basis("head_meta", "/global-inclusion/global-meta.php");
 		?>
 
-		<title></title>
+		<title><?php $this->embrace("title"); ?></title>
 
 		<?php
 		// CSS' included globally
-		// if ((isset($html_css) && $html_css) || !isset($html_css)) {
-		// 	include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-css.php";
-		// }
+		$this->basis("html_css", "/global-inclusion/global-css.php");
 
 		// CSS' included manually
 		$this->embrace("css");
@@ -30,22 +24,17 @@
 	<body>
 
 		<?php
-		// if ((isset($render_globalnav) && $render_globalnav) || !isset($render_globalnav)) {
-		// 	include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/globalnav/globalnav.php";
-		// }
+		$this->basis("render_globalnav", "/global-inclusion/globalnav/globalnav.php");
 		?>
 
 		<!-- Main tag -->
 		<?php
-		// if (isset($main)) {
-		// 	include_once $main;
-		// }
+		$this->embrace("main");
 		?>
 
 		<?php
-		// if ((isset($global_script) && $global_script) || !isset($global_script)) {
-		// 	include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-script.php";
-		// }
+		// Javascript files included globally
+		$this->basis("html_script", "/global-inclusion/global-script.php");
 		?>
 
 	</body>
