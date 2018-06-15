@@ -24,8 +24,7 @@
   border-top: 1px solid #F1F1F2;
   border-bottom: 1px solid #F1F1F2;
 }
-.auth-form > input {
-  text-align: center;
+.auth-form > .input-wrapper > input {
   margin-top: 1rem;
 }
 .auth-form > button {

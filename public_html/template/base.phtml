@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<?php
+		// Meta tags included globally
+		// if ($this->isConfigSet("head_meta") && $this->getConfig("head_meta")
+		//     || !($this->isConfigSet("head_meta"))) {
+		// 	include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-meta.php";
+		// }
+		$this->basis("head_meta", $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-meta.php");
+		?>
+
+		<title></title>
+
+		<?php
+		// CSS' included globally
+		// if ((isset($html_css) && $html_css) || !isset($html_css)) {
+		// 	include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-css.php";
+		// }
+
+		// CSS' included manually
+		$this->embrace("css");
+
+		?>
+
+	</head>
+
+	<body>
+
+		<?php
+		// if ((isset($render_globalnav) && $render_globalnav) || !isset($render_globalnav)) {
+		// 	include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/globalnav/globalnav.php";
+		// }
+		?>
+
+		<!-- Main tag -->
+		<?php
+		// if (isset($main)) {
+		// 	include_once $main;
+		// }
+		?>
+
+		<?php
+		// if ((isset($global_script) && $global_script) || !isset($global_script)) {
+		// 	include_once $_SERVER['DOCUMENT_ROOT'] . "/global-inclusion/global-script.php";
+		// }
+		?>
+
+	</body>
+
+</html>

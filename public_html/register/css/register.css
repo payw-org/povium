@@ -30,18 +30,12 @@
   width: 100%;
   max-width: 20rem;
   margin: auto;
+  padding-top: 1rem;
 }
 .provider input,
 .provider button {
   padding: .7rem 1rem;
-  margin-top: 2rem;
-}
-.provider input {
-  text-align: left;
-  color: #888888;
-}
-.provider input:focus {
-  color: inherit;
+  margin-top: 1rem;
 }
 .provider button {
   margin-top: 2rem;

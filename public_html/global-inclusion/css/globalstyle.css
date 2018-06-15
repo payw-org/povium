@@ -35,6 +35,9 @@ body {
   color: #222;
   overflow-x: hidden;
 }
+body.loaded {
+  display: block;
+}
 main {
   padding-top: 60px;
   overflow-x: hidden;
@@ -114,9 +117,10 @@ button::-moz-focus-inner {
 }
 .input-wrapper {
   position: relative;
-  -webkit-transition: padding .2s ease;
-  -o-transition: padding .2s ease;
-  transition: padding .2s ease;
+  -webkit-transition: top .2s ease, padding .2s ease;
+  -o-transition: top .2s ease, padding .2s ease;
+  transition: top .2s ease, padding .2s ease;
+  top: 0;
 }
 .input-wrapper .placeholder {
   position: absolute;
@@ -132,19 +136,27 @@ button::-moz-focus-inner {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-transition: left .2s ease, top .2s ease, -webkit-transform .33s ease;
-  transition: left .2s ease, top .2s ease, -webkit-transform .33s ease;
-  -o-transition: transform .33s ease, left .2s ease, top .2s ease;
-  transition: transform .33s ease, left .2s ease, top .2s ease;
-  transition: transform .33s ease, left .2s ease, top .2s ease, -webkit-transform .33s ease;
+  -webkit-transition: left .2s ease, top .2s ease, -webkit-transform .27s ease;
+  transition: left .2s ease, top .2s ease, -webkit-transform .27s ease;
+  -o-transition: transform .27s ease, left .2s ease, top .2s ease;
+  transition: transform .27s ease, left .2s ease, top .2s ease;
+  transition: transform .27s ease, left .2s ease, top .2s ease, -webkit-transform .27s ease;
 }
-.input-wrapper .placeholder.fixed {
+.input-wrapper.focused {
+  top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.input-wrapper.fixed {
+  top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.input-wrapper.fixed .placeholder {
   font-size: .9rem;
   -webkit-transform: scale(0.95);
   -ms-transform: scale(0.95);
   transform: scale(0.95);
   left: 0;
-  top: -1.4rem;
+  top: -1.3rem;
 }
 .input-basic {
   width: 100%;
@@ -153,6 +165,8 @@ button::-moz-focus-inner {
   border-radius: .5rem;
   padding: .7rem 1rem;
   font-size: 1.1rem;
+  text-align: left;
+  color: #888888;
   cursor: default;
   -webkit-transition: background .2s ease, color .2s ease;
   -o-transition: background .2s ease, color .2s ease;
@@ -165,6 +179,7 @@ button::-moz-focus-inner {
 .input-basic:focus {
   cursor: text;
   background: #e9e9eb;
+  color: inherit;
 }
 .input-basic:focus + .placeholder {
   font-size: .9rem;
@@ -172,7 +187,7 @@ button::-moz-focus-inner {
   -ms-transform: scale(0.95);
   transform: scale(0.95);
   left: 0;
-  top: -1.4rem;
+  top: -1.3rem;
 }
 input::-ms-clear {
   display: none;
@@ -249,11 +264,12 @@ label {
   -webkit-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
-  -webkit-transition: -webkit-transform .1s ease;
-  transition: -webkit-transform .1s ease;
-  -o-transition: transform .1s ease;
-  transition: transform .1s ease;
-  transition: transform .1s ease, -webkit-transform .1s ease;
+  opacity: 0;
+  -webkit-transition: opacity .1s ease, -webkit-transform .1s ease;
+  transition: opacity .1s ease, -webkit-transform .1s ease;
+  -o-transition: transform .1s ease, opacity .1s ease;
+  transition: transform .1s ease, opacity .1s ease;
+  transition: transform .1s ease, opacity .1s ease, -webkit-transform .1s ease;
   background: #5f42ff;
   -webkit-transform-origin: center;
   -ms-transform-origin: center;
@@ -274,4 +290,5 @@ label {
   -webkit-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
+  opacity: 1;
 }

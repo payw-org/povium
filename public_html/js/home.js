@@ -63,6 +63,14 @@ class HomeView {
 		// Mouse pointer events on popular posts
 		this.mouseFlag = 0;
 
+		this.popPostContainer.addEventListener('mouseover', (e) => {
+			this.stopAutoFlick();
+		})
+
+		this.popPostContainer.addEventListener('mouseout', (e) => {
+			this.autoFlick();
+		})
+
 		// Fire event when mouse down on popular posts
 		this.popPostContainer.addEventListener('mousedown', (e) => {
 			e.preventDefault();
