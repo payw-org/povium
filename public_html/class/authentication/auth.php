@@ -32,7 +32,8 @@ class Auth{
 
 	/**
 	* [__construct description]
-	* @param \PDO $conn
+	* @param PDO $conn
+	* @param array $config
 	*/
 	public function __construct(PDO $conn, array $config){
 		$this->conn = $conn;
@@ -49,7 +50,7 @@ class Auth{
 	*/
 	public function login($identifier, $user_pw, $remember){
 		$return = array('err' => true, 'msg' => '');
-		
+
 
 		$valid_user_id = $this->validateUserId($identifier);
 		if($valid_user_id['err']){				//	invalid user id
@@ -121,23 +122,20 @@ class Auth{
 	* @return void
 	*/
 	public function logout(){
-		unset($_SESSION['uid']);
+		$this->deleteSession();
 
 		if(isset($_COOKIE['auth_token'])){				//	if auto login cookie is set
 			$token = $_COOKIE['auth_token'];			//	token = selector:validator
 
-			$selector = strtok($token, ':');
-			$validator = hash('sha256', strtok(':'));
+			$encodedToken = $this->encodeToken($token);
 
-			if($token_info = $this->getTokenInfo($selector)){		//	if table record found
-				if(hash_equals($validator, $token_info['validator'])){		//	if the cookie matches the record
-					$stmt = $this->conn->prepare("DELETE FROM {$this->config['table_tokens']} WHERE id = :id");
-					$stmt->execute([':id' => $token_info['id']]);
+			if($token_info = $this->getTokenInfo($encodedToken['selector'])){		//	if table record found
+				if(hash_equals($encodedToken['validator'], $token_info['validator'])){		//	if the encoded token matches the record
+					$this->deleteTokenInfo($token_info['id']);
 				}
 			}
 
-			setcookie('auth_token', "", time() - 3600);
-			unset($_COOKIE['auth_token']);
+			$this->deleteCookie();
 		}
 	}
 
@@ -359,15 +357,14 @@ class Auth{
 			$hash = $this->generateRandomHash(30);
 			$token = substr_replace($hash, ':', 20, 0);			//	selector:validator
 
-			$selector = strtok($token, ':');
-			$validator = hash('sha256', strtok(':'));
+			$encodedtoken = $this->encodeToken($token);
 
 			$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_tokens']} (selector, validator, uid, expire)
 			VALUES (:selector, :validator, :uid, :expire)");
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
 			$query_params = [
-				':selector' => $selector,
-				':validator' => $validator,
+				':selector' => $encodedtoken['selector'],
+				':validator' => $encodedtoken['validator'],
 				':uid' => $uid,
 				':expire' => date("Y-m-d H:i:s", $expiration_time)
 			];
@@ -406,6 +403,17 @@ class Auth{
 
 
 	/**
+	* [getCurrentUser description]
+	* Get current user's info from database
+	* @return array user info dictionary
+	* @return bool false if no current user
+	*/
+	public function getCurrentUser(){
+		return $this->getUser($_SESSION['uid']);
+	}
+
+
+	/**
 	* [checkSession description]
 	* @return boolean
 	*/
@@ -430,37 +438,43 @@ class Auth{
 			return false;
 		}
 
-		$token = $_COOKIE['auth_token'];			//	token = selector:validator
+		$encodedToken = $this->encodeToken($_COOKIE['auth_token']);	//	token = selector:validator
 
-		$selector = strtok($token, ':');
-		$validator = hash('sha256', strtok(':'));
-
-		if(!$token_info = $this->getTokenInfo($selector)){		//	if selector invalid
-			setcookie('auth_token', "", time() - 3600);
-			unset($_COOKIE['auth_token']);
+		if(!$token_info = $this->getTokenInfo($encodedToken['selector'])){		//	if selector invalid
+			$this->deleteCookie();
 
 			return false;
 		}
 
-		if(!hash_equals($validator, $token_info['validator'])){			//	if validator invalid
-			setcookie('auth_token', "", time() - 3600);
-			unset($_COOKIE['auth_token']);
-			$stmt = $this->conn->prepare("DELETE FROM {$this->config['table_tokens']} WHERE id = :id");
-			$stmt->execute([':id' => $token_info['id']]);
+		if(!hash_equals($encodedToken['validator'], $token_info['validator'])){			//	if validator invalid
+			$this->deleteCookie();
 
 			return false;
 		}
 
 		if(strtotime($token_info['expire']) < time()){				//	if token has already expired
-			setcookie('auth_token', "", time() - 3600);
-			unset($_COOKIE['auth_token']);
-			$stmt = $this->conn->prepare("DELETE FROM {$this->config['table_tokens']} WHERE id = :id");
-			$stmt->execute([':id' => $token_info['id']]);
+			$this->deleteCookie();
+			$this->deleteTokenInfo($token_info['id']);
 
 			return false;
 		}
 
 		return $token_info['uid'];
+	}
+
+
+	/**
+	* [encodeToken description]
+	* @param  string $token [selector:raw validator]
+	* @return array        [selector, validator]
+	*/
+	private function encodeToken($token){
+		$return = array('selector' => '', 'validator' => '');
+
+		$return['selector'] = strtok($token, ':');
+		$return['validator'] = hash('sha256', strtok(':'));
+
+		return $return;
 	}
 
 
@@ -482,14 +496,37 @@ class Auth{
 	}
 
 
+
 	/**
-	* [getCurrentUser description]
-	* Get current user's info from database
-	* @return array user info dictionary
-	* @return bool false if no current user
+	* [deleteSession description]
+	*
 	*/
-	public function getCurrentUser(){
-		return $this->getUser($_SESSION['uid']);
+	private function deleteSession(){
+		unset($_SESSION['uid']);
+		session_destroy();
+	}
+
+
+	/**
+	* [deleteCookie description]
+	*
+	*/
+	private function deleteCookie(){
+		setcookie('auth_token', "", time() - 3600);
+		unset($_COOKIE['auth_token']);
+	}
+
+
+	/**
+	* [deleteTokenInfo description]
+	* @param  int $token_id
+	* @return boolean [if deletion success, return true.]
+	*/
+	private function deleteTokenInfo($token_id){
+		$stmt = $this->conn->prepare("DELETE FROM {$this->config['table_tokens']} WHERE id = :id");
+		$stmt->execute([':id' => $token_id]);
+
+		return $stmt->rowCount() == 1;
 	}
 
 
