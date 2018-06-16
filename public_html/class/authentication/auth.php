@@ -43,35 +43,32 @@ class Auth{
 
 	/**
 	* [login description]
-	* @param  string $identifier [user_id or email]
-	* @param  string $user_pw
+	* @param  string $email
+	* @param  string $password
 	* @param  bool $remember [flag for auto login]
 	* @return array	['err' is an error flag. 'msg' is an error message.]
 	*/
-	public function login($identifier, $user_pw, $remember){
+	public function login($email, $password, $remember){
 		$return = array('err' => true, 'msg' => '');
 
 
-		$valid_user_id = $this->validateUserId($identifier);
-		if($valid_user_id['err']){				//	invalid user id
-			$valid_email = $this->validateEmail($identifier);
-			if($valid_email['err']){			//	invalid email
-				$return['msg'] = $this->config['msg']['account_incorrect'];
-
-				return $return;
-			}
-		}
-
-
-		$valid_user_pw = $this->validateUserPw($user_pw);
-		if($valid_user_pw['err']){			//	invalid user pw
+		$valid_email = $this->validateEmail($email);
+		if($valid_email['err']){			//	invalid email
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
 
-		$uid = $this->getUID($identifier);
+		$valid_password = $this->validatePassword($password);
+		if($valid_password['err']){			//	invalid user pw
+			$return['msg'] = $this->config['msg']['account_incorrect'];
+
+			return $return;
+		}
+
+
+		$uid = $this->getUID($email);
 		if(!$uid){						//	unregistered user id
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
@@ -87,7 +84,7 @@ class Auth{
 		}
 
 
-		if(!$this->passwordVerifyWithRehash($user_pw, $user['user_pw'], $uid)){		//	incorrect password
+		if(!$this->passwordVerifyWithRehash($password, $user['password'], $uid)){		//	incorrect password
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
@@ -104,7 +101,7 @@ class Auth{
 		//	login success
 		$return['err'] = false;
 
-		if(!$this->addSessionAndCookie($uid, $remember)){
+		if(!$this->addSessionAndCookie($uid, $remember)){		//	if failed auto login setting
 			$return['msg'] = $this->config['msg']['system_warning'];
 		}
 
@@ -125,7 +122,7 @@ class Auth{
 		$this->deleteSession();
 
 		if(isset($_COOKIE['auth_token'])){				//	if auto login cookie is set
-			$token = $_COOKIE['auth_token'];			//	token = selector:validator
+			$token = $_COOKIE['auth_token'];			//	token = selector:raw validator
 
 			$encodedToken = $this->encodeToken($token);
 
@@ -141,35 +138,8 @@ class Auth{
 
 
 
-	/**
-	* [validateUserId description]
-	* @param  string $user_id
-	* @return array ['err' is an error flag. 'msg' is an error message.]
-	*/
-	public function validateUserId($user_id){
-		$return = array('err' => true, 'msg' => '');
-
-		if(strlen($user_id) < (int)$this->config['len']['userid_min_length']){
-			$return['msg'] = $this->config['msg']['userid_short'];
-
-			return $return;
-		}
-
-		if(strlen($user_id) > (int)$this->config['len']['userid_max_length']){
-			$return['msg'] = $this->config['msg']['userid_long'];
-
-			return $return;
-		}
-
-		if(!preg_match($this->config['regexp']['userid_regexp'], $user_id)){
-			$return['msg'] = $this->config['msg']['userid_invalid'];
-
-			return $return;
-		}
-
-		$return['err'] = false;
-
-		return $return;
+	public function register(){
+		
 	}
 
 
@@ -206,27 +176,27 @@ class Auth{
 
 
 	/**
-	* [validateUserPw description]
-	* @param  string $user_pw
+	* [validatePassword description]
+	* @param  string $password
 	* @return array ['err' is an error flag. 'msg' is an error message.]
 	*/
-	public function validateUserPw($user_pw){
+	public function validatePassword($password){
 		$return = array('err' => true, 'msg' => '');
 
-		if(strlen($user_pw) < (int)$this->config['len']['userpw_min_length']){
-			$return['msg'] = $this->config['msg']['userpw_short'];
+		if(strlen($password) < (int)$this->config['len']['password_min_length']){
+			$return['msg'] = $this->config['msg']['password_short'];
 
 			return $return;
 		}
 
-		if(strlen($user_pw) > (int)$this->config['len']['userpw_max_length']){
-			$return['msg'] = $this->config['msg']['userpw_long'];
+		if(strlen($password) > (int)$this->config['len']['password_max_length']){
+			$return['msg'] = $this->config['msg']['password_long'];
 
 			return $return;
 		}
 
-		if(!preg_match($this->config['regexp']['userpw_regexp'], $user_pw)){
-			$return['msg'] = $this->config['msg']['userpw_invalid'];
+		if(!preg_match($this->config['regexp']['password_regexp'], $password)){
+			$return['msg'] = $this->config['msg']['password_invalid'];
 
 			return $return;
 		}
@@ -239,12 +209,12 @@ class Auth{
 
 	/**
 	* [getUID description]
-	* @param  string $identifier
+	* @param  string $email
 	* @return int or false
 	*/
-	public function getUID($identifier){
-		$stmt = $this->conn->prepare("SELECT id FROM {$this->config['table_users']} WHERE user_id = :user_id OR email = :email");
-		$stmt->execute([':user_id' => $identifier, ':email' => $identifier]);
+	public function getUID($email){
+		$stmt = $this->conn->prepare("SELECT id FROM {$this->config['table_users']} WHERE email = :email");
+		$stmt->execute([':email' => $email]);
 
 		if($stmt->rowCount() == 0){
 			return false;
@@ -274,7 +244,7 @@ class Auth{
 	/**
 	* [getUser description]
 	* @param  int  $uid
-	* @param  boolean $with_pw [if it is true, return with user_pw.]
+	* @param  boolean $with_pw [if it is true, return with password.]
 	* @return array
 	* @return bool false
 	*/
@@ -289,7 +259,7 @@ class Auth{
 		$user = $stmt->fetch();
 
 		if(!$with_pw){
-			unset($user['user_pw']);
+			unset($user['password']);
 		}
 
 		return $user;
@@ -319,9 +289,9 @@ class Auth{
 	/**
 	* [passwordVerifyWithRehash description]
 	* Verify password and rehash if hash options is changed.
-	* @param  string $raw_pw [description]
-	* @param  string $hash   [description]
-	* @param  int $uid    [description]
+	* @param  string $raw_pw
+	* @param  string $hash
+	* @param  int $uid
 	* @return bool         [if password match, return true.]
 	*/
 	private function passwordVerifyWithRehash($raw_pw, $hash, $uid){
@@ -332,8 +302,8 @@ class Auth{
 		if(password_needs_rehash($hash, PASSWORD_DEFAULT, $this->config['pw_hash_options'])){
 			$new_hash = getPasswordHash($raw_pw);
 
-			$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET user_pw = :user_pw WHERE id = :id");
-			$stmt->execute([':user_pw' => $new_hash, ':id' => $uid]);
+			$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET password = :password WHERE id = :id");
+			$stmt->execute([':password' => $new_hash, ':id' => $uid]);
 		}
 
 		return true;
@@ -360,7 +330,7 @@ class Auth{
 			$encodedtoken = $this->encodeToken($token);
 
 			$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_tokens']} (selector, validator, uid, expire)
-			VALUES (:selector, :validator, :uid, :expire)");
+											VALUES (:selector, :validator, :uid, :expire)");
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
 			$query_params = [
 				':selector' => $encodedtoken['selector'],
@@ -405,7 +375,7 @@ class Auth{
 	/**
 	* [getCurrentUser description]
 	* Get current user's info from database
-	* @return array user info dictionary
+	* @return array user info associative array
 	* @return bool false if no current user
 	*/
 	public function getCurrentUser(){
@@ -519,6 +489,7 @@ class Auth{
 
 	/**
 	* [deleteTokenInfo description]
+	* Delete tokeninfo record from table
 	* @param  int $token_id
 	* @return boolean [if deletion success, return true.]
 	*/
