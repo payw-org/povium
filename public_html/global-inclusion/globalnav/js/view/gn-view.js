@@ -13,7 +13,6 @@ class GlobalNavView {
 		window.addEventListener('touchstart', e => this.handleWindowClickEvent(e));
 
 		document.querySelector('#globalnav .magnifier').addEventListener('click', e => {
-			console.log('clicked magnifier');
 			this.handleMagnifierEvent();
 		});
 

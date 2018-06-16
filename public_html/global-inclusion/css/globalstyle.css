@@ -52,6 +52,7 @@ input {
   background: none;
   border: none;
   display: block;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 button:focus {
   outline: none;
@@ -124,6 +125,7 @@ button::-moz-focus-inner {
 }
 .input-wrapper .placeholder {
   position: absolute;
+  width: 100%;
   left: 50%;
   top: 50%;
   -webkit-transform: translateX(-50%) translateY(-50%);
@@ -259,9 +261,9 @@ label {
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
-}
-.checkbox-violet + label::before:hover {
-  background: black;
+  -webkit-transition: background .2s ease;
+  -o-transition: background .2s ease;
+  transition: background .2s ease;
 }
 .checkbox-violet + label::after {
   content: "";
@@ -274,14 +276,15 @@ label {
   transform: translateY(-50%) scale(0);
   width: 10px;
   height: 10px;
-  border-radius: 0px;
+  border-radius: 2px;
   background: #5f42ff;
+  border-radius: 50px;
   opacity: 0;
-  -webkit-transition: opacity .1s ease, -webkit-transform .1s ease;
-  transition: opacity .1s ease, -webkit-transform .1s ease;
-  -o-transition: transform .1s ease, opacity .1s ease;
-  transition: transform .1s ease, opacity .1s ease;
-  transition: transform .1s ease, opacity .1s ease, -webkit-transform .1s ease;
+  -webkit-transition: opacity 0.1s ease, border-radius 0.1s ease, -webkit-transform 0.1s ease;
+  transition: opacity 0.1s ease, border-radius 0.1s ease, -webkit-transform 0.1s ease;
+  -o-transition: transform 0.1s ease, opacity 0.1s ease, border-radius 0.1s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease, border-radius 0.1s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease, border-radius 0.1s ease, -webkit-transform 0.1s ease;
   will-change: transform, opacity;
 }
 .checkbox-violet:checked + label::after {
@@ -290,4 +293,10 @@ label {
   -ms-transform: translateY(-50%) scale(1);
   transform: translateY(-50%) scale(1);
   border-radius: 2px;
+}
+.checkbox-violet + label:hover::before {
+  background: #eeeef0;
+}
+.checkbox-violet + label:active::before {
+  background: #e9e9eb;
 }

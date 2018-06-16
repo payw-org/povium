@@ -54,6 +54,7 @@ button, input {
 	background: none;
 	border: none;
 	display: block;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 
 
@@ -119,6 +120,7 @@ button::-moz-focus-inner {border:0;}
 
 	.placeholder {
 		position: absolute;
+		width: 100%;
 		left: 50%;
 		top: 50%;
 		transform: translateX(-50%) translateY(-50%);
@@ -249,10 +251,7 @@ label {
 		left: 0;
 		top: 50%;
 		transform: translateY(-50%);
-
-		&:hover {
-			background: black;
-		}
+		transition: background .2s ease;
 	}
 
 	& + label::after {
@@ -264,10 +263,11 @@ label {
 		transform: translateY(-50%) scale(0);
 		width: 10px;
 		height: 10px;
-		border-radius: 0px;
+		border-radius: 2px;
 		background: @pvm-purple;
+		border-radius: 50px;
 		opacity: 0;
-		transition: transform .1s ease, opacity .1s ease;
+		transition: transform .1s ease, opacity .1s ease, border-radius .1s ease;
 		will-change: transform, opacity;
 	}
 
@@ -275,6 +275,14 @@ label {
 		opacity: 1;
 		transform: translateY(-50%) scale(1);
 		border-radius: 2px;
+	}
+
+	& + label:hover::before {
+		background: darken(@white-blue, 1%);
+	}
+
+	& + label:active::before {
+		background: @dark-white-blue;
 	}
 
 }
