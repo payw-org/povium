@@ -15,7 +15,7 @@
 		$this->basis("html_css", "/global-inclusion/global-css.php");
 
 		// CSS' included manually
-		$this->embrace("css");
+		$this->optional("css");
 
 		?>
 
@@ -35,6 +35,9 @@
 		<?php
 		// Javascript files included globally
 		$this->basis("html_script", "/global-inclusion/global-script.php");
+
+		// Javascript files included manually
+		$this->optional("script");
 		?>
 
 	</body>

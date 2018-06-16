@@ -10,20 +10,30 @@ class TemplateEngine {
 	 * @param  array   $config        "name" => value
 	 * @return null                   Return nothing
 	 */
-	public function render ($template_dir, $config, $is_root = false) {
+	public function render ($template_dir, $config) {
 
 		if (is_array($config)) {
+
 			$this->config = $config;
+
 		} else {
+
 			trigger_error("Config is not an array", E_USER_ERROR);
+
 		}
 
 		if (is_file(getcwd() . "/" . $template_dir)) {
+
 			include getcwd() . "/" . $template_dir;
+
 		} else if (is_file($_SERVER['DOCUMENT_ROOT'] . $template_dir)) {
+
 			include $_SERVER['DOCUMENT_ROOT'] . $template_dir;
+
 		} else {
+
 			trigger_error("File not exist", E_USER_ERROR);
+
 		}
 
 	}
@@ -44,7 +54,9 @@ class TemplateEngine {
 			} else if ($this->getConfig($config_name)[0] == "/") {
 
 				if (is_file($_SERVER['DOCUMENT_ROOT'] . $this->getConfig($config_name))) {
+
 					include_once $_SERVER['DOCUMENT_ROOT'] . $this->getConfig($config_name);
+
 				}
 
 			} else {
@@ -54,38 +66,67 @@ class TemplateEngine {
 			}
 
 		} else {
+
 			echo $config_name;
+
 		}
 
 	}
 
 	public function isConfigSet ($config_name) {
+
 		if (isset($this->config[$config_name])) {
+
 			return true;
+
 		} else {
+
 			false;
+
 		}
+
 	}
 
 	public function getConfig ($config_name) {
+
 		return $this->config[$config_name];
+
 	}
 
 	public function setConfig ($config_name, $new) {
+
 		$this->config[$config_name] = $new;
+
 	}
 
 	/**
-	 * This function automatically includes the template without config. To avoid including the template, set the confing to false.
-	 * @param  string  $config_name
-	 * @param  string  $str
-	 * @param  boolean $is_root     [description]
-	 * @return boolean              [description]
+	 * This function automatically includes the template without config set to true. To avoid including the template, set the config to false.
+	 * @param  string  $config_name  Config Name
+	 * @param  string  $dir          Directory
+	 * @return null                  Return Nothing
 	 */
-	public function basis ($config_name, $dir) {
+	public function basis ($config_name, $dir, $config = []) {
+
 		if (($this->isConfigSet($config_name) && $this->getConfig($config_name)) || !($this->isConfigSet($config_name))) {
-			$this->setConfig($config_name, $dir);
+
+			// $this->setConfig($config_name, $dir);
+			// $this->embrace($config_name);
+			$te = new TemplateEngine();
+			$te->render($dir, $config);
+
+		}
+
+	}
+
+	/**
+	 * If there is no config, do nothing.
+	 * @param  string $config_name
+	 */
+	public function optional ($config_name) {
+		if ($this->isConfigSet($config_name)) {
 			$this->embrace($config_name);
+		} else {
+			return;
 		}
 	}
 

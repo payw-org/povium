@@ -1,0 +1,30 @@
+<main id="home-main">
+
+	<section id="popular" class="post-section">
+
+		<div class="post-view">
+			<div class="guided-view">
+				<ul class="post-container" data-post-pos="0">
+				<?php
+				for ($i = 0; $i < 6; $i++) {
+				?>
+					<li class="post-wrapper">
+						<a class="post-link" href="/register"></a>
+						<div class="post">
+							<img class="hero" src="/assets/images/sets/<?php echo $this->getConfig("post_img_link")[$i]; ?>.jpg" alt="">
+							<div class="post-contents">
+								<h1><?php echo $this->getConfig("post_title")[$i]; ?></h1>
+								<span class="writer-name">- <?php echo $this->getConfig("post_writer")[$i]; ?> -</span>
+							</div>
+						</div>
+					</li>
+				<?php
+				}
+				?>
+			</ul>
+			</div>
+		</div>
+
+	</section>
+
+</main>
