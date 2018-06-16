@@ -9,8 +9,9 @@
 				for ($i = 0; $i < sizeof($this->getConfig("post_img_link")); $i++) {
 				?>
 					<li class="post-wrapper">
-						<a class="post-link" href="/register"></a>
 						<div class="post">
+							<a class="post-link" href="/register"></a>
+							<img class="hero" src="/assets/images/sets/<?php echo $this->getConfig("post_img_link")[$i]; ?>.jpg" alt="">
 							<img class="hero" src="/assets/images/sets/<?php echo $this->getConfig("post_img_link")[$i]; ?>.jpg" alt="">
 							<div class="post-contents">
 								<h1><?php echo $this->getConfig("post_title")[$i]; ?></h1>

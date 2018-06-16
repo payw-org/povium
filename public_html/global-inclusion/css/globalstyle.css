@@ -238,57 +238,56 @@ label {
   color: #fff;
 }
 .checkbox-violet {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: #F1F1F2;
-  -webkit-transition: background .2s ease;
-  -o-transition: background .2s ease;
-  transition: background .2s ease;
-  padding: 9px;
-  border-radius: 4px;
-  display: inline-block;
-  vertical-align: middle;
+  display: none;
+}
+.checkbox-violet + label {
   position: relative;
-  margin-right: 3px;
+  padding-left: 30px;
 }
-.checkbox-violet:hover {
-  background: #eeeef0;
-}
-.checkbox-violet:active,
-.checkbox-violet:checked:active {
-  background: #e9e9eb;
-}
-.checkbox-violet:after {
+.checkbox-violet + label::before {
   content: "";
-  -webkit-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
+  display: inline-block;
+  width: 0;
+  height: 0;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background: #F1F1F2;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.checkbox-violet + label::before:hover {
+  background: black;
+}
+.checkbox-violet + label::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  -webkit-transform: translateY(-50%) scale(0);
+  -ms-transform: translateY(-50%) scale(0);
+  transform: translateY(-50%) scale(0);
+  width: 10px;
+  height: 10px;
+  border-radius: 0px;
+  background: #5f42ff;
   opacity: 0;
   -webkit-transition: opacity .1s ease, -webkit-transform .1s ease;
   transition: opacity .1s ease, -webkit-transform .1s ease;
   -o-transition: transform .1s ease, opacity .1s ease;
   transition: transform .1s ease, opacity .1s ease;
   transition: transform .1s ease, opacity .1s ease, -webkit-transform .1s ease;
-  background: #5f42ff;
-  -webkit-transform-origin: center;
-  -ms-transform-origin: center;
-  transform-origin: center;
-  font-size: 12px;
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  right: 4px;
-  bottom: 4px;
-  border-radius: 2px;
-  color: #5f42ff;
+  will-change: transform, opacity;
 }
-.checkbox-violet:checked {
-  color: #5f42ff;
-}
-.checkbox-violet:checked:after {
-  -webkit-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
+.checkbox-violet:checked + label::after {
   opacity: 1;
+  -webkit-transform: translateY(-50%) scale(1);
+  -ms-transform: translateY(-50%) scale(1);
+  transform: translateY(-50%) scale(1);
+  border-radius: 2px;
 }

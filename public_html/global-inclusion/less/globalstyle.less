@@ -227,51 +227,104 @@ label {
 }
 
 
-// Custom Checkbox style
 .checkbox-violet {
-	appearance: none;
-	background-color: @white-blue;
-	transition: background .2s ease;
-	// border: 1px solid #d6d6d6;
-	padding: 9px;
-	border-radius: 4px;
-	display: inline-block;
-	vertical-align: middle;
-	position: relative;
-	margin-right: 3px;
 
-	&:hover {
-		background: darken(@white-blue, 1%);
+	display: none;
+
+	& + label {
+		position: relative;
+		padding-left: 30px;
 	}
 
-	&:active, &:checked:active {
-		background: @dark-white-blue;
-	}
-
-	&:after {
-		// content: '\2714';
+	& + label::before {
 		content: "";
-		transform: scale(0);
-		opacity: 0;
-		transition: transform .1s ease, opacity .1s ease;
-		background: @pvm-purple;
-		transform-origin: center;
-		font-size: 12px;
+		display: inline-block;
+		width: 0;
+		height: 0;
+		padding: 10px;
+		border: none;
+		border-radius: 4px;
+		background: @white-blue;
 		position: absolute;
-		top: 4px;
-		left: 4px;
-		right: 4px;
-		bottom: 4px;
-		border-radius: 2px;
-		color: @pvm-purple;
-	}
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
 
-	&:checked {
-		color: @pvm-purple;
-
-		&:after {
-			transform: scale(1);
-			opacity: 1;
+		&:hover {
+			background: black;
 		}
 	}
+
+	& + label::after {
+		content: "";
+		display: inline-block;
+		position: absolute;
+		left: 5px;
+		top: 50%;
+		transform: translateY(-50%) scale(0);
+		width: 10px;
+		height: 10px;
+		border-radius: 0px;
+		background: @pvm-purple;
+		opacity: 0;
+		transition: transform .1s ease, opacity .1s ease;
+		will-change: transform, opacity;
+	}
+
+	&:checked + label::after {
+		opacity: 1;
+		transform: translateY(-50%) scale(1);
+		border-radius: 2px;
+	}
+
 }
+
+
+// Custom Checkbox style
+// .checkbox-violet {
+// 	appearance: none;
+// 	background-color: @white-blue;
+// 	transition: background .2s ease;
+// 	// border: 1px solid #d6d6d6;
+// 	padding: 9px;
+// 	border-radius: 4px;
+// 	display: inline-block;
+// 	vertical-align: middle;
+// 	position: relative;
+// 	margin-right: 3px;
+//
+// 	&:hover {
+// 		background: darken(@white-blue, 1%);
+// 	}
+//
+// 	&:active, &:checked:active {
+// 		background: @dark-white-blue;
+// 	}
+//
+// 	&:after {
+// 		// content: '\2714';
+// 		content: "";
+// 		transform: scale(0);
+// 		opacity: 0;
+// 		transition: transform .1s ease, opacity .1s ease;
+// 		background: @pvm-purple;
+// 		transform-origin: center;
+// 		font-size: 12px;
+// 		position: absolute;
+// 		top: 4px;
+// 		left: 4px;
+// 		right: 4px;
+// 		bottom: 4px;
+// 		border-radius: 2px;
+// 		color: @pvm-purple;
+// 	}
+//
+// 	&:checked {
+// 		color: @pvm-purple;
+//
+// 		&:after {
+// 			transform: scale(1);
+// 			opacity: 1;
+// 		}
+// 	}
+// }

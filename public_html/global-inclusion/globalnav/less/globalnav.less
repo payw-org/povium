@@ -81,6 +81,10 @@
 	align-items: center;
 	margin-right: @search-margin;
 
+	.responsive({
+		display: none;
+	},{});
+
 	.container {
 		display: inherit;
 
@@ -106,7 +110,7 @@
 				transition: color @pvm-animation;
 				transition-duration: .2s;
 				font-weight: 400;
-				font-size: 17px;
+				font-size: 16px;
 			}
 
 			.bg {

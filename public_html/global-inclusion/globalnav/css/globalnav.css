@@ -88,6 +88,11 @@
   align-items: center;
   margin-right: 18px;
 }
+@media only screen and (max-width: 768px) {
+  #gn-sign-register {
+    display: none;
+  }
+}
 #gn-sign-register .container {
   display: inherit;
 }
@@ -121,7 +126,7 @@
   -o-transition-duration: .2s;
   transition-duration: .2s;
   font-weight: 400;
-  font-size: 17px;
+  font-size: 16px;
 }
 #gn-sign-register .container .sign-in .bg,
 #gn-sign-register .container .register .bg {

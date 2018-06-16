@@ -33,7 +33,7 @@
 				flex-wrap: nowrap;
 				height: 100%;
 				font-size: 0;
-				transition: transform .3s ease;
+				transition: transform .7s cubic-bezier(0.63, 0.02, 0.07, 0.99);
 				will-change: transform;
 				-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 
@@ -45,6 +45,10 @@
 					}
 				}
 
+				&.ease {
+					transition: transform .3s ease;
+				}
+
 				.post-wrapper {
 
 					display: block;
@@ -52,30 +56,30 @@
 					height: 100%;
 					padding: 0 .5rem;
 					position: relative;
-					transition: transform .2s ease;
-
-					&.active {
-						transform: scale(.97);
-					}
-
-					.post-link {
-						cursor: default;
-						position: absolute;
-						left: 0;
-						right: 0;
-						top: 0;
-						bottom: 0;
-					}
 
 					.post {
+						cursor: pointer;
 						position: relative;
 						height: 100%;
 						margin: auto;
 						// background: #006dfe;
 						border-radius: 20px;
 						overflow: hidden;
-						pointer-events: none;
 						user-select: none;
+						transition: transform .4s ease;
+
+						&.active {
+							transform: scale(.95);
+						}
+
+						.post-link {
+							position: absolute;
+							left: 0;
+							right: 0;
+							top: 0;
+							bottom: 0;
+							z-index: 10;
+						}
 
 						.hero {
 							width: 100%;
@@ -90,12 +94,12 @@
 							right: 0;
 							bottom: 0;
 							padding: .8rem;
-							background: rgba(0,0,0,.4);
+							background: rgba(0,0,0,.5);
 							color: #fff;
 							text-align: center;
 							border-radius: 0 0 20px 20px;
-							backdrop-filter: blur(20px);
-							-webkit-backdrop-filter: blur(20px);
+							pointer-events: none;
+							// backdrop-filter: blur(20px);
 
 							h1 {
 								font-size: 1.7rem;
