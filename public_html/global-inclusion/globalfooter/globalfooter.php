@@ -1,3 +1,0 @@
-<footer id="globalfooter">
-	
-</footer>

@@ -32,7 +32,7 @@ class TemplateEngine {
 
 		} else {
 
-			trigger_error("File not exist", E_USER_ERROR);
+			echo $template_dir;
 
 		}
 

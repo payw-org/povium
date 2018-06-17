@@ -9,6 +9,7 @@ html {
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
   font-size: 100%;
+  background: #F1F1F2;
   word-wrap: break-word;
   word-break: keep-all;
 }
@@ -34,6 +35,7 @@ body {
   font-family: 'JHM Pro', sans-serif;
   color: #222;
   overflow-x: hidden;
+  background: #fff;
 }
 body.loaded {
   display: block;
@@ -125,12 +127,14 @@ button::-moz-focus-inner {
 }
 .input-wrapper .placeholder {
   position: absolute;
-  width: 100%;
   left: 50%;
   top: 50%;
   -webkit-transform: translateX(-50%) translateY(-50%);
   -ms-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%);
+  -webkit-transform-origin: left;
+  -ms-transform-origin: left;
+  transform-origin: left;
   font-size: 1.1rem;
   color: #808080;
   pointer-events: none;
@@ -138,27 +142,53 @@ button::-moz-focus-inner {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  -webkit-transition: left .2s ease, top .2s ease, -webkit-transform .27s ease;
-  transition: left .2s ease, top .2s ease, -webkit-transform .27s ease;
-  -o-transition: transform .27s ease, left .2s ease, top .2s ease;
-  transition: transform .27s ease, left .2s ease, top .2s ease;
-  transition: transform .27s ease, left .2s ease, top .2s ease, -webkit-transform .27s ease;
+  -webkit-transition: left .2s ease, top .2s ease, -webkit-transform .2s ease;
+  transition: left .2s ease, top .2s ease, -webkit-transform .2s ease;
+  -o-transition: transform .2s ease, left .2s ease, top .2s ease;
+  transition: transform .2s ease, left .2s ease, top .2s ease;
+  transition: transform .2s ease, left .2s ease, top .2s ease, -webkit-transform .2s ease;
 }
 .input-wrapper.focused {
-  top: 1.5rem;
-  padding-bottom: 1.5rem;
+  top: 1.2rem;
+  padding-bottom: 1.2rem;
+}
+.input-wrapper.focused .placeholder {
+  width: auto;
+  -webkit-transform: scale(0.85) translateX(0) translateY(-50%);
+  -ms-transform: scale(0.85) translateX(0) translateY(-50%);
+  transform: scale(0.85) translateX(0) translateY(-50%);
+  left: .3rem;
+  top: -0.8rem;
 }
 .input-wrapper.fixed {
-  top: 1.5rem;
-  padding-bottom: 1.5rem;
+  top: 1.2rem;
+  padding-bottom: 1.2rem;
 }
 .input-wrapper.fixed .placeholder {
+  width: auto;
+  -webkit-transform: scale(0.85) translateX(0) translateY(-50%);
+  -ms-transform: scale(0.85) translateX(0) translateY(-50%);
+  transform: scale(0.85) translateX(0) translateY(-50%);
+  left: .3rem;
+  top: -0.8rem;
+}
+.input-wrapper .expanded-box {
+  border-radius: 0 0 .5rem .5rem;
+  -webkit-transition: height .2s ease, padding .2s ease;
+  -o-transition: height .2s ease, padding .2s ease;
+  transition: height .2s ease, padding .2s ease;
+  padding: .3rem;
   font-size: .9rem;
-  -webkit-transform: scale(0.95);
-  -ms-transform: scale(0.95);
-  transform: scale(0.95);
-  left: 0;
-  top: -1.3rem;
+  font-weight: 400;
+}
+.input-wrapper .expanded-box.collapsed,
+.input-wrapper .expanded-box.collapsing {
+  padding: 0;
+  height: 0;
+}
+.input-wrapper .expanded-box.error-msg-box {
+  background: #ff2323;
+  color: #fff;
 }
 .input-basic {
   width: 100%;
@@ -170,9 +200,13 @@ button::-moz-focus-inner {
   text-align: left;
   color: #888888;
   cursor: default;
-  -webkit-transition: background .2s ease, color .2s ease;
-  -o-transition: background .2s ease, color .2s ease;
-  transition: background .2s ease, color .2s ease;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -webkit-transition: background 0.2s ease, color 0.2s ease, -webkit-box-shadow 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, -webkit-box-shadow 0.2s ease;
+  -o-transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, -webkit-box-shadow 0.2s ease;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 .input-basic:hover {
@@ -183,13 +217,8 @@ button::-moz-focus-inner {
   background: #e9e9eb;
   color: inherit;
 }
-.input-basic:focus + .placeholder {
-  font-size: .9rem;
-  -webkit-transform: scale(0.95);
-  -ms-transform: scale(0.95);
-  transform: scale(0.95);
-  left: 0;
-  top: -1.3rem;
+.input-basic.expanded {
+  border-radius: .5rem .5rem 0 0;
 }
 input::-ms-clear {
   display: none;
@@ -299,4 +328,10 @@ label {
 }
 .checkbox-violet + label:active::before {
   background: #e9e9eb;
+}
+.pvm-violet {
+  color: #5f42ff;
+}
+.pvm-aqua {
+  color: #13edbd;
 }

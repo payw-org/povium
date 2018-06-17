@@ -10,6 +10,8 @@ html {
 	text-size-adjust: 100%;
 	font-size: 100%; // 62.5% of 16px = 10px
 
+	background: @white-blue;
+
 	word-wrap: break-word;
 	word-break: keep-all;
 
@@ -34,6 +36,7 @@ body {
 	color: @soft-black;
 	overflow-x: hidden;
 	// display: none;
+	background: #fff;
 
 	&.loaded {
 		display: block;
@@ -120,32 +123,59 @@ button::-moz-focus-inner {border:0;}
 
 	.placeholder {
 		position: absolute;
-		width: 100%;
+		// width: 100%;
 		left: 50%;
 		top: 50%;
 		transform: translateX(-50%) translateY(-50%);
+		transform-origin: left;
 		font-size: 1.1rem;
 		color: #808080;
 		pointer-events: none;
 		user-select: none;
-		transition: transform .27s ease, left .2s ease, top .2s ease;
+		transition: transform .2s ease, left .2s ease, top .2s ease;
 	}
 
 	&.focused {
-		top: 1.5rem;
-		padding-bottom: 1.5rem;
+		top: 1.2rem;
+		padding-bottom: 1.2rem;
+
+		.placeholder {
+			width: auto;
+			transform: scale(.85) translateX(0) translateY(-50%);
+			left: .3rem;
+			top: -.8rem;
+		}
 	}
 
 	&.fixed {
 
-		top: 1.5rem;
-		padding-bottom: 1.5rem;
+		top: 1.2rem;
+		padding-bottom: 1.2rem;
 
 		.placeholder {
-			font-size: .9rem;
-			transform: scale(.95);
-			left: 0;
-			top: -1.3rem;
+			width: auto;
+			transform: scale(.85) translateX(0) translateY(-50%);
+			left: .3rem;
+			top: -.8rem;
+		}
+	}
+
+	.expanded-box {
+
+		border-radius: 0 0 .5rem .5rem;
+		transition: height .2s ease, padding .2s ease;
+		padding: .3rem;
+		font-size: .9rem;
+		font-weight: 400;
+
+		&.collapsed, &.collapsing {
+			padding: 0;
+			height: 0;
+		}
+
+		&.error-msg-box {
+			background: @pvm-red;
+			color: #fff;
 		}
 	}
 }
@@ -161,7 +191,8 @@ button::-moz-focus-inner {border:0;}
 	text-align: left;
 	color: #888888;
 	cursor: default;
-	transition: background .2s ease, color .2s ease;
+	box-shadow: none;
+	transition: background .2s ease, color .2s ease, box-shadow .2s ease;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 
 	&:hover {
@@ -169,23 +200,16 @@ button::-moz-focus-inner {border:0;}
 	}
 
 	&:focus {
-
 		cursor: text;
 		background: @dark-white-blue;
 		color: inherit;
-
-		& + .placeholder {
-			font-size: .9rem;
-			transform: scale(.95);
-			left: 0;
-			top: -1.3rem;
-		}
 	}
 
-	&:active {
-
+	&.expanded {
+		border-radius: .5rem .5rem 0 0;
 	}
 }
+
 
 input::-ms-clear {
 	display: none;
@@ -287,52 +311,11 @@ label {
 
 }
 
+// Text Color
+.pvm-violet {
+	color: @pvm-purple;
+}
 
-// Custom Checkbox style
-// .checkbox-violet {
-// 	appearance: none;
-// 	background-color: @white-blue;
-// 	transition: background .2s ease;
-// 	// border: 1px solid #d6d6d6;
-// 	padding: 9px;
-// 	border-radius: 4px;
-// 	display: inline-block;
-// 	vertical-align: middle;
-// 	position: relative;
-// 	margin-right: 3px;
-//
-// 	&:hover {
-// 		background: darken(@white-blue, 1%);
-// 	}
-//
-// 	&:active, &:checked:active {
-// 		background: @dark-white-blue;
-// 	}
-//
-// 	&:after {
-// 		// content: '\2714';
-// 		content: "";
-// 		transform: scale(0);
-// 		opacity: 0;
-// 		transition: transform .1s ease, opacity .1s ease;
-// 		background: @pvm-purple;
-// 		transform-origin: center;
-// 		font-size: 12px;
-// 		position: absolute;
-// 		top: 4px;
-// 		left: 4px;
-// 		right: 4px;
-// 		bottom: 4px;
-// 		border-radius: 2px;
-// 		color: @pvm-purple;
-// 	}
-//
-// 	&:checked {
-// 		color: @pvm-purple;
-//
-// 		&:after {
-// 			transform: scale(1);
-// 			opacity: 1;
-// 		}
-// 	}
-// }
+.pvm-aqua {
+	color: @pvm-green;
+}
