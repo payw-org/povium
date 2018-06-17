@@ -33,6 +33,9 @@ class EditorController {
 
 	}
 
+	/**
+	 * Initialize empty editor with <p> tag.
+	 */
 	initEditor () {
 		
 	}
