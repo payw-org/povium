@@ -138,7 +138,7 @@ class Auth{
 
 
 
-	public function register(){
+	public function register($email, $username, $password){
 		
 	}
 
@@ -165,6 +165,56 @@ class Auth{
 
 		if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
 			$return['msg'] = $this->config['msg']['email_invalid'];
+
+			return $return;
+		}
+
+		$return['err'] = false;
+
+		return $return;
+	}
+
+
+	/**
+	 * [validateUsername description]
+	 * @param  string $username
+	 * @return array 'err' is an error flag. 'msg' is an error message.
+	 */
+	public function validateUsername($username){
+		$return = array('err' => true, 'msg' => '');
+
+		if(strlen($username) < (int)$this->config['len']['username_min_length']){
+			$return['msg'] = $this->config['msg']['username_short'];
+
+			return $return;
+		}
+
+		if(strlen($username) > (int)$this->config['len']['username_max_length']){
+			$return['msg'] = $this->config['msg']['username_long'];
+
+			return $return;
+		}
+
+		if(!preg_match($this->config['regexp']['username_regexp_base_1'], $username)){
+			$return['msg'] = $this->config['msg']['username_invalid'];
+
+			return $return;
+		}
+
+		if(preg_match($this->config['regexp']['username_regexp_banned_1'], $username)){
+			$return['msg'] = $this->config['msg']['username_single_korean'];
+
+			return $return;
+		}
+
+		if(!preg_match($this->config['regexp']['username_regexp_base_2'], $username)){
+			$return['msg'] = $this->config['msg']['username_both_ends_illegal'];
+
+			return $return;
+		}
+
+		if(preg_match($this->config['regexp']['username_regexp_banned_2'], $username)){
+			$return['msg'] = $this->config['msg']['username_continuous_special_chars'];
 
 			return $return;
 		}
@@ -330,7 +380,7 @@ class Auth{
 			$encodedtoken = $this->encodeToken($token);
 
 			$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_tokens']} (selector, validator, uid, expire)
-											VALUES (:selector, :validator, :uid, :expire)");
+			VALUES (:selector, :validator, :uid, :expire)");
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
 			$query_params = [
 				':selector' => $encodedtoken['selector'],
