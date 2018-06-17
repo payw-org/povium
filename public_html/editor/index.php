@@ -10,7 +10,7 @@ $te->render('/template/base.phtml', [
 
 	'main' => 'src/interface.phtml',
 
-	'script' => '<script src="src/js/editor.js"></script>',
+	'script' => '<script src="src/js/postEditor.js"></script>',
 
 	'render_globalnav' => false,
 	'globalnav_script' => false

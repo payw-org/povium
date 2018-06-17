@@ -5,9 +5,27 @@
 	margin: auto;
 }
 
+p, h1, h2, h3 {
+	position: relative;
+}
+
 #editor-body {
+
+	outline: none;
+
 	p {
 		font-size: 1rem;
+
+		&.p--holder {
+			&::after {
+				content: '여기서 시작';
+				position: absolute;
+				left: 0;
+				top: 0;
+				pointer-events: none;
+				color: gray;
+			}
+		}
 	}
 
 	h1 {

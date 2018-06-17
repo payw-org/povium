@@ -4,8 +4,25 @@
   max-width: 50rem;
   margin: auto;
 }
+p,
+h1,
+h2,
+h3 {
+  position: relative;
+}
+#editor-body {
+  outline: none;
+}
 #editor-body p {
   font-size: 1rem;
+}
+#editor-body p.p--holder::after {
+  content: '여기서 시작';
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  color: gray;
 }
 #editor-body h1 {
   font-size: 2rem;
