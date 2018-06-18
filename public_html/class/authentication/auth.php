@@ -61,37 +61,37 @@ class Auth{
 
 
 		$valid_password = $this->validatePassword($password);
-		if($valid_password['err']){			//	invalid user pw
+		if($valid_password['err']){			//	invalid password
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
 
-		$uid = $this->getUID($email);
-		if(!$uid){						//	unregistered user id
+		$user_id = $this->getUserID($email);
+		if(!$user_id){						//	unregistered email
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
 
-		$user = $this->getBaseUser($uid);
-		if(!$user){						//	nonexistent uid
+		$user = $this->getBaseUser($user_id);
+		if(!$user){						//	nonexistent user id
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
 
-		if(!$this->passwordVerifyWithRehash($password, $user['password'], $uid)){		//	incorrect password
+		if(!$this->passwordVerifyWithRehash($password, $user['password'], $user_id)){		//	incorrect password
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
 
-		if(!$user['isactive']){									//	inactive account
+		if(!$user['is_active']){									//	inactive account
 			$return['msg'] = $this->config['msg']['account_inactive'];
 
 			return $return;
@@ -101,7 +101,7 @@ class Auth{
 		//	login success
 		$return['err'] = false;
 
-		if(!$this->addSessionAndCookie($uid, $remember)){		//	if failed auto login setting
+		if(!$this->addSessionAndCookie($user_id, $remember)){		//	if failed auto login setting
 			$return['msg'] = $this->config['msg']['system_warning'];
 		}
 
@@ -138,8 +138,49 @@ class Auth{
 
 
 
-	public function register($email, $username, $password){
-		
+	public function register($email, $name, $password){
+		// $return = array('err' => true, 'email_msg' => '', 'name_msg' => '', 'password_msg' => '');
+		$return = array('err' => true, 'msg' => '');
+
+
+		$valid_email = $this->validateEmail($email);
+		if($valid_email['err']){
+			$return['msg'] = $valid_email['msg'];
+
+			return $return;
+		}
+
+
+		$valid_name = $this->validateName($name);
+		if($valid_name['err']){
+			$return['msg'] = $valid_name['msg'];
+
+			return $return;
+		}
+
+
+		$valid_password = $this->validatePassword($password);
+		if($valid_password['err']){
+			$return['msg'] = $valid_password['msg'];
+
+			return $return;
+		}
+
+
+		if($this->isEmailTaken($email)){
+			$return['msg'] = $this->config['msg']['email_istaken'];
+
+			return $return;
+		}
+
+
+		if($this->isNameTaken($name)){
+			$return['msg'] = $this->config['msg']['name_istaken'];
+
+			return $return;
+		}
+
+
 	}
 
 
@@ -176,45 +217,45 @@ class Auth{
 
 
 	/**
-	 * [validateUsername description]
-	 * @param  string $username
+	 * [validateName description]
+	 * @param  string $name
 	 * @return array 'err' is an error flag. 'msg' is an error message.
 	 */
-	public function validateUsername($username){
+	public function validateName($name){
 		$return = array('err' => true, 'msg' => '');
 
-		if(strlen($username) < (int)$this->config['len']['username_min_length']){
-			$return['msg'] = $this->config['msg']['username_short'];
+		if(strlen($name) < (int)$this->config['len']['name_min_length']){
+			$return['msg'] = $this->config['msg']['name_short'];
 
 			return $return;
 		}
 
-		if(strlen($username) > (int)$this->config['len']['username_max_length']){
-			$return['msg'] = $this->config['msg']['username_long'];
+		if(strlen($name) > (int)$this->config['len']['name_max_length']){
+			$return['msg'] = $this->config['msg']['name_long'];
 
 			return $return;
 		}
 
-		if(!preg_match($this->config['regexp']['username_regexp_base_1'], $username)){
-			$return['msg'] = $this->config['msg']['username_invalid'];
+		if(!preg_match($this->config['regexp']['name_regexp_base_1'], $name)){
+			$return['msg'] = $this->config['msg']['name_invalid'];
 
 			return $return;
 		}
 
-		if(preg_match($this->config['regexp']['username_regexp_banned_1'], $username)){
-			$return['msg'] = $this->config['msg']['username_single_korean'];
+		if(preg_match($this->config['regexp']['name_regexp_banned_1'], $name)){
+			$return['msg'] = $this->config['msg']['name_single_korean'];
 
 			return $return;
 		}
 
-		if(!preg_match($this->config['regexp']['username_regexp_base_2'], $username)){
-			$return['msg'] = $this->config['msg']['username_both_ends_illegal'];
+		if(!preg_match($this->config['regexp']['name_regexp_base_2'], $name)){
+			$return['msg'] = $this->config['msg']['name_both_ends_illegal'];
 
 			return $return;
 		}
 
-		if(preg_match($this->config['regexp']['username_regexp_banned_2'], $username)){
-			$return['msg'] = $this->config['msg']['username_continuous_special_chars'];
+		if(preg_match($this->config['regexp']['name_regexp_banned_2'], $name)){
+			$return['msg'] = $this->config['msg']['name_continuous_special_chars'];
 
 			return $return;
 		}
@@ -258,11 +299,49 @@ class Auth{
 
 
 	/**
-	* [getUID description]
+	 * [isEmailTaken description]
+	 * Check if the email is already taken
+	 * Compare case-insensitive
+	 * @param  string  $email
+	 * @return boolean
+	 */
+	public function isEmailTaken($email){
+		$stmt = $this->conn->prepare("SELECT COUNT(id) FROM {$this->config['table_users']} WHERE LOWER(email) = LOWER(:email)");
+		$stmt->execute([':email' => $email]);
+
+		if($stmt->fetchColumn() == 0){
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * [isNameTaken description]
+	 * Check if the name is already taken
+	 * Compare case-insensitive
+	 * @param  string  $name
+	 * @return boolean
+	 */
+	public function isNameTaken($name){
+		$stmt = $this->conn->prepare("SELECT COUNT(id) FROM {$this->config['table_users']} WHERE LOWER(name) = LOWER(:name)");
+		$stmt->execute([':name' => $name]);
+
+		if($stmt->fetchColumn() == 0){
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/**
+	* [getUserID description]
 	* @param  string $email
 	* @return int or false
 	*/
-	public function getUID($email){
+	public function getUserID($email){
 		$stmt = $this->conn->prepare("SELECT id FROM {$this->config['table_users']} WHERE email = :email");
 		$stmt->execute([':email' => $email]);
 
@@ -276,12 +355,12 @@ class Auth{
 
 	/**
 	* [getBaseUser description]
-	* @param  int $uid
+	* @param  int $user_id
 	* @return array or false
 	*/
-	public function getBaseUser($uid){
-		$stmt = $this->conn->prepare("SELECT id, user_id, email, user_pw, isactive FROM {$this->config['table_users']} WHERE id = :id");
-		$stmt->execute([':id' => $uid]);
+	public function getBaseUser($user_id){
+		$stmt = $this->conn->prepare("SELECT id, email, password, is_active FROM {$this->config['table_users']} WHERE id = :id");
+		$stmt->execute([':id' => $user_id]);
 
 		if($stmt->rowCount() == 0){
 			return false;
@@ -293,14 +372,14 @@ class Auth{
 
 	/**
 	* [getUser description]
-	* @param  int  $uid
+	* @param  int  $user_id
 	* @param  boolean $with_pw [if it is true, return with password.]
 	* @return array
 	* @return bool false
 	*/
-	public function getUser($uid, $with_pw=false){
+	public function getUser($user_id, $with_pw=false){
 		$stmt = $this->conn->prepare("SELECT * FROM {$this->config['table_users']} WHERE id = :id");
-		$stmt->execute([':id' => $uid]);
+		$stmt->execute([':id' => $user_id]);
 
 		if($stmt->rowCount() == 0){
 			return false;
@@ -341,10 +420,10 @@ class Auth{
 	* Verify password and rehash if hash options is changed.
 	* @param  string $raw_pw
 	* @param  string $hash
-	* @param  int $uid
+	* @param  int $user_id
 	* @return bool         [if password match, return true.]
 	*/
-	private function passwordVerifyWithRehash($raw_pw, $hash, $uid){
+	private function passwordVerifyWithRehash($raw_pw, $hash, $user_id){
 		if(!password_verify($raw_pw, $hash)){
 			return false;
 		}
@@ -353,7 +432,7 @@ class Auth{
 			$new_hash = getPasswordHash($raw_pw);
 
 			$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET password = :password WHERE id = :id");
-			$stmt->execute([':password' => $new_hash, ':id' => $uid]);
+			$stmt->execute([':password' => $new_hash, ':id' => $user_id]);
 		}
 
 		return true;
@@ -362,16 +441,16 @@ class Auth{
 
 	/**
 	* [addSessionAndCookie description]
-	* Creates a session for a specified uid
+	* Creates a session for a specified user_id
 	* Creates cookie and table record about token for auto login
-	* @param int $uid
+	* @param int $user_id
 	* @param bool $remember [flag for auto login]
 	* @return bool
 	*/
-	private function addSessionAndCookie($uid, $remember){
-		$_SESSION['uid'] = $uid;
+	private function addSessionAndCookie($user_id, $remember){
+		$_SESSION['user_id'] = $user_id;
 		$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET last_login_dt = :last_login_dt WHERE id = :id");
-		$stmt->execute([':last_login_dt' => date("Y-m-d H:i:s", time()), ':id' => $uid]);
+		$stmt->execute([':last_login_dt' => date("Y-m-d H:i:s", time()), ':id' => $user_id]);
 
 		if($remember){
 			$hash = $this->generateRandomHash(30);
@@ -379,14 +458,14 @@ class Auth{
 
 			$encodedtoken = $this->encodeToken($token);
 
-			$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_tokens']} (selector, validator, uid, expire)
-			VALUES (:selector, :validator, :uid, :expire)");
+			$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_tokens']} (selector, validator, user_id, expn_dt)
+			VALUES (:selector, :validator, :user_id, :expn_dt)");
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
 			$query_params = [
 				':selector' => $encodedtoken['selector'],
 				':validator' => $encodedtoken['validator'],
-				':uid' => $uid,
-				':expire' => date("Y-m-d H:i:s", $expiration_time)
+				':user_id' => $user_id,
+				':expn_dt' => date("Y-m-d H:i:s", $expiration_time)
 			];
 
 			if(!$stmt->execute($query_params)){
@@ -412,8 +491,8 @@ class Auth{
 			return true;
 		}
 
-		if(($uid = $this->checkCookie()) !== false){
-			$_SESSION['uid'] = $uid;
+		if(($user_id = $this->checkCookie()) !== false){
+			$_SESSION['user_id'] = $user_id;
 
 			return true;
 		}
@@ -429,7 +508,7 @@ class Auth{
 	* @return bool false if no current user
 	*/
 	public function getCurrentUser(){
-		return $this->getUser($_SESSION['uid']);
+		return $this->getUser($_SESSION['user_id']);
 	}
 
 
@@ -438,7 +517,7 @@ class Auth{
 	* @return boolean
 	*/
 	private function checkSession(){
-		if(!isset($_SESSION['uid'])){
+		if(!isset($_SESSION['user_id'])){
 			return false;
 		}
 
@@ -450,7 +529,7 @@ class Auth{
 	* [checkCookie description]
 	* Check cookie for auto login
 	* Authenticate token
-	* @return int uid for auto login
+	* @return int user_id for auto login
 	* @return boolean false if auto login fails.
 	*/
 	private function checkCookie(){
@@ -472,14 +551,14 @@ class Auth{
 			return false;
 		}
 
-		if(strtotime($token_info['expire']) < time()){				//	if token has already expired
+		if(strtotime($token_info['expn_dt']) < time()){				//	if token has already expired
 			$this->deleteCookie();
 			$this->deleteTokenInfo($token_info['id']);
 
 			return false;
 		}
 
-		return $token_info['uid'];
+		return $token_info['user_id'];
 	}
 
 
@@ -522,7 +601,7 @@ class Auth{
 	*
 	*/
 	private function deleteSession(){
-		unset($_SESSION['uid']);
+		unset($_SESSION['user_id']);
 		session_destroy();
 	}
 
