@@ -270,7 +270,7 @@ class Selection {
 	 * Returns an array of paragraph nodes inside the selection.
 	 * @return {Array}
 	 */
-	getParagraphNodes () {
+	getParagraphNode () {
 		// this.range.
 	}
 
