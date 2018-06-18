@@ -1,4 +1,4 @@
-#povium-editor {
+#post-editor {
 	position: relative;
 	width: calc(100% - 40px);
 	max-width: 50rem;
@@ -9,23 +9,21 @@ p, h1, h2, h3 {
 	position: relative;
 }
 
+#editor-toolbar {
+	margin-bottom: 1rem;
+	button {
+		background: purple;
+		color: #fff;
+	}
+}
+
 #editor-body {
 
 	outline: none;
 
 	p {
 		font-size: 1rem;
-
-		&.p--holder {
-			&::after {
-				content: '여기서 시작';
-				position: absolute;
-				left: 0;
-				top: 0;
-				pointer-events: none;
-				color: gray;
-			}
-		}
+		margin-bottom: .2rem;
 	}
 
 	h1 {
