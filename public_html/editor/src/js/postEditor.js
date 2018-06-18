@@ -1,3 +1,19 @@
+class Snapshot {
+
+	constructor () {
+
+	}
+
+	recordSnapshot () {
+
+	}
+
+	revertToSnapshot () {
+
+	}
+
+}
+
 class DOMManager {
 
 	/**
@@ -39,6 +55,8 @@ class PostEditor {
 
 		this.dom.editor.addEventListener('paste', (e) => { this.onPaste(e); });
 
+		this.dom.boldButton.addEventListener('click', (e) => { this.sel.bold(); });
+
 		this.initEditor();
 
 	}
@@ -65,17 +83,27 @@ class PostEditor {
 	}
 
 	onKeyDown (e) {
-		if (e) {
-			if (e.which === 8 || e.which === 46 || e.which === 13) {
-				e.stopPropagation();
-				e.preventDefault();
+		// if (e) {
+		// 	if (e.which === 8 || e.which === 46 || e.which === 13) {
+		// 		e.stopPropagation();
+		// 		e.preventDefault();
 
-				// Backspace key
-				if (e.which === 8) {
-					this.sel.backspace();
-				}
-			}
-		}
+		// 		// Backspace key
+		// 		if (e.which === 8) {
+		// 			this.sel.backspace();
+		// 		}
+
+		// 		// Delete key
+		// 		if (e.which === 46) {
+		// 			this.sel.delete();
+		// 		}
+
+		// 		// Return key
+		// 		if (e.which === 13) {
+		// 			this.sel.enter();
+		// 		}
+		// 	}
+		// }
 	}
 
 	onSelectionChanged () {
@@ -151,7 +179,7 @@ class Selection {
 	 * Make the selection bold.
 	 */
 	bold () {
-
+		document.execCommand('bold');
 	}
 
 	/**
@@ -164,11 +192,52 @@ class Selection {
 
 
 	backspace () {
+
+		// this.range.deleteContents();
+
+		// If the selection is collapsed
+		// implement default delete action.
 		if (this.isEmpty()) {
-			console.log('empty selection');
-		} else {
-			this.deleteSelection();
+			console.log(this.startOffset);
+			if (this.startOffset === 0) {
+				// If the selection is on the beginning
+				
+			} else {
+				if (this.startNode.nodeType === 3) {
+					console.log(this.startNode);
+					// TextNode
+					var text = this.startNode.textContent;
+					var suffixNode;
+
+					this.startNode.textContent
+					= text.slice(0, this.startOffset - 1) + text.slice(this.startOffset, text.length);
+					var newRange = document.createRange();
+					newRange.setEnd(this.startNode, this.startOffset - 1);
+					newRange.collapse(false);
+
+					newRange.insertNode((suffixNode = document.createTextNode(' ')));
+
+					newRange.setStartAfter(suffixNode);
+
+					console.log(this.startOffset);
+
+					this.clearRange();
+
+					this.sel.addRange(newRange);
+					
+				}
+			}
 		}
+		
+
+	}
+
+	delete () {
+		
+	}
+
+	enter () {
+
 	}
 
 	/**
@@ -210,8 +279,14 @@ class Selection {
 
 	}
 
+
+
+	clearRange () {
+		this.sel.removeAllRanges();
+	}
+
 	/**
-	 * Update selection.
+	 * Update selection information.
 	 */
 	updateSelection () {
 
@@ -227,13 +302,16 @@ class Selection {
 	}
 
 	splitTextNode () {
-		if (this.startOffset === 0) {
-
+		if (this.startOffset > 0) {
+			console.log(this.startNode);
 		}
 	}
 
-	deleteSelection () {
-		this.range.deleteContents();
+	/**
+	 * Remove selection.
+	 */
+	removeSelection () {
+		
 	}
 
 	/**
@@ -247,8 +325,16 @@ class Selection {
 		}
 	}
 
-	isMultiLine () {
-
+	/**
+	 * Returns true if the selection is in multiple paragraphs.
+	 * @return {Boolean}
+	 */
+	isMultiParagraph () {
+		if (this.getParagraphNode(this.startNode) === this.getParagraphNode(this.endNode)) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 
@@ -268,12 +354,40 @@ class Selection {
 
 	/**
 	 * Returns an array of paragraph nodes inside the selection.
+	 * @param {Node} node
 	 * @return {Array}
 	 */
-	getParagraphNode () {
-		// this.range.
+	getParagraphNode (node) {
+		// Loop nodes
+		var travelNode = node;
+		while (1) {
+			if (travelNode.nodeName === 'BODY') {
+				return false;
+			} else if (
+				travelNode.nodeName === 'H1' ||
+				travelNode.nodeName === 'H2' ||
+				travelNode.nodeName === 'H3' ||
+				travelNode.nodeName === 'P'
+			) {
+				return travelNode;
+			} else {
+				travelNode = travelNode.parentNode;
+			}
+		}
+	}
+
+	getCursorPosInParagraph () {
+		if (this.startOffset === 0) {
+			// If the selection is on the beginning
+			return 1;
+		} else {
+			return
+		}
 	}
 
 }
 
 const editor = new PostEditor(document.querySelector('#post-editor'));
+
+// var a = document.createElement('h1').nodeName;
+// console.log(a);
