@@ -53,6 +53,13 @@ class DOMManager {
 
 	}
 
+	generateEmptyParagraph (tagName) {
+		let elm = document.createElement(tagName);
+		let br = document.createElement('br');
+		elm.appendChild(br);
+		return elm;
+	}
+
 }
 
 class PostEditor {
@@ -65,41 +72,43 @@ class PostEditor {
 
 		let self = this;
 
-		this.sel = new Selection();
-		this.dom = new DOMManager(editorDOM);
+		this.domManager = new DOMManager(editorDOM);
+		this.selManager = new SelectionManager(this.domManager);
 
 		document.execCommand("defaultParagraphSeparator", false, "p");
 
 		// Event Listeners
 
-		this.dom.editor.addEventListener('focusin', () => { this.onSelectionChanged(); });
-		this.dom.editor.addEventListener('keyup', () => { this.onSelectionChanged(); });
-		this.dom.editor.addEventListener('keydown', (e) => {
-			this.onSelectionChanged();
+		this.domManager.editor.addEventListener('focusin', () => { this.onSelectionChanged(); });
+		this.domManager.editor.addEventListener('keyup', (e) => {
 			this.onKeyDown(e);
+			this.onSelectionChanged();
+		});
+		this.domManager.editor.addEventListener('click', () => {
+			this.onSelectionChanged();
 		});
 
-		this.dom.editor.addEventListener('paste', (e) => { this.onPaste(e); });
+		this.domManager.editor.addEventListener('paste', (e) => { this.onPaste(e); });
 
 		// Toolbar button events
-		this.dom.body.addEventListener('click', (e) => { this.sel.heading('P'); });
-		this.dom.heading1.addEventListener('click', (e) => { this.sel.heading('H1'); });
-		this.dom.heading2.addEventListener('click', (e) => { this.sel.heading('H2'); });
-		this.dom.heading3.addEventListener('click', (e) => { this.sel.heading('H3'); });
+		this.domManager.body.addEventListener('click', (e) => { this.selManager.heading('P'); });
+		this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1'); });
+		this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2'); });
+		this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3'); });
 
-		this.dom.boldButton.addEventListener('click', (e) => { this.sel.bold(); });
-		this.dom.italicButton.addEventListener('click', (e) => { this.sel.italic(); });
-		this.dom.underlineButton.addEventListener('click', (e) => { this.sel.underline(); });
-		this.dom.strikeButton.addEventListener('click', (e) => { this.sel.strike(); });
+		this.domManager.boldButton.addEventListener('click', (e) => { this.selManager.bold(); });
+		this.domManager.italicButton.addEventListener('click', (e) => { this.selManager.italic(); });
+		this.domManager.underlineButton.addEventListener('click', (e) => { this.selManager.underline(); });
+		this.domManager.strikeButton.addEventListener('click', (e) => { this.selManager.strike(); });
 
-		this.dom.alignLeft.addEventListener('click', (e) => { this.sel.align('justifyLeft'); });
-		this.dom.alignCenter.addEventListener('click', (e) => { this.sel.align('justifyCenter'); });
-		this.dom.alignRight.addEventListener('click', (e) => { this.sel.align('justifyRight'); });
+		this.domManager.alignLeft.addEventListener('click', (e) => { this.selManager.align('justifyLeft'); });
+		this.domManager.alignCenter.addEventListener('click', (e) => { this.selManager.align('justifyCenter'); });
+		this.domManager.alignRight.addEventListener('click', (e) => { this.selManager.align('justifyRight'); });
 
-		this.dom.orderedList.addEventListener('click', (e) => { this.sel.list('ol'); });
-		this.dom.unorderedList.addEventListener('click', (e) => { this.sel.list('ul'); });
+		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('ol'); });
+		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('ul'); });
 
-		this.dom.unorderedList.addEventListener('click', (e) => { this.sel.list('ul'); });
+		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('ul'); });
 
 		this.initEditor();
 
@@ -122,10 +131,15 @@ class PostEditor {
 		clipboardData = e.clipboardData || window.clipboardData;
 		pastedData = clipboardData.getData('Text');
 
-		this.sel.paste(pastedData);
+		this.selManager.paste(pastedData);
 
 	}
 
+
+	/**
+	 * 
+	 * @param {KeyboardEvent} e 
+	 */
 	onKeyDown (e) {
 		// if (e) {
 		// 	if (e.which === 8 || e.which === 46 || e.which === 13) {
@@ -134,28 +148,35 @@ class PostEditor {
 
 		// 		// Backspace key
 		// 		if (e.which === 8) {
-		// 			this.sel.backspace();
+		// 			this.selManager.backspace();
 		// 		}
 
 		// 		// Delete key
 		// 		if (e.which === 46) {
-		// 			this.sel.delete();
+		// 			this.selManager.delete();
 		// 		}
 
 		// 		// Return key
 		// 		if (e.which === 13) {
-		// 			this.sel.enter();
+		// 			this.selManager.enter();
 		// 		}
 		// 	}
 		// }
 	}
 
+
 	onSelectionChanged () {
 
-		this.sel.updateSelection();
+		this.selManager.updateSelection();
 
 		if (this.isEmpty()) {
-			this.initEditor();
+			// this.initEditor();
+			var p = this.domManager.generateEmptyParagraph('p');
+			var range = document.createRange();
+			range.setStart(p, 0);
+			this.domManager.editor.appendChild(p);
+			this.selManager.replaceRange(range);
+			console.log('Oops, editor seems empty. Now reset it to initial stat.');
 		}
 
 	}
@@ -167,35 +188,41 @@ class PostEditor {
 	 * Initialize editor.
 	 */
 	initEditor () {
-		if (this.isEmpty()) {
-			this.dom.editor.innerHTML = "";
-			this.dom.editor.appendChild(this.dom.pHolder);
-			var range = document.createRange();
-			range.setStartBefore(this.dom.pHolder.firstChild);
-			range.collapse(true);
-			this.sel.sel.removeAllRanges();
-			this.sel.sel.addRange(range);
-		}
 
 		var emptyNode = document.createElement('p');
 		emptyNode.innerHTML = 'a';
 		emptyNode.style.opacity = '0';
-		this.dom.editor.appendChild(emptyNode);
+		this.domManager.editor.appendChild(emptyNode);
 		var range = document.createRange();
 		range.setStart(emptyNode.firstChild, 0);
 		range.setEnd(emptyNode.firstChild, 1);
-		this.sel.replaceRange(range);
+		this.selManager.replaceRange(range);
 		document.execCommand('bold', false);
-		this.dom.editor.removeChild(emptyNode);
+		this.domManager.editor.removeChild(emptyNode);
+
+		if (this.isEmpty()) {
+			this.domManager.editor.innerHTML = "";
+			var emptyP = this.domManager.generateEmptyParagraph('p');
+			this.domManager.editor.appendChild(emptyP);
+
+			var range = document.createRange();
+			range.setStartBefore(emptyP);
+			range.collapse(true);
+
+			this.selManager.sel.removeAllRanges();
+			this.selManager.sel.addRange(range);
+		}
+		
 	}
+	
 
 	/**
 	 * Return true if the editor is empty.
 	 */
 	isEmpty () {
-		let contentInside = this.dom.editor.textContent;
-		let childNodesCount = this.dom.editor.childElementCount;
-		if (contentInside === "" && childNodesCount <= 1) {
+		let contentInside = this.domManager.editor.textContent;
+		let childNodesCount = this.domManager.editor.childElementCount;
+		if (contentInside === "" && childNodesCount < 1) {
 			return true;
 		} else {
 			return false;
@@ -204,13 +231,13 @@ class PostEditor {
 
 }
 
-class Selection {
+class SelectionManager {
 
 	/**
-	 *
-	 * @param {Selection} sel
+	 * 
+	 * @param {DOMManager} domManager 
 	 */
-	constructor () {
+	constructor (domManager) {
 
 		this.sel = document.getSelection();
 		this.range;
@@ -218,6 +245,8 @@ class Selection {
 		this.startOffset;
 		this.endNode;
 		this.endOffset;
+
+		this.domManager = domManager;
 
 	}
 
@@ -396,6 +425,9 @@ class Selection {
 	updateSelection () {
 
 		this.sel = document.getSelection();
+
+		// If there is a range
+		// update range property.
 		if (this.sel.rangeCount > 0) {
 			this.range = this.sel.getRangeAt(0);
 			this.startNode = this.range.startContainer;
@@ -404,6 +436,17 @@ class Selection {
 			this.endOffset = this.range.endOffset;
 		}
 
+		// If the selection is not in the paragraph,
+		// move the cursor to the nearest pragraph node.
+		console.log(this.startNode);
+		console.log(this.endNode);
+
+	}
+
+	fixSelection () {
+		if (!this.isInsideParagraph()) {
+			this.sel
+		}
 	}
 
 	splitTextNode () {
@@ -442,6 +485,14 @@ class Selection {
 		}
 	}
 
+	isInsideParagraph () {
+		if (this.getParagraphNode(this.startNode)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 
 	// Getters
 
@@ -466,7 +517,9 @@ class Selection {
 		// Loop nodes
 		var travelNode = node;
 		while (1) {
-			if (travelNode.nodeName === 'BODY') {
+			if (!travelNode) {
+				return false;
+			} else if (travelNode.nodeName === 'BODY') {
 				return false;
 			} else if (
 				travelNode.nodeName === 'H1' ||

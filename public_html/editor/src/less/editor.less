@@ -15,9 +15,9 @@ p, h1, h2, h3 {
 #editor-toolbar {
 	margin-bottom: 1rem;
 	button {
-		color: blueviolet;
+		color: @pvm-purple;
 		display: inline-block;
-		border-bottom: 2px solid aquamarine;
+		border-bottom: 2px solid @pvm-green;
 		margin: 2px;
 	}
 }
@@ -32,9 +32,9 @@ p, h1, h2, h3 {
 	p, li {
 
 		font-size: @font-size--base + 2;
-		margin-bottom: .5rem;
+		margin-bottom: .3em;
 
-		line-height: 1.2;
+		line-height: 1.1;
 
 		.responsive({
 			font-size: @font-size--base;
@@ -48,7 +48,9 @@ p, h1, h2, h3 {
 	}
 
 	h1, h2, h3, h4, h5, h6 {
+		line-height: 1.5;
 		font-weight: 700;
+		margin-bottom: .5em;
 	}
 
 	h1 {
