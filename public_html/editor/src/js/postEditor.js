@@ -53,6 +53,11 @@ class DOMManager {
 
 	}
 
+	/**
+	 * 
+	 * @param  {String} tagName
+	 * @return {HTMLElement}
+	 */
 	generateEmptyParagraph (tagName) {
 		let elm = document.createElement(tagName);
 		let br = document.createElement('br');
@@ -105,10 +110,8 @@ class PostEditor {
 		this.domManager.alignCenter.addEventListener('click', (e) => { this.selManager.align('justifyCenter'); });
 		this.domManager.alignRight.addEventListener('click', (e) => { this.selManager.align('justifyRight'); });
 
-		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('ol'); });
-		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('ul'); });
-
-		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('ul'); });
+		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL'); });
+		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
 
 		this.initEditor();
 
@@ -166,8 +169,6 @@ class PostEditor {
 
 
 	onSelectionChanged () {
-
-		this.selManager.updateSelection();
 
 		if (this.isEmpty()) {
 			// this.initEditor();
@@ -262,7 +263,9 @@ class SelectionManager {
 	 * justifyLeft, justifyCenter, justifyRight
 	 */
 	align (direction) {
+
 		document.execCommand(direction, false);
+		
 	}
 
 
@@ -293,8 +296,38 @@ class SelectionManager {
 	 * @param {string} type 
 	 */
 	heading (type) {
-		type = type.toUpperCase();
-		document.execCommand('formatBlock', false, '<'+type+'>');
+		
+		let paragraphs = this.getParagraphNodes();
+		let startNode = this.getRange().startContainer;
+		let startOffset = this.getRange().startOffset;
+		let endNode = this.getRange().endContainer;
+		let endOffset = this.getRange().endOffset;
+
+		console.log('multi paragraph');
+
+		for (var i = 0; i < paragraphs.length; i++) {
+
+			if (paragraphs[i].nodeName === type) {
+				continue;
+			}
+
+			let newParagraph = document.createElement(type);
+			
+			var child;
+			while (child = paragraphs[i].firstChild) {
+				newParagraph.appendChild(child);
+			}
+
+			this.domManager.editor.replaceChild(newParagraph, paragraphs[i]);
+
+		}
+
+		var keepRange = document.createRange();
+		keepRange.setStart(startNode, startOffset);
+		keepRange.setEnd(endNode, endOffset);
+
+		this.replaceRange(keepRange);
+
 	}
 
 	/**
@@ -302,18 +335,45 @@ class SelectionManager {
 	 * @param {string} type 
 	 */
 	list (type) {
-		type = type.toLowerCase();
-		if (type === 'ol') {
-			document.execCommand('insertOrderedList', false);
-		} else if (type === 'ul') {
-		
-		}
+		document.execCommand('insertOrderedList', false);
+		// var ol = document.createElement(type);
+		// if (paragraphs.length > 1) {
+
+		// 	console.log('multi paragraph');
+
+		// 	for (var i = 0; i < paragraphs.length; i++) {
+
+		// 		if (paragraphs[i].nodeName === type) {
+		// 			continue;
+		// 		}
+
+		// 		let newParagraph = document.createElement(type);
+
+		// 		var child;
+		// 		while (child = paragraphs[i].firstChild) {
+		// 			newParagraph.appendChild(child);
+		// 		}
+
+		// 		this.domManager.editor.replaceChild(newParagraph, paragraphs[i]);
+
+		// 	}
+
+		// 	var keepRange = document.createRange();
+		// 	keepRange.setStart(startNode, startOffset);
+		// 	keepRange.setEnd(endNode, endOffset);
+
+		// 	this.replaceRange(keepRange);
+
+		// } else {
+		// 	console.log('single paragraph');
+		// 	type = type.toUpperCase();
+		// 	document.execCommand('formatBlock', false, '<'+type+'>');
+		// }
 	}
 
 	link (uri) {
 		document.execCommand('createLink', false, uri);
 	}
-
 
 
 	/**
@@ -374,11 +434,13 @@ class SelectionManager {
 		let splitted = pastedData.split(/(?:\r\n|\r|\n)/g);
 
 		var range = document.createRange();
-		range = this.range;
+		range = this.getRange();
 
-		splitted.forEach( (line, index) => {
+		splitted.forEach( (paragraph, index) => {
 
 			var addedNode;
+
+			var line = paragraph;
 
 			if (index === 0) {
 				// line = line.replace(/\s/g, "&nbsp;");
@@ -424,29 +486,12 @@ class SelectionManager {
 	 */
 	updateSelection () {
 
-		this.sel = document.getSelection();
-
-		// If there is a range
-		// update range property.
-		if (this.sel.rangeCount > 0) {
-			this.range = this.sel.getRangeAt(0);
-			this.startNode = this.range.startContainer;
-			this.startOffset = this.range.startOffset;
-			this.endNode = this.range.endContainer;
-			this.endOffset = this.range.endOffset;
-		}
-
-		// If the selection is not in the paragraph,
-		// move the cursor to the nearest pragraph node.
-		console.log(this.startNode);
-		console.log(this.endNode);
 
 	}
 
 	fixSelection () {
-		if (!this.isInsideParagraph()) {
-			this.sel
-		}
+		
+		
 	}
 
 	splitTextNode () {
@@ -478,60 +523,90 @@ class SelectionManager {
 	 * @return {Boolean}
 	 */
 	isMultiParagraph () {
-		if (this.getParagraphNode(this.startNode) === this.getParagraphNode(this.endNode)) {
-			return false;
-		} else {
+		if (this.getParagraphNodes().length > 1) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 
-	isInsideParagraph () {
-		if (this.getParagraphNode(this.startNode)) {
+
+	/**
+	 * Determine if the given node is a paragraph node which Povium understands.
+	 * @param {Node} node
+	 */
+	isParagraphNode (node) {
+		if (!node) {
+			return false;
+		} else if (
+			node.nodeName === 'P' ||
+			node.nodeName === 'H1' ||
+			node.nodeName === 'H2' ||
+			node.nodeName === 'H3' ||
+			node.nodeName === 'H4' ||
+			node.nodeName === 'H5' ||
+			node.nodeName === 'H6'
+		) {
 			return true;
 		} else {
-			return false;
+			console.warn(node.nodeName + ' : Node is not a paragraph');
 		}
 	}
 
 
 	// Getters
 
+
+	/**
+	 * @return {Selection}
+	 */
 	getSelection () {
 		return this.sel;
 	}
 
+	
+	/**
+	 * @return {Range}
+	 */
 	getRange () {
-		if (this.sel.rangeCount > 0) {
-			return this.sel.getRangeAt(0);
+		if (document.getSelection().rangeCount > 0) {
+			return document.getSelection().getRangeAt(0);
 		} else {
-			return false;
+			return null;
 		}
 	}
 
 	/**
-	 * Returns an array of paragraph nodes inside the selection.
-	 * @param {Node} node
-	 * @return {Array}
+	 * Returns an array of all paragraph nodes within the selection.
+	 * @return {Array.<HTMLElement>}
 	 */
-	getParagraphNode (node) {
-		// Loop nodes
-		var travelNode = node;
+	getParagraphNodes () {
+
+		let travelNode = this.getRange() ? this.getRange().startContainer : null;
+		let nodes = [];
+
 		while (1) {
-			if (!travelNode) {
-				return false;
-			} else if (travelNode.nodeName === 'BODY') {
-				return false;
-			} else if (
-				travelNode.nodeName === 'H1' ||
-				travelNode.nodeName === 'H2' ||
-				travelNode.nodeName === 'H3' ||
-				travelNode.nodeName === 'P'
-			) {
-				return travelNode;
-			} else {
+			console.log(travelNode);
+			if (travelNode.nodeName === 'BODY') {
+				break;
+			} else if (this.isParagraphNode(travelNode)) {
+				nodes.push(travelNode);
+				
+				if (travelNode.contains(this.getRange().endContainer)) {
+					break;
+				} else {
+					travelNode = travelNode.nextSibling;
+				}
+
+			} else if (travelNode.nextSibling === null) {
 				travelNode = travelNode.parentNode;
+			} else {
+				travelNode = travelNode.nextSibling;
 			}
 		}
+
+		return nodes;
+
 	}
 
 	getCursorPosInParagraph () {

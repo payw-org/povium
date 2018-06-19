@@ -15,12 +15,38 @@ h3 {
 }
 #editor-toolbar {
   margin-bottom: 1rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#editor-toolbar > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 #editor-toolbar button {
+  min-width: 50px;
+  font-weight: 700;
+  padding: 1px 4px 0px;
+  margin: 1px 2px;
   color: #5f42ff;
   display: inline-block;
-  border-bottom: 2px solid #13edbd;
-  margin: 2px;
+  border-bottom: 3px solid #13edbd;
+  font-size: 1rem;
+  -webkit-transition: -webkit-transform .2s ease;
+  transition: -webkit-transform .2s ease;
+  -o-transition: transform .2s ease;
+  transition: transform .2s ease;
+  transition: transform .2s ease, -webkit-transform .2s ease;
+}
+#editor-toolbar button:hover {
+  background: #F1F1F2;
+}
+#editor-toolbar button:active {
+  -webkit-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  transform: scale(0.9);
 }
 #editor-body {
   outline: none;
@@ -49,12 +75,15 @@ h3 {
 #editor-body h4,
 #editor-body h5,
 #editor-body h6 {
-  line-height: 1.5;
+  line-height: 1.2;
   font-weight: 700;
-  margin-bottom: .5em;
+  margin: 0;
 }
 #editor-body h1 {
   font-size: 36px;
+}
+#editor-body h1 + p {
+  margin-top: 1.2em;
 }
 @media only screen and (max-width: 768px) {
   #editor-body h1 {
@@ -69,8 +98,15 @@ h3 {
 #editor-body h2 {
   font-size: 1.5rem;
 }
+#editor-body h2 + p {
+  margin-top: 1em;
+}
 #editor-body h3 {
   font-size: 1.2rem;
+}
+#editor-body ol,
+#editor-body ul {
+  padding: .5rem 0;
 }
 #editor-body ol,
 #editor-body ul,
