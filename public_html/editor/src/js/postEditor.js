@@ -25,9 +25,31 @@ class DOMManager {
 		this.pHolder = document.createElement('p');
 		this.pHolder.innerHTML = '<br>';
 
+		// Editor body
 		this.editor = editorDOM.querySelector('#editor-body');
+
+		// Toolbar
 		this.toolbar = editorDOM.querySelector('#editor-toolbar');
+
+		// Toolbar buttons
+		this.body = this.toolbar.querySelector('#p');
+		this.heading1 = this.toolbar.querySelector('#h1');
+		this.heading2 = this.toolbar.querySelector('#h2');
+		this.heading3 = this.toolbar.querySelector('#h3');
+
 		this.boldButton = this.toolbar.querySelector('#bold');
+		this.italicButton = this.toolbar.querySelector('#italic');
+		this.underlineButton = this.toolbar.querySelector('#underline');
+		this.strikeButton = this.toolbar.querySelector('#strike');
+
+		this.alignLeft = this.toolbar.querySelector('#align-left');
+		this.alignCenter = this.toolbar.querySelector('#align-center');
+		this.alignRight = this.toolbar.querySelector('#align-right');
+
+		this.orderedList = this.toolbar.querySelector('#ol');
+		this.unorderedList = this.toolbar.querySelector('#ul');
+
+		this.link = this.toolbar.querySelector('#link');
 
 	}
 
@@ -46,6 +68,10 @@ class PostEditor {
 		this.sel = new Selection();
 		this.dom = new DOMManager(editorDOM);
 
+		document.execCommand("defaultParagraphSeparator", false, "p");
+
+		// Event Listeners
+
 		this.dom.editor.addEventListener('focusin', () => { this.onSelectionChanged(); });
 		this.dom.editor.addEventListener('keyup', () => { this.onSelectionChanged(); });
 		this.dom.editor.addEventListener('keydown', (e) => {
@@ -55,7 +81,25 @@ class PostEditor {
 
 		this.dom.editor.addEventListener('paste', (e) => { this.onPaste(e); });
 
+		// Toolbar button events
+		this.dom.body.addEventListener('click', (e) => { this.sel.heading('P'); });
+		this.dom.heading1.addEventListener('click', (e) => { this.sel.heading('H1'); });
+		this.dom.heading2.addEventListener('click', (e) => { this.sel.heading('H2'); });
+		this.dom.heading3.addEventListener('click', (e) => { this.sel.heading('H3'); });
+
 		this.dom.boldButton.addEventListener('click', (e) => { this.sel.bold(); });
+		this.dom.italicButton.addEventListener('click', (e) => { this.sel.italic(); });
+		this.dom.underlineButton.addEventListener('click', (e) => { this.sel.underline(); });
+		this.dom.strikeButton.addEventListener('click', (e) => { this.sel.strike(); });
+
+		this.dom.alignLeft.addEventListener('click', (e) => { this.sel.align('justifyLeft'); });
+		this.dom.alignCenter.addEventListener('click', (e) => { this.sel.align('justifyCenter'); });
+		this.dom.alignRight.addEventListener('click', (e) => { this.sel.align('justifyRight'); });
+
+		this.dom.orderedList.addEventListener('click', (e) => { this.sel.list('ol'); });
+		this.dom.unorderedList.addEventListener('click', (e) => { this.sel.list('ul'); });
+
+		this.dom.unorderedList.addEventListener('click', (e) => { this.sel.list('ul'); });
 
 		this.initEditor();
 
@@ -126,7 +170,23 @@ class PostEditor {
 		if (this.isEmpty()) {
 			this.dom.editor.innerHTML = "";
 			this.dom.editor.appendChild(this.dom.pHolder);
+			var range = document.createRange();
+			range.setStartBefore(this.dom.pHolder.firstChild);
+			range.collapse(true);
+			this.sel.sel.removeAllRanges();
+			this.sel.sel.addRange(range);
 		}
+
+		var emptyNode = document.createElement('p');
+		emptyNode.innerHTML = 'a';
+		emptyNode.style.opacity = '0';
+		this.dom.editor.appendChild(emptyNode);
+		var range = document.createRange();
+		range.setStart(emptyNode.firstChild, 0);
+		range.setEnd(emptyNode.firstChild, 1);
+		this.sel.replaceRange(range);
+		document.execCommand('bold', false);
+		this.dom.editor.removeChild(emptyNode);
 	}
 
 	/**
@@ -169,28 +229,67 @@ class Selection {
 
 	/**
 	 * Align the selected paragraph.
-	 * @param {String} Direction
+	 * @param {String} direction
+	 * justifyLeft, justifyCenter, justifyRight
 	 */
 	align (direction) {
-
+		document.execCommand(direction, false);
 	}
+
 
 	/**
 	 * Make the selection bold.
 	 */
 	bold () {
-		document.execCommand('bold');
+		document.execCommand('bold', false);
 	}
 
 	/**
 	 * Make the selection italics.
 	 */
-	italics () {
+	italic () {
+		document.execCommand('italic', false);
+	}
 
+	underline () {
+		document.execCommand('underline', false);
+	}
+
+	strike () {
+		document.execCommand('strikeThrough', false);
+	}
+
+	/**
+	 * 
+	 * @param {string} type 
+	 */
+	heading (type) {
+		type = type.toUpperCase();
+		document.execCommand('formatBlock', false, '<'+type+'>');
+	}
+
+	/**
+	 * 
+	 * @param {string} type 
+	 */
+	list (type) {
+		type = type.toLowerCase();
+		if (type === 'ol') {
+			document.execCommand('insertOrderedList', false);
+		} else if (type === 'ul') {
+		
+		}
+	}
+
+	link (uri) {
+		document.execCommand('createLink', false, uri);
 	}
 
 
 
+	/**
+	 * Deprecated
+	 */
 	backspace () {
 
 		// this.range.deleteContents();
@@ -208,22 +307,19 @@ class Selection {
 					// TextNode
 					var text = this.startNode.textContent;
 					var suffixNode;
+					var newRange = document.createRange();
 
 					this.startNode.textContent
 					= text.slice(0, this.startOffset - 1) + text.slice(this.startOffset, text.length);
-					var newRange = document.createRange();
+					
 					newRange.setEnd(this.startNode, this.startOffset - 1);
 					newRange.collapse(false);
-
 					newRange.insertNode((suffixNode = document.createTextNode(' ')));
-
 					newRange.setStartAfter(suffixNode);
 
 					console.log(this.startOffset);
 
-					this.clearRange();
-
-					this.sel.addRange(newRange);
+					this.replaceRange(newRange);
 					
 				}
 			}
@@ -283,6 +379,15 @@ class Selection {
 
 	clearRange () {
 		this.sel.removeAllRanges();
+	}
+
+	/**
+	 * 
+	 * @param {Range} range 
+	 */
+	replaceRange (range) {
+		this.sel.removeAllRanges();
+		this.sel.addRange(range);
 	}
 
 	/**

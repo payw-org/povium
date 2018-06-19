@@ -1,3 +1,6 @@
+@import "../../../global-inclusion/less/_global-variables";
+@import "../../../global-inclusion/less/_global-mixins";
+
 #post-editor {
 	position: relative;
 	width: calc(100% - 40px);
@@ -12,8 +15,9 @@ p, h1, h2, h3 {
 #editor-toolbar {
 	margin-bottom: 1rem;
 	button {
-		background: purple;
-		color: #fff;
+		color: violet;
+		display: inline-block;
+		border-bottom: 2px solid aqua;
 	}
 }
 
@@ -21,9 +25,23 @@ p, h1, h2, h3 {
 
 	outline: none;
 
+	// Font size
+	p, li {
+
+		font-size: 28px;
+		margin-bottom: .5rem;
+
+		line-height: 1.2;
+
+		.responsive({
+			font-size: 16px;
+		},{
+			font-size: 20px;
+		});
+	}
+
 	p {
-		font-size: 16px;
-		margin-bottom: .2rem;
+		
 	}
 
 	h1 {
@@ -36,5 +54,25 @@ p, h1, h2, h3 {
 
 	h3 {
 		font-size: 1.2rem;
+	}
+
+	ol, ul, ol > li, ul > li {
+		list-style-position: inside;
+	}
+
+	ol > li {
+		margin-left: 15px;
+	}
+
+	ol, ol > li {
+		list-style-type: circle;
+	}
+
+	ul > li {
+		margin-left: 15px;
+	}
+
+	ul, ul > li {
+		list-style-type: decimal;
 	}
 }
