@@ -49,6 +49,8 @@ return [
 	//	message
 	'msg' => [
 		'system_warning' => '알 수 없는 오류입니다.',
+		'token_insert_to_db_err' => '자동 로그인 설정 오류',
+		'user_insert_to_db_err' => '신규유저 등록 오류',
 
 		'account_incorrect' => '이메일 또는 비밀번호를 다시 확인하세요.',
 		'account_inactive' => '비활성화 계정입니다.',

@@ -24,11 +24,6 @@ class Auth{
 	private $conn;
 
 
-	// private $is_logged = NULL;
-
-
-	// private $curr_user = NULL;
-
 
 	/**
 	* [__construct description]
@@ -101,8 +96,11 @@ class Auth{
 		//	login success
 		$return['err'] = false;
 
+		$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET last_login_dt = :last_login_dt WHERE id = :id");
+		$stmt->execute([':last_login_dt' => date("Y-m-d H:i:s", time()), ':id' => $user_id]);
+
 		if(!$this->addSessionAndCookie($user_id, $remember)){		//	if failed auto login setting
-			$return['msg'] = $this->config['msg']['system_warning'];
+			$return['msg'] = $this->config['msg']['token_insert_to_db_err'];
 		}
 
 
@@ -137,7 +135,16 @@ class Auth{
 	}
 
 
-
+	/**
+	 * [register description]
+	 * Validate input
+	 * Checks if input is already taken
+	 * Add user to db
+	 * @param  string $email
+	 * @param  string $name
+	 * @param  string $password
+	 * @return array 'err' is an error flag. 'msg' is an error message.
+	 */
 	public function register($email, $name, $password){
 		// $return = array('err' => true, 'email_msg' => '', 'name_msg' => '', 'password_msg' => '');
 		$return = array('err' => true, 'msg' => '');
@@ -181,6 +188,16 @@ class Auth{
 		}
 
 
+		if(!$this->addUser($email, $name, $password)){
+			$return['msg'] = $this->config['msg']['user_insert_to_db_err'];
+
+			return $return;
+		}
+
+
+		$return['err'] = false;
+
+		return $return;
 	}
 
 
@@ -396,6 +413,36 @@ class Auth{
 
 
 	/**
+	 * [addUser description]
+	 * Insert new user row to DB
+	 * @param string $email
+	 * @param string $name
+	 * @param string $password
+	 * @return bool if adding new user row to DB is failed, return false.
+	 */
+	public function addUser($email, $name, $password){
+		$at_pos = strpos($email, '@');
+		$reformed_email = substr($email, 0, $at_pos) . strtolower(substr($email, $pos));
+
+		$password_hash = $this->getPasswordHash($password);
+
+
+		$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_users']} (email, name, password)
+										VALUES (:email, :name, :password)");
+		if(!$stmt->execute([':email' => $reformed_email, ':name' => $name, ':password' => $password_hash])) {
+			return false;
+		}
+
+		return true;
+	}
+
+
+	public function updateUser($user_id, $params){
+		
+	}
+
+
+	/**
 	* [generateRandomHash description]
 	* @param  int $len [length of random hash (real length is $len * 2)]
 	* @return string
@@ -449,8 +496,6 @@ class Auth{
 	*/
 	private function addSessionAndCookie($user_id, $remember){
 		$_SESSION['user_id'] = $user_id;
-		$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET last_login_dt = :last_login_dt WHERE id = :id");
-		$stmt->execute([':last_login_dt' => date("Y-m-d H:i:s", time()), ':id' => $user_id]);
 
 		if($remember){
 			$hash = $this->generateRandomHash(30);
