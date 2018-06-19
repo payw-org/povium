@@ -11,9 +11,9 @@ $sql = "CREATE TABLE editor_types (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
 $constant1 = "INSERT INTO editor_types (id, name)
-				VALUES (1, 'public')";
+VALUES (1, 'public')";
 
 $constant2 = "INSERT INTO editor_types (id, name)
-				VALUES (2, 'premium')";
+VALUES (2, 'premium')";
 
 ?>

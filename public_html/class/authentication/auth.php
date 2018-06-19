@@ -96,8 +96,10 @@ class Auth{
 		//	login success
 		$return['err'] = false;
 
-		$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET last_login_dt = :last_login_dt WHERE id = :id");
-		$stmt->execute([':last_login_dt' => date("Y-m-d H:i:s", time()), ':id' => $user_id]);
+		$params = array(
+			'last_login_dt' => date('Y-m-d H:i:s', time())
+		);
+		$this->updateUser($user_id, $params);		//	update last login date
 
 		if(!$this->addSessionAndCookie($user_id, $remember)){		//	if failed auto login setting
 			$return['msg'] = $this->config['msg']['token_insert_to_db_err'];
@@ -136,15 +138,15 @@ class Auth{
 
 
 	/**
-	 * [register description]
-	 * Validate input
-	 * Checks if input is already taken
-	 * Add user to db
-	 * @param  string $email
-	 * @param  string $name
-	 * @param  string $password
-	 * @return array 'err' is an error flag. 'msg' is an error message.
-	 */
+	* [register description]
+	* Validate input
+	* Checks if input is already taken
+	* Add user to db
+	* @param  string $email
+	* @param  string $name
+	* @param  string $password
+	* @return array 'err' is an error flag. 'msg' is an error message.
+	*/
 	public function register($email, $name, $password){
 		// $return = array('err' => true, 'email_msg' => '', 'name_msg' => '', 'password_msg' => '');
 		$return = array('err' => true, 'msg' => '');
@@ -195,6 +197,7 @@ class Auth{
 		}
 
 
+		//	register success
 		$return['err'] = false;
 
 		return $return;
@@ -234,10 +237,10 @@ class Auth{
 
 
 	/**
-	 * [validateName description]
-	 * @param  string $name
-	 * @return array 'err' is an error flag. 'msg' is an error message.
-	 */
+	* [validateName description]
+	* @param  string $name
+	* @return array 'err' is an error flag. 'msg' is an error message.
+	*/
 	public function validateName($name){
 		$return = array('err' => true, 'msg' => '');
 
@@ -316,12 +319,12 @@ class Auth{
 
 
 	/**
-	 * [isEmailTaken description]
-	 * Check if the email is already taken
-	 * Compare case-insensitive
-	 * @param  string  $email
-	 * @return boolean
-	 */
+	* [isEmailTaken description]
+	* Check if the email is already taken
+	* Compare case-insensitive
+	* @param  string  $email
+	* @return boolean
+	*/
 	public function isEmailTaken($email){
 		$stmt = $this->conn->prepare("SELECT COUNT(id) FROM {$this->config['table_users']} WHERE LOWER(email) = LOWER(:email)");
 		$stmt->execute([':email' => $email]);
@@ -335,12 +338,12 @@ class Auth{
 
 
 	/**
-	 * [isNameTaken description]
-	 * Check if the name is already taken
-	 * Compare case-insensitive
-	 * @param  string  $name
-	 * @return boolean
-	 */
+	* [isNameTaken description]
+	* Check if the name is already taken
+	* Compare case-insensitive
+	* @param  string  $name
+	* @return boolean
+	*/
 	public function isNameTaken($name){
 		$stmt = $this->conn->prepare("SELECT COUNT(id) FROM {$this->config['table_users']} WHERE LOWER(name) = LOWER(:name)");
 		$stmt->execute([':name' => $name]);
@@ -413,13 +416,13 @@ class Auth{
 
 
 	/**
-	 * [addUser description]
-	 * Insert new user row to DB
-	 * @param string $email
-	 * @param string $name
-	 * @param string $password
-	 * @return bool if adding new user row to DB is failed, return false.
-	 */
+	* [addUser description]
+	* Insert new user row to DB
+	* @param string $email
+	* @param string $name
+	* @param string $password
+	* @return bool if adding new user row to DB is failed, return false.
+	*/
 	public function addUser($email, $name, $password){
 		$at_pos = strpos($email, '@');
 		$reformed_email = substr($email, 0, $at_pos) . strtolower(substr($email, $pos));
@@ -428,7 +431,7 @@ class Auth{
 
 
 		$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_users']} (email, name, password)
-										VALUES (:email, :name, :password)");
+		VALUES (:email, :name, :password)");
 		if(!$stmt->execute([':email' => $reformed_email, ':name' => $name, ':password' => $password_hash])) {
 			return false;
 		}
@@ -437,8 +440,31 @@ class Auth{
 	}
 
 
+	/**
+	 * [updateUser description]
+	 * Update some column values of user
+	 * @param  int $user_id
+	 * @param  array $params  assoc array(column to update => new value, ...)
+	 * @return bool
+	 */
 	public function updateUser($user_id, $params){
-		
+		$col_list = array();
+		$val_list = array();
+
+		foreach($params as $col => $val){
+			array_push($col_list, $col . ' = ?');
+			array_push($val_list, $val);
+		}
+		array_push($val_list, $user_id);
+
+		$set_params = implode(', ', $col_list);
+
+		$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET " . $set_params . " WHERE id = ?");
+		if(!$stmt->execute($val_list)){
+			return false;
+		}
+
+		return true;
 	}
 
 
