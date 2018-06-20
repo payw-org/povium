@@ -4,7 +4,8 @@
   "description": "포비엄은 누구나 글을 쓰고 업로드할 수 있는 출판 플랫폼입니다.",
   "main": "",
   "dependencies": {
-    "less": "^3.0.4"
+    "less": "^3.0.4",
+    "nodemon": "^1.17.5"
   },
   "devDependencies": {},
   "scripts": {
