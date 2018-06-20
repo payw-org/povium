@@ -9,7 +9,13 @@
 *
 */
 
-class DBConnection{
+require $_SERVER['DOCUMENT_ROOT'] . '/trait/SingletonTrait.php';
+
+
+class DBConnection {
+
+	use SingletonTrait;
+
 	/**
 	* configuration parameters
 	* array('driver' => '', 'host' => '', 'dbname' => '', 'username' => '', 'password' => '', 'opt' => '')
@@ -22,16 +28,15 @@ class DBConnection{
 	* database connection (PDO)
 	* @var \PDO
 	*/
-	private $conn;
+	private $conn = NULL;
 
 
 	/**
 	* [__construct description]
 	* Opens the database connection using PDO
-	* @param array $config
 	*/
-	public function __construct(array $config){
-		$this->config = $config;
+	private function __construct(){
+		$this->config = require('conn.config.php');
 		$this->getPDOConnection();
 	}
 

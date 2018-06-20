@@ -10,7 +10,7 @@
 *
 */
 
-class Auth{
+class Auth {
 	/**
 	* @var array
 	*/
@@ -21,18 +21,17 @@ class Auth{
 	* database connection (PDO)
 	* @var \PDO
 	*/
-	private $conn;
+	private $conn = NULL;
 
 
 
 	/**
 	* [__construct description]
 	* @param PDO $conn
-	* @param array $config
 	*/
-	public function __construct(PDO $conn, array $config){
+	public function __construct(PDO $conn){
 		$this->conn = $conn;
-		$this->config = $config;
+		$this->config = require('auth.config.php');
 	}
 
 
