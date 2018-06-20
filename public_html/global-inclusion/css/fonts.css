@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
+
 @font-face {
 	font-family: 'JHM Pro';
 	font-style: normal;
@@ -20,6 +23,7 @@
 	font-family: 'JHM Pro';
 	font-style: normal;
 	font-weight: 400;
+	font-size: .5em !important;
 	src: url("/fonts/JHM-Pro/JHMPro-Regular.woff2") format("woff2"),
 		url("/fonts/JHM-Pro/JHMPro-Regular.woff") format("woff"),
 		url("/fonts/JHM-Pro/JHMPro-Regular.ttf") format("truetype");
