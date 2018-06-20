@@ -8,7 +8,7 @@ $te->render('/template/base.phtml', [
 
 	'title' => 'Editor',
 
-	'main' => 'src/interface.phtml',
+	'main' => 'src/template/main.phtml',
 
 	'script' => '<script src="src/js/postEditor.js"></script>',
 

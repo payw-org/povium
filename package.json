@@ -4,12 +4,18 @@
   "description": "포비엄은 누구나 글을 쓰고 업로드할 수 있는 출판 플랫폼입니다.",
   "main": "",
   "dependencies": {
-    "less": "^3.0.4",
-    "nodemon": "^1.17.5"
+    "autoprefixer": "^8.6.3",
+    "node-sass": "^4.9.0",
+    "postcss-cli": "^5.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "webpack": "^4.12.0"
+  },
   "scripts": {
-    "test": "lessc public_html/src/less/test.less test.css"
+    "build:sass": "node-sass -wr public_html/src/scss/ -o public_html/src/build/css/",
+    "build:sass:postcss": "node-sass -wr public_html/src/scss -o public_html/src/build/css && postcss public_html/src/build/css --use autoprefixer -d public_html/src/build/css",
+    "autoprefix": "postcss public_html/src/build/css --use autoprefixer -d public_html/src/build/css",
+    "watch:sass": "nodemon -e scss -x \"npm run build:sass\""
   },
   "repository": {
     "type": "git",

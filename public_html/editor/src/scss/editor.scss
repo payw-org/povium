@@ -1,0 +1,124 @@
+@import "../../../global-inclusion/scss/_global-variables";
+@import "../../../global-inclusion/less/_global-mixins";
+
+#post-editor {
+	position: relative;
+	width: calc(100% - 40px);
+	max-width: 50rem;
+	margin: auto;
+}
+
+p, h1, h2, h3 {
+	position: relative;
+}
+
+#editor-toolbar {
+	margin-bottom: 1rem;
+	user-select: none;
+
+	& > div {
+		display: flex;
+	}
+
+	button {
+		min-width: 50px;
+		font-weight: 700;
+		padding: 1px 4px 0px;
+		margin: 1px 2px;
+		color: $pvm-violet;
+		display: inline-block;
+		border-bottom: 3px solid $pvm-aqua;
+		font-size: 1rem;
+		transition: transform .2s ease;
+
+		&:hover {
+			background: $white-blue;
+		}
+
+		&:active {
+			transform: scale(.9);
+		}
+	}
+}
+
+#editor-body {
+
+	outline: none;
+
+	@font-size--base: 16px;
+
+	// Font size
+	p, li {
+
+		font-size: @font-size--base + 2;
+		margin-bottom: .3em;
+
+		line-height: 1.1;
+
+		@include responsive({
+			font-size: @font-size--base;
+		},{
+			font-size: @font-size--base + 4;
+		});
+	}
+
+	p {
+		
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		line-height: 1.2;
+		font-weight: 400;
+		margin: 0;
+	}
+
+	h1 {
+		font-size: @font-size--base * 2 + 4;
+
+		& + p {
+			margin-top: 1.2em;
+		}
+
+		@include responsive({
+			font-size: @font-size--base * 2;
+		}, {
+			font-size: @font-size--base * 2 + 8;
+		});
+	}
+
+	h2 {
+		font-size: 1.5rem;
+
+		& + p {
+			margin-top: 1em;
+		}
+	}
+
+	h3 {
+		font-size: 1.2rem;
+	}
+
+	ol, ul {
+		padding: .5rem 0;
+	}
+
+	ol, ul, ol > li, ul > li {
+		list-style-position: inside;
+	}
+
+	ol > li {
+		margin-left: 15px;
+	}
+
+	ol, ol > li {
+		list-style-type: circle;
+	}
+
+	ul > li {
+		margin-left: 15px;
+	}
+
+	ul, ul > li {
+		list-style-type: decimal;
+	}
+}
