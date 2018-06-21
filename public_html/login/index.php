@@ -6,7 +6,7 @@ $te = new TemplateEngine();
 $te->render("/template/base.phtml", [
 	"title" => "Povium | 로그인",
 	"main" => "template/login-main.phtml",
-	"css" => '<link rel="stylesheet" href="css/login.css">'
+	"css" => '<link rel="stylesheet" href="/src/build/css/login.css">'
 ]);
 
 ?>

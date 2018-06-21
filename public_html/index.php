@@ -5,9 +5,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/class/view/TemplateEngine.php';
 $te = new TemplateEngine();
 $te->render("/template/base.phtml", [
 	"title" => "Povium | 좋은 글, 세상을 바꾸는 힘",
-	"css" => '<link rel="stylesheet" href="css/home.css">',
+	"css" => '<link rel="stylesheet" href="/src/build/css/home.css">',
 	"main" => "template/home.phtml",
-	"script" => '<script src="js/home.js"></script>',
+	"script" => '<script src="/src/js/home.js"></script>',
 
 	"post_img_link" => [
 		"programmer", "1", "2" , "3", "4", "5", "6"

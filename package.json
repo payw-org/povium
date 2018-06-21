@@ -1,11 +1,13 @@
 {
   "name": "povium",
   "version": "1.0.0",
-  "description": "포비엄은 누구나 글을 쓰고 업로드할 수 있는 출판 플랫폼입니다.",
+  "description": "좋은 글 플랫폼",
   "main": "",
   "dependencies": {
     "autoprefixer": "^8.6.3",
+    "concurrently": "^3.6.0",
     "node-sass": "^4.9.0",
+    "nodemon": "^1.17.5",
     "postcss-cli": "^5.0.1"
   },
   "devDependencies": {
@@ -13,12 +15,14 @@
     "webpack-cli": "^3.0.8"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "build:sass": "node-sass -wr public_html/src/scss/ -o public_html/src/build/css/",
-    "build:sass:postcss": "node-sass -wr public_html/src/scss -o public_html/src/build/css && postcss public_html/src/build/css --use autoprefixer -d public_html/src/build/css",
-    "autoprefix": "postcss public_html/src/build/css --use autoprefixer -d public_html/src/build/css",
-    "watch:sass": "nodemon -e scss -x \"npm run build:sass\""
+	"webpack:build": "webpack --config webpack.config.js",
+	"autoprefix": "postcss public_html/src/build/css --use autoprefixer -d public_html/src/build/css",
+	"sass:build": "concurrently \"node-sass -w public_html/src/scss/ -o public_html/src/build/css/\" \"nodemon -e scss -x npm run autoprefix\""
   },
+  "browserslist": [
+    "> 5%",
+    "last 5 versions"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DesignAndDevelop/Povium.git"
