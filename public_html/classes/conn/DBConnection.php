@@ -9,12 +9,12 @@
 *
 */
 
-require $_SERVER['DOCUMENT_ROOT'] . '/trait/SingletonTrait.php';
+namespace pvm\conn;
 
 
 class DBConnection {
 
-	use SingletonTrait;
+	use \pvm\SingletonTrait;
 
 	/**
 	* configuration parameters
@@ -61,8 +61,8 @@ class DBConnection {
 			";dbname=" . $this->config['dbname'];
 
 			try{
-				$this->conn = new PDO($dsn, $this->config['username'], $this->config['password'], $this->config['opt']);
-			}catch(PDOException $e){
+				$this->conn = new \PDO($dsn, $this->config['username'], $this->config['password'], $this->config['opt']);
+			}catch(\PDOException $e){
 				echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
 			}
 		}
@@ -91,7 +91,7 @@ class DBConnection {
 			$stmt->execute();
 
 			$count = $stmt->rowCount();
-		}catch(PDOException $e){
+		}catch(\PDOException $e){
 			echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
 		}
 
@@ -111,7 +111,7 @@ class DBConnection {
 			$stmt->execute();
 
 			// $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-		}catch(PDOException $e){
+		}catch(\PDOException $e){
 			echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
 		}
 

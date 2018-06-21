@@ -10,6 +10,9 @@
 *
 */
 
+namespace pvm\auth;
+
+
 class Auth {
 	/**
 	* @var array
@@ -23,15 +26,23 @@ class Auth {
 	*/
 	private $conn = NULL;
 
-
+	
 
 	/**
 	* [__construct description]
-	* @param PDO $conn
+	* @param \PDO $conn
 	*/
-	public function __construct(PDO $conn){
+	public function __construct(\PDO $conn){
 		$this->conn = $conn;
 		$this->config = require('auth.config.php');
+	}
+
+
+	/**
+	 * [__destruct description]
+	 */
+	public function __destruct(){
+
 	}
 
 
