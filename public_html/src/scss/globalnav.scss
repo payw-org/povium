@@ -216,7 +216,7 @@ $search-font-size: floor($search-size / 2.5) + 1;
 
 	.magnifier {
 		background: none;
-		background-image: url('/assets/images/magnifier.svg');
+		background-image: url('/src/images/magnifier.svg');
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: floor($search-size / 2.3) floor($search-size / 2.3);

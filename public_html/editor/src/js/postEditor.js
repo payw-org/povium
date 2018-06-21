@@ -335,40 +335,37 @@ class SelectionManager {
 	 * @param {string} type 
 	 */
 	list (type) {
-		document.execCommand('insertOrderedList', false);
-		// var ol = document.createElement(type);
-		// if (paragraphs.length > 1) {
 
-		// 	console.log('multi paragraph');
+		// If one or more lists are
+		// included in the selection,
+		// add other paragraphs to the existing list.
 
-		// 	for (var i = 0; i < paragraphs.length; i++) {
+		// If all selection is already a list
+		// restore them to 'P' paragraphs.
 
-		// 		if (paragraphs[i].nodeName === type) {
-		// 			continue;
-		// 		}
+		let paragraphs = this.getParagraphNodes();
+		let listDOM = document.createElement(type);
 
-		// 		let newParagraph = document.createElement(type);
+		for (var i = 0; i < paragraphs.length; i++) {
 
-		// 		var child;
-		// 		while (child = paragraphs[i].firstChild) {
-		// 			newParagraph.appendChild(child);
-		// 		}
+			if (paragraphs[i].nodeName === type) {
 
-		// 		this.domManager.editor.replaceChild(newParagraph, paragraphs[i]);
 
-		// 	}
 
-		// 	var keepRange = document.createRange();
-		// 	keepRange.setStart(startNode, startOffset);
-		// 	keepRange.setEnd(endNode, endOffset);
+			} else {
 
-		// 	this.replaceRange(keepRange);
 
-		// } else {
-		// 	console.log('single paragraph');
-		// 	type = type.toUpperCase();
-		// 	document.execCommand('formatBlock', false, '<'+type+'>');
-		// }
+
+			}
+
+		}
+
+		var keepRange = document.createRange();
+		keepRange.setStart(startNode, startOffset);
+		keepRange.setEnd(endNode, endOffset);
+
+		this.replaceRange(keepRange);
+
 	}
 
 	link (uri) {
