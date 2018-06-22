@@ -1,5 +1,5 @@
-@import "../../../global-inclusion/scss/_global-variables";
-@import "../../../global-inclusion/less/_global-mixins";
+@import "../../../src/scss/_global-variables";
+@import "../../../src/scss/_global-mixins";
 
 #post-editor {
 	position: relative;
@@ -45,21 +45,21 @@ p, h1, h2, h3 {
 
 	outline: none;
 
-	@font-size--base: 16px;
+	$font-size--base: 16px;
 
 	// Font size
 	p, li {
 
-		font-size: @font-size--base + 2;
+		font-size: $font-size--base + 2;
 		margin-bottom: .3em;
 
 		line-height: 1.1;
 
-		@include responsive({
-			font-size: @font-size--base;
-		},{
-			font-size: @font-size--base + 4;
-		});
+		@include responsive((
+			font-size: $font-size--base
+		),(
+			font-size: $font-size--base + 4
+		));
 	}
 
 	p {
@@ -73,17 +73,17 @@ p, h1, h2, h3 {
 	}
 
 	h1 {
-		font-size: @font-size--base * 2 + 4;
+		font-size: $font-size--base * 2 + 4;
 
 		& + p {
 			margin-top: 1.2em;
 		}
 
-		@include responsive({
-			font-size: @font-size--base * 2;
-		}, {
-			font-size: @font-size--base * 2 + 8;
-		});
+		@include responsive((
+			font-size: $font-size--base * 2
+		), (
+			font-size: $font-size--base * 2 + 8
+		));
 	}
 
 	h2 {

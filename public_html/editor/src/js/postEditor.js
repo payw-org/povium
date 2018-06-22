@@ -297,28 +297,31 @@ class SelectionManager {
 	 */
 	heading (type) {
 		
-		let paragraphs = this.getParagraphNodes();
+		let chunks = this.getNodesInSelection();
 		let startNode = this.getRange().startContainer;
 		let startOffset = this.getRange().startOffset;
 		let endNode = this.getRange().endContainer;
 		let endOffset = this.getRange().endOffset;
 
-		console.log('multi paragraph');
+		for (var i = 0; i < chunks.length; i++) {
 
-		for (var i = 0; i < paragraphs.length; i++) {
+			if (chunks[i].nodeName === type) {
+				continue;
+			}
 
-			if (paragraphs[i].nodeName === type) {
+			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
+				console.log('the node is not a paragraph nor heading.')
 				continue;
 			}
 
 			let newParagraph = document.createElement(type);
 			
 			var child;
-			while (child = paragraphs[i].firstChild) {
+			while (child = chunks[i].firstChild) {
 				newParagraph.appendChild(child);
 			}
 
-			this.domManager.editor.replaceChild(newParagraph, paragraphs[i]);
+			this.domManager.editor.replaceChild(newParagraph, chunks[i]);
 
 		}
 
@@ -343,7 +346,7 @@ class SelectionManager {
 		// If all selection is already a list
 		// restore them to 'P' paragraphs.
 
-		let paragraphs = this.getParagraphNodes();
+		let paragraphs = this.getNodesInSelection();
 		let listDOM = document.createElement(type);
 
 		for (var i = 0; i < paragraphs.length; i++) {
@@ -515,28 +518,25 @@ class SelectionManager {
 		}
 	}
 
+
 	/**
-	 * Returns true if the selection is in multiple paragraphs.
-	 * @return {Boolean}
+	 * Determine if the given node is a paragraph node which Povium understands.
+	 * @param {Node} node
 	 */
-	isMultiParagraph () {
-		if (this.getParagraphNodes().length > 1) {
+	isParagraph (node) {
+		if (!node) {
+			return false;
+		} else if (node.nodeName === 'P') {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-
-	/**
-	 * Determine if the given node is a paragraph node which Povium understands.
-	 * @param {Node} node
-	 */
-	isParagraphNode (node) {
+	isHeading (node) {
 		if (!node) {
 			return false;
 		} else if (
-			node.nodeName === 'P' ||
 			node.nodeName === 'H1' ||
 			node.nodeName === 'H2' ||
 			node.nodeName === 'H3' ||
@@ -546,7 +546,30 @@ class SelectionManager {
 		) {
 			return true;
 		} else {
-			console.warn(node.nodeName + ' : Node is not a paragraph');
+			return false;
+		}
+	}
+
+	isList (node) {
+		if (!node) {
+			return false;
+		} else if (
+			node.nodeName === 'OL' ||
+			node.nodeName === 'UL'
+		) {
+			return true;
+		} else {
+			console.warn(node.nodeName + ' : Node is not a heading');
+		}
+	}
+
+	isBlockquote (node) {
+		if (!node) {
+			return false;
+		} else if (node.nodeName === 'BLOCKQUOTE') {
+			return true;
+		} else {
+			console.warn(node.nodeName + ' : Node is not a heading');
 		}
 	}
 
@@ -577,28 +600,31 @@ class SelectionManager {
 	 * Returns an array of all paragraph nodes within the selection.
 	 * @return {Array.<HTMLElement>}
 	 */
-	getParagraphNodes () {
+	getNodesInSelection () {
 
 		let travelNode = this.getRange() ? this.getRange().startContainer : null;
 		let nodes = [];
 
 		while (1) {
-			console.log(travelNode);
 			if (travelNode.nodeName === 'BODY') {
 				break;
-			} else if (this.isParagraphNode(travelNode)) {
+			} else if (
+				this.isParagraph(travelNode) ||
+				this.isHeading(travelNode) ||
+				this.isList(travelNode)
+			) {
 				nodes.push(travelNode);
 				
 				if (travelNode.contains(this.getRange().endContainer)) {
 					break;
 				} else {
-					travelNode = travelNode.nextSibling;
+					travelNode = travelNode.nextElementSibling;
 				}
 
-			} else if (travelNode.nextSibling === null) {
+			} else if (travelNode.nextElementSibling === null) {
 				travelNode = travelNode.parentNode;
 			} else {
-				travelNode = travelNode.nextSibling;
+				travelNode = travelNode.nextElementSibling;
 			}
 		}
 
