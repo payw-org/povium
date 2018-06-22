@@ -2,11 +2,10 @@
 
 /**
 * Class AutoLoader
+* Custom AutoLoader class
 *
-* An custom autoloader class that includes the optional functionality
-* of allowing multiple base directories for a single namespace prefix.
-*
-*
+* @author fairyhooni
+* @license MIT
 *
 */
 
@@ -24,8 +23,8 @@ class AutoLoader {
 
 
 	/**
-	* Set prefixes and base directories for povium directory
 	*
+	* Set prefixes and base directories for povium directory
 	*/
 	public function __construct() {
 		$this->addNamespace('povium', 'classes');
@@ -96,21 +95,26 @@ class AutoLoader {
 	private function loader($classname) {
 		//	convert classname to filename
 		$classname = ltrim($classname, '\\');
-		$fileName = str_replace('\\', '/', $classname) . '.php';
+		$filename = str_replace('\\', '/', $classname) . '.php';
 
 		//	look through base directories for each prefixes
 		foreach($this->prefixes as $prefix => $base_dirs){
-			foreach($base_dirs as $dir){
-				$reformedName = str_replace($prefix, $dir, $fileName);
+			//	if prefix match,
+			if(strpos($filename, $prefix . '/') === 0){
+				foreach($base_dirs as $dir) {
+					$newFilename = substr_replace($filename, $dir, 0, strlen($prefix));
 
-				// if the mapped file exists, require it
-				if($this->requireFile($reformedName)){
-					return $reformedName;
+					//	if the mapped file exists, require it
+					//	and return file name
+					if($this->requireFile($newFilename)) {
+						return $newFilename;
+					}
 				}
+
+				return false;
 			}
 		}
 
-		return false;
 	}
 
 
