@@ -9,7 +9,7 @@
 *
 */
 
-namespace pvm;
+namespace povium;
 
 
 trait SingletonTrait {

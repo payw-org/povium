@@ -1,13 +1,14 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/AutoLoader.php';
-\pvm\AutoLoader::register();
+$autoloader = new \povium\AutoLoader();
+$autoloader->register();
 
 
-$dbc = \pvm\conn\DBConnection::getInstance();
+$dbc = \povium\conn\DBConnection::getInstance();
 $conn = $dbc->getConn();
 
-$auth = new \pvm\auth\Auth($conn);
+$auth = new \povium\auth\Auth($conn);
 
 
 $login_inputs = json_decode($_POST['login_inputs'], TRUE);		//	assoc array

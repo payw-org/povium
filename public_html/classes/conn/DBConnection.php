@@ -9,12 +9,12 @@
 *
 */
 
-namespace pvm\conn;
+namespace povium\conn;
 
 
 class DBConnection {
 
-	use \pvm\SingletonTrait;
+	use \povium\SingletonTrait;
 
 	/**
 	* configuration parameters

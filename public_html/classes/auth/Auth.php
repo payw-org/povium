@@ -10,7 +10,7 @@
 *
 */
 
-namespace pvm\auth;
+namespace povium\auth;
 
 
 class Auth {
@@ -26,7 +26,7 @@ class Auth {
 	*/
 	private $conn = NULL;
 
-	
+
 
 	/**
 	* [__construct description]
@@ -39,8 +39,8 @@ class Auth {
 
 
 	/**
-	 * [__destruct description]
-	 */
+	* [__destruct description]
+	*/
 	public function __destruct(){
 
 	}
@@ -451,12 +451,12 @@ class Auth {
 
 
 	/**
-	 * [updateUser description]
-	 * Update some column values of user
-	 * @param  int $user_id
-	 * @param  array $params  assoc array(column to update => new value, ...)
-	 * @return bool
-	 */
+	* [updateUser description]
+	* Update some column values of user
+	* @param  int $user_id
+	* @param  array $params  assoc array(column to update => new value, ...)
+	* @return bool
+	*/
 	public function updateUser($user_id, $params){
 		$col_list = array();
 		$val_list = array();
