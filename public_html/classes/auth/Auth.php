@@ -692,7 +692,7 @@ class Auth {
 	*
 	*/
 	private function deleteCookie(){
-		setcookie('auth_token', "", time() - 3600);
+		setcookie('auth_token', '', time() - 3600);
 		unset($_COOKIE['auth_token']);
 	}
 
