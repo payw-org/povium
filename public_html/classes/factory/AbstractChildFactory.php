@@ -1,9 +1,7 @@
 <?php
 /**
 *
-* Class for abstract factory
-* This follows factory method pattern
-* A factory can create object instances for given types
+* This Factory is responsible for creating instance of given type.
 *
 * @author fairyhooni
 * @license MIT
@@ -14,10 +12,10 @@
 namespace povium\factory;
 
 
-abstract class AbstractFactory implements FactoryInterface {
+abstract class AbstractChildFactory implements FactoryInterface {
 
 	/**
-	* Type of instance
+	* Givne type of instance
 	*
 	* @var string
 	*/
@@ -33,24 +31,17 @@ abstract class AbstractFactory implements FactoryInterface {
 
 
 	/**
-	* Returns instance of given type.
+	* Returns an instance of given type.
 	*
-	* @param  mixed type and materials
+	* @param  mixed type and some materials
 	* @return object An instance of given type
 	*/
 	public function createInstance ($type) {
-		if(!class_exists($type)) {
-			throw new exceptions\FactoryException('Nonexistent type: "' . $type . '"',
-			exceptions\FactoryException::EXC_NONEXISTENT_TYPE);
-		}
-
 		$this->type = $type;
 		$materials = array_slice(func_get_args(), 1);
 		call_user_func_array(array($this, 'prepareArgs'), $materials);
 
-		$instance = $this->create();
-
-		return $instance;
+		return $this->create();
 	}
 
 

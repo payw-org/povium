@@ -1,9 +1,7 @@
 <?php
 /**
 *
-* Class for service factory
-* This follows factory method pattern
-* A factory can create object instances for given types
+* This Factory is responsible for creating instance of type based on service.
 *
 * @author fairyhooni
 * @license MIT
@@ -14,7 +12,7 @@
 namespace povium\factory;
 
 
-class ServiceFactory extends AbstractFactory {
+class ServiceFactory extends AbstractChildFactory {
 
 	/**
 	* Manufacture materials into arguments
