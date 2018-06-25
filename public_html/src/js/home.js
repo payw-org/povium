@@ -26,8 +26,9 @@ class HomeView {
 
 		// Touch events on popular posts
 		this.popPostContainer.addEventListener('touchstart', (e) => {
-			// e.preventDefault();
+			e.preventDefault();
 			this.stopAutoFlick();
+			this.popPostContainer.classList.add('moving');
 			this.dist = 0;
 			this.orgPageX = e.touches[0].pageX;
 			this.orgPageY = e.touches[0].pageY;
@@ -35,11 +36,10 @@ class HomeView {
 
 		this.popPostContainer.addEventListener('touchmove', (e) => {
 			e.preventDefault();
-			this.popPostContainer.classList.add('moving');
 			this.dist = e.touches[0].pageX - this.orgPageX;
 			if (Number(this.popPostContainer.getAttribute('data-post-pos')) === 0 && this.dist > 0 ||
 			    Number(this.popPostContainer.getAttribute('data-post-pos')) === this.postMax - 1 && this.dist < 0) {
-				this.dist = this.dist / 7;
+				this.dist = this.dist / 5;
 			}
 			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.dist + 'px),0,10px)';
 		})
@@ -56,7 +56,7 @@ class HomeView {
 			this.flickPostTo(postPos);
 			setTimeout(() => {
 				this.autoFlick();
-			}, 3000)
+			}, 300)
 		})
 
 
@@ -90,7 +90,7 @@ class HomeView {
 			this.dist = e.pageX - this.orgPageX;
 			if (Number(this.popPostContainer.getAttribute('data-post-pos')) === 0 && this.dist > 0 ||
 			    Number(this.popPostContainer.getAttribute('data-post-pos')) === this.postMax - 1 && this.dist < 0) {
-				this.dist = this.dist / 7;
+				this.dist = this.dist / 5;
 			}
 			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.dist + 'px),0,10px)';
 		})
@@ -110,7 +110,7 @@ class HomeView {
 			this.flickPostTo(postPos);
 			setTimeout(() => {
 				this.autoFlick();
-			}, 3000)
+			}, 300)
 
 			if (!this.isDragged && e.which === 1) {
 				e.target.querySelector('.post-link').click();
@@ -141,6 +141,7 @@ class HomeView {
 	}
 
 	autoFlick() {
+		
 		this.popPostContainer.classList.remove('ease');
 		if (this.isAutoFlicking) {
 			return;

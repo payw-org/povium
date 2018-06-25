@@ -86,7 +86,7 @@ button::-moz-focus-inner {border:0;}
 
 	&:active {
 		background: darken($pvm-violet, 1%);
-		transform: scale(.97);
+		// transform: scale(.97);
 	}
 }
 
@@ -111,7 +111,7 @@ button::-moz-focus-inner {border:0;}
 
 	&:active {
 		background: darken($btn-aqua, 2%);
-		transform: scale(.97);
+		// transform: scale(.97);
 	}
 }
 
@@ -121,43 +121,32 @@ button::-moz-focus-inner {border:0;}
 	position: relative;
 	transition: top .2s ease, padding .2s ease;
 	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
 
 	.placeholder {
 		position: absolute;
 		// width: 100%;
-		left: 50%;
-		top: 50%;
-		transform: translateX(-50%) translateY(-50%);
-		transform-origin: left;
+		transform: scale(1);
+		transform-origin: cetner;
 		font-size: 1.1rem;
 		color: #808080;
 		pointer-events: none;
 		user-select: none;
-		transition: transform .2s ease, left .2s ease, top .2s ease;
+		transition: transform .2s ease, opacity .2s ease;
+		will-change: transform, opacity;
 	}
 
-	&.focused {
-		top: 1.2rem;
-		padding-bottom: 1.2rem;
+	&.focused, &.fixed {
+		// top: 1.2rem;
+		// padding-bottom: 1.2rem;
 
 		.placeholder {
 			width: auto;
-			transform: scale(.85) translateX(0) translateY(-50%);
-			left: .3rem;
-			top: -.8rem;
-		}
-	}
-
-	&.fixed {
-
-		top: 1.2rem;
-		padding-bottom: 1.2rem;
-
-		.placeholder {
-			width: auto;
-			transform: scale(.85) translateX(0) translateY(-50%);
-			left: .3rem;
-			top: -.8rem;
+			transform: scale(0.9) translateX(10px);
+			opacity: 0;
 		}
 	}
 
@@ -168,6 +157,7 @@ button::-moz-focus-inner {border:0;}
 		padding: .3rem;
 		font-size: .9rem;
 		font-weight: 400;
+		width: 100%;
 
 		&.collapsed, &.collapsing {
 			padding: 0;

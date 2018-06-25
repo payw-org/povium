@@ -37,16 +37,18 @@
 				will-change: transform;
 				-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 
+				
+
+				&.ease {
+					transition: transform .3s ease;
+				}
+
 				&.moving {
 					transition: none;
 
 					.post-link {
 						pointer-events: none;
 					}
-				}
-
-				&.ease {
-					transition: transform .3s ease;
 				}
 
 				.post-wrapper {

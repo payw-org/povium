@@ -21,7 +21,7 @@ p, h1, h2, h3 {
 	}
 
 	button {
-		min-width: 50px;
+		// min-width: 50px;
 		font-weight: 700;
 		padding: 1px 4px 0px;
 		margin: 1px 2px;
@@ -45,20 +45,22 @@ p, h1, h2, h3 {
 
 	outline: none;
 
+	min-height: 500px;
+
 	$font-size--base: 16px;
 
 	// Font size
 	p, li {
 
-		font-size: $font-size--base + 2;
+		font-size: 18px;
 		margin-bottom: .3em;
 
 		line-height: 1.1;
 
 		@include responsive((
-			font-size: $font-size--base
+			font-size: 16px
 		),(
-			font-size: $font-size--base + 4
+			font-size: 20px
 		));
 	}
 
@@ -73,29 +75,45 @@ p, h1, h2, h3 {
 	}
 
 	h1 {
-		font-size: $font-size--base * 2 + 4;
+		font-size: 35px;
 
 		& + p {
 			margin-top: 1.2em;
 		}
 
 		@include responsive((
-			font-size: $font-size--base * 2
+			font-size: 32px
 		), (
-			font-size: $font-size--base * 2 + 8
+			font-size: 40px
 		));
 	}
 
 	h2 {
-		font-size: 1.5rem;
+		font-size: 30px;
 
 		& + p {
 			margin-top: 1em;
 		}
+
+		@include responsive((
+			font-size: 28px
+		), (
+			font-size: 35px
+		));
 	}
 
 	h3 {
-		font-size: 1.2rem;
+		font-size: 27px;
+
+		& + p {
+			margin-top: .8em;
+		}
+
+		@include responsive((
+			font-size: 24px
+		), (
+			font-size: 31px
+		));
 	}
 
 	ol, ul {

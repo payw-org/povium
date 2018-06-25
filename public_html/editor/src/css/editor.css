@@ -21,7 +21,6 @@ p, h1, h2, h3 {
     display: -ms-flexbox;
     display: flex; }
   #editor-toolbar button {
-    min-width: 50px;
     font-weight: 700;
     padding: 1px 4px 0px;
     margin: 1px 2px;
@@ -42,7 +41,8 @@ p, h1, h2, h3 {
       transform: scale(0.9); }
 
 #editor-body {
-  outline: none; }
+  outline: none;
+  min-height: 500px; }
   #editor-body p, #editor-body li {
     font-size: 18px;
     margin-bottom: .3em;
@@ -58,7 +58,7 @@ p, h1, h2, h3 {
     font-weight: 400;
     margin: 0; }
   #editor-body h1 {
-    font-size: 36px; }
+    font-size: 35px; }
     #editor-body h1 + p {
       margin-top: 1.2em; }
     @media only screen and (max-width: 768px) {
@@ -68,11 +68,25 @@ p, h1, h2, h3 {
       #editor-body h1 {
         font-size: 40px; } }
   #editor-body h2 {
-    font-size: 1.5rem; }
+    font-size: 30px; }
     #editor-body h2 + p {
       margin-top: 1em; }
+    @media only screen and (max-width: 768px) {
+      #editor-body h2 {
+        font-size: 28px; } }
+    @media only screen and (min-width: 1441px) {
+      #editor-body h2 {
+        font-size: 35px; } }
   #editor-body h3 {
-    font-size: 1.2rem; }
+    font-size: 27px; }
+    #editor-body h3 + p {
+      margin-top: .8em; }
+    @media only screen and (max-width: 768px) {
+      #editor-body h3 {
+        font-size: 24px; } }
+    @media only screen and (min-width: 1441px) {
+      #editor-body h3 {
+        font-size: 31px; } }
   #editor-body ol, #editor-body ul {
     padding: .5rem 0; }
   #editor-body ol, #editor-body ul, #editor-body ol > li, #editor-body ul > li {

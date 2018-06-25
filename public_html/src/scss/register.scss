@@ -37,9 +37,17 @@
 	margin: auto;
 	padding-top: 1rem;
 
-	input, button {
+	button {
 		padding: .7rem 1rem;
 		margin-top: 1rem;
+	}
+
+	.input-wrapper {
+		margin-top: 1rem;
+
+		input {
+			padding: .7rem 1rem;
+		}
 	}
 
 	button {

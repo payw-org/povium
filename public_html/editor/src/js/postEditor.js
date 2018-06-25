@@ -86,7 +86,7 @@ class PostEditor {
 
 		this.domManager.editor.addEventListener('focusin', () => { this.onSelectionChanged(); });
 		this.domManager.editor.addEventListener('keyup', (e) => {
-			this.onKeyDown(e);
+			this.onKeyUp(e);
 			this.onSelectionChanged();
 		});
 		this.domManager.editor.addEventListener('click', () => {
@@ -140,44 +140,27 @@ class PostEditor {
 
 
 	/**
-	 * 
+	 * Fires when press keyboard inside the editor.
 	 * @param {KeyboardEvent} e 
 	 */
-	onKeyDown (e) {
-		// if (e) {
-		// 	if (e.which === 8 || e.which === 46 || e.which === 13) {
-		// 		e.stopPropagation();
-		// 		e.preventDefault();
-
-		// 		// Backspace key
-		// 		if (e.which === 8) {
-		// 			this.selManager.backspace();
-		// 		}
-
-		// 		// Delete key
-		// 		if (e.which === 46) {
-		// 			this.selManager.delete();
-		// 		}
-
-		// 		// Return key
-		// 		if (e.which === 13) {
-		// 			this.selManager.enter();
-		// 		}
-		// 	}
-		// }
+	onKeyUp (e) {
+		
 	}
 
 
 	onSelectionChanged () {
 
 		if (this.isEmpty()) {
-			// this.initEditor();
+
+			console.log('what');
+			this.clearEditor();
 			var p = this.domManager.generateEmptyParagraph('p');
 			var range = document.createRange();
 			range.setStart(p, 0);
 			this.domManager.editor.appendChild(p);
 			this.selManager.replaceRange(range);
 			console.log('Oops, editor seems empty. Now reset it to initial stat.');
+		
 		}
 
 	}
@@ -190,6 +173,8 @@ class PostEditor {
 	 */
 	initEditor () {
 
+		// Fix flickering when add text style first time
+		// in Chrome browser.
 		var emptyNode = document.createElement('p');
 		emptyNode.innerHTML = 'a';
 		emptyNode.style.opacity = '0';
@@ -215,6 +200,12 @@ class PostEditor {
 		}
 		
 	}
+
+	clearEditor () {
+
+		this.domManager.editor.innerHTML = "";
+
+	}
 	
 
 	/**
@@ -222,7 +213,7 @@ class PostEditor {
 	 */
 	isEmpty () {
 		let contentInside = this.domManager.editor.textContent;
-		let childNodesCount = this.domManager.editor.childElementCount;
+		let childNodesCount = this.selManager.getNodesInSelection().length;
 		if (contentInside === "" && childNodesCount < 1) {
 			return true;
 		} else {
@@ -341,19 +332,19 @@ class SelectionManager {
 
 		// If one or more lists are
 		// included in the selection,
-		// add other paragraphs to the existing list.
+		// add other chunks to the existing list.
 
 		// If all selection is already a list
-		// restore them to 'P' paragraphs.
+		// restore them to 'P' node.
 
-		let paragraphs = this.getNodesInSelection();
+		let chunks = this.getNodesInSelection();
 		let listDOM = document.createElement(type);
 
-		for (var i = 0; i < paragraphs.length; i++) {
+		for (var i = 0; i < chunks.length; i++) {
 
-			if (paragraphs[i].nodeName === type) {
+			if (chunks[i].nodeName === type) {
 
-
+				return;
 
 			} else {
 
@@ -463,7 +454,7 @@ class SelectionManager {
 		// console.log(splitted);
 
 		// pastedData = pastedData.replace(/(?:\r\n|\r|\n)/g, '<br>');
-
+ 
 	}
 
 
@@ -559,7 +550,8 @@ class SelectionManager {
 		) {
 			return true;
 		} else {
-			console.warn(node.nodeName + ' : Node is not a heading');
+			// console.warn(node);
+			return false;
 		}
 	}
 
@@ -569,9 +561,25 @@ class SelectionManager {
 		} else if (node.nodeName === 'BLOCKQUOTE') {
 			return true;
 		} else {
-			console.warn(node.nodeName + ' : Node is not a heading');
+			// console.warn(node);
+			return false;
 		}
 	}
+
+	isAvailableNode (node) {
+		if (
+			this.isParagraph(node) ||
+			this.isHeading(node) ||
+			this.isList(node) ||
+			this.isBlockquote(node)
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
 
 
 	// Getters
@@ -597,7 +605,7 @@ class SelectionManager {
 	}
 
 	/**
-	 * Returns an array of all paragraph nodes within the selection.
+	 * Returns an array of all available nodes within the selection.
 	 * @return {Array.<HTMLElement>}
 	 */
 	getNodesInSelection () {
@@ -606,13 +614,9 @@ class SelectionManager {
 		let nodes = [];
 
 		while (1) {
-			if (travelNode.nodeName === 'BODY') {
+			if (travelNode.nodeName === 'BODY' || travelNode.id === 'editor-body') {
 				break;
-			} else if (
-				this.isParagraph(travelNode) ||
-				this.isHeading(travelNode) ||
-				this.isList(travelNode)
-			) {
+			} else if (this.isAvailableNode(travelNode)) {
 				nodes.push(travelNode);
 				
 				if (travelNode.contains(this.getRange().endContainer)) {
