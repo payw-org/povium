@@ -145,8 +145,9 @@ button::-moz-focus-inner {border:0;}
 
 		.placeholder {
 			width: auto;
-			transform: scale(0.9) translateX(10px);
+			transform: scale(.9) translateX(1rem);
 			opacity: 0;
+			// transform: translateY(-2.4rem);
 		}
 	}
 
