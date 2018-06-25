@@ -287,16 +287,28 @@ class SelectionManager {
 	 * @param {string} type 
 	 */
 	heading (type) {
+
+		// # 버그
+		// 엔터 치고 첫번째 줄과 두번째 빈 줄 셀렉트 하고
+		// heading 적용 시 range 유지 안됨. range가 document 벗어났다고 에러뜸.
 		
 		let chunks = this.getNodesInSelection();
-		let startNode = this.getRange().startContainer;
-		let startOffset = this.getRange().startOffset;
-		let endNode = this.getRange().endContainer;
-		let endOffset = this.getRange().endOffset;
+		let orgRange = this.getRange();
+		let startNode = orgRange.startContainer;
+		let startOffset = orgRange.startOffset;
+		let endNode = orgRange.endContainer;
+		let endOffset = orgRange.endOffset;
+
+		console.log(startNode, startOffset);
+		console.log(endNode, endOffset);
 
 		for (var i = 0; i < chunks.length; i++) {
 
 			if (chunks[i].nodeName === type) {
+				continue;
+			}
+
+			if (chunks[i].textContent === "") {
 				continue;
 			}
 
@@ -485,6 +497,9 @@ class SelectionManager {
 		
 	}
 
+	/**
+	 * Split text nodes based on the selection.
+	 */
 	splitTextNode () {
 		if (this.startOffset > 0) {
 			console.log(this.startNode);
@@ -614,7 +629,9 @@ class SelectionManager {
 		let nodes = [];
 
 		while (1) {
-			if (travelNode.nodeName === 'BODY' || travelNode.id === 'editor-body') {
+			if (!travelNode) {
+				break;
+			} else if (travelNode.nodeName === 'BODY' || travelNode.id === 'editor-body') {
 				break;
 			} else if (this.isAvailableNode(travelNode)) {
 				nodes.push(travelNode);
