@@ -264,7 +264,7 @@ class SelectionManager {
 		for (var i = 0; i < chunks.length; i++) {
 
 			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
-				console.log('the node is not a paragraph nor heading.')
+				console.warn('the node is not a paragraph nor a heading.')
 				continue;
 			}
 
@@ -306,13 +306,17 @@ class SelectionManager {
 		// # 버그
 		// 엔터 치고 첫번째 줄과 두번째 빈 줄 셀렉트 하고
 		// heading 적용 시 range 유지 안됨. range가 document 벗어났다고 에러뜸.
+		// -> 빈 태그는 heading 적용하지 않음.
 		
-		let chunks = this.getNodesInSelection();
 		let orgRange = this.getRange();
+		if (!orgRange) {
+			return;
+		}
 		let startNode = orgRange.startContainer;
 		let startOffset = orgRange.startOffset;
 		let endNode = orgRange.endContainer;
 		let endOffset = orgRange.endOffset;
+		let chunks = this.getNodesInSelection();
 
 		console.log(startNode, startOffset);
 		console.log(endNode, endOffset);
@@ -328,7 +332,7 @@ class SelectionManager {
 			}
 
 			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
-				console.log('the node is not a paragraph nor heading.')
+				console.warn('the node is not a paragraph nor a heading.')
 				continue;
 			}
 
@@ -365,6 +369,9 @@ class SelectionManager {
 		// restore them to 'P' node.
 
 		let orgRange = this.getRange();
+		if (!orgRange) {
+			return;
+		}
 		let startNode = orgRange.startContainer;
 		let startOffset = orgRange.startOffset;
 		let endNode = orgRange.endContainer;
@@ -374,7 +381,8 @@ class SelectionManager {
 		let listElm = document.createElement(type);
 		var node;
 
-		var isAllList = true;
+		var unlockList = true;
+		var recordList = [];
 
 		for (var i = 0; i < chunks.length; i++) {
 
@@ -399,12 +407,20 @@ class SelectionManager {
 
 				this.domManager.editor.removeChild(chunks[i]);
 
-				isAllList = false;
+				unlockList = false;
 
 			} else if (this.isList(chunks[i])) {
 
 				// If the node is already a list
 				// move items inside to the new list element.
+
+				if (!recordList.includes(chunks[i])) {
+					recordList.push(chunks[i]);
+				}
+
+				if (recordList.length > 1) {
+					unlockList = false;
+				}
 
 				while (node = chunks[i].firstChild) {
 
@@ -419,6 +435,32 @@ class SelectionManager {
 		}
 
 		this.sel.getRangeAt(0).insertNode(listElm);
+
+		if (unlockList) {
+
+			var range = document.createRange();
+			var itemNode;
+			range.setStartAfter(listElm);
+			this.replaceRange(range);
+			while (itemNode = listElm.firstChild) {
+				if (itemNode.nodeName !== "LI") {
+					continue;
+				} else {
+					listElm.removeChild(itemNode);
+				}
+
+				var pElm = document.createElement('P');
+				while (node = itemNode.firstChild) {
+					pElm.appendChild(node)
+				}
+
+				range.insertNode(pElm);
+				range.setStartAfter(pElm);
+			}
+			this.domManager.editor.removeChild(listElm);
+		}
+
+		
 
 		var keepRange = document.createRange();
 		keepRange.setStart(startNode, startOffset);
