@@ -349,16 +349,53 @@ class SelectionManager {
 		// If all selection is already a list
 		// restore them to 'P' node.
 
+		let orgRange = this.getRange();
+		let startNode = orgRange.startContainer;
+		let startOffset = orgRange.startOffset;
+		let endNode = orgRange.endContainer;
+		let endOffset = orgRange.endOffset;
+
 		let chunks = this.getNodesInSelection();
-		let listDOM = document.createElement(type);
+		let listElm = document.createElement(type);
+		var node;
+
+		var isReplaced = false;
 
 		for (var i = 0; i < chunks.length; i++) {
 
-			if (chunks[i].nodeName === type) {
+			if (chunks[i].textContent === "") {
+				continue;
+			}
 
-				return;
+			if (
+				this.isParagraph(chunks[i]) ||
+				this.isHeading(chunks[i])
+			) {
 
-			} else {
+				var itemElm = document.createElement('LI');
+
+				while (node = chunks[i].firstChild) {
+
+					itemElm.appendChild(node);
+
+				}
+				listElm.appendChild(itemElm);
+
+				if (isReplaced) {
+
+					this.domManager.editor.removeChild(chunks[i]);
+
+				} else {
+
+					this.domManager.editor.replaceChild(listElm, chunks[i]);
+					isReplaced = true;
+
+				}
+
+			} else if (this.isList(chunks[i])) {
+
+				// If the node is already a list
+				// move items inside to the new list element.
 
 
 
@@ -565,7 +602,6 @@ class SelectionManager {
 		) {
 			return true;
 		} else {
-			// console.warn(node);
 			return false;
 		}
 	}
@@ -576,7 +612,20 @@ class SelectionManager {
 		} else if (node.nodeName === 'BLOCKQUOTE') {
 			return true;
 		} else {
-			// console.warn(node);
+			return false;
+		}
+	}
+
+	/**
+	 * Returns true if the node is an available image block.
+	 * @param {HTMLElement} node 
+	 */
+	isImageBlock (node) {
+		if (!node) {
+			return false;
+		} else if (node.classList && node.classList.contains('image-block')) {
+			return true;
+		} else {
 			return false;
 		}
 	}
@@ -586,7 +635,8 @@ class SelectionManager {
 			this.isParagraph(node) ||
 			this.isHeading(node) ||
 			this.isList(node) ||
-			this.isBlockquote(node)
+			this.isBlockquote(node) ||
+			this.isImageBlock(node)
 		) {
 			return true;
 		} else {
