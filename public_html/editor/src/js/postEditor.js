@@ -106,12 +106,12 @@ class PostEditor {
 		this.domManager.underlineButton.addEventListener('click', (e) => { this.selManager.underline(); });
 		this.domManager.strikeButton.addEventListener('click', (e) => { this.selManager.strike(); });
 
-		this.domManager.alignLeft.addEventListener('click', (e) => { this.selManager.align('justifyLeft'); });
-		this.domManager.alignCenter.addEventListener('click', (e) => { this.selManager.align('justifyCenter'); });
-		this.domManager.alignRight.addEventListener('click', (e) => { this.selManager.align('justifyRight'); });
+		this.domManager.alignLeft.addEventListener('click', (e) => { this.selManager.align('left'); });
+		this.domManager.alignCenter.addEventListener('click', (e) => { this.selManager.align('center'); });
+		this.domManager.alignRight.addEventListener('click', (e) => { this.selManager.align('right'); });
 
 		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL'); });
-		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
+		// this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
 
 		this.initEditor();
 
@@ -255,7 +255,22 @@ class SelectionManager {
 	 */
 	align (direction) {
 
-		document.execCommand(direction, false);
+		// document.execCommand('styleWithCSS', true);
+		// document.execCommand(direction, false);
+
+		var chunks = this.getNodesInSelection();
+		var node;
+
+		for (var i = 0; i < chunks.length; i++) {
+
+			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
+				console.log('the node is not a paragraph nor heading.')
+				continue;
+			}
+
+			chunks[i].style.textAlign = direction;
+
+		}
 		
 	}
 
@@ -359,7 +374,7 @@ class SelectionManager {
 		let listElm = document.createElement(type);
 		var node;
 
-		var isReplaced = false;
+		var isAllList = true;
 
 		for (var i = 0; i < chunks.length; i++) {
 
@@ -379,29 +394,31 @@ class SelectionManager {
 					itemElm.appendChild(node);
 
 				}
+
 				listElm.appendChild(itemElm);
 
-				if (isReplaced) {
+				this.domManager.editor.removeChild(chunks[i]);
 
-					this.domManager.editor.removeChild(chunks[i]);
-
-				} else {
-
-					this.domManager.editor.replaceChild(listElm, chunks[i]);
-					isReplaced = true;
-
-				}
+				isAllList = false;
 
 			} else if (this.isList(chunks[i])) {
 
 				// If the node is already a list
 				// move items inside to the new list element.
 
+				while (node = chunks[i].firstChild) {
 
+					listElm.appendChild(node);
+
+				}
+
+				this.domManager.editor.removeChild(chunks[i]);
 
 			}
 
 		}
+
+		this.sel.getRangeAt(0).insertNode(listElm);
 
 		var keepRange = document.createRange();
 		keepRange.setStart(startNode, startOffset);
