@@ -150,18 +150,70 @@ class PostEditor {
 
 	onSelectionChanged () {
 
-		if (this.isEmpty()) {
+		// if (this.isEmpty()) {
 
-			console.log('what');
-			this.clearEditor();
-			var p = this.domManager.generateEmptyParagraph('p');
-			var range = document.createRange();
-			range.setStart(p, 0);
-			this.domManager.editor.appendChild(p);
-			this.selManager.replaceRange(range);
-			console.log('Oops, editor seems empty. Now reset it to initial stat.');
+		// 	console.log('what');
+		// 	this.clearEditor();
+		// 	var p = this.domManager.generateEmptyParagraph('p');
+		// 	var range = document.createRange();
+		// 	range.setStart(p, 0);
+		// 	this.domManager.editor.appendChild(p);
+		// 	this.selManager.replaceRange(range);
+		// 	console.log('Oops, editor seems empty. Now reset it to initial stat.');
 		
+		// }
+
+		// If the selection is not in the available elements
+		// adjust it.
+		var range = this.selManager.getRange();
+		var startNode = range.startContainer;
+		var startOffset = range.startOffset;
+		var endNode = range.endContainer;
+		var endOffset = range.endOffset;
+
+		var target;
+
+		var newRange = document.createRange();
+		newRange.setStart(startNode, startOffset);
+		newRange.setEnd(endNode, endOffset);
+
+		var isChanged = false;
+
+		if (startNode.id === 'editor-body') {
+
+			target = startNode.firstElementChild;
+
+			for (var i = 0; i < startOffset; i++) {
+				target = target.nextElementSibling;
+			}
+
+
+			newRange.setStartBefore(target.firstChild);
+
+			isChanged = true;
+			
 		}
+
+		if (endNode.id === 'editor-body') {
+
+			target = endNode.firstChild;
+
+			for (var i = 0; i < endOffset - 1; i++) {
+				target = target.nextElementSibling;
+			}
+
+			newRange.setEndAfter(target.lastChild);
+
+			isChanged = true;
+			
+		}
+
+
+		if (isChanged) {
+			this.selManager.replaceRange(newRange);
+			console.log(newRange);
+		}
+		
 
 	}
 
@@ -186,18 +238,18 @@ class PostEditor {
 		document.execCommand('bold', false);
 		this.domManager.editor.removeChild(emptyNode);
 
-		if (this.isEmpty()) {
-			this.domManager.editor.innerHTML = "";
-			var emptyP = this.domManager.generateEmptyParagraph('p');
-			this.domManager.editor.appendChild(emptyP);
+		// if (this.isEmpty()) {
+		// 	this.domManager.editor.innerHTML = "";
+		// 	var emptyP = this.domManager.generateEmptyParagraph('p');
+		// 	this.domManager.editor.appendChild(emptyP);
 
-			var range = document.createRange();
-			range.setStartBefore(emptyP);
-			range.collapse(true);
+		// 	var range = document.createRange();
+		// 	range.setStartBefore(emptyP);
+		// 	range.collapse(true);
 
-			this.selManager.sel.removeAllRanges();
-			this.selManager.sel.addRange(range);
-		}
+		// 	this.selManager.sel.removeAllRanges();
+		// 	this.selManager.sel.addRange(range);
+		// }
 		
 	}
 
@@ -312,14 +364,12 @@ class SelectionManager {
 		if (!orgRange) {
 			return;
 		}
+
 		let startNode = orgRange.startContainer;
 		let startOffset = orgRange.startOffset;
 		let endNode = orgRange.endContainer;
 		let endOffset = orgRange.endOffset;
 		let chunks = this.getNodesInSelection();
-
-		console.log(startNode, startOffset);
-		console.log(endNode, endOffset);
 
 		for (var i = 0; i < chunks.length; i++) {
 
@@ -343,7 +393,17 @@ class SelectionManager {
 				newParagraph.appendChild(child);
 			}
 
+			if (chunks[i] === startNode) {
+				startNode = newParagraph;
+			}
+
+			if (chunks[i] === endNode) {
+				endNode = newParagraph;
+			}
+
 			this.domManager.editor.replaceChild(newParagraph, chunks[i]);
+
+			// this.changeNodeName(chunks[i], type);
 
 		}
 
@@ -403,6 +463,14 @@ class SelectionManager {
 
 				}
 
+				if (chunks[i] === startNode) {
+					startNode = itemElm;
+				}
+	
+				if (chunks[i] === endNode) {
+					endNode = itemElm;
+				}
+
 				listElm.appendChild(itemElm);
 
 				this.domManager.editor.removeChild(chunks[i]);
@@ -427,6 +495,7 @@ class SelectionManager {
 					listElm.appendChild(node);
 
 				}
+				
 
 				this.domManager.editor.removeChild(chunks[i]);
 
@@ -479,6 +548,7 @@ class SelectionManager {
 
 
 				if (part1) {
+
 					part1ListElm.appendChild(itemNode);
 
 					if (!part1ListElmInserted) {
@@ -488,6 +558,7 @@ class SelectionManager {
 					}
 					
 				} else if (part2) {
+
 					var pElm = document.createElement('P');
 					while (node = itemNode.firstChild) {
 						pElm.appendChild(node)
@@ -495,7 +566,9 @@ class SelectionManager {
 
 					range.insertNode(pElm);
 					range.setStartAfter(pElm);
+
 				} else if (part3) {
+
 					part3ListElm.appendChild(itemNode);
 					
 					if (!part3ListElmInserted) {
@@ -506,22 +579,22 @@ class SelectionManager {
 
 				}
 
+				if (itemNode === startNode) {
+					startNode = newParagraph;
+				}
+	
+				if (itemNode === endNode) {
+					endNode = newParagraph;
+				}
 
-				
+			
 
 				if (part3Will) {
 					part1 = false;
 					part2 = false;
 					part3 = true;
 				}
-
-
-
-
-
-
-
-				
+			
 
 				itemNode = nextNode;
 
@@ -535,7 +608,7 @@ class SelectionManager {
 
 		}
 
-		
+		console.log(startNode);
 
 		var keepRange = document.createRange();
 		keepRange.setStart(startNode, startOffset);
@@ -653,6 +726,60 @@ class SelectionManager {
 	replaceRange (range) {
 		this.sel.removeAllRanges();
 		this.sel.addRange(range);
+	}
+
+	/**
+	 * Replace the node if the node is inside the editor,
+	 * else return the new node.
+	 * @param {HTMLElement} targetNode An HTML element you want to change its node name.
+	 * @param {String} newNodeName New node name for the target element.
+	 */
+	changeNodeName (targetNode, newNodeName) {
+
+		// Move all the nodes inside the target node
+		// to the new generated node with new node name,
+		// as well as preserving the range
+		// if the startContainer or the endContainer are included
+		// in the original node.
+
+		if (targetNode.nodeType !== 1) {
+			// If the node is not an HTML element do nothing.
+			return;
+		}
+
+		var tempNode;
+		var newNode = document.createElement(newNodeName);
+
+		while (tempNode = targetNode.firstChild) {
+			newNode.appendChild(tempNode);
+		}
+
+		var range = this.getRange();
+		console.log(range.cloneRange());
+		if (range !== null) {
+
+			if (targetNode === range.startContainer) {
+				console.log('1');
+				range.setStart(newNode, range.startOffset);
+				this.replaceRange(range);
+			}
+
+			if (targetNode === range.endContainer) {
+				console.log('2');
+				range.setEnd(newNode, range.endOffset);
+				this.replaceRange(range);
+			}
+
+		}
+
+		if (this.domManager.editor.contains(targetNode)) {
+			this.domManager.editor.replaceChild(newNode, targetNode);
+			console.log(range);
+			this.replaceRange(range);
+		} else {
+			return newNode;
+		}
+
 	}
 
 	/**
@@ -813,24 +940,45 @@ class SelectionManager {
 		let nodes = [];
 
 		while (1) {
+
+
 			if (!travelNode) {
-				break;
-			} else if (travelNode.nodeName === 'BODY' || travelNode.id === 'editor-body') {
 				break;
 			} else if (this.isAvailableNode(travelNode)) {
 				nodes.push(travelNode);
-				
 				if (travelNode.contains(this.getRange().endContainer)) {
 					break;
 				} else {
 					travelNode = travelNode.nextElementSibling;
 				}
-
-			} else if (travelNode.nextElementSibling === null) {
-				travelNode = travelNode.parentNode;
+				
 			} else {
-				travelNode = travelNode.nextElementSibling;
+				travelNode = travelNode.parentElement;
 			}
+			
+			// if (!travelNode || travelNode.nodeName === 'BODY') {
+
+			// 	break;
+
+			// } else if (travelNode.id === 'editor-body') {
+
+			// 	travelNode = travelNode.firstChild;
+
+			// } else if (this.isAvailableNode(travelNode)) {
+			// 	nodes.push(travelNode);
+				
+			// 	if (travelNode.contains(this.getRange().endContainer)) {
+			// 		break;
+			// 	} else {
+			// 		travelNode = travelNode.nextElementSibling;
+			// 	}
+
+			// } else if (travelNode.nextElementSibling === null) {
+			// 	travelNode = travelNode.parentNode;
+			// } else {
+			// 	travelNode = travelNode.nextElementSibling;
+			// }
+
 		}
 
 		return nodes;
@@ -852,3 +1000,18 @@ const editor = new PostEditor(document.querySelector('#post-editor'));
 
 // var a = document.createElement('h1').nodeName;
 // console.log(a);
+
+document.querySelector('#log-range').addEventListener('click', function () {
+
+	var sel = window.getSelection();
+
+	if (sel.rangeCount === 0) {
+		return;
+	}
+
+	var range = sel.getRangeAt(0);
+
+	console.log(range.startContainer, range.startOffset);
+	console.log(range.endContainer, range.endOffset);
+
+});

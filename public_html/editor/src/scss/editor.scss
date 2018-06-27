@@ -43,6 +43,14 @@ p, h1, h2, h3 {
 
 #editor-body {
 
+	&:empty {
+		background: red;
+	}
+
+	:empty {
+		background: blue;
+	}
+
 	outline: none;
 
 	min-height: 500px;
@@ -62,10 +70,6 @@ p, h1, h2, h3 {
 		),(
 			font-size: 20px
 		));
-	}
-
-	p {
-		
 	}
 
 	h1, h2, h3, h4, h5, h6 {
@@ -117,7 +121,7 @@ p, h1, h2, h3 {
 	}
 
 	ol, ul {
-		padding: .5rem 0;
+		padding: .5em 0;
 	}
 
 	ol, ul, ol > li, ul > li {
@@ -138,6 +142,38 @@ p, h1, h2, h3 {
 
 	ul, ul > li {
 		list-style-type: decimal;
+	}
+
+	blockquote {
+
+		padding-left: 1.2em;
+		position: relative;
+		color: $pvm-gray;
+
+		font-size: 18px;
+
+		@include responsive((
+			font-size: 16px
+		),(
+			font-size: 20px
+		));
+
+		&::before {
+			content: "";
+			position: absolute;
+			display: inline-block;
+			width: 3px;
+			top: 0;
+			left: 3px;
+			bottom: 0;
+			border-radius: 1px;
+			background: $pvm-gray;
+		}
+
+		p {
+			line-height: 1.2;
+			margin: 0;
+		}
 	}
 
 	.image-block {
