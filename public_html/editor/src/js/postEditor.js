@@ -251,7 +251,7 @@ class SelectionManager {
 	/**
 	 * Align the selected paragraph.
 	 * @param {String} direction
-	 * justifyLeft, justifyCenter, justifyRight
+	 * Left, Center, Right
 	 */
 	align (direction) {
 
@@ -264,7 +264,7 @@ class SelectionManager {
 		for (var i = 0; i < chunks.length; i++) {
 
 			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
-				console.warn('the node is not a paragraph nor a heading.')
+				console.warn('The node is not a paragraph nor a heading.')
 				continue;
 			}
 
@@ -332,7 +332,7 @@ class SelectionManager {
 			}
 
 			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
-				console.warn('the node is not a paragraph nor a heading.')
+				console.warn('The node is not a paragraph nor a heading.')
 				continue;
 			}
 
@@ -434,30 +434,105 @@ class SelectionManager {
 
 		}
 
+		if (listElm.childElementCount < 1) {
+			return;
+		}
+
 		this.sel.getRangeAt(0).insertNode(listElm);
 
 		if (unlockList) {
 
 			var range = document.createRange();
-			var itemNode;
+			var itemNode, nextNode;
+			var part1 = true, part2 = false, part3 = false;
+			var part1ListElm = document.createElement('OL'), part3ListElm = document.createElement('OL');
+			var part1ListElmInserted = false, part3ListElmInserted = false;
+			var part3Will = false;
+
 			range.setStartAfter(listElm);
 			this.replaceRange(range);
-			while (itemNode = listElm.firstChild) {
+
+			itemNode = listElm.firstChild;
+			nextNode = itemNode;
+
+			while (itemNode) {
+
+
+				nextNode = itemNode.nextElementSibling;
+
 				if (itemNode.nodeName !== "LI") {
 					continue;
-				} else {
-					listElm.removeChild(itemNode);
 				}
 
-				var pElm = document.createElement('P');
-				while (node = itemNode.firstChild) {
-					pElm.appendChild(node)
+				if (itemNode.contains(startNode)) {
+					part1 = false;
+					part2 = true;
+					part3 = false;
 				}
 
-				range.insertNode(pElm);
-				range.setStartAfter(pElm);
+				if (itemNode.contains(endNode)) {
+					part3Will = true;
+				}
+
+
+
+
+
+				if (part1) {
+					part1ListElm.appendChild(itemNode);
+
+					if (!part1ListElmInserted) {
+						range.insertNode(part1ListElm);
+						range.setStartAfter(part1ListElm);
+						part1ListElmInserted = true;
+					}
+					
+				} else if (part2) {
+					var pElm = document.createElement('P');
+					while (node = itemNode.firstChild) {
+						pElm.appendChild(node)
+					}
+
+					range.insertNode(pElm);
+					range.setStartAfter(pElm);
+				} else if (part3) {
+					part3ListElm.appendChild(itemNode);
+					
+					if (!part3ListElmInserted) {
+						range.insertNode(part3ListElm);
+						range.setStartAfter(part3ListElm);
+						part3ListElmInserted = true;
+					}
+
+				}
+
+
+				
+
+				if (part3Will) {
+					part1 = false;
+					part2 = false;
+					part3 = true;
+				}
+
+
+
+
+
+
+
+				
+
+				itemNode = nextNode;
+
+
 			}
-			this.domManager.editor.removeChild(listElm);
+
+			if (this.domManager.editor.contains(listElm)) {
+				this.domManager.editor.removeChild(listElm);
+			}
+			
+
 		}
 
 		
