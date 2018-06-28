@@ -8,10 +8,15 @@ class HomeView {
 
 		// Class variables
 		this.orgPageX = 0;
-		this.dist = 0;
+		this.orgPageY = 0;
+		this.distX = 0;
+		this.distY = 0;
 		this.postMax = document.querySelectorAll('#popular .post').length;
 		this.isAutoFlicking = false;
 		this.isDragged = false;
+
+		this.lockVerticalScrolling = false;
+		this.lockHorizontalScrolling = false;
 
 		// Initializing post view
 		// TweenMax.to(".guided-view", 3, {
@@ -26,37 +31,73 @@ class HomeView {
 
 		// Touch events on popular posts
 		this.popPostContainer.addEventListener('touchstart', (e) => {
-			e.preventDefault();
+			// e.preventDefault();
 			this.stopAutoFlick();
 			this.popPostContainer.classList.add('moving');
-			this.dist = 0;
+			this.distX = 0;
 			this.orgPageX = e.touches[0].pageX;
 			this.orgPageY = e.touches[0].pageY;
 		})
 
 		this.popPostContainer.addEventListener('touchmove', (e) => {
-			e.preventDefault();
-			this.dist = e.touches[0].pageX - this.orgPageX;
-			if (Number(this.popPostContainer.getAttribute('data-post-pos')) === 0 && this.dist > 0 ||
-			    Number(this.popPostContainer.getAttribute('data-post-pos')) === this.postMax - 1 && this.dist < 0) {
-				this.dist = this.dist / 5;
+
+			this.distX = e.touches[0].pageX - this.orgPageX;
+			this.distY = e.touches[0].pageY - this.orgPageY;
+
+			var mi = Math.abs( this.distY / this.distX );
+
+			if (isNaN(mi)) {
+				mi = 0;
 			}
-			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.dist + 'px),0,10px)';
+
+			if (((mi > 0 && mi < 2) || this.lockVerticalScrolling) && !this.lockHorizontalScrolling) {
+
+				if (this.lockVerticalScrolling) {
+					console.log('scroll locked by flag');
+				} else {
+					console.log('scroll locked by mi: ', mi);
+				}
+				this.lockVerticalScrolling = true;
+				e.preventDefault();
+
+				if (
+					Number(this.popPostContainer.getAttribute('data-post-pos')) === 0 && this.distX > 0 ||
+					Number(this.popPostContainer.getAttribute('data-post-pos')) === this.postMax - 1 && this.distX < 0
+				) {
+					this.distX = this.distX / 5;
+				}
+				this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.distX + 'px),0,10px)';
+
+			} else {
+				this.lockHorizontalScrolling = true;
+			}
+
+			
 		})
 
 		this.popPostContainer.addEventListener('touchend', (e) => {
-			let postPos = Number(this.popPostContainer.getAttribute('data-post-pos'));
-			if (this.dist < 0 && postPos < this.postMax - 1) {
-				postPos += 1;
-			} else if (this.dist > 0 && postPos > 0) {
-				postPos -= 1;
+
+			if (this.lockHorizontalScrolling) {
+
+			} else {
+				let postPos = Number(this.popPostContainer.getAttribute('data-post-pos'));
+				if (this.distX < 0 && postPos < this.postMax - 1) {
+					postPos += 1;
+				} else if (this.distX > 0 && postPos > 0) {
+					postPos -= 1;
+				}
+				this.popPostContainer.classList.add('ease');
+				this.popPostContainer.classList.remove('moving');
+				this.flickPostTo(postPos);
+				setTimeout(() => {
+					this.autoFlick();
+				}, 300)
 			}
-			this.popPostContainer.classList.add('ease');
-			this.popPostContainer.classList.remove('moving');
-			this.flickPostTo(postPos);
-			setTimeout(() => {
-				this.autoFlick();
-			}, 300)
+
+			this.lockVerticalScrolling = false;
+			this.lockHorizontalScrolling = false;
+
+			
 		})
 
 
@@ -77,7 +118,7 @@ class HomeView {
 			e.preventDefault();
 			this.stopAutoFlick();
 			this.popPostContainer.classList.add('moving');
-			this.dist = 0;
+			this.distX = 0;
 			this.mouseFlag = true;
 			this.orgPageX = e.pageX;
 		})
@@ -87,12 +128,12 @@ class HomeView {
 			if (!this.mouseFlag) return;
 			e.preventDefault();
 			this.isDragged = true;
-			this.dist = e.pageX - this.orgPageX;
-			if (Number(this.popPostContainer.getAttribute('data-post-pos')) === 0 && this.dist > 0 ||
-			    Number(this.popPostContainer.getAttribute('data-post-pos')) === this.postMax - 1 && this.dist < 0) {
-				this.dist = this.dist / 5;
+			this.distX = e.pageX - this.orgPageX;
+			if (Number(this.popPostContainer.getAttribute('data-post-pos')) === 0 && this.distX > 0 ||
+			    Number(this.popPostContainer.getAttribute('data-post-pos')) === this.postMax - 1 && this.distX < 0) {
+				this.distX = this.distX / 5;
 			}
-			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.dist + 'px),0,10px)';
+			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.distX + 'px),0,10px)';
 		})
 
 		// Fire event when mouse up on popular posts
@@ -100,9 +141,9 @@ class HomeView {
 			if (!this.mouseFlag) return;
 			this.mouseFlag = 0;
 			let postPos = Number(this.popPostContainer.getAttribute('data-post-pos'));
-			if (this.dist < 0 && postPos < this.postMax - 1) {
+			if (this.distX < 0 && postPos < this.postMax - 1) {
 				postPos += 1;
-			} else if (this.dist > 0 && postPos > 0) {
+			} else if (this.distX > 0 && postPos > 0) {
 				postPos -= 1;
 			}
 			this.popPostContainer.classList.add('ease');
