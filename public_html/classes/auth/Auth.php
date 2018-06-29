@@ -1,7 +1,5 @@
 <?php
-
 /**
-* Class Auth
 * Manipulate sign in, sign up, and sign out.
 *
 * @author fairyhooni
@@ -123,9 +121,9 @@ class Auth {
 
 	/**
 	* [logout description]
-	* delete session about authentication
-	* delete cookie about auto login
-	* delete table record about auto login
+	* Delete session about authentication
+	* Delete cookie about auto login
+	* Delete table record about auto login
 	* @return void
 	*/
 	public function logout(){
@@ -148,7 +146,6 @@ class Auth {
 
 
 	/**
-	* [register description]
 	* Validate input
 	* Checks if input is already taken
 	* Add user to db
@@ -162,50 +159,32 @@ class Auth {
 		$return = array('err' => true, 'msg' => '');
 
 
-		$valid_email = $this->validateEmail($email);
-		if($valid_email['err']){
-			$return['msg'] = $valid_email['msg'];
+		$verify_email = $this->verifyEmail($email);
+		if($verify_email['err']) {
+			$return['msg'] = $verify_email['msg'];
 
 			return $return;
 		}
 
-
-		$valid_name = $this->validateName($name);
-		if($valid_name['err']){
-			$return['msg'] = $valid_name['msg'];
-
-			return $return;
-		}
-
-
-		$valid_password = $this->validatePassword($password);
-		if($valid_password['err']){
-			$return['msg'] = $valid_password['msg'];
+		$verify_name = $this->verifyName($name);
+		if($verify_name['err']) {
+			$return['msg'] = $verify_name['msg'];
 
 			return $return;
 		}
 
-
-		if($this->isEmailTaken($email)){
-			$return['msg'] = $this->config['msg']['email_istaken'];
-
-			return $return;
-		}
-
-
-		if($this->isNameTaken($name)){
-			$return['msg'] = $this->config['msg']['name_istaken'];
+		$validate_password = $this->validatePassword($password);
+		if($validate_password['err']){
+			$return['msg'] = $validate_password['msg'];
 
 			return $return;
 		}
-
 
 		if(!$this->addUser($email, $name, $password)){
 			$return['msg'] = $this->config['msg']['user_insert_to_db_err'];
 
 			return $return;
 		}
-
 
 		//	register success
 		$return['err'] = false;
@@ -215,12 +194,72 @@ class Auth {
 
 
 	/**
-	* [validateEmail description]
+	* Verify email input.
+	* Validate and Check if input is already taken.
+	* @param  string $email
+	* @return array 'err' is an error flag. 'msg' is an error message.
+	*/
+	public function verifyEmail ($email) {
+		$return = array('err' => true, 'msg' => '');
+
+		$validate_email = $this->validateEmail($email);
+		if($validate_email['err']) {
+			$return['msg'] = $validate_email['msg'];
+
+			return $return;
+		}
+
+		if($this->isEmailTaken($email)) {
+			$return['msg'] = $this->config['msg']['email_istaken'];
+
+			return $return;
+		}
+
+		$return['err'] = false;
+
+		return $return;
+	}
+
+
+	/**
+	* Verify name input.
+	* Validate and Check if input is already taken.
+	* @param  string $name
+	* @return array 'err' is an error flag. 'msg' is an error message.
+	*/
+	public function verifyName ($name) {
+		$return = array('err' => true, 'msg' => '');
+
+		$validate_name = $this->validateName($name);
+		if($validate_name['err']) {
+			$return['msg'] = $validate_name['msg'];
+
+			return $return;
+		}
+
+		if($this->isNameTaken($name)) {
+			$return['msg'] = $this->config['msg']['name_istaken'];
+
+			return $return;
+		}
+
+		$return['err'] = false;
+
+		return $return;
+	}
+
+
+	/**
 	* @param  string $email
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function validateEmail($email){
 		$return = array('err' => true, 'msg' => '');
+
+
+		if (empty($email)) {
+			return $return;
+		}
 
 		if(strlen($email) < (int)$this->config['len']['email_min_length']){
 			$return['msg'] = $this->config['msg']['email_short'];
@@ -247,12 +286,16 @@ class Auth {
 
 
 	/**
-	* [validateName description]
 	* @param  string $name
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function validateName($name){
 		$return = array('err' => true, 'msg' => '');
+
+
+		if (empty($name)) {
+			return $return;
+		}
 
 		if(strlen($name) < (int)$this->config['len']['name_min_length']){
 			$return['msg'] = $this->config['msg']['name_short'];
@@ -297,12 +340,16 @@ class Auth {
 
 
 	/**
-	* [validatePassword description]
 	* @param  string $password
 	* @return array ['err' is an error flag. 'msg' is an error message.]
 	*/
 	public function validatePassword($password){
 		$return = array('err' => true, 'msg' => '');
+
+
+		if (empty($password)) {
+			return $return;
+		}
 
 		if(strlen($password) < (int)$this->config['len']['password_min_length']){
 			$return['msg'] = $this->config['msg']['password_short'];

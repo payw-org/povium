@@ -1,7 +1,5 @@
 <?php
-
 /**
-* [return description]
 * @var array	config array for authentication
 */
 return [

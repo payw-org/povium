@@ -1,45 +1,43 @@
 <?php
-
 /**
- *
- * Login manager
- * Connect login ajax with Auth class
- *
- */
+*
+* Receive login inputs and process login.
+*
+* @author fairyhooni
+* @license MIT
+*
+*/
 
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/AutoLoader.php';
 $autoloader = new \povium\AutoLoader();
 $autoloader->register();
+$factory = new \povium\factory\MasterFactory();
 
 
-$conn = \povium\conn\DBConnection::getInstance()->getConn();
-
-$auth = new \povium\auth\Auth($conn);
+$auth = $factory->createInstance('\povium\auth\Auth');
 $auth_config = require('./auth.config.php');
 
-
 /* receive login inputs by ajax */
-$login_inputs = json_decode($_POST['login_inputs'], TRUE);
-
+$login_inputs = json_decode($_POST['login_inputs'], true);
 $email = $login_inputs['email'];
 $password = $login_inputs['password'];
 $remember = $login_inputs['remember'];
 
 
-#	$login_return = array('err' => bool, 'msg' => 'err msg for display', 'redirect' => 'redirect url');
+#	array('err' => bool, 'msg' => 'err msg for display', 'redirect' => 'redirect url');
 $login_return = array_merge($auth->login($email, $password, $remember), array('redirect' => ''));
 
-if($login_return['err']) {		//	로그인 실패
+if($login_return['err']) {		//	failed to login
 	//	if inactive account,
 	if($login_return['msg'] == $auth_config['msg']['account_inactive']){
-	// TODO:	set redirect url to activate user account
+		// TODO:	set redirect url to activate user account
 	}
-} else {							//	로그인 성공
-	if(isset($_SESSION['before_page'])) {	//	직전 접속 페이지가 있으면 해당 url 리턴
-		$login_return['redirect'] = $_SESSION['before_page'];
-	}else {									//	없으면 홈 url 리턴
-		$login_return['redirect'] = $_SERVER['DOCUMENT_ROOT'] . '/index.php';
+} else {							//	login success
+	if(isset($_SESSION['prev_page'])) {
+		$login_return['redirect'] = $_SESSION['prev_page'];
+	}else {
+		$login_return['redirect'] = '/';
 	}
 }
 

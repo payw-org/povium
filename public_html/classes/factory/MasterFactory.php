@@ -28,7 +28,7 @@ class MasterFactory implements FactoryInterface {
 	/**
 	* initialize type map
 	*/
-	public function __construct() {
+	public function __construct () {
 		$this->typeMap = require('factory.config.php');
 	}
 
