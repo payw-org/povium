@@ -33,7 +33,17 @@
 	border-bottom: 1px solid $white-blue;
 
 	& > .input-wrapper {
+
 		margin-top: 1rem;
+
+		&.email .icon {
+			background-image: url('/src/images/input-icons/email-icon.svg');
+		}
+
+		&.password .icon {
+			background-image: url('/src/images/input-icons/lock-icon.svg');
+		}
+
 	}
 
 	& > button {

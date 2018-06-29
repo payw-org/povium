@@ -25,6 +25,10 @@
   border-bottom: 1px solid #F1F1F2; }
   .auth-form > .input-wrapper {
     margin-top: 1rem; }
+    .auth-form > .input-wrapper.email .icon {
+      background-image: url("/src/images/input-icons/email-icon.svg"); }
+    .auth-form > .input-wrapper.password .icon {
+      background-image: url("/src/images/input-icons/lock-icon.svg"); }
   .auth-form > button {
     margin-top: 2rem; }
   .auth-form .auto-login {

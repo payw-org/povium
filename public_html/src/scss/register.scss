@@ -37,16 +37,19 @@
 	margin: auto;
 	padding-top: 1rem;
 
-	button {
-		padding: .7rem 1rem;
-		margin-top: 1rem;
-	}
-
 	.input-wrapper {
 		margin-top: 1rem;
 
-		input {
-			padding: .7rem 1rem;
+		&.email .icon {
+			background-image: url('/src/images/input-icons/email-icon.svg');
+		}
+
+		&.name .icon {
+			background-image: url('/src/images/input-icons/nametag-icon.svg');
+		}
+
+		&.password .icon {
+			background-image: url('/src/images/input-icons/lock-icon.svg');
 		}
 	}
 

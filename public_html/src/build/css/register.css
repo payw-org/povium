@@ -27,12 +27,13 @@
   max-width: 20rem;
   margin: auto;
   padding-top: 1rem; }
-  .provider button {
-    padding: .7rem 1rem;
-    margin-top: 1rem; }
   .provider .input-wrapper {
     margin-top: 1rem; }
-    .provider .input-wrapper input {
-      padding: .7rem 1rem; }
+    .provider .input-wrapper.email .icon {
+      background-image: url("/src/images/input-icons/email-icon.svg"); }
+    .provider .input-wrapper.name .icon {
+      background-image: url("/src/images/input-icons/nametag-icon.svg"); }
+    .provider .input-wrapper.password .icon {
+      background-image: url("/src/images/input-icons/lock-icon.svg"); }
   .provider button {
     margin-top: 2rem; }
