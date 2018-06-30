@@ -133,12 +133,8 @@ class Auth {
 		if (isset($_COOKIE['auth_token'])) {			//	if auto login cookie is set
 			$token = $_COOKIE['auth_token'];			//	token = selector:raw validator
 
-			$encodedToken = $this->encodeToken($token);
-
-			if ($token_info = $this->getTokenInfo($encodedToken['selector'])) {		//	if table record found
-				if (hash_equals($encodedToken['validator'], $token_info['validator'])) {	//	if the encoded token matches the record
-					$this->deleteTokenInfo($token_info['id']);
-				}
+			if ($token_info = $this->getTokenInfo($token)) {
+				$this->deleteTokenInfo($token_info['id']);
 			}
 
 			$this->deleteCookie();
@@ -668,15 +664,7 @@ class Auth {
 			return false;
 		}
 
-		$encodedToken = $this->encodeToken($_COOKIE['auth_token']);	//	token = selector:validator
-
-		if (!$token_info = $this->getTokenInfo($encodedToken['selector'])) {	//	if selector invalid
-			$this->deleteCookie();
-
-			return false;
-		}
-
-		if (!hash_equals($encodedToken['validator'], $token_info['validator'])) {		//	if validator invalid
+		if (!$token_info = $this->getTokenInfo($_COOKIE['auth_token'])) {	//	if can not find the token info in the db
 			$this->deleteCookie();
 
 			return false;
@@ -708,19 +696,32 @@ class Auth {
 
 
 	/**
-	* @param  string $selector
-	* @return array token info dictionary
+	* Encode raw token to selector and validator.
+	* First, looking for a matched selector.
+	* Then check if validator is matched.
+	* If all matched, return token info.
+	*
+	* @param  string $token
+	* @return array token info assoc array
 	* @return bool false if token is not selected
 	*/
-	private function getTokenInfo ($selector) {
+	private function getTokenInfo ($token) {
+		$encodedToken = $this->encodeToken($token);
+
 		$stmt = $this->conn->prepare("SELECT * FROM {$this->config['table_tokens']} WHERE selector = :selector");
-		$stmt->execute([':selector' => $selector]);
+		$stmt->execute([':selector' => $encodedToken['selector']]);
 
 		if ($stmt->rowCount() == 0) {
 			return false;
 		}
 
-		return $stmt->fetch();
+		$token_info = $stmt->fetch();
+
+		if (!hash_equals($encodedToken['validator'], $token_info['validator'])) {
+			return false;
+		}
+
+		return $token_info;
 	}
 
 
