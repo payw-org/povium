@@ -3,7 +3,8 @@
 *
 * This Factory is responsible for creating instance of type based on service.
 *
-* @author fairyhooni
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
 * @license MIT
 *
 */
@@ -13,7 +14,6 @@ namespace povium\factory;
 
 
 class ServiceFactory extends AbstractChildFactory {
-
 	/**
 	* Manufacture materials into arguments
 	*

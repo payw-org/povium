@@ -4,7 +4,8 @@
 * This follows factory method pattern.
 * A factory can create object instances for given types
 *
-* @author fairyhooni
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
 * @license MIT
 *
 */
@@ -21,7 +22,7 @@ interface FactoryInterface {
 	* @param  mixed type and some materials
 	* @return object An instance of given type
 	*/
-	public function createInstance($type);
+	public function createInstance ($type);
 
 
 }

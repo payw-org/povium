@@ -3,7 +3,8 @@
 *
 * This Factory is responsible for creating instance of given type.
 *
-* @author fairyhooni
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
 * @license MIT
 *
 */
@@ -15,7 +16,7 @@ namespace povium\factory;
 abstract class AbstractChildFactory implements FactoryInterface {
 
 	/**
-	* Givne type of instance
+	* Given type of instance
 	*
 	* @var string
 	*/
@@ -59,7 +60,7 @@ abstract class AbstractChildFactory implements FactoryInterface {
 	*
 	* @return object
 	*/
-	protected function create() {
+	protected function create () {
 		//	if '...' operator (require upper version of PHP 5.6.0)
 		//	is not working, use below code.
 		#	$reflect  = new ReflectionClass($this->type);

@@ -1,12 +1,17 @@
 <?php
 /**
 * @var array	config array for authentication
+*
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
+* @license MIT
 */
-return [
-	//	regular expressions
 
+
+return [
 	'table_users' => 'users',
 	'table_tokens' => 'tokens',
+
 
 	'cookie_params' => [
 		'expire' => 60*60*24*30,
@@ -15,6 +20,7 @@ return [
 		'secure' => false,
 		'httponly' => false
 	],
+
 
 	'pw_hash_options' => [
 		'cost' => 13,
@@ -73,6 +79,7 @@ return [
 		'password_long' => '비밀번호를 50자 이하로 입력해주세요.',
 		'password_invalid' => '8~50자 영어 대소문자, 숫자를 최소 하나씩 사용해주세요.'
 	]
+
 ];
 
 

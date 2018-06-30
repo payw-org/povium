@@ -3,7 +3,8 @@
 *
 * Receive login inputs and process login.
 *
-* @author fairyhooni
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
 * @license MIT
 *
 */
@@ -28,15 +29,15 @@ $remember = $login_inputs['remember'];
 #	array('err' => bool, 'msg' => 'err msg for display', 'redirect' => 'redirect url');
 $login_return = array_merge($auth->login($email, $password, $remember), array('redirect' => ''));
 
-if($login_return['err']) {		//	failed to login
+if ($login_return['err']) {		//	failed to login
 	//	if inactive account,
-	if($login_return['msg'] == $auth_config['msg']['account_inactive']){
+	if ($login_return['msg'] == $auth_config['msg']['account_inactive']) {
 		// TODO:	set redirect url to activate user account
 	}
 } else {							//	login success
-	if(isset($_SESSION['prev_page'])) {
+	if (isset($_SESSION['prev_page'])) {
 		$login_return['redirect'] = $_SESSION['prev_page'];
-	}else {
+	} else {
 		$login_return['redirect'] = '/';
 	}
 }

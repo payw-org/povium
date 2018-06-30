@@ -1,13 +1,15 @@
 <?php
-
 /**
-* Class AutoLoader
 * Custom AutoLoader class
+* Makes you do not have to include class file every time.
+* You can create an object without including class file.
 *
-* @author fairyhooni
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
 * @license MIT
 *
 */
+
 
 namespace povium;
 
@@ -23,10 +25,9 @@ class AutoLoader {
 
 
 	/**
-	*
 	* Set prefixes and base directories for povium directory
 	*/
-	public function __construct() {
+	public function __construct () {
 		$this->addNamespace('povium', 'classes');
 		$this->addNamespace('povium', 'traits');
 	}
@@ -37,7 +38,7 @@ class AutoLoader {
 	*
 	* @return void
 	*/
-	public function register() {
+	public function register () {
 		spl_autoload_register(array($this, 'loader'));
 	}
 
@@ -47,7 +48,7 @@ class AutoLoader {
 	*
 	* @return void
 	*/
-	public function unregister() {
+	public function unregister () {
 		spl_autoload_unregister(array($this, 'loader'));
 	}
 
@@ -63,7 +64,7 @@ class AutoLoader {
 	* than last.
 	* @return void
 	*/
-	public function addNamespace($prefix, $base_dir, $prepend=false) {
+	public function addNamespace ($prefix, $base_dir, $prepend=false) {
 		// normalize namespace prefix
 		$prefix = ltrim($prefix, '\\');
 		$prefix = str_replace('\\', '/', $prefix);
@@ -88,25 +89,25 @@ class AutoLoader {
 	/**
 	* Loads the class file for a given class name.
 	*
-	* @param  string $classname Classname
+	* @param  string $classname
 	* @return mixed Boolean false if no mapped file can be loaded, or the
 	* name of the mapped file that was loaded.
 	*/
-	private function loader($classname) {
+	private function loader ($classname) {
 		//	convert classname to filename
 		$classname = ltrim($classname, '\\');
 		$filename = str_replace('\\', '/', $classname) . '.php';
 
 		//	look through base directories for each prefixes
-		foreach($this->prefixes as $prefix => $base_dirs){
+		foreach ($this->prefixes as $prefix => $base_dirs) {
 			//	if prefix match,
-			if(strpos($filename, $prefix . '/') === 0){
-				foreach($base_dirs as $dir) {
+			if (strpos($filename, $prefix . '/') === 0) {
+				foreach ($base_dirs as $dir) {
 					$newFilename = substr_replace($filename, $dir, 0, strlen($prefix));
 
 					//	if the mapped file exists, require it
 					//	and return file name
-					if($this->requireFile($newFilename)) {
+					if ($this->requireFile($newFilename)) {
 						return $newFilename;
 					}
 				}
@@ -124,7 +125,7 @@ class AutoLoader {
 	* @param string $file The file to require.
 	* @return bool True if the file exists, false if not.
 	*/
-	private function requireFile($file) {
+	private function requireFile ($file) {
 		if (file_exists($file)) {
 			require $file;
 			return true;

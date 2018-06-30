@@ -5,7 +5,8 @@
 * It cannot create any instances itself, but knows which factory is
 * responsible for creating which instance and delegates instantiation.
 *
-* @author fairyhooni
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
 * @license MIT
 *
 */
@@ -26,7 +27,7 @@ class MasterFactory implements FactoryInterface {
 
 
 	/**
-	* initialize type map
+	* Initialize type map
 	*/
 	public function __construct () {
 		$this->typeMap = require('factory.config.php');
@@ -41,12 +42,12 @@ class MasterFactory implements FactoryInterface {
 	* @return object An instance of given type
 	*/
 	public function createInstance ($type) {
-		if(!class_exists($type)) {
+		if (!class_exists($type)) {
 			throw new FactoryException('Nonexistent type: "' . $type . '"',
 			FactoryException::EXC_NONEXISTENT_TYPE);
 		}
 
-		if(!$this->hasFactoryFor($type)) {
+		if (!$this->hasFactoryFor($type)) {
 			throw new FactoryException('Unregistered type: "' . $type . '"',
 			FactoryException::EXC_UNREGISTERED_TYPE);
 		}

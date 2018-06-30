@@ -1,13 +1,13 @@
 <?php
-
 /**
-* Trait SingletonTrait
 * Trait for singleton pattern
 *
-* @author fairyhooni
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
 * @license MIT
 *
 */
+
 
 namespace povium;
 
@@ -16,12 +16,11 @@ trait SingletonTrait {
 	private static $instance = NULL;
 
 	/**
-	* [getInstance description]
-	* call this method to get instance
+	* Only one instance is generated.
 	* @return object static instance
 	*/
-	public static function getInstance(){
-		if(static::$instance === NULL){
+	public static function getInstance () {
+		if (static::$instance === NULL) {
 			static::$instance = new static();
 		}
 		return static::$instance;
@@ -29,18 +28,16 @@ trait SingletonTrait {
 
 
 	/**
-	* [__construct description]
-	* private to prevent creating multiple instance
+	* Constructor is private to prevent creating multiple instance
 	*/
-	private function __construct(){
+	private function __construct () {
 	}
 
 
 	/**
-	* [__clone description]
-	* private to prevent clonning
+	* This function is private to prevent clonning
 	*/
-	private function __clone(){
+	private function __clone () {
 	}
 
 

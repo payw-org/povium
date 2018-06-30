@@ -3,7 +3,8 @@
 *
 * Receive register inputs and process register.
 *
-* @author fairyhooni
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
 * @license MIT
 *
 */

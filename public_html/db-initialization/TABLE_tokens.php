@@ -1,9 +1,14 @@
 <?php
-
 /**
 * This code is not for executing.
 * Table for authenticating auto login.
+*
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
+* @license MIT
 */
+
+
 $sql = "CREATE TABLE tokens (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	selector VARCHAR(20) NOT NULL UNIQUE,

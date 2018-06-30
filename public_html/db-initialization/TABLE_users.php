@@ -1,10 +1,13 @@
 <?php
-
 /**
-* This code is not for executing.
-* @email
-* @column sub_stat 일정 간격으로 subs_expn_dt 값을 확인하며 auto update 시킨다.
+*  This code is not for executing.
+*
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
+* @license MIT
 */
+
+
 $sql = "CREATE TABLE users (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	email VARCHAR(50) NOT NULL UNIQUE,

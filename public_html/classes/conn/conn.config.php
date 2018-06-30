@@ -1,7 +1,10 @@
 <?php
 /**
-* [return description]
 * @var array	config array for database connection
+*
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
+* @license MIT
 */
 return [
 	'driver' => 'mysql',
