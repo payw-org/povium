@@ -25,26 +25,40 @@ class TextInput {
 	 */
 	constructor (inputDOM) {
 		this.target = inputDOM;
-		console.log(this.target);
+		this.wrapperElement = inputDOM.parentElement;
 	}
 
-	showError (message) {
-		console.log('message');
-		if (this.target.parentNode.querySelector('.expanded-box') || this.target.value === "") {
-			console.log('no');
+	showMsg (message) {
+
+		if (message === "") {
+			
+			console.log('no massage');
+			this.hideMsg();
+
 			return;
+
+		} else if (this.target.value === "") {
+
+			return;
+
+		} else if (this.wrapperElement.querySelector('.expanded-box')) {
+
+			this.wrapperElement.querySelector('.expanded-box').innerHTML = message;
+
 		} else {
-			let errorMsgBox = document.createElement('div');
-			errorMsgBox.className = 'expanded-box error-msg-box collapsed';
+			var errorMsgBox = document.createElement('div');
+			errorMsgBox.className = 'expanded-box error-msg-box';
 			errorMsgBox.innerHTML = message;
 			this.target.classList.add('expanded');
-			this.target.parentNode.appendChild(errorMsgBox);
-
-			errorMsgBox.classList.remove('collapsed');
-			errorMsgBox.classList.add('collapsing');
-			errorMsgBox.classList.remove('collapsing');
+			this.wrapperElement.appendChild(errorMsgBox);
 		}
 
+		this.wrapperElement.style.paddingBottom = "1.7rem";
+
+	}
+
+	hideMsg () {
+		this.wrapperElement.style.paddingBottom = "0px";
 	}
 
 }
@@ -73,10 +87,10 @@ class AJAX {
 	 */
 	chirp (config) {
 		/*
-		send type, uri, data, success function, fail function
+		send type, url, data, success function, fail function
 		*/
 
-		var type = "get", uri = "", data = "", success, fail, done;
+		var type = "post", url = "", data = "", success, fail, done;
 
 		if ("type" in config) {
 			type = config["type"];
@@ -84,10 +98,10 @@ class AJAX {
 
 		type = type.toLowerCase();
 
-		if ("uri" in config) {
-			uri = config["uri"];
+		if ("url" in config) {
+			url = config["url"];
 		} else {
-			console.error("You didn't provide an uri for AJAX call.");
+			console.error("You didn't provide an url for AJAX call.");
 			return;
 		}
 
@@ -147,7 +161,7 @@ class AJAX {
 			}
 		});
 
-		this.httpRequest.open(type, uri, true);
+		this.httpRequest.open(type, url, true);
 		if (type === "post") {
 			this.httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		}

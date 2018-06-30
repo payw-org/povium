@@ -62,7 +62,8 @@ button::-moz-focus-inner {
   font-weight: 400;
   background: #5f42ff;
   color: #fff;
-  padding: .7rem 1rem;
+  padding: 0 1rem;
+  height: 2.7rem;
   border-radius: .5rem;
   cursor: pointer;
   display: block;
@@ -85,7 +86,8 @@ button::-moz-focus-inner {
   font-weight: 400;
   background: #11dbae;
   color: #fff;
-  padding: .7rem 1rem;
+  padding: 0 1rem;
+  height: 2.7rem;
   border-radius: .5rem;
   cursor: pointer;
   display: block;
@@ -121,22 +123,23 @@ button::-moz-focus-inner {
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   border-radius: .5rem;
-  overflow: hidden; }
+  overflow: hidden;
+  -webkit-mask-image: -webkit-radial-gradient(white, black); }
   .input-wrapper .icon {
     display: block;
     background: #999999;
     position: absolute;
     left: 0;
     top: 0;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.7rem;
+    height: 2.7rem;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 55% auto;
     opacity: 0;
-    -webkit-transform: translateX(-1rem) scale(1.2);
-    -ms-transform: translateX(-1rem) scale(1.2);
-    transform: translateX(-1rem) scale(1.2);
+    -webkit-transform: translateX(-1rem);
+    -ms-transform: translateX(-1rem);
+    transform: translateX(-1rem);
     -webkit-transition: opacity .2s ease, -webkit-transform .2s ease;
     transition: opacity .2s ease, -webkit-transform .2s ease;
     -o-transition: transform .2s ease, opacity .2s ease;
@@ -164,8 +167,6 @@ button::-moz-focus-inner {
     transition: transform .2s ease, opacity .2s ease;
     transition: transform .2s ease, opacity .2s ease, -webkit-transform .2s ease;
     will-change: transform, opacity; }
-  .input-wrapper.focused .input-basic, .input-wrapper.fixed .input-basic {
-    padding: 0 1rem 0 3.2rem; }
   .input-wrapper.focused .icon, .input-wrapper.fixed .icon {
     -webkit-transform: translateX(0) scale(1);
     -ms-transform: translateX(0) scale(1);
@@ -179,16 +180,23 @@ button::-moz-focus-inner {
     opacity: 0; }
   .input-wrapper .expanded-box {
     border-radius: 0 0 .5rem .5rem;
-    -webkit-transition: height .2s ease, padding .2s ease;
-    -o-transition: height .2s ease, padding .2s ease;
-    transition: height .2s ease, padding .2s ease;
-    padding: .3rem;
-    font-size: .9rem;
+    -webkit-transition: padding .2s ease;
+    -o-transition: padding .2s ease;
+    transition: padding .2s ease;
+    will-change: padding;
+    padding: 0;
+    font-size: 1rem;
     font-weight: 400;
-    width: 100%; }
-    .input-wrapper .expanded-box.collapsed, .input-wrapper .expanded-box.collapsing {
-      padding: 0;
-      height: 0; }
+    width: 100%;
+    height: 1.7rem;
+    line-height: 1.7rem;
+    position: absolute;
+    top: 2.7rem;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }
     .input-wrapper .expanded-box.error-msg-box {
       background: #ff2323;
       color: #fff; }
@@ -198,11 +206,11 @@ button::-moz-focus-inner {
   background: #F1F1F2;
   display: block;
   border-radius: .5rem;
-  padding: 0 1rem 0 2.2rem;
-  height: 2.5rem;
+  padding: 0 1rem 0 3.7rem;
+  height: 2.7rem;
   font-size: 1.1rem;
   text-align: left;
-  color: #888888;
+  color: inherit;
   cursor: default;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -215,8 +223,7 @@ button::-moz-focus-inner {
     background: #eeeef0; }
   .input-basic:focus {
     cursor: text;
-    background: #e9e9eb;
-    color: inherit; }
+    background: #e9e9eb; }
   .input-basic.expanded {
     border-radius: .5rem .5rem 0 0; }
 
@@ -226,7 +233,7 @@ input::-ms-clear {
 p, h1, h2, h3, h4, h5, h6 {
   padding: 0;
   margin: 0;
-  font-family: 'JHM Pro', sans-serif; }
+  font-family: inherit; }
 
 ol {
   padding: 0;

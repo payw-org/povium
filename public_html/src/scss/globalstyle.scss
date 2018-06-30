@@ -71,7 +71,8 @@ button::-moz-focus-inner {border:0;}
 	font-weight: 400;
 	background: $pvm-violet;
 	color: #fff;
-	padding: .7rem 1rem;
+	padding: 0 1rem;
+	height: $button-height;
 	border-radius: .5rem;
 	cursor: pointer;
 	display: block;
@@ -96,7 +97,8 @@ button::-moz-focus-inner {border:0;}
 	font-weight: 400;
 	background: $btn-aqua;
 	color: #fff;
-	padding: .7rem 1rem;
+	padding: 0 1rem;
+	height: $button-height;
 	border-radius: .5rem;
 	cursor: pointer;
 	display: block;
@@ -127,6 +129,7 @@ button::-moz-focus-inner {border:0;}
 	flex-wrap: wrap;
 	border-radius: .5rem;
 	overflow: hidden;
+	-webkit-mask-image: -webkit-radial-gradient(white, black);
 
 	.icon {
 		display: block;
@@ -134,13 +137,13 @@ button::-moz-focus-inner {border:0;}
 		position: absolute;
 		left: 0;
 		top: 0;
-		width: 2.5rem;
-		height: 2.5rem;
+		width: $button-height;
+		height: $button-height;
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 55% auto;
 		opacity: 0;
-		transform: translateX(-1rem) scale(1.2);
+		transform: translateX(-1rem);
 		transition: transform .2s ease, opacity .2s ease;
 		will-change: transform, opacity;
 	}
@@ -162,10 +165,6 @@ button::-moz-focus-inner {border:0;}
 		// top: 1.2rem;
 		// padding-bottom: 1.2rem;
 
-		.input-basic {
-			padding: 0 1rem 0 3.2rem;
-		}
-
 		.icon {
 			transform: translateX(0) scale(1);
 			opacity: 1;
@@ -182,16 +181,18 @@ button::-moz-focus-inner {border:0;}
 	.expanded-box {
 
 		border-radius: 0 0 .5rem .5rem;
-		transition: height .2s ease, padding .2s ease;
-		padding: .3rem;
-		font-size: .9rem;
+		transition: padding .2s ease;
+		will-change: padding;
+		padding: 0;
+		font-size: 1rem;
 		font-weight: 400;
 		width: 100%;
-
-		&.collapsed, &.collapsing {
-			padding: 0;
-			height: 0;
-		}
+		height: 1.7rem;
+		line-height: 1.7rem;
+		position: absolute;
+		top: $button-height;
+		overflow: hidden;
+		user-select: none;
 
 		&.error-msg-box {
 			background: $pvm-red;
@@ -207,11 +208,12 @@ button::-moz-focus-inner {border:0;}
 	display: block;
 	border-radius: .5rem;
 	// padding: .7rem 1rem;
-	padding: 0 1rem 0 2.2rem;
-	height: 2.5rem;
+	padding: 0 1rem 0 $button-height + 1rem;
+	height: $button-height;
 	font-size: 1.1rem;
 	text-align: left;
-	color: #888888;
+	// color: #888888;
+	color: inherit;
 	cursor: default;
 	box-shadow: none;
 	transition: background-color .2s ease, color .2s ease, padding .2s ease;
@@ -225,7 +227,6 @@ button::-moz-focus-inner {border:0;}
 	&:focus {
 		cursor: text;
 		background: $dark-white-blue;
-		color: inherit;
 	}
 
 	&.expanded {
@@ -241,7 +242,7 @@ input::-ms-clear {
 p, h1, h2, h3, h4, h5, h6 {
 	padding: 0;
 	margin: 0;
-	font-family: 'JHM Pro', sans-serif;
+	font-family: inherit;
 }
 
 ol {
