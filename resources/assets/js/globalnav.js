@@ -1,7 +1,3 @@
-class GlobalNavModel {
-
-}
-
 class GlobalNavView {
 	constructor() {
 		// Elements
