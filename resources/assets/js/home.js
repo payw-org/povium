@@ -1,6 +1,5 @@
 class HomeView {
 	constructor() {
-		console.log('A HomeView object has been created.');
 
 		// DOM elements
 		this.popPostContainer = document.querySelector('#popular .post-container');
@@ -214,4 +213,6 @@ class HomeController {
 	}
 }
 
-const homeController = new HomeController();
+if (document.querySelector('#popular .post-container')) {
+	const homeController = new HomeController();
+}

@@ -1,12 +1,12 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/class/view/TemplateEngine.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../class/view/TemplateEngine.php';
 
 $te = new TemplateEngine();
-$te->render("/src/template/base.phtml", [
+$te->render("/resources/templates/base.phtml", [
 	"title" => "Povium | 좋은 글, 세상을 바꾸는 힘",
-	"css" => '<link rel="stylesheet" href="/src/build/css/home.css">',
-	"main" => "/src/template/home.phtml",
+	"css" => '<link rel="stylesheet" href="/build/css/home.css">',
+	"main" => "/resources/templates/home.phtml",
 	"script" => '<script src="/src/js/home.js"></script>',
 
 	"post_img_link" => [

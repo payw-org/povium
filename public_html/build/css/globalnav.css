@@ -46,7 +46,7 @@
   width: 100%;
   margin: auto;
   height: 30px;
-  background-image: url("/src/images/pvm-landscape.svg");
+  background-image: url("/assets/images/pvm-landscape.svg");
   background-repeat: no-repeat;
   background-position: center;
   -webkit-transition: opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
@@ -68,7 +68,7 @@
     transition-delay: 0s; }
   @media only screen and (max-width: 768px) {
     #gn-home-link {
-      background-image: url("/src/images/pvm-icon.svg"); } }
+      background-image: url("/assets/images/pvm-icon.svg"); } }
 
 #gn-sign-register {
   position: absolute;
@@ -215,7 +215,7 @@
     background-color: #F1F1F2; }
   #gn-search-ui .magnifier {
     background: none;
-    background-image: url("/src/images/magnifier.svg");
+    background-image: url("/assets/images/magnifier.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 18px 18px;

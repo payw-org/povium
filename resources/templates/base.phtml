@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<?php
+
+		// Meta tags included globally
+		$this->basis("head_meta", "/public_html/global-inclusion/global-meta.php");
+
+		// Meta tags included manually
+		$this->optional("head_meta_sub");
+
+		?>
+
+		<title><?php $this->embrace("title"); ?></title>
+
+		<?php
+
+		// CSS' included globally
+		$this->basis("html_css", "/public_html/global-inclusion/global-css.php");
+
+		// CSS' included manually
+		$this->optional("css");
+
+		?>
+
+	</head>
+
+	<body>
+
+		<?php
+
+		$this->basis("render_globalnav", "/resources/templates/globalnav.phtml");
+
+		?>
+
+		<!-- Main tag -->
+		<?php
+
+		$this->embrace("main");
+
+		?>
+
+		<?php
+
+		$this->basis("render_globalfooter", "/resources/templates/globalfooter.phtml");
+
+		?>
+
+		<?php
+
+		// Javascript files included globally
+		// $this->basis("html_script", "/global-inclusion/global-script.php");
+		
+		// $this->basis('GSAP', '<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>');
+		$this->basis('globalscript', '<script src="/build/js/povium.js"></script>');
+
+		// Javascript files included manually
+		$this->optional("script");
+		
+		?>
+
+	</body>
+
+</html>

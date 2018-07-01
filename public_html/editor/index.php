@@ -1,9 +1,9 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/class/view/TemplateEngine.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../class/view/TemplateEngine.php';
 
 $te = new TemplateEngine();
-$te->render('/src/template/base.phtml', [
+$te->render('/resources/templates/base.phtml', [
 	'css' => '<link rel="stylesheet" href="src/build/css/editor.css">',
 
 	'title' => 'Editor',

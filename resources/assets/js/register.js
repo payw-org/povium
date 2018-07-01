@@ -1,3 +1,6 @@
+import TextInput from "./TextInput";
+import AJAX from "./AJAX";
+
 class RegInput extends TextInput {
 
 	constructor (inputDOM) {
@@ -33,9 +36,12 @@ var emailInputDOM = document.querySelector('.input-wrapper.email input');
 var nameInputDOM = document.querySelector('.input-wrapper.name input');
 var passInputDOM = document.querySelector('.input-wrapper.password input');
 
-var emailInputObj = new RegInput(emailInputDOM);
-var nameInputObj = new RegInput(nameInputDOM);
-var passInputObj = new RegInput(passInputDOM);
+if (emailInputDOM) {
+	var emailInputObj = new RegInput(emailInputDOM);
+	var nameInputObj = new RegInput(nameInputDOM);
+	var passInputObj = new RegInput(passInputDOM);
+}
+
 
 function checkValidation () {
 
