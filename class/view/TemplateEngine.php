@@ -24,11 +24,11 @@ class TemplateEngine {
 
 		if (is_file(getcwd() . "/" . $template_dir)) {
 
-			include_once getcwd() . "/" . $template_dir;
+			require_once getcwd() . "/" . $template_dir;
 
 		} else if (is_file($_SERVER['DOCUMENT_ROOT'] . "/.." . $template_dir)) {
 
-			include $_SERVER['DOCUMENT_ROOT'] . "/.." . $template_dir;
+			require_once $_SERVER['DOCUMENT_ROOT'] . "/.." . $template_dir;
 
 		} else {
 
@@ -49,13 +49,13 @@ class TemplateEngine {
 
 			if (is_file(getcwd() . "/" . $this->getConfig($config_name))) {
 
-				include_once getcwd() . "/" . $this->getConfig($config_name);
+				require_once getcwd() . "/" . $this->getConfig($config_name);
 
 			} else if ($this->getConfig($config_name)[0] == "/") {
 
 				if (is_file($_SERVER['DOCUMENT_ROOT'] . "/.." . $this->getConfig($config_name))) {
 
-					include_once $_SERVER['DOCUMENT_ROOT'] . "/.." . $this->getConfig($config_name);
+					require_once $_SERVER['DOCUMENT_ROOT'] . "/.." . $this->getConfig($config_name);
 
 				}
 
