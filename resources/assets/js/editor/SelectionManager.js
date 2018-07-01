@@ -1,281 +1,4 @@
-class Snapshot {
-
-	constructor () {
-
-	}
-
-	recordSnapshot () {
-
-	}
-
-	revertToSnapshot () {
-
-	}
-
-}
-
-class DOMManager {
-
-	/**
-	 * Manages html DOM.
-	 * @param {HTMLElement} editorDOM
-	 */
-	constructor (editorDOM) {
-
-		this.pHolder = document.createElement('p');
-		this.pHolder.innerHTML = '<br>';
-
-		// Editor body
-		this.editor = editorDOM.querySelector('#editor-body');
-
-		// Toolbar
-		this.toolbar = editorDOM.querySelector('#editor-toolbar');
-
-		// Toolbar buttons
-		this.body = this.toolbar.querySelector('#p');
-		this.heading1 = this.toolbar.querySelector('#h1');
-		this.heading2 = this.toolbar.querySelector('#h2');
-		this.heading3 = this.toolbar.querySelector('#h3');
-
-		this.boldButton = this.toolbar.querySelector('#bold');
-		this.italicButton = this.toolbar.querySelector('#italic');
-		this.underlineButton = this.toolbar.querySelector('#underline');
-		this.strikeButton = this.toolbar.querySelector('#strike');
-
-		this.alignLeft = this.toolbar.querySelector('#align-left');
-		this.alignCenter = this.toolbar.querySelector('#align-center');
-		this.alignRight = this.toolbar.querySelector('#align-right');
-
-		this.orderedList = this.toolbar.querySelector('#ol');
-		this.unorderedList = this.toolbar.querySelector('#ul');
-
-		this.link = this.toolbar.querySelector('#link');
-
-	}
-
-	/**
-	 * 
-	 * @param  {String} tagName
-	 * @return {HTMLElement}
-	 */
-	generateEmptyParagraph (tagName) {
-		let elm = document.createElement(tagName);
-		let br = document.createElement('br');
-		elm.appendChild(br);
-		return elm;
-	}
-
-}
-
-class PostEditor {
-
-	/**
-	 * Creates a new PostEditor object.
-	 * @param {HTMLElement} editorDOM
-	 */
-	constructor (editorDOM) {
-
-		let self = this;
-
-		this.domManager = new DOMManager(editorDOM);
-		this.selManager = new SelectionManager(this.domManager);
-
-		document.execCommand("defaultParagraphSeparator", false, "p");
-
-		// Event Listeners
-
-		this.domManager.editor.addEventListener('focusin', () => { this.onSelectionChanged(); });
-		this.domManager.editor.addEventListener('keyup', (e) => {
-			this.onKeyUp(e);
-			this.onSelectionChanged();
-		});
-		this.domManager.editor.addEventListener('click', () => {
-			this.onSelectionChanged();
-		});
-
-		this.domManager.editor.addEventListener('paste', (e) => { this.onPaste(e); });
-
-		// Toolbar button events
-		this.domManager.body.addEventListener('click', (e) => { this.selManager.heading('P'); });
-		this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1'); });
-		this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2'); });
-		this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3'); });
-
-		this.domManager.boldButton.addEventListener('click', (e) => { this.selManager.bold(); });
-		this.domManager.italicButton.addEventListener('click', (e) => { this.selManager.italic(); });
-		this.domManager.underlineButton.addEventListener('click', (e) => { this.selManager.underline(); });
-		this.domManager.strikeButton.addEventListener('click', (e) => { this.selManager.strike(); });
-
-		this.domManager.alignLeft.addEventListener('click', (e) => { this.selManager.align('left'); });
-		this.domManager.alignCenter.addEventListener('click', (e) => { this.selManager.align('center'); });
-		this.domManager.alignRight.addEventListener('click', (e) => { this.selManager.align('right'); });
-
-		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL'); });
-		// this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
-
-		this.initEditor();
-
-	}
-
-	// Events
-
-	/**
-	 *
-	 * @param {KeyboardEvent} e
-	 */
-	onPaste (e) {
-
-		let clipboardData, pastedData;
-
-		e.stopPropagation();
-		e.preventDefault();
-
-		// Get data from clipboard and conver
-		clipboardData = e.clipboardData || window.clipboardData;
-		pastedData = clipboardData.getData('Text');
-
-		this.selManager.paste(pastedData);
-
-	}
-
-
-	/**
-	 * Fires when press keyboard inside the editor.
-	 * @param {KeyboardEvent} e 
-	 */
-	onKeyUp (e) {
-		
-	}
-
-
-	onSelectionChanged () {
-
-		// if (this.isEmpty()) {
-
-		// 	console.log('what');
-		// 	this.clearEditor();
-		// 	var p = this.domManager.generateEmptyParagraph('p');
-		// 	var range = document.createRange();
-		// 	range.setStart(p, 0);
-		// 	this.domManager.editor.appendChild(p);
-		// 	this.selManager.replaceRange(range);
-		// 	console.log('Oops, editor seems empty. Now reset it to initial stat.');
-		
-		// }
-
-		// If the selection is not in the available elements
-		// adjust it.
-		var range = this.selManager.getRange();
-		var startNode = range.startContainer;
-		var startOffset = range.startOffset;
-		var endNode = range.endContainer;
-		var endOffset = range.endOffset;
-
-		var target;
-
-		var newRange = document.createRange();
-		newRange.setStart(startNode, startOffset);
-		newRange.setEnd(endNode, endOffset);
-
-		var isChanged = false;
-
-		if (startNode.id === 'editor-body') {
-
-			target = startNode.firstElementChild;
-
-			for (var i = 0; i < startOffset; i++) {
-				target = target.nextElementSibling;
-			}
-
-
-			newRange.setStartBefore(target.firstChild);
-
-			isChanged = true;
-			
-		}
-
-		if (endNode.id === 'editor-body') {
-
-			target = endNode.firstChild;
-
-			for (var i = 0; i < endOffset - 1; i++) {
-				target = target.nextElementSibling;
-			}
-
-			newRange.setEndAfter(target.lastChild);
-
-			isChanged = true;
-			
-		}
-
-
-		if (isChanged) {
-			this.selManager.replaceRange(newRange);
-			console.log(newRange);
-		}
-		
-
-	}
-
-
-	// Methods
-
-	/**
-	 * Initialize editor.
-	 */
-	initEditor () {
-
-		// Fix flickering when add text style first time
-		// in Chrome browser.
-		var emptyNode = document.createElement('p');
-		emptyNode.innerHTML = 'a';
-		emptyNode.style.opacity = '0';
-		this.domManager.editor.appendChild(emptyNode);
-		var range = document.createRange();
-		range.setStart(emptyNode.firstChild, 0);
-		range.setEnd(emptyNode.firstChild, 1);
-		this.selManager.replaceRange(range);
-		document.execCommand('bold', false);
-		this.domManager.editor.removeChild(emptyNode);
-
-		// if (this.isEmpty()) {
-		// 	this.domManager.editor.innerHTML = "";
-		// 	var emptyP = this.domManager.generateEmptyParagraph('p');
-		// 	this.domManager.editor.appendChild(emptyP);
-
-		// 	var range = document.createRange();
-		// 	range.setStartBefore(emptyP);
-		// 	range.collapse(true);
-
-		// 	this.selManager.sel.removeAllRanges();
-		// 	this.selManager.sel.addRange(range);
-		// }
-		
-	}
-
-	clearEditor () {
-
-		this.domManager.editor.innerHTML = "";
-
-	}
-	
-
-	/**
-	 * Return true if the editor is empty.
-	 */
-	isEmpty () {
-		let contentInside = this.domManager.editor.textContent;
-		let childNodesCount = this.selManager.getNodesInSelection().length;
-		if (contentInside === "" && childNodesCount < 1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-}
-
-class SelectionManager {
+export default class SelectionManager {
 
 	/**
 	 * 
@@ -310,7 +33,7 @@ class SelectionManager {
 		// document.execCommand('styleWithCSS', true);
 		// document.execCommand(direction, false);
 
-		var chunks = this.getNodesInSelection();
+		var chunks = this.getAllNodesInSelection();
 		var node;
 
 		for (var i = 0; i < chunks.length; i++) {
@@ -369,7 +92,7 @@ class SelectionManager {
 		let startOffset = orgRange.startOffset;
 		let endNode = orgRange.endContainer;
 		let endOffset = orgRange.endOffset;
-		let chunks = this.getNodesInSelection();
+		let chunks = this.getAllNodesInSelection();
 
 		for (var i = 0; i < chunks.length; i++) {
 
@@ -437,7 +160,7 @@ class SelectionManager {
 		let endNode = orgRange.endContainer;
 		let endOffset = orgRange.endOffset;
 
-		let chunks = this.getNodesInSelection();
+		let chunks = this.getAllNodesInSelection();
 		let listElm = document.createElement(type);
 		var node;
 
@@ -507,7 +230,7 @@ class SelectionManager {
 			return;
 		}
 
-		this.sel.getRangeAt(0).insertNode(listElm);
+		this.getRange().insertNode(listElm);
 
 		if (unlockList) {
 
@@ -618,8 +341,12 @@ class SelectionManager {
 
 	}
 
-	link (uri) {
-		document.execCommand('createLink', false, uri);
+	link (url) {
+		document.execCommand('createLink', false, url);
+	}
+
+	blockquote () {
+
 	}
 
 
@@ -716,7 +443,7 @@ class SelectionManager {
 
 
 	clearRange () {
-		this.sel.removeAllRanges();
+		document.getSelection().removeAllRanges();
 	}
 
 	/**
@@ -724,8 +451,8 @@ class SelectionManager {
 	 * @param {Range} range 
 	 */
 	replaceRange (range) {
-		this.sel.removeAllRanges();
-		this.sel.addRange(range);
+		document.getSelection().removeAllRanges();
+		document.getSelection().addRange(range);
 	}
 
 	/**
@@ -815,7 +542,7 @@ class SelectionManager {
 	 * Return true if the selection is empty.
 	 */
 	isEmpty () {
-		if (this.sel.isCollapsed) {
+		if (document.getSelection().isCollapsed) {
 			return true;
 		} else {
 			return false;
@@ -905,6 +632,25 @@ class SelectionManager {
 		}
 	}
 
+	getSelectionPosition () {
+		var orgRange = this.getRange();
+		var startNode = orgRange.startContainer;
+		var startOffset = orgRange.startOffset;
+		var endNode = orgRange.endContainer;
+		var endOffset = orgRange.endOffset;
+
+		if (!endNode.nextSibling && endNode.textContent.length === endOffset) {
+			// console.log('end of the line');
+			return 2;
+		} else if (!startNode.previousSibling && startOffset === 0) {
+			// console.log('start of the line');
+			return 0;
+		} else {
+			// console.log('middle of the night');
+			return 1;
+		}
+	}
+
 
 
 
@@ -915,7 +661,7 @@ class SelectionManager {
 	 * @return {Selection}
 	 */
 	getSelection () {
-		return this.sel;
+		return document.getSelection();
 	}
 
 	
@@ -934,7 +680,7 @@ class SelectionManager {
 	 * Returns an array of all available nodes within the selection.
 	 * @return {Array.<HTMLElement>}
 	 */
-	getNodesInSelection () {
+	getAllNodesInSelection () {
 
 		let travelNode = this.getRange() ? this.getRange().startContainer : null;
 		let nodes = [];
@@ -985,6 +731,24 @@ class SelectionManager {
 
 	}
 
+	getNodeInSelection () {
+
+		var travelNode = this.getRange().startContainer;
+		if (!travelNode) {
+			return;
+		}
+
+		while (1) {
+			if (this.isAvailableNode(travelNode)) {
+				return travelNode;
+				break;
+			} else {
+				travelNode = travelNode.parentElement;
+			}
+		}
+
+	}
+
 	getCursorPosInParagraph () {
 		if (this.startOffset === 0) {
 			// If the selection is on the beginning
@@ -995,23 +759,3 @@ class SelectionManager {
 	}
 
 }
-
-const editor = new PostEditor(document.querySelector('#post-editor'));
-
-// var a = document.createElement('h1').nodeName;
-// console.log(a);
-
-document.querySelector('#log-range').addEventListener('click', function () {
-
-	var sel = window.getSelection();
-
-	if (sel.rangeCount === 0) {
-		return;
-	}
-
-	var range = sel.getRangeAt(0);
-
-	console.log(range.startContainer, range.startOffset);
-	console.log(range.endContainer, range.endOffset);
-
-});

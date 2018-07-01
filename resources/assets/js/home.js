@@ -48,9 +48,9 @@ class HomeView {
 			if (((mi > 0 && mi < 2) || this.lockVerticalScrolling) && !this.lockHorizontalScrolling) {
 
 				if (this.lockVerticalScrolling) {
-					console.log('scroll locked by flag');
+					// console.log('scroll locked by flag');
 				} else {
-					console.log('scroll locked by mi: ', mi);
+					// console.log('scroll locked by mi: ', mi);
 				}
 				this.lockVerticalScrolling = true;
 				e.preventDefault();
@@ -174,7 +174,7 @@ class HomeView {
 	// Methods
 	initHomeUI() {
 		// Initialize home UI
-		console.log('Initialize home UI');
+		// console.log('Initialize home UI');
 	}
 
 	flickPostTo(index) {
@@ -210,7 +210,7 @@ class HomeView {
 
 class HomeController {
 	constructor() {
-		console.log('A HomeController object has been created.');
+		// console.log('A HomeController object has been created.');
 		this.homeView = new HomeView();
 	}
 }

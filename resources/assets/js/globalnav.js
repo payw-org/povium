@@ -61,5 +61,7 @@ class GlobalNavController {
 }
 
 window.onload = function() {
-	var globalNavController = new GlobalNavController();
+	if (document.querySelector('#globalnav')) {
+		var globalNavController = new GlobalNavController();
+	}
 };

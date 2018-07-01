@@ -89,10 +89,8 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(1);
-__webpack_require__(2);
 __webpack_require__(3);
-__webpack_require__(4);
-module.exports = __webpack_require__(5);
+module.exports = __webpack_require__(4);
 
 
 /***/ }),
@@ -102,7 +100,80 @@ module.exports = __webpack_require__(5);
 "use strict";
 
 
+var _TextInput = __webpack_require__(2);
+
+var _TextInput2 = _interopRequireDefault(_TextInput);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TextInput = function () {
+
+	/**
+  * 
+  * @param {HTMLElement} inputDOM 
+  */
+	function TextInput(inputDOM) {
+		_classCallCheck(this, TextInput);
+
+		this.target = inputDOM;
+		this.wrapperElement = inputDOM.parentElement;
+	}
+
+	_createClass(TextInput, [{
+		key: "showMsg",
+		value: function showMsg(message) {
+
+			if (message === "") {
+
+				console.log('no massage');
+				this.hideMsg();
+
+				return;
+			} else if (this.target.value === "") {
+
+				return;
+			} else if (this.wrapperElement.querySelector('.expanded-box')) {
+
+				this.wrapperElement.querySelector('.expanded-box').innerHTML = message;
+			} else {
+				var errorMsgBox = document.createElement('div');
+				errorMsgBox.className = 'expanded-box error-msg-box';
+				errorMsgBox.innerHTML = message;
+				this.target.classList.add('expanded');
+				this.wrapperElement.appendChild(errorMsgBox);
+			}
+
+			this.wrapperElement.style.paddingBottom = "1.7rem";
+		}
+	}, {
+		key: "hideMsg",
+		value: function hideMsg() {
+			this.wrapperElement.style.paddingBottom = "0px";
+		}
+	}]);
+
+	return TextInput;
+}();
+
 // input.js
+
+
+exports.default = TextInput;
 document.querySelectorAll(".input-wrapper").forEach(function (self, index) {
 
 	self.addEventListener("focusin", function () {
@@ -120,7 +191,7 @@ document.querySelectorAll(".input-wrapper").forEach(function (self, index) {
 });
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -210,11 +281,13 @@ var GlobalNavController = function GlobalNavController() {
 };
 
 window.onload = function () {
-	var globalNavController = new GlobalNavController();
+	if (document.querySelector('#globalnav')) {
+		var globalNavController = new GlobalNavController();
+	}
 };
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -277,10 +350,10 @@ var HomeView = function () {
 			if ((mi > 0 && mi < 2 || _this.lockVerticalScrolling) && !_this.lockHorizontalScrolling) {
 
 				if (_this.lockVerticalScrolling) {
-					console.log('scroll locked by flag');
+					// console.log('scroll locked by flag');
 				} else {
-					console.log('scroll locked by mi: ', mi);
-				}
+						// console.log('scroll locked by mi: ', mi);
+					}
 				_this.lockVerticalScrolling = true;
 				e.preventDefault();
 
@@ -392,7 +465,7 @@ var HomeView = function () {
 		key: 'initHomeUI',
 		value: function initHomeUI() {
 			// Initialize home UI
-			console.log('Initialize home UI');
+			// console.log('Initialize home UI');
 		}
 	}, {
 		key: 'flickPostTo',
@@ -437,7 +510,7 @@ var HomeView = function () {
 var HomeController = function HomeController() {
 	_classCallCheck(this, HomeController);
 
-	console.log('A HomeController object has been created.');
+	// console.log('A HomeController object has been created.');
 	this.homeView = new HomeView();
 };
 
@@ -445,313 +518,6 @@ if (document.querySelector('#popular .post-container')) {
 	var homeController = new HomeController();
 }
 
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// 로그인 받을 때
-// array('email' => '', 'password' => '', 'remember' => bool);
-// 로그인 리턴할 때
-// array('err' => bool, 'msg' => 'err msg for display', 'redirect' => 'redirect url');
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _TextInput2 = __webpack_require__(6);
-
-var _TextInput3 = _interopRequireDefault(_TextInput2);
-
-var _AJAX = __webpack_require__(7);
-
-var _AJAX2 = _interopRequireDefault(_AJAX);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var RegInput = function (_TextInput) {
-	_inherits(RegInput, _TextInput);
-
-	function RegInput(inputDOM) {
-		_classCallCheck(this, RegInput);
-
-		var _this = _possibleConstructorReturn(this, (RegInput.__proto__ || Object.getPrototypeOf(RegInput)).call(this, inputDOM));
-
-		var self = _this;
-
-		_this.target.addEventListener('keyup', function () {
-
-			clearTimeout(this.wait);
-
-			var inputData = self.target.value;
-
-			if (inputData === "") {
-				self.hideMsg();
-				return;
-			}
-
-			this.wait = setTimeout(function () {
-				checkValidation();
-			}, 300);
-		});
-
-		_this.target.addEventListener('focusout', function () {
-			// console.log('focused out');
-		});
-		return _this;
-	}
-
-	return RegInput;
-}(_TextInput3.default);
-
-var emailInputDOM = document.querySelector('.input-wrapper.email input');
-var nameInputDOM = document.querySelector('.input-wrapper.name input');
-var passInputDOM = document.querySelector('.input-wrapper.password input');
-
-if (emailInputDOM) {
-	var emailInputObj = new RegInput(emailInputDOM);
-	var nameInputObj = new RegInput(nameInputDOM);
-	var passInputObj = new RegInput(passInputDOM);
-}
-
-function checkValidation() {
-
-	console.log('checking validation...');
-
-	var inputData = {
-		email: emailInputDOM.value,
-		name: nameInputDOM.value,
-		password: passInputDOM.value
-	};
-
-	var ajax = new _AJAX2.default();
-	ajax.chirp({
-		type: "post",
-		url: "/test.php",
-		data: "register_inputs=" + JSON.stringify(inputData),
-		success: function success(response) {
-			var result = JSON.parse(response);
-
-			console.log(result);
-
-			if (result['err']) {
-				emailInputObj.showMsg(result['email_msg']);
-				nameInputObj.showMsg(result['name_msg']);
-				passInputObj.showMsg(result['password_msg']);
-			} else {
-				emailInputObj.hideMsg();
-				nameInputObj.hideMsg();
-				passInputObj.hideMsg();
-			}
-		}
-	});
-}
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var TextInput = function () {
-
-	/**
-  * 
-  * @param {HTMLElement} inputDOM 
-  */
-	function TextInput(inputDOM) {
-		_classCallCheck(this, TextInput);
-
-		this.target = inputDOM;
-		this.wrapperElement = inputDOM.parentElement;
-	}
-
-	_createClass(TextInput, [{
-		key: "showMsg",
-		value: function showMsg(message) {
-
-			if (message === "") {
-
-				console.log('no massage');
-				this.hideMsg();
-
-				return;
-			} else if (this.target.value === "") {
-
-				return;
-			} else if (this.wrapperElement.querySelector('.expanded-box')) {
-
-				this.wrapperElement.querySelector('.expanded-box').innerHTML = message;
-			} else {
-				var errorMsgBox = document.createElement('div');
-				errorMsgBox.className = 'expanded-box error-msg-box';
-				errorMsgBox.innerHTML = message;
-				this.target.classList.add('expanded');
-				this.wrapperElement.appendChild(errorMsgBox);
-			}
-
-			this.wrapperElement.style.paddingBottom = "1.7rem";
-		}
-	}, {
-		key: "hideMsg",
-		value: function hideMsg() {
-			this.wrapperElement.style.paddingBottom = "0px";
-		}
-	}]);
-
-	return TextInput;
-}();
-
-exports.default = TextInput;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// ajax.js
-var AJAX = function () {
-	function AJAX() {
-		_classCallCheck(this, AJAX);
-
-		this.httpRequest = new XMLHttpRequest();
-
-		if (window.XMLHttpRequest) {
-			// Firefox, Safari, Chrome
-			this.httpRequest = new XMLHttpRequest();
-		} else if (window.ActiveXObject) {
-			// IE 8 and over
-			this.httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-	}
-
-	/**
-  * 
-  * @param {Object} config
-  */
-
-
-	_createClass(AJAX, [{
-		key: "chirp",
-		value: function chirp(config) {
-			/*
-   send type, url, data, success function, fail function
-   */
-
-			var type = "post",
-			    url = "",
-			    data = "",
-			    success,
-			    fail,
-			    done;
-
-			if ("type" in config) {
-				type = config["type"];
-			}
-
-			type = type.toLowerCase();
-
-			if ("url" in config) {
-				url = config["url"];
-			} else {
-				console.error("You didn't provide an url for AJAX call.");
-				return;
-			}
-
-			if ("data" in config) {
-				data = config["data"];
-			}
-
-			if ("success" in config) {
-
-				success = config["success"];
-
-				if (typeof success !== "function") {
-					console.error(success, "is not a function.");
-					return;
-				}
-			}
-
-			if ("fail" in config) {
-
-				fail = config["fail"];
-
-				if (typeof fail !== "function") {
-					console.error(fail, "is not a function.");
-					return;
-				}
-			}
-
-			if ("done" in config) {
-				done = config["done"];
-
-				if (typeof done !== "function") {
-					console.error(done, "is not a function.");
-					return;
-				}
-			}
-
-			this.httpRequest.addEventListener('readystatechange', function () {
-				if (this.readyState === 4) {
-
-					if (done) {
-						done();
-					}
-
-					if (this.status === 200) {
-						var response = this.responseText;
-						if (success) {
-							success(response);
-						}
-					} else {
-						if (fail) {
-							fail();
-						}
-					}
-				}
-			});
-
-			this.httpRequest.open(type, url, true);
-			if (type === "post") {
-				this.httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			}
-			this.httpRequest.send(data);
-		}
-	}]);
-
-	return AJAX;
-}();
-
-exports.default = AJAX;
-
 /***/ })
 /******/ ]);
+//# sourceMappingURL=main.built.js.map

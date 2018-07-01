@@ -28,24 +28,29 @@ p, h1, h2, h3 {
     display: inline-block;
     border-bottom: 3px solid #13edbd;
     font-size: 1rem;
-    -webkit-transition: -webkit-transform .2s ease;
-    transition: -webkit-transform .2s ease;
-    -o-transition: transform .2s ease;
-    transition: transform .2s ease;
-    transition: transform .2s ease, -webkit-transform .2s ease; }
+    -webkit-transition: -webkit-transform .1s ease;
+    transition: -webkit-transform .1s ease;
+    -o-transition: transform .1s ease;
+    transition: transform .1s ease;
+    transition: transform .1s ease, -webkit-transform .1s ease; }
     #editor-toolbar button:hover {
       background: #F1F1F2; }
     #editor-toolbar button:active {
-      -webkit-transform: scale(0.9);
-      -ms-transform: scale(0.9);
-      transform: scale(0.9); }
+      -webkit-transform: scale(0.95);
+      -ms-transform: scale(0.95);
+      transform: scale(0.95); }
 
 #editor-body {
+  margin-top: 2rem;
   outline: none;
   min-height: 500px; }
+  #editor-body:empty {
+    background: red; }
+  #editor-body :empty {
+    background: blue; }
   #editor-body p, #editor-body li {
     font-size: 18px;
-    margin-bottom: .3em;
+    margin-bottom: .5em;
     line-height: 1.1; }
     @media only screen and (max-width: 768px) {
       #editor-body p, #editor-body li {
@@ -88,7 +93,7 @@ p, h1, h2, h3 {
       #editor-body h3 {
         font-size: 31px; } }
   #editor-body ol, #editor-body ul {
-    padding: .5rem 0; }
+    padding: .5em 0; }
   #editor-body ol, #editor-body ul, #editor-body ol > li, #editor-body ul > li {
     list-style-position: inside; }
   #editor-body ol > li {
@@ -99,3 +104,35 @@ p, h1, h2, h3 {
     margin-left: 15px; }
   #editor-body ul, #editor-body ul > li {
     list-style-type: decimal; }
+  #editor-body blockquote {
+    padding: 0;
+    padding-left: 1.2em;
+    position: relative;
+    margin: 2em 0 0;
+    line-height: 2;
+    font-size: 18px; }
+    @media only screen and (max-width: 768px) {
+      #editor-body blockquote {
+        font-size: 16px; } }
+    @media only screen and (min-width: 1441px) {
+      #editor-body blockquote {
+        font-size: 20px; } }
+    #editor-body blockquote + blockquote {
+      margin-top: 0; }
+    #editor-body blockquote + p, #editor-body blockquote + h1, #editor-body blockquote + h2, #editor-body blockquote + h3, #editor-body blockquote + h4, #editor-body blockquote + h5, #editor-body blockquote + h6 {
+      margin-top: 2em; }
+    #editor-body blockquote::before {
+      content: "";
+      position: absolute;
+      display: inline-block;
+      width: 3px;
+      top: 0;
+      left: 3px;
+      bottom: 0;
+      border-radius: 0;
+      background: #6c6c79; }
+    #editor-body blockquote p {
+      line-height: 1.2;
+      margin: 0; }
+  #editor-body .image-block {
+    cursor: pointer; }

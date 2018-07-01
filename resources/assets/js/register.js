@@ -45,8 +45,6 @@ if (emailInputDOM) {
 
 function checkValidation () {
 
-	console.log('checking validation...');
-
 	var inputData = {
 		email: emailInputDOM.value,
 		name: nameInputDOM.value,

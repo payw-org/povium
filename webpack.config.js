@@ -1,31 +1,49 @@
 module.exports = {
 
-	entry: [
+	entry: {
+
+		main: [
 		'./resources/assets/js/globalscript',
 		'./resources/assets/js/globalnav',
-		'./resources/assets/js/home',
-		'./resources/assets/js/login',
-		'./resources/assets/js/register',
-	],
+		'./resources/assets/js/home'
+		],
+
+		login: [
+			'./resources/assets/js/login'
+		],
+		
+		register: [
+			'./resources/assets/js/register'
+		],
+
+		editor: [
+			'./resources/assets/js/editor/main'
+		]
+
+	},
 
 	mode: 'none',
 
+	devtool: 'source-map',
+
 	output : {
+
 		path: __dirname + '/public_html/build/js',
-		filename: 'povium.js'
+		filename: '[name].built.js'
+		
 	},
 
 	module: {
 		rules: [
 			{
-			test: /\.js$/,
-			exclude: /(node_modules|bower_components)/,
-			use: {
-				loader: 'babel-loader',
-				options: {
-				presets: ['env']
+				test: /\.js$/,
+				exclude: /(node_modules|bower_components)/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+					presets: ['env']
+					}
 				}
-			}
 			}
 		]
 	}
