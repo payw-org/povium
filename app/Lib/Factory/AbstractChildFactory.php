@@ -10,7 +10,7 @@
 */
 
 
-namespace povium\factory;
+namespace Povium\Lib;
 
 
 abstract class AbstractChildFactory implements FactoryInterface {

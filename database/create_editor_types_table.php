@@ -1,6 +1,5 @@
 <?php
 /**
-* This code is not for executing.
 * Table for editor type
 *
 * @author H.Chihoon
@@ -15,10 +14,10 @@ $sql = "CREATE TABLE editor_types (
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
-$constant1 = "INSERT INTO editor_types (id, name)
-VALUES (1, 'public')";
 
-$constant2 = "INSERT INTO editor_types (id, name)
-VALUES (2, 'premium')";
+/* Initialize editor types */
+$insert_1 = "INSERT INTO editor_types (id, name) VALUES (1, 'public')";
+$insert_2 = "INSERT INTO editor_types (id, name) VALUES (2, 'premium')";
+
 
 ?>

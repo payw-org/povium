@@ -1,6 +1,6 @@
 <?php
 /**
-*  This code is not for executing.
+* Table for user's info.
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop

@@ -10,8 +10,9 @@
 */
 
 
-namespace povium\factory;
+namespace Povium\Lib;
 
+use Povium\Connection\DBConnection;
 
 class ServiceFactory extends AbstractChildFactory {
 	/**
@@ -22,7 +23,7 @@ class ServiceFactory extends AbstractChildFactory {
 	*/
 	protected function prepareArgs () {
 		$args = func_get_args();
-		$db_conn = \povium\conn\DBConnection::getInstance()->getConn();
+		$db_conn = DBConnection::getInstance()->getConn();
 
 		array_unshift($args, $db_conn);
 

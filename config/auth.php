@@ -1,6 +1,6 @@
 <?php
 /**
-* @var array	config array for authentication
+* config array for authentication
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop

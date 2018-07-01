@@ -9,15 +9,13 @@
 *
 */
 
+use Povium\Lib\MasterFactory;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/AutoLoader.php';
-$autoloader = new \povium\AutoLoader();
-$autoloader->register();
-$factory = new \povium\factory\MasterFactory();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php'
+$factory = new MasterFactory();
 
-
-$auth = $factory->createInstance('\povium\auth\Auth');
-$auth_config = require('./auth.config.php');
+$auth = $factory->createInstance('\Povium\Auth\Auth');
+$auth_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 
 /* receive login inputs by ajax */
 $login_inputs = json_decode($_POST['login_inputs'], true);

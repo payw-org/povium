@@ -11,7 +11,7 @@
 */
 
 
-namespace povium\factory;
+namespace Povium\Lib;
 
 
 interface FactoryInterface {

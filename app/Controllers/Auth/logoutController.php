@@ -9,14 +9,12 @@
 *
 */
 
+use Povium\Lib\MasterFactory;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/AutoLoader.php';
-$autoloader = new \povium\AutoLoader();
-$autoloader->register();
-$factory = new \povium\factory\MasterFactory();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php'
+$factory = new MasterFactory();
 
-
-$auth = $factory->createInstance('\povium\auth\Auth');
+$auth = $factory->createInstance('\Povium\Auth\Auth');
 
 $logout_return = array('err' => false, 'msg' => '', 'redirect' => '');
 

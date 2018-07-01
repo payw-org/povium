@@ -8,7 +8,7 @@
 *
 */
 
-namespace povium\auth;
+namespace Povium\Auth;
 
 
 class Auth {
@@ -31,7 +31,7 @@ class Auth {
 	*/
 	public function __construct (\PDO $conn) {
 		$this->conn = $conn;
-		$this->config = require('auth.config.php');
+		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 	}
 
 

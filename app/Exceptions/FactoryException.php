@@ -10,7 +10,7 @@
 */
 
 
-namespace povium\factory\exceptions;
+namespace Povium\Exceptions;
 
 
 class FactoryException extends \Exception {

@@ -1,0 +1,32 @@
+{
+	"name": "DesignAndDevelop/Povium",
+	"description": "Povium Website",
+	"version": "1.0.0",
+	"type": "project",
+	"keywords": [],
+	"homepage": "http://povium.com/",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "J.Haemin",
+			"email": "io@jhaemin.com",
+			"role": "Design and Front-end developer"
+		},
+		{
+			"name": "H.Chihoon",
+			"email": "1000jaman@naver.com",
+			"role": "Database management and Back-end developer"
+		}
+	],
+	"support": {},
+	"require": {
+		"php": ">= 5.6",
+		"phpmailer/phpmailer": "~6.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Povium\\": "app/",
+			"Povium\\Lib\\": "app/Lib/Factory/"
+		}
+	}
+}

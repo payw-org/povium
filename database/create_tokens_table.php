@@ -1,7 +1,6 @@
 <?php
 /**
-* This code is not for executing.
-* Table for authenticating auto login.
+* Table for auto login authentication token.
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop
