@@ -36,7 +36,7 @@ class HomeView {
 			this.distX = 0;
 			this.orgPageX = e.touches[0].pageX;
 			this.orgPageY = e.touches[0].pageY;
-		})
+		});
 
 		this.popPostContainer.addEventListener('touchmove', (e) => {
 
@@ -44,10 +44,6 @@ class HomeView {
 			this.distY = e.touches[0].pageY - this.orgPageY;
 
 			var mi = Math.abs( this.distY / this.distX );
-
-			if (isNaN(mi)) {
-				mi = 0;
-			}
 
 			if (((mi > 0 && mi < 2) || this.lockVerticalScrolling) && !this.lockHorizontalScrolling) {
 
@@ -67,12 +63,12 @@ class HomeView {
 				}
 				this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.distX + 'px),0,10px)';
 
-			} else {
+			} else if (mi >= 2) {
 				this.lockHorizontalScrolling = true;
 			}
 
 			
-		})
+		});
 
 		this.popPostContainer.addEventListener('touchend', (e) => {
 
@@ -93,11 +89,16 @@ class HomeView {
 				}, 300)
 			}
 
+			if (!this.lockHorizontalScrolling && !this.lockVerticalScrolling) {
+				if (e.target.querySelector('.post-link')) {
+					e.target.querySelector('.post-link').click();
+				}
+			}
+
 			this.lockVerticalScrolling = false;
 			this.lockHorizontalScrolling = false;
-
 			
-		})
+		});
 
 
 
@@ -106,11 +107,11 @@ class HomeView {
 
 		this.popPostContainer.addEventListener('mouseover', (e) => {
 			this.stopAutoFlick();
-		})
+		});
 
 		this.popPostContainer.addEventListener('mouseout', (e) => {
 			this.autoFlick();
-		})
+		});
 
 		// Fire event when mouse down on popular posts
 		this.popPostContainer.addEventListener('mousedown', (e) => {
@@ -120,7 +121,7 @@ class HomeView {
 			this.distX = 0;
 			this.mouseFlag = true;
 			this.orgPageX = e.pageX;
-		})
+		});
 
 		// Fire event when mouse move on popular posts
 		window.addEventListener('mousemove', (e) => {
@@ -133,10 +134,11 @@ class HomeView {
 				this.distX = this.distX / 5;
 			}
 			this.popPostContainer.style.transform = 'translate3d(calc(' + (-Number(this.popPostContainer.getAttribute('data-post-pos')) * 100) + "% + " + this.distX + 'px),0,10px)';
-		})
+		});
 
 		// Fire event when mouse up on popular posts
 		window.addEventListener('mouseup', (e) => {
+
 			if (!this.mouseFlag) return;
 			this.mouseFlag = 0;
 			let postPos = Number(this.popPostContainer.getAttribute('data-post-pos'));
@@ -158,7 +160,7 @@ class HomeView {
 				this.isDragged = false;
 			}
 
-		})
+		});
 
 		// this.popPostContainer.addEventListener('mouseover', (e) => {
 		// 	console.log('mouseover on popular posts');

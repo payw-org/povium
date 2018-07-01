@@ -8,14 +8,18 @@ class GlobalNavView {
 		window.addEventListener('mousedown', e => this.handleWindowClickEvent(e));
 		window.addEventListener('touchstart', e => this.handleWindowClickEvent(e));
 
-		document.querySelector('#globalnav .magnifier').addEventListener('click', e => {
+		document.querySelector('#globalnav .magnifier').addEventListener('click', (e) => {
 			this.handleMagnifierEvent();
 		});
 
-		document.querySelector('#gn-search-input').addEventListener('keyup', e => {
+		document.querySelector('#gn-search-input').addEventListener('keyup', (e) => {
 			if (e.which === 27) {
 				this.foldSearchInput();
 			}
+		});
+
+		document.querySelector('#globalnav .mobile-btn').addEventListener('click', function () {
+			document.querySelector('#globalnav').classList.toggle('mobile-menu-active');
 		});
 
 	}

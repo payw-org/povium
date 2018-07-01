@@ -157,6 +157,10 @@ var GlobalNavView = function () {
 				_this.foldSearchInput();
 			}
 		});
+
+		document.querySelector('#globalnav .mobile-btn').addEventListener('click', function () {
+			document.querySelector('#globalnav').classList.toggle('mobile-menu-active');
+		});
 	}
 
 	// Methods
@@ -270,10 +274,6 @@ var HomeView = function () {
 
 			var mi = Math.abs(_this.distY / _this.distX);
 
-			if (isNaN(mi)) {
-				mi = 0;
-			}
-
 			if ((mi > 0 && mi < 2 || _this.lockVerticalScrolling) && !_this.lockHorizontalScrolling) {
 
 				if (_this.lockVerticalScrolling) {
@@ -288,7 +288,7 @@ var HomeView = function () {
 					_this.distX = _this.distX / 5;
 				}
 				_this.popPostContainer.style.transform = 'translate3d(calc(' + -Number(_this.popPostContainer.getAttribute('data-post-pos')) * 100 + "% + " + _this.distX + 'px),0,10px)';
-			} else {
+			} else if (mi >= 2) {
 				_this.lockHorizontalScrolling = true;
 			}
 		});
@@ -308,6 +308,12 @@ var HomeView = function () {
 				setTimeout(function () {
 					_this.autoFlick();
 				}, 300);
+			}
+
+			if (!_this.lockHorizontalScrolling && !_this.lockVerticalScrolling) {
+				if (e.target.querySelector('.post-link')) {
+					e.target.querySelector('.post-link').click();
+				}
 			}
 
 			_this.lockVerticalScrolling = false;
@@ -349,6 +355,7 @@ var HomeView = function () {
 
 		// Fire event when mouse up on popular posts
 		window.addEventListener('mouseup', function (e) {
+
 			if (!_this.mouseFlag) return;
 			_this.mouseFlag = 0;
 			var postPos = Number(_this.popPostContainer.getAttribute('data-post-pos'));

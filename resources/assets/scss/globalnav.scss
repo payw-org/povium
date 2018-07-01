@@ -18,9 +18,40 @@ $search-font-size: floor($search-size / 2.5) + 1;
 }
 
 #gn-backface {
+
 	background-color: rgba(255, 255, 255, 1);
 	height: $globalnav-height;
 	// border-bottom: 1px solid $white-blue;
+	transition: height $pvm-animation;
+	// box-shadow: 0 0 5px rgba(0,0,0,.2);
+	overflow: hidden;
+
+	.mobile-menu-active & {
+		height: 100vh;
+		// background-color: rgba(255, 255, 255, .9);
+	}
+
+	.mobile-menu {
+
+		display: none;
+		justify-content: center;
+		align-items: center;
+
+		.mobile-menu-active & {
+			display: flex;
+		}
+
+		.gn-m-item {
+			display: block;
+			.gn-m-link {
+				display: block;
+				padding: 10px;
+				text-align: center;
+				font-size: 1.5rem;
+			}
+		}
+
+	}
 }
 
 #gn-container {
@@ -30,6 +61,59 @@ $search-font-size: floor($search-size / 2.5) + 1;
 	display: flex;
 	justify-content: space-around;
 	position: relative;
+
+	.mobile-btn {
+		position: absolute;
+		right: 32px;
+		width: 20px;
+		height: 100%;
+		display: none;
+		cursor: pointer;
+
+		transition: transform $pvm-animation, opacity $pvm-animation, filter $pvm-animation;
+		transition-delay: .05s;
+		will-change: transform, opacity;
+
+		@include responsive((
+			display: block
+		),(
+			display: none
+		));
+
+		.search-active & {
+			transform: scale(0);
+			opacity: 0;
+			transition-delay: 0s;
+		}
+
+		.block1, .block2 {
+			position: absolute;
+			background: $pvm-gray;
+			top: 50%;
+			left: 0;
+			width: 100%;
+			height: 2px;
+			border-radius: 50px;
+			transition: transform $pvm-animation;
+		}
+
+		.block1 {
+			transform: translateY(-4px);
+
+			.mobile-menu-active & {
+				transform: rotate(45deg);
+			}
+		}
+
+		.block2 {
+			transform: translateY(4px);
+
+			.mobile-menu-active & {
+				transform: rotate(-45deg);
+			}
+		}
+
+	}
 }
 
 #gn-logo-wrapper {

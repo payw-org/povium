@@ -15,7 +15,32 @@
 
 #gn-backface {
   background-color: white;
-  height: 60px; }
+  height: 60px;
+  -webkit-transition: height 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+  -o-transition: height 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+  transition: height 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+  overflow: hidden; }
+  .mobile-menu-active #gn-backface {
+    height: 100vh; }
+  #gn-backface .mobile-menu {
+    display: none;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center; }
+    .mobile-menu-active #gn-backface .mobile-menu {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex; }
+    #gn-backface .mobile-menu .gn-m-item {
+      display: block; }
+      #gn-backface .mobile-menu .gn-m-item .gn-m-link {
+        display: block;
+        padding: 10px;
+        text-align: center;
+        font-size: 1.5rem; }
 
 #gn-container {
   max-width: 800px;
@@ -27,6 +52,65 @@
   -ms-flex-pack: distribute;
   justify-content: space-around;
   position: relative; }
+  #gn-container .mobile-btn {
+    position: absolute;
+    right: 32px;
+    width: 20px;
+    height: 100%;
+    display: none;
+    cursor: pointer;
+    -webkit-transition: opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+    transition: opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+    -o-transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+    transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+    transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), opacity 0.5s cubic-bezier(0.68, 0.17, 0, 1), filter 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-filter 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+    -webkit-transition-delay: .05s;
+    -o-transition-delay: .05s;
+    transition-delay: .05s;
+    will-change: transform, opacity; }
+    @media only screen and (max-width: 768px) {
+      #gn-container .mobile-btn {
+        display: block; } }
+    @media only screen and (min-width: 1441px) {
+      #gn-container .mobile-btn {
+        display: none; } }
+    .search-active #gn-container .mobile-btn {
+      -webkit-transform: scale(0);
+      -ms-transform: scale(0);
+      transform: scale(0);
+      opacity: 0;
+      -webkit-transition-delay: 0s;
+      -o-transition-delay: 0s;
+      transition-delay: 0s; }
+    #gn-container .mobile-btn .block1, #gn-container .mobile-btn .block2 {
+      position: absolute;
+      background: #6c6c79;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border-radius: 50px;
+      -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+      transition: -webkit-transform 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+      -o-transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+      transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1);
+      transition: transform 0.5s cubic-bezier(0.68, 0.17, 0, 1), -webkit-transform 0.5s cubic-bezier(0.68, 0.17, 0, 1); }
+    #gn-container .mobile-btn .block1 {
+      -webkit-transform: translateY(-4px);
+      -ms-transform: translateY(-4px);
+      transform: translateY(-4px); }
+      .mobile-menu-active #gn-container .mobile-btn .block1 {
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg); }
+    #gn-container .mobile-btn .block2 {
+      -webkit-transform: translateY(4px);
+      -ms-transform: translateY(4px);
+      transform: translateY(4px); }
+      .mobile-menu-active #gn-container .mobile-btn .block2 {
+        -webkit-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        transform: rotate(-45deg); }
 
 #gn-logo-wrapper {
   width: 132px;

@@ -7,7 +7,6 @@ $te->render("/resources/templates/base.phtml", [
 	"title" => "Povium | 좋은 글, 세상을 바꾸는 힘",
 	"css" => '<link rel="stylesheet" href="/build/css/home.css">',
 	"main" => "/resources/templates/home.phtml",
-	"script" => '<script src="/src/js/home.js"></script>',
 
 	"post_img_link" => [
 		"spongebob", "programmer", "1", "2" , "3", "4", "5", "6"
