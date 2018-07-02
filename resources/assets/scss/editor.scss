@@ -1,0 +1,205 @@
+@import "_global-variables";
+@import "_global-mixins";
+
+#post-editor {
+	display: block;
+	position: relative;
+	width: calc(100% - 40px);
+	max-width: 50rem;
+	margin: auto;
+}
+
+p, h1, h2, h3 {
+	position: relative;
+}
+
+#editor-toolbar {
+	margin-bottom: 1rem;
+	padding: 1rem;
+	background: $white-blue;
+	user-select: none;
+
+	& > div {
+		display: flex;
+	}
+
+	button {
+		// min-width: 50px;
+		font-weight: 700;
+		padding: 3px 5px;
+		margin: 0;
+		color: $soft-black;
+		display: inline-block;
+		font-size: 1rem;
+		cursor: pointer;
+		transition: transform .1s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
+
+		&:hover {
+			background: $pvm-violet;
+			transform: scale(1.1);
+			color: #fff;
+			box-shadow: 0 .5em 1.5em rgba(0,0,0,.3);
+		}
+
+		&:active {
+			transform: scale(1);
+		}
+	}
+}
+
+#editor-body {
+
+	margin-top: 2rem;
+
+	&:empty {
+		background: red;
+	}
+
+	:empty {
+		background: blue;
+	}
+
+	outline: none;
+
+	min-height: 500px;
+
+	$font-size--base: 16px;
+
+	// Font size
+	p, li {
+
+		font-size: 18px;
+		margin-bottom: .5em;
+
+		line-height: 1.1;
+
+		@include responsive((
+			font-size: 16px
+		),(
+			font-size: 20px
+		));
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		line-height: 1.2;
+		font-weight: 400;
+		margin: 0;
+	}
+
+	h1 {
+		font-size: 35px;
+
+		& + p {
+			margin-top: 1.2em;
+		}
+
+		@include responsive((
+			font-size: 32px
+		), (
+			font-size: 40px
+		));
+	}
+
+	h2 {
+		font-size: 30px;
+
+		& + p {
+			margin-top: 1em;
+		}
+
+		@include responsive((
+			font-size: 28px
+		), (
+			font-size: 35px
+		));
+	}
+
+	h3 {
+		font-size: 27px;
+
+		& + p {
+			margin-top: .8em;
+		}
+
+		@include responsive((
+			font-size: 24px
+		), (
+			font-size: 31px
+		));
+	}
+
+	ol, ul {
+		padding: .5em 0;
+	}
+
+	ol, ul, ol > li, ul > li {
+		list-style-position: outside;
+	}
+
+	ol > li {
+		margin-left: 15px;
+	}
+
+	ol, ol > li {
+		list-style-type: circle;
+	}
+
+	ul > li {
+		margin-left: 15px;
+	}
+
+	ul, ul > li {
+		list-style-type: decimal;
+	}
+
+	blockquote {
+
+		padding: 0;
+		padding-left: 1.2em;
+		position: relative;
+		margin: 2em 0 0;
+		line-height: 2;
+
+		font-size: 18px;
+
+		@include responsive((
+			font-size: 16px
+		),(
+			font-size: 20px
+		));
+
+		& + blockquote {
+			margin-top: 0;
+		}
+
+		& + p, & + h1, & + h2, & + h3, & + h4, & + h5, & + h6 {
+			margin-top: 2em;
+		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			display: inline-block;
+			width: 3px;
+			top: 0;
+			left: 3px;
+			bottom: 0;
+			border-radius: 0;
+			background: $pvm-gray;
+		}
+
+		p {
+			line-height: 1.2;
+			margin: 0;
+		}
+	}
+
+	.image-block {
+
+		cursor: pointer;
+
+		img {
+			
+		}
+	}
+}

@@ -1,33 +1,82 @@
-const path = require('path');
-const webpack = require('webpack');
+var WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
 module.exports = {
-	mode: "production",
+
 	entry: {
-		'povium': [
-			path.resolve(__dirname, 'public_html/js/povium.js')
+
+		main: [
+		'./resources/assets/js/globalscript',
+		'./resources/assets/js/globalnav',
+		'./resources/assets/js/home'
+		],
+
+		login: [
+			'./resources/assets/js/login'
+		],
+		
+		register: [
+			'./resources/assets/js/register'
+		],
+
+		editor: [
+			'./resources/assets/js/editor/main'
+		]
+
+	},
+
+	mode: 'none',
+
+	devtool: 'source-map',
+
+	output : {
+
+		path: __dirname + '/public_html/build/js',
+		filename: '[name].built.js'
+		
+	},
+
+	module: {
+		rules: [
+			{
+				test: /\.js$/,
+				exclude: /(node_modules|bower_components)/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+					presets: ['env']
+					}
+				}
+			}
 		]
 	},
-	output: {
-		filename: '[name].bundle.js',
-		path: path.resolve(__dirname, 'public_html/js')
-	},
-	resolve: {
-		alias: {
-			jquery: "./public_html/global-inclusion/js/lib/jquery.min.js"
-		}
-	},
+
 	plugins: [
-		new webpack.ProvidePlugin({
-			$: path.resolve(__dirname, 'public_html/global-inclusion/js/lib/jquery.min.js'),
-			jQuery: path.resolve(__dirname, 'public_html/global-inclusion/js/lib/jquery.min.js'),
-			Vue: path.resolve(__dirname, 'public_html/global-inclusion/js/lib/vue.js')
+		new WebpackBuildNotifierPlugin({
+			title: "Webpack"
 		})
-	],
-	module: {
-		rules: [{
-			test: /\.less$/,
-			loader: 'less-loader' // compile LESS to CSS
-		}]
-	}
+	]
+
 }
+
+// examples
+
+// {
+// 	entry: ['./index.js', './script.js'],
+
+// 	output: {
+// 		path: '/dist',
+// 		filename: 'bundle.js'
+// 	}
+// }
+
+// {
+// 	entry: {
+// 		"indexEntry": './index.js',
+// 		"profileEntry": './profile.js'
+// 	},
+
+// 	output: {
+// 		path: '/dist',
+// 		filename: '[name].js'
+// 	}
+// }

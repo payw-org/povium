@@ -1,24 +1,39 @@
 {
   "name": "povium",
   "version": "1.0.0",
-  "description": "Plan.md를 읽으세요.",
-  "private": true,
-  "main": "public_html/",
+  "description": "좋은 글 플랫폼",
+  "main": "",
   "dependencies": {
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3"
+    "autoprefixer": "^8.6.4",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "concurrently": "^3.6.0",
+    "node-sass": "^4.9.0",
+    "nodemon": "^1.17.5",
+    "postcss-cli": "^5.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "webpack": "^4.14.0",
+    "webpack-build-notifier": "^0.1.28",
+    "webpack-cli": "^3.0.8"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "webpack:build": "webpack --config webpack.config.js",
+    "webpack:watch": "webpack --watch --config webpack.config.js",
+    "autoprefix": "postcss public_html/src/build/css --use autoprefixer -d public_html/src/build/css",
+    "sass:build": "concurrently \"node-sass -w public_html/src/scss/ -o public_html/src/build/css/\" \"nodemon -e scss -x npm run autoprefix\""
   },
+  "browserslist": [
+    "> 5%",
+    "last 5 versions"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DesignAndDevelop/Povium.git"
   },
-  "keywords": [],
-  "author": "povium",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/DesignAndDevelop/Povium/issues"

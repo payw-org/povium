@@ -1,0 +1,126 @@
+.no-tap-highlight-color {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); }
+
+#popular {
+  position: relative; }
+  #popular .post-view {
+    width: 100%;
+    height: 50vw;
+    max-height: 22rem;
+    min-height: 200px; }
+    #popular .post-view .guided-view {
+      height: 100%;
+      width: 70vw;
+      margin: auto;
+      will-change: transform; }
+      @media only screen and (max-width: 768px) {
+        #popular .post-view .guided-view {
+          width: calc(100% - 40px); } }
+      @media only screen and (min-width: 1441px) {
+        #popular .post-view .guided-view {
+          width: 50vw; } }
+      #popular .post-view .guided-view .post-container {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
+        height: 100%;
+        font-size: 0;
+        -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.63, 0.02, 0.07, 0.99);
+        transition: -webkit-transform 0.7s cubic-bezier(0.63, 0.02, 0.07, 0.99);
+        -o-transition: transform 0.7s cubic-bezier(0.63, 0.02, 0.07, 0.99);
+        transition: transform 0.7s cubic-bezier(0.63, 0.02, 0.07, 0.99);
+        transition: transform 0.7s cubic-bezier(0.63, 0.02, 0.07, 0.99), -webkit-transform 0.7s cubic-bezier(0.63, 0.02, 0.07, 0.99);
+        will-change: transform;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0); }
+        #popular .post-view .guided-view .post-container.ease {
+          -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.32, 0.57, 0.02, 0.99);
+          transition: -webkit-transform 0.3s cubic-bezier(0.32, 0.57, 0.02, 0.99);
+          -o-transition: transform 0.3s cubic-bezier(0.32, 0.57, 0.02, 0.99);
+          transition: transform 0.3s cubic-bezier(0.32, 0.57, 0.02, 0.99);
+          transition: transform 0.3s cubic-bezier(0.32, 0.57, 0.02, 0.99), -webkit-transform 0.3s cubic-bezier(0.32, 0.57, 0.02, 0.99); }
+        #popular .post-view .guided-view .post-container.moving {
+          -webkit-transition: none;
+          -o-transition: none;
+          transition: none; }
+          #popular .post-view .guided-view .post-container.moving .post-link {
+            pointer-events: none; }
+        #popular .post-view .guided-view .post-container .post-wrapper {
+          display: block;
+          min-width: 100%;
+          height: 100%;
+          padding: 0 .5rem;
+          position: relative; }
+          #popular .post-view .guided-view .post-container .post-wrapper .post {
+            cursor: pointer;
+            position: relative;
+            height: 100%;
+            margin: auto;
+            border-radius: 20px;
+            overflow: hidden;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-transition: -webkit-transform .4s ease;
+            transition: -webkit-transform .4s ease;
+            -o-transition: transform .4s ease;
+            transition: transform .4s ease;
+            transition: transform .4s ease, -webkit-transform .4s ease; }
+            #popular .post-view .guided-view .post-container .post-wrapper .post.active {
+              -webkit-transform: scale(0.95);
+              -ms-transform: scale(0.95);
+              transform: scale(0.95); }
+            #popular .post-view .guided-view .post-container .post-wrapper .post .post-link {
+              position: absolute;
+              left: 0;
+              right: 0;
+              top: 0;
+              bottom: 0;
+              z-index: 10; }
+            #popular .post-view .guided-view .post-container .post-wrapper .post .hero {
+              width: 100%;
+              height: 100%;
+              -o-object-fit: cover;
+              object-fit: cover; }
+            #popular .post-view .guided-view .post-container .post-wrapper .post .post-contents {
+              position: absolute;
+              max-height: 100%;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              padding: .8rem;
+              background: rgba(0, 0, 0, 0.5);
+              color: #fff;
+              text-align: center;
+              border-radius: 0 0 20px 20px;
+              pointer-events: none; }
+              #popular .post-view .guided-view .post-container .post-wrapper .post .post-contents h1 {
+                font-size: 1.7rem;
+                font-weight: 500; }
+              #popular .post-view .guided-view .post-container .post-wrapper .post .post-contents .writer-name {
+                display: block;
+                font-size: 1rem;
+                font-weight: 400;
+                margin-top: .3rem; }
+
+.post-section {
+  padding-top: 2.5rem; }
+  .post-section.narrow {
+    max-width: 90rem;
+    margin: auto; }
+  .post-section .section-title {
+    max-width: 60rem;
+    margin: auto;
+    margin-bottom: 1.5rem;
+    padding-left: 1.7rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
+    .post-section .section-title.popular::before {
+      background-image: url("/assets/images/flare.svg");
+      top: -.3rem; }
+    .post-section .section-title.technology::before {
+      background-image: url("/assets/images/chip.svg");
+      top: .1rem; }
