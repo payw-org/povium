@@ -5,7 +5,6 @@
 *
 * @author J.Haemin
 * @copyright 2018 DesignAndDevelop
-* @license MIT
 *
 */
 
