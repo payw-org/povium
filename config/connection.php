@@ -10,7 +10,7 @@
 
 return [
 	'driver' => 'mysql',
-	'host' => '127.0.0.1',
+	'host' => 'localhost',
 	'dbname' => 'povium',
 	'username' => 'povium',
 	'password' => 'welovepoviumdb2018',

@@ -1,4 +1,15 @@
 <?php
+/**
+* Load template files and configuration.
+* And renders the view.
+*
+* @author J.Haemin
+* @copyright 2018 DesignAndDevelop
+* @license MIT
+*
+*/
+
+namespace Povium\View;
 
 class TemplateEngine {
 
