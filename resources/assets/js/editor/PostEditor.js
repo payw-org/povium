@@ -18,7 +18,7 @@ export default class PostEditor {
 
 		// Event Listeners
 
-		this.domManager.editor.addEventListener('focusin', () => { this.onSelectionChanged(); });
+		this.domManager.editor.addEventListener('click', () => { this.onSelectionChanged(); });
 		this.domManager.editor.addEventListener('keydown', (e) => { this.onKeyDown(e); });
 		this.domManager.editor.addEventListener('keyup', (e) => {
 			this.onKeyUp(e);
@@ -146,6 +146,7 @@ export default class PostEditor {
 		if (!range) {
 			return;
 		}
+
 		var startNode = range.startContainer;
 		var startOffset = range.startOffset;
 		var endNode = range.endContainer;
@@ -161,14 +162,17 @@ export default class PostEditor {
 
 		if (startNode.id === 'editor-body') {
 
+			console.log(startNode.firstElementChild);
+
 			target = startNode.firstElementChild;
 
 			for (var i = 0; i < startOffset; i++) {
 				target = target.nextElementSibling;
 			}
 
+			console.log(target);
 
-			newRange.setStartBefore(target.firstChild);
+			newRange.setStartBefore(target);
 
 			isChanged = true;
 			
@@ -182,7 +186,7 @@ export default class PostEditor {
 				target = target.nextElementSibling;
 			}
 
-			newRange.setEndAfter(target.lastChild);
+			newRange.setEndAfter(target);
 
 			isChanged = true;
 			

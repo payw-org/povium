@@ -109,32 +109,34 @@ export default class SelectionManager {
 				continue;
 			}
 
-			let newParagraph = document.createElement(type);
+			this.changeNodeName(chunks[i], type);
+
+			// let newParagraph = document.createElement(type);
 			
-			var child;
-			while (child = chunks[i].firstChild) {
-				newParagraph.appendChild(child);
-			}
+			// var child;
+			// while (child = chunks[i].firstChild) {
+			// 	newParagraph.appendChild(child);
+			// }
 
-			if (chunks[i] === startNode) {
-				startNode = newParagraph;
-			}
+			// if (chunks[i] === startNode) {
+			// 	startNode = newParagraph;
+			// }
 
-			if (chunks[i] === endNode) {
-				endNode = newParagraph;
-			}
+			// if (chunks[i] === endNode) {
+			// 	endNode = newParagraph;
+			// }
 
-			this.domManager.editor.replaceChild(newParagraph, chunks[i]);
+			// this.domManager.editor.replaceChild(newParagraph, chunks[i]);
 
 			// this.changeNodeName(chunks[i], type);
 
 		}
 
-		var keepRange = document.createRange();
-		keepRange.setStart(startNode, startOffset);
-		keepRange.setEnd(endNode, endOffset);
+		// var keepRange = document.createRange();
+		// keepRange.setStart(startNode, startOffset);
+		// keepRange.setEnd(endNode, endOffset);
 
-		this.replaceRange(keepRange);
+		// this.replaceRange(keepRange);
 
 	}
 
@@ -331,8 +333,6 @@ export default class SelectionManager {
 
 		}
 
-		console.log(startNode);
-
 		var keepRange = document.createRange();
 		keepRange.setStart(startNode, startOffset);
 		keepRange.setEnd(endNode, endOffset);
@@ -474,38 +474,12 @@ export default class SelectionManager {
 			return;
 		}
 
-		var tempNode;
-		var newNode = document.createElement(newNodeName);
+		// 1. Change node
+		
 
-		while (tempNode = targetNode.firstChild) {
-			newNode.appendChild(tempNode);
-		}
+		// 2. Keep Range
 
-		var range = this.getRange();
-		console.log(range.cloneRange());
-		if (range !== null) {
-
-			if (targetNode === range.startContainer) {
-				console.log('1');
-				range.setStart(newNode, range.startOffset);
-				this.replaceRange(range);
-			}
-
-			if (targetNode === range.endContainer) {
-				console.log('2');
-				range.setEnd(newNode, range.endOffset);
-				this.replaceRange(range);
-			}
-
-		}
-
-		if (this.domManager.editor.contains(targetNode)) {
-			this.domManager.editor.replaceChild(newNode, targetNode);
-			console.log(range);
-			this.replaceRange(range);
-		} else {
-			return newNode;
-		}
+		// 3. Keep style
 
 	}
 

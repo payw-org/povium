@@ -178,7 +178,7 @@ var PostEditor = function () {
 
 				// Event Listeners
 
-				this.domManager.editor.addEventListener('focusin', function () {
+				this.domManager.editor.addEventListener('click', function () {
 						_this.onSelectionChanged();
 				});
 				this.domManager.editor.addEventListener('keydown', function (e) {
@@ -335,6 +335,7 @@ var PostEditor = function () {
 						if (!range) {
 								return;
 						}
+
 						var startNode = range.startContainer;
 						var startOffset = range.startOffset;
 						var endNode = range.endContainer;
@@ -350,13 +351,17 @@ var PostEditor = function () {
 
 						if (startNode.id === 'editor-body') {
 
+								console.log(startNode.firstElementChild);
+
 								target = startNode.firstElementChild;
 
 								for (var i = 0; i < startOffset; i++) {
 										target = target.nextElementSibling;
 								}
 
-								newRange.setStartBefore(target.firstChild);
+								console.log(target);
+
+								newRange.setStartBefore(target);
 
 								isChanged = true;
 						}
@@ -369,7 +374,7 @@ var PostEditor = function () {
 										target = target.nextElementSibling;
 								}
 
-								newRange.setEndAfter(target.lastChild);
+								newRange.setEndAfter(target);
 
 								isChanged = true;
 						}
@@ -658,31 +663,33 @@ var SelectionManager = function () {
 					continue;
 				}
 
-				var _newParagraph = document.createElement(type);
+				this.changeNodeName(chunks[i], type);
 
-				var child;
-				while (child = chunks[i].firstChild) {
-					_newParagraph.appendChild(child);
-				}
+				// let newParagraph = document.createElement(type);
 
-				if (chunks[i] === startNode) {
-					startNode = _newParagraph;
-				}
+				// var child;
+				// while (child = chunks[i].firstChild) {
+				// 	newParagraph.appendChild(child);
+				// }
 
-				if (chunks[i] === endNode) {
-					endNode = _newParagraph;
-				}
+				// if (chunks[i] === startNode) {
+				// 	startNode = newParagraph;
+				// }
 
-				this.domManager.editor.replaceChild(_newParagraph, chunks[i]);
+				// if (chunks[i] === endNode) {
+				// 	endNode = newParagraph;
+				// }
+
+				// this.domManager.editor.replaceChild(newParagraph, chunks[i]);
 
 				// this.changeNodeName(chunks[i], type);
 			}
 
-			var keepRange = document.createRange();
-			keepRange.setStart(startNode, startOffset);
-			keepRange.setEnd(endNode, endOffset);
+			// var keepRange = document.createRange();
+			// keepRange.setStart(startNode, startOffset);
+			// keepRange.setEnd(endNode, endOffset);
 
-			this.replaceRange(keepRange);
+			// this.replaceRange(keepRange);
 		}
 
 		/**
@@ -861,8 +868,6 @@ var SelectionManager = function () {
 				}
 			}
 
-			console.log(startNode);
-
 			var keepRange = document.createRange();
 			keepRange.setStart(startNode, startOffset);
 			keepRange.setEnd(endNode, endOffset);
@@ -1005,37 +1010,12 @@ var SelectionManager = function () {
 				return;
 			}
 
-			var tempNode;
-			var newNode = document.createElement(newNodeName);
+			// 1. Change node
 
-			while (tempNode = targetNode.firstChild) {
-				newNode.appendChild(tempNode);
-			}
 
-			var range = this.getRange();
-			console.log(range.cloneRange());
-			if (range !== null) {
+			// 2. Keep Range
 
-				if (targetNode === range.startContainer) {
-					console.log('1');
-					range.setStart(newNode, range.startOffset);
-					this.replaceRange(range);
-				}
-
-				if (targetNode === range.endContainer) {
-					console.log('2');
-					range.setEnd(newNode, range.endOffset);
-					this.replaceRange(range);
-				}
-			}
-
-			if (this.domManager.editor.contains(targetNode)) {
-				this.domManager.editor.replaceChild(newNode, targetNode);
-				console.log(range);
-				this.replaceRange(range);
-			} else {
-				return newNode;
-			}
+			// 3. Keep style
 		}
 
 		/**
