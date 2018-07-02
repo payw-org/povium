@@ -30,7 +30,7 @@ class Auth {
 	*/
 	public function __construct (\PDO $conn) {
 		$this->conn = $conn;
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
+		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/app/auth.php');
 	}
 
 
