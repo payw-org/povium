@@ -126,8 +126,10 @@ button::-moz-focus-inner {
   overflow: hidden;
   -webkit-mask-image: -webkit-radial-gradient(white, black); }
   .input-wrapper .icon {
+    pointer-events: none;
+    cursor: default;
     display: block;
-    background: #999999;
+    background: #6c6c79;
     position: absolute;
     left: 0;
     top: 0;
@@ -167,11 +169,14 @@ button::-moz-focus-inner {
     transition: transform .2s ease, opacity .2s ease;
     transition: transform .2s ease, opacity .2s ease, -webkit-transform .2s ease;
     will-change: transform, opacity; }
+  .input-wrapper.focused .input-basic, .input-wrapper.fixed .input-basic {
+    padding: 0 1rem 0 3.7rem; }
   .input-wrapper.focused .icon, .input-wrapper.fixed .icon {
     -webkit-transform: translateX(0) scale(1);
     -ms-transform: translateX(0) scale(1);
     transform: translateX(0) scale(1);
-    opacity: 1; }
+    opacity: 1;
+    pointer-events: all; }
   .input-wrapper.focused .placeholder, .input-wrapper.fixed .placeholder {
     width: auto;
     -webkit-transform: scale(0.9) translateX(1rem);
@@ -206,7 +211,7 @@ button::-moz-focus-inner {
   background: #F1F1F2;
   display: block;
   border-radius: .5rem;
-  padding: 0 1rem 0 3.7rem;
+  padding: 0 1em;
   height: 2.7rem;
   font-size: 1.1rem;
   text-align: left;
@@ -214,9 +219,9 @@ button::-moz-focus-inner {
   cursor: default;
   -webkit-box-shadow: none;
   box-shadow: none;
-  -webkit-transition: background-color .2s ease, color .2s ease, padding .2s ease;
-  -o-transition: background-color .2s ease, color .2s ease, padding .2s ease;
-  transition: background-color .2s ease, color .2s ease, padding .2s ease;
+  -webkit-transition: background-color .2s ease, color .2s ease;
+  -o-transition: background-color .2s ease, color .2s ease;
+  transition: background-color .2s ease, color .2s ease;
   will-change: background-color, padding;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0); }
   .input-basic:hover {
