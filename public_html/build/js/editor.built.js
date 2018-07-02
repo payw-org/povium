@@ -283,13 +283,12 @@ var PostEditor = function () {
 
 								// Return key
 								var selectionNode = this.selManager.getNodeInSelection();
+								var selPosType = this.selManager.getSelectionPosition();
 
-								if (this.selManager.getSelectionPosition() === 2) {
+								if (this.selManager.isBlockquote(selectionNode)) {
 
-										e.stopPropagation();
-										e.preventDefault();
+										if (selPosType === 2) {
 
-										if (this.selManager.isBlockquote(selectionNode)) {
 												e.stopPropagation();
 												e.preventDefault();
 
@@ -302,6 +301,13 @@ var PostEditor = function () {
 												range.collapse(true);
 
 												this.selManager.replaceRange(range);
+										} else if (selPosType === 1) {
+
+												e.stopPropagation();
+												e.preventDefault();
+
+												// this.selManager.removeSelection();
+												this.selManager.splitTextNode();
 										}
 								}
 						}
@@ -1042,6 +1048,9 @@ var SelectionManager = function () {
 	}, {
 		key: 'fixSelection',
 		value: function fixSelection() {}
+	}, {
+		key: 'splitElementNode',
+		value: function splitElementNode() {}
 
 		/**
    * Split text nodes based on the selection.
@@ -1050,8 +1059,24 @@ var SelectionManager = function () {
 	}, {
 		key: 'splitTextNode',
 		value: function splitTextNode() {
-			if (this.startOffset > 0) {
-				console.log(this.startNode);
+			console.log('split');
+			var range = this.getRange();
+			if (!range) {
+				return;
+			}
+			var startNode = range.startContainer;
+			var startOffset = range.startOffset;
+
+			if (startNode.nodeType === 3 && startOffset > 0) {
+				startNode.splitText(startOffset);
+			}
+
+			range = this.getRange();
+			var endNode = range.endContainer;
+			var endOffset = range.endOffset;
+
+			if (endNode.nodeType === 3 && endOffset < endNode.textContent.length) {
+				endNode.splitText(endOffset);
 			}
 		}
 
@@ -1061,7 +1086,9 @@ var SelectionManager = function () {
 
 	}, {
 		key: 'removeSelection',
-		value: function removeSelection() {}
+		value: function removeSelection() {
+			this.getRange().deleteContents();
+		}
 
 		/**
    * Return true if the selection is empty.

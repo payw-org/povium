@@ -522,12 +522,33 @@ export default class SelectionManager {
 		
 	}
 
+	splitElementNode () {
+
+	}
+
 	/**
 	 * Split text nodes based on the selection.
 	 */
 	splitTextNode () {
-		if (this.startOffset > 0) {
-			console.log(this.startNode);
+		console.log('split');
+		var range = this.getRange();
+		if (!range) {
+			return;
+		}
+		var startNode = range.startContainer;
+		var startOffset = range.startOffset;
+		
+
+		if (startNode.nodeType === 3 && startOffset > 0) {
+			startNode.splitText(startOffset);
+		}
+
+		range = this.getRange();
+		var endNode = range.endContainer;
+		var endOffset = range.endOffset;
+
+		if (endNode.nodeType === 3 && endOffset < endNode.textContent.length) {
+			endNode.splitText(endOffset);
 		}
 	}
 
@@ -535,7 +556,7 @@ export default class SelectionManager {
 	 * Remove selection.
 	 */
 	removeSelection () {
-		
+		this.getRange().deleteContents();
 	}
 
 	/**

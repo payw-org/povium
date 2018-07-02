@@ -89,13 +89,12 @@ export default class PostEditor {
 
 			// Return key
 			var selectionNode = this.selManager.getNodeInSelection();
+			var selPosType = this.selManager.getSelectionPosition()
 
-			if (this.selManager.getSelectionPosition() === 2) {
+			if (this.selManager.isBlockquote(selectionNode)) {
 
-				e.stopPropagation();
-				e.preventDefault();
+				if (selPosType === 2) {
 
-				if (this.selManager.isBlockquote(selectionNode)) {
 					e.stopPropagation();
 					e.preventDefault();
 
@@ -109,7 +108,16 @@ export default class PostEditor {
 
 					this.selManager.replaceRange(range);
 
+				} else if (selPosType === 1) {
+
+					e.stopPropagation();
+					e.preventDefault();
+
+					// this.selManager.removeSelection();
+					this.selManager.splitTextNode();
+
 				}
+
 			}
 
 			

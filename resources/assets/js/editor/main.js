@@ -1,6 +1,5 @@
 import PostEditor from "./PostEditor";
 
-
 const editor = new PostEditor(document.querySelector('#post-editor'));
 
 // var a = document.createElement('h1').nodeName;
