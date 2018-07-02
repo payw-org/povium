@@ -1,3 +1,5 @@
+var WebpackBuildNotifierPlugin = require('webpack-build-notifier');
+
 module.exports = {
 
 	entry: {
@@ -46,7 +48,13 @@ module.exports = {
 				}
 			}
 		]
-	}
+	},
+
+	plugins: [
+		new WebpackBuildNotifierPlugin({
+			title: "Webpack"
+		})
+	]
 
 }
 

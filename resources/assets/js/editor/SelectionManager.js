@@ -94,49 +94,42 @@ export default class SelectionManager {
 		let endOffset = orgRange.endOffset;
 		let chunks = this.getAllNodesInSelection();
 
+		
+
 		for (var i = 0; i < chunks.length; i++) {
 
 			if (chunks[i].nodeName === type) {
 				continue;
 			}
 
-			if (chunks[i].textContent === "") {
-				continue;
-			}
+			// if (chunks[i].textContent === "") {
+			// 	continue;
+			// }
 
-			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
+			if (
+				!this.isParagraph(chunks[i]) &&
+				!this.isHeading(chunks[i]) &&
+				!this.isBlockquote(chunks[i])
+			) {
 				console.warn('The node is not a paragraph nor a heading.')
 				continue;
 			}
 
-			this.changeNodeName(chunks[i], type);
-
-			// let newParagraph = document.createElement(type);
-			
-			// var child;
-			// while (child = chunks[i].firstChild) {
-			// 	newParagraph.appendChild(child);
-			// }
-
-			// if (chunks[i] === startNode) {
-			// 	startNode = newParagraph;
-			// }
-
-			// if (chunks[i] === endNode) {
-			// 	endNode = newParagraph;
-			// }
-
-			// this.domManager.editor.replaceChild(newParagraph, chunks[i]);
-
-			// this.changeNodeName(chunks[i], type);
+			var changedNode = this.changeNodeName(chunks[i], type);
+			if (chunks[i] === startNode) {
+				startNode = changedNode;
+			}
+			if (chunks[i] === endNode) {
+				endNode = changedNode;
+			}
 
 		}
 
-		// var keepRange = document.createRange();
-		// keepRange.setStart(startNode, startOffset);
-		// keepRange.setEnd(endNode, endOffset);
-
-		// this.replaceRange(keepRange);
+		
+		var keepRange = document.createRange();
+		keepRange.setStart(startNode, startOffset);
+		keepRange.setEnd(endNode, endOffset);
+		this.replaceRange(keepRange);
 
 	}
 
@@ -346,7 +339,64 @@ export default class SelectionManager {
 	}
 
 	blockquote () {
+		let orgRange = this.getRange();
+		if (!orgRange) {
+			return;
+		}
 
+		let startNode = orgRange.startContainer;
+		let startOffset = orgRange.startOffset;
+		let endNode = orgRange.endContainer;
+		let endOffset = orgRange.endOffset;
+		let chunks = this.getAllNodesInSelection();
+
+		var isAllBlockquote = true;
+
+		for (var i = 0; i < chunks.length; i++) {
+
+			if (chunks[i].nodeName === "BLOCKQUOTE") {
+				continue;
+			} else {
+				isAllBlockquote = false;
+			}
+
+			// if (chunks[i].textContent === "") {
+			// 	continue;
+			// }
+
+			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
+				console.warn('The node is not a paragraph nor a heading.')
+				continue;
+			}
+
+			var changedNode = this.changeNodeName(chunks[i], "blockquote", false);
+			if (chunks[i] === startNode) {
+				startNode = changedNode;
+			}
+			if (chunks[i] === endNode) {
+				endNode = changedNode;
+			}
+
+		}
+
+		// Selection is all blockquote
+		if (isAllBlockquote) {
+			for (var i = 0; i < chunks.length; i++) {
+				var changedNode = this.changeNodeName(chunks[i], "P", false);
+				if (chunks[i] === startNode) {
+					startNode = changedNode;
+				}
+				if (chunks[i] === endNode) {
+					endNode = changedNode;
+				}
+			}
+		}
+
+
+		var keepRange = document.createRange();
+		keepRange.setStart(startNode, startOffset);
+		keepRange.setEnd(endNode, endOffset);
+		this.replaceRange(keepRange);
 	}
 
 
@@ -461,7 +511,7 @@ export default class SelectionManager {
 	 * @param {HTMLElement} targetNode An HTML element you want to change its node name.
 	 * @param {String} newNodeName New node name for the target element.
 	 */
-	changeNodeName (targetNode, newNodeName) {
+	changeNodeName (targetNode, newNodeName, keepStyle = true) {
 
 		// Move all the nodes inside the target node
 		// to the new generated node with new node name,
@@ -475,11 +525,22 @@ export default class SelectionManager {
 		}
 
 		// 1. Change node
+		var node;
+		var newNode = document.createElement(newNodeName);
+
+		if (keepStyle) {
+			newNode.style.textAlign = targetNode.style.textAlign;
+		}
 		
 
-		// 2. Keep Range
+		while (node = targetNode.firstChild) {
+			newNode.appendChild(node);
+		}
 
-		// 3. Keep style
+		// 3. replace node
+		this.domManager.editor.replaceChild(newNode, targetNode);
+
+		return newNode;
 
 	}
 

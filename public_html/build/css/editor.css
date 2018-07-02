@@ -13,6 +13,8 @@ p, h1, h2, h3 {
 
 #editor-toolbar {
   margin-bottom: 1rem;
+  padding: 1rem;
+  background: #F1F1F2;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -23,23 +25,29 @@ p, h1, h2, h3 {
     display: flex; }
   #editor-toolbar button {
     font-weight: 700;
-    padding: 1px 4px 0px;
-    margin: 1px 2px;
-    color: #5f42ff;
+    padding: 3px 5px;
+    margin: 0;
+    color: #222;
     display: inline-block;
-    border-bottom: 3px solid #13edbd;
     font-size: 1rem;
-    -webkit-transition: -webkit-transform .1s ease;
-    transition: -webkit-transform .1s ease;
-    -o-transition: transform .1s ease;
-    transition: transform .1s ease;
-    transition: transform .1s ease, -webkit-transform .1s ease; }
+    cursor: pointer;
+    -webkit-transition: background-color .2s ease, color .2s ease, -webkit-transform .1s ease, -webkit-box-shadow .2s ease;
+    transition: background-color .2s ease, color .2s ease, -webkit-transform .1s ease, -webkit-box-shadow .2s ease;
+    -o-transition: transform .1s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
+    transition: transform .1s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
+    transition: transform .1s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, -webkit-transform .1s ease, -webkit-box-shadow .2s ease; }
     #editor-toolbar button:hover {
-      background: #F1F1F2; }
+      background: #5f42ff;
+      -webkit-transform: scale(1.1);
+      -ms-transform: scale(1.1);
+      transform: scale(1.1);
+      color: #fff;
+      -webkit-box-shadow: 0 0.5em 1.5em rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0.5em 1.5em rgba(0, 0, 0, 0.3); }
     #editor-toolbar button:active {
-      -webkit-transform: scale(0.95);
-      -ms-transform: scale(0.95);
-      transform: scale(0.95); }
+      -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+      transform: scale(1); }
 
 #editor-body {
   margin-top: 2rem;
@@ -96,7 +104,7 @@ p, h1, h2, h3 {
   #editor-body ol, #editor-body ul {
     padding: .5em 0; }
   #editor-body ol, #editor-body ul, #editor-body ol > li, #editor-body ul > li {
-    list-style-position: inside; }
+    list-style-position: outside; }
   #editor-body ol > li {
     margin-left: 15px; }
   #editor-body ol, #editor-body ol > li {

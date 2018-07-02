@@ -47,6 +47,7 @@ export default class PostEditor {
 
 		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL'); });
 		// this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
+		this.domManager.blockquote.addEventListener('click', (e) => { this.selManager.blockquote('UL'); });
 
 		this.initEditor();
 
@@ -162,17 +163,15 @@ export default class PostEditor {
 
 		if (startNode.id === 'editor-body') {
 
-			console.log(startNode.firstElementChild);
-
 			target = startNode.firstElementChild;
 
 			for (var i = 0; i < startOffset; i++) {
 				target = target.nextElementSibling;
 			}
 
-			console.log(target);
+			newRange.setStart(target, 0);
 
-			newRange.setStartBefore(target);
+			console.log(target);
 
 			isChanged = true;
 			
@@ -186,7 +185,9 @@ export default class PostEditor {
 				target = target.nextElementSibling;
 			}
 
-			newRange.setEndAfter(target);
+			newRange.setEnd(target, 1);
+
+			console.log(target);
 
 			isChanged = true;
 			

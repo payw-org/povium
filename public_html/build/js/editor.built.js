@@ -237,6 +237,9 @@ var PostEditor = function () {
 						_this.selManager.list('OL');
 				});
 				// this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
+				this.domManager.blockquote.addEventListener('click', function (e) {
+						_this.selManager.blockquote('UL');
+				});
 
 				this.initEditor();
 		}
@@ -351,17 +354,15 @@ var PostEditor = function () {
 
 						if (startNode.id === 'editor-body') {
 
-								console.log(startNode.firstElementChild);
-
 								target = startNode.firstElementChild;
 
 								for (var i = 0; i < startOffset; i++) {
 										target = target.nextElementSibling;
 								}
 
-								console.log(target);
+								newRange.setStart(target, 0);
 
-								newRange.setStartBefore(target);
+								console.log(target);
 
 								isChanged = true;
 						}
@@ -374,7 +375,9 @@ var PostEditor = function () {
 										target = target.nextElementSibling;
 								}
 
-								newRange.setEndAfter(target);
+								newRange.setEnd(target, 1);
+
+								console.log(target);
 
 								isChanged = true;
 						}
@@ -502,6 +505,7 @@ var DOMManager = function () {
 				this.unorderedList = this.toolbar.querySelector('#ul');
 
 				this.link = this.toolbar.querySelector('#link');
+				this.blockquote = this.toolbar.querySelector('#blockquote');
 		}
 
 		/**
@@ -654,42 +658,28 @@ var SelectionManager = function () {
 					continue;
 				}
 
-				if (chunks[i].textContent === "") {
-					continue;
-				}
+				// if (chunks[i].textContent === "") {
+				// 	continue;
+				// }
 
-				if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
+				if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i]) && !this.isBlockquote(chunks[i])) {
 					console.warn('The node is not a paragraph nor a heading.');
 					continue;
 				}
 
-				this.changeNodeName(chunks[i], type);
-
-				// let newParagraph = document.createElement(type);
-
-				// var child;
-				// while (child = chunks[i].firstChild) {
-				// 	newParagraph.appendChild(child);
-				// }
-
-				// if (chunks[i] === startNode) {
-				// 	startNode = newParagraph;
-				// }
-
-				// if (chunks[i] === endNode) {
-				// 	endNode = newParagraph;
-				// }
-
-				// this.domManager.editor.replaceChild(newParagraph, chunks[i]);
-
-				// this.changeNodeName(chunks[i], type);
+				var changedNode = this.changeNodeName(chunks[i], type);
+				if (chunks[i] === startNode) {
+					startNode = changedNode;
+				}
+				if (chunks[i] === endNode) {
+					endNode = changedNode;
+				}
 			}
 
-			// var keepRange = document.createRange();
-			// keepRange.setStart(startNode, startOffset);
-			// keepRange.setEnd(endNode, endOffset);
-
-			// this.replaceRange(keepRange);
+			var keepRange = document.createRange();
+			keepRange.setStart(startNode, startOffset);
+			keepRange.setEnd(endNode, endOffset);
+			this.replaceRange(keepRange);
 		}
 
 		/**
@@ -881,7 +871,64 @@ var SelectionManager = function () {
 		}
 	}, {
 		key: 'blockquote',
-		value: function blockquote() {}
+		value: function blockquote() {
+			var orgRange = this.getRange();
+			if (!orgRange) {
+				return;
+			}
+
+			var startNode = orgRange.startContainer;
+			var startOffset = orgRange.startOffset;
+			var endNode = orgRange.endContainer;
+			var endOffset = orgRange.endOffset;
+			var chunks = this.getAllNodesInSelection();
+
+			var isAllBlockquote = true;
+
+			for (var i = 0; i < chunks.length; i++) {
+
+				if (chunks[i].nodeName === "BLOCKQUOTE") {
+					continue;
+				} else {
+					isAllBlockquote = false;
+				}
+
+				// if (chunks[i].textContent === "") {
+				// 	continue;
+				// }
+
+				if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
+					console.warn('The node is not a paragraph nor a heading.');
+					continue;
+				}
+
+				var changedNode = this.changeNodeName(chunks[i], "blockquote", false);
+				if (chunks[i] === startNode) {
+					startNode = changedNode;
+				}
+				if (chunks[i] === endNode) {
+					endNode = changedNode;
+				}
+			}
+
+			// Selection is all blockquote
+			if (isAllBlockquote) {
+				for (var i = 0; i < chunks.length; i++) {
+					var changedNode = this.changeNodeName(chunks[i], "P", false);
+					if (chunks[i] === startNode) {
+						startNode = changedNode;
+					}
+					if (chunks[i] === endNode) {
+						endNode = changedNode;
+					}
+				}
+			}
+
+			var keepRange = document.createRange();
+			keepRange.setStart(startNode, startOffset);
+			keepRange.setEnd(endNode, endOffset);
+			this.replaceRange(keepRange);
+		}
 
 		/**
    * Deprecated
@@ -998,6 +1045,8 @@ var SelectionManager = function () {
 	}, {
 		key: 'changeNodeName',
 		value: function changeNodeName(targetNode, newNodeName) {
+			var keepStyle = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
 
 			// Move all the nodes inside the target node
 			// to the new generated node with new node name,
@@ -1011,11 +1060,21 @@ var SelectionManager = function () {
 			}
 
 			// 1. Change node
+			var node;
+			var newNode = document.createElement(newNodeName);
 
+			if (keepStyle) {
+				newNode.style.textAlign = targetNode.style.textAlign;
+			}
 
-			// 2. Keep Range
+			while (node = targetNode.firstChild) {
+				newNode.appendChild(node);
+			}
 
-			// 3. Keep style
+			// 3. replace node
+			this.domManager.editor.replaceChild(newNode, targetNode);
+
+			return newNode;
 		}
 
 		/**

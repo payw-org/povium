@@ -34,6 +34,7 @@ export default class DOMManager {
 		this.unorderedList = this.toolbar.querySelector('#ul');
 
 		this.link = this.toolbar.querySelector('#link');
+		this.blockquote = this.toolbar.querySelector('#blockquote');
 
 	}
 
