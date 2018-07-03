@@ -8,12 +8,12 @@
 *
 */
 
-use Povium\Base\Factory\MasterFactory;
+use Povium\Base\MasterFactory;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php'
 $factory = new MasterFactory();
 
-$auth = $factory->createInstance('\Povium\Auth\Auth');
+$auth = $factory->createInstance('\Povium\Auth');
 $auth_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 
 /* receive login inputs by ajax */

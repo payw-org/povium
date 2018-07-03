@@ -7,7 +7,7 @@
 *
 */
 
-namespace Povium\Auth;
+namespace Povium;
 
 
 class Auth {

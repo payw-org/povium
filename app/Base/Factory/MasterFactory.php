@@ -11,7 +11,7 @@
 */
 
 
-namespace Povium\Base\Factory;
+namespace Povium\Base;
 
 use Povium\Exceptions\FactoryException;
 

@@ -8,7 +8,7 @@
 */
 
 
-namespace Povium\Base\Connection;
+namespace Povium\Base;
 
 use Povium\Lib\SingletonTrait;
 

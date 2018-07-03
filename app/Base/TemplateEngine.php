@@ -8,7 +8,7 @@
 *
 */
 
-namespace Povium\Base\View;
+namespace Povium\Base;
 
 class TemplateEngine {
 
@@ -121,7 +121,7 @@ class TemplateEngine {
 
 			// $this->setConfig($config_name, $dir);
 			// $this->embrace($config_name);
-			$te = new TemplateEngine();
+			$te = new self();
 			$te->render($dir, $config);
 
 		}
