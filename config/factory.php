@@ -10,7 +10,7 @@
 
 
 return [
-	'\Povium\Auth\Auth' => '\Povium\Lib\Factory\ServiceFactory',
+	'\Povium\Auth\Auth' => '\Povium\Base\Factory\ServiceFactory',
 
 ];
 

@@ -8,7 +8,7 @@
 *
 */
 
-namespace Povium\View;
+namespace Povium\Base\View;
 
 class TemplateEngine {
 

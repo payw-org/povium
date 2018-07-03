@@ -10,7 +10,7 @@
 */
 
 
-namespace Povium\Lib;
+namespace Povium\Base\Factory;
 
 
 interface FactoryInterface {

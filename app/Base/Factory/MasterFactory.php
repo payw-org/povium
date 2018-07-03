@@ -11,7 +11,7 @@
 */
 
 
-namespace Povium\Lib;
+namespace Povium\Base\Factory;
 
 use Povium\Exceptions\FactoryException;
 
@@ -29,7 +29,7 @@ class MasterFactory implements FactoryInterface {
 	* Initialize type map
 	*/
 	public function __construct () {
-		$this->typeMap = require($_SERVER['DOCUMENT_ROOT'] . '/../config/app/factory.php');
+		$this->typeMap = require($_SERVER['DOCUMENT_ROOT'] . '/../config/factory.php');
 	}
 
 

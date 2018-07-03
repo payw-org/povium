@@ -8,7 +8,7 @@
 */
 
 
-namespace Povium\Connection;
+namespace Povium\Base\Connection;
 
 use Povium\Lib\SingletonTrait;
 
@@ -40,7 +40,7 @@ class DBConnection {
 	* Opens the database connection using PDO
 	*/
 	private function __construct () {
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/app/connection.php');
+		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/connection.php');
 		$this->getPDOConnection();
 	}
 
