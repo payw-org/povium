@@ -11,6 +11,7 @@
 
 namespace Povium\Base;
 
+use Povium\Base\FactoryInterface;
 
 abstract class AbstractChildFactory implements FactoryInterface {
 

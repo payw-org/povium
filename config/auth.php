@@ -28,7 +28,7 @@ return [
 
 
 	'regexp' => [
-		'name_regexp_base_1' => '/^[\xEA-\xED\x80-\xBF\w\s.]{3,40}$/',
+		'name_regexp_base_1' => '/^[\xEA-\xED\x80-\xBF\w\s.]{3,30}$/',
 		'name_regexp_base_2' => '/^[\xEA-\xED\x80-\xBFa-zA-Z0-9].*[\xEA-\xED\x80-\xBFa-zA-Z0-9]$/',
 		'name_regexp_banned_1' => '/^[\xEA-\xED\x80-\xBF]{3}$/',
 		'name_regexp_banned_2' => '/\s{2,}|\.{2,}|_{2,}/',
@@ -42,7 +42,7 @@ return [
 		'email_max_length' => 50,
 
 		'name_min_length' => 3,
-		'name_max_length' => 40,
+		'name_max_length' => 30,
 
 		'password_min_length' => 8,
 		'password_max_length' => 50
@@ -68,7 +68,7 @@ return [
 		'email_invalid' => '유효하지 않은 이메일 형식 입니다.',
 
 		'name_short' => '이름을 3자 이상 입력해주세요. (단, 한글은 최소 2자)',
-		'name_long' => '이름을 40자 이하로 입력해주세요. (단, 한글은 최대 13자)',
+		'name_long' => '이름을 30자 이하로 입력해주세요. (단, 한글은 최대 10자)',
 		'name_single_korean' => '이름이 너무 짧습니다.',
 		'name_both_ends_illegal' => '이름의 양끝은 한글, 영어 대소문자 또는 숫자로 입력해주세요.',
 		'name_continuous_special_chars' => '띄어쓰기와 특수문자는 연속으로 사용할 수 없습니다.',

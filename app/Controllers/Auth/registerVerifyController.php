@@ -10,7 +10,7 @@
 
 use Povium\Base\MasterFactory;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php'
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
 $factory = new MasterFactory();
 
 $auth = $factory->createInstance('\Povium\Auth');

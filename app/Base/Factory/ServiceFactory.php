@@ -11,6 +11,7 @@
 
 namespace Povium\Base;
 
+use Povium\Base\AbstractChildFactory;
 use Povium\Base\DBConnection;
 
 class ServiceFactory extends AbstractChildFactory {

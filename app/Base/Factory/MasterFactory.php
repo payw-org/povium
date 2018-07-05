@@ -13,6 +13,7 @@
 
 namespace Povium\Base;
 
+use Povium\Base\FactoryInterface;
 use Povium\Exceptions\FactoryException;
 
 class MasterFactory implements FactoryInterface {

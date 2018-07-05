@@ -12,7 +12,6 @@
 
 namespace Povium\Base;
 
-
 interface FactoryInterface {
 
 	/**

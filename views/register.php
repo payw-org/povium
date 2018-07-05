@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../class/view/TemplateEngine.php';
+use Povium\Base\TemplateEngine;
 
 $te = new TemplateEngine();
 $te->render("/resources/templates/base.phtml", [
