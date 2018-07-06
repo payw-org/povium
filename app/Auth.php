@@ -296,13 +296,13 @@ class Auth {
 			return $return;
 		}
 
-		if (strlen($name) < (int)$this->config['len']['name_min_length']) {
+		if (mb_strlen($name) < (int)$this->config['len']['name_min_length']) {
 			$return['msg'] = $this->config['msg']['name_short'];
 
 			return $return;
 		}
 
-		if (strlen($name) > (int)$this->config['len']['name_max_length']) {
+		if (mb_strlen($name) > (int)$this->config['len']['name_max_length']) {
 			$return['msg'] = $this->config['msg']['name_long'];
 
 			return $return;
@@ -314,19 +314,13 @@ class Auth {
 			return $return;
 		}
 
-		if (preg_match($this->config['regexp']['name_regexp_banned_1'], $name)) {
-			$return['msg'] = $this->config['msg']['name_single_korean'];
-
-			return $return;
-		}
-
 		if (!preg_match($this->config['regexp']['name_regexp_base_2'], $name)) {
 			$return['msg'] = $this->config['msg']['name_both_ends_illegal'];
 
 			return $return;
 		}
 
-		if (preg_match($this->config['regexp']['name_regexp_banned_2'], $name)) {
+		if (preg_match($this->config['regexp']['name_regexp_banned'], $name)) {
 			$return['msg'] = $this->config['msg']['name_continuous_special_chars'];
 
 			return $return;
