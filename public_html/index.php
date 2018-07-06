@@ -1,37 +1,11 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
-
-use Povium\Base\Router;
-
-$router = new Router();
-
-$router->get('/', function () {
-	require $_SERVER['DOCUMENT_ROOT'] . '/../views/home.php';
-});
-
-$router->get('/login', function () {
-	require $_SERVER['DOCUMENT_ROOT'] . '/../views/login.php';
-});
-
-$router->get('/register', function () {
-	require $_SERVER['DOCUMENT_ROOT'] . '/../views/register.php';
-});
-
-$router->get('', function () {
-	require $_SERVER['DOCUMENT_ROOT'] . '/../views/404.php';
-}, 'ERR_404');
-
-$router->get('', function () {
-	require $_SERVER['DOCUMENT_ROOT'] . '/../views/405.php';
-}, 'ERR_405');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
 
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 
-// var_dump($router->routes);
-// echo "<br>";
-// var_dump($router->namedRoutes);
+
 
 
 
@@ -68,5 +42,13 @@ $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 // $router->checkMatchedPattern('/login/hi', $_SERVER['REQUEST_URI']);
 
+
+// require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
+//
+// use Povium\Base\Router;
+//
+// $router = new Router();
+//
+// $router->checkMatchedPattern('/@{name:.+}/{title:.+}-{id:\d+}', '/@/b');
 
 ?>

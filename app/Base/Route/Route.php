@@ -46,23 +46,7 @@ class Route {
 	}
 
 
-	// /**
-	//  * Check if a given Request URI is matched the pattern.
-	//  * @param  string  $request_uri
-	//  * @return bool
-	//  */
-	// public function checkMatch ($request_uri) {
-	//
-	// }
 
-
-	// /**
-	//  * @param  [type] $request_uri [description]
-	//  * @return [type]              [description]
-	//  */
-	// public function handle ($request_uri) {
-	//
-	// }
 }
 
 

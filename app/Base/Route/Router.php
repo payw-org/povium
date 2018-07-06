@@ -201,8 +201,8 @@ class Router {
 		}
 
 		//	Strip query string (?a=b) from Request URI
-		if (false !== $pos = strpos($request_uri, '?')) {
-			$request_uri = substr($request_uri, 0, $pos);
+		if (false !== $pos = mb_strpos($request_uri, '?')) {
+			$request_uri = mb_substr($request_uri, 0, $pos);
 		}
 
 		//	Parse pattern by slash and delete blank values
@@ -228,13 +228,52 @@ class Router {
 			$parsed_uri = array_shift($parsed_uris);
 
 			//	Pattern include variable part '{}'.
-			if (false !== $pos = strpos($parsed_pattern, '{')) {
-				//	TODO
-				//	find all variable part
-				//	and transform to one regex
-				//	preg_match regex with uri
-				//	store params
-			} else {	//	Not include variable part. Pattern is normal string.
+			if (false !== $pos = mb_strpos($parsed_pattern, '{')) {
+				$regex = '';
+				$varNames = array();
+
+				//	Extract variable names and completed regex.
+				$currPos = 0;
+				while ($currPos < mb_strlen($parsed_pattern)) {
+					//	If the variable part still exists
+					if (false !== $oBracketPos = mb_strpos($parsed_pattern, '{', $currPos)) {
+						//	Parse string before '{'. (fixed part)
+						//	and concatenate to regex
+						$regex .= mb_substr($parsed_pattern, $currPos, $oBracketPos - $currPos);
+
+						//	Parse string between '{' and ':'. (variable name part)
+						//	and save as variable name
+						$currPos = $oBracketPos + 1;
+						$colonPos = mb_strpos($parsed_pattern, ':', $currPos);
+						array_push($varNames, mb_substr($parsed_pattern, $currPos, $colonPos - $currPos));
+
+						//	Parse string between ':' and '}'. (regex part)
+						//	and parenthesize then concatenate to regex
+						$currPos = $colonPos + 1;
+						$cBracketPos = mb_strpos($parsed_pattern, '}', $currPos);
+						$regex .= '(' . mb_substr($parsed_pattern, $currPos, $cBracketPos - $currPos) . ')';
+
+						$currPos = $cBracketPos + 1;
+					} else {
+						//	Parse string after '}'. (fixed part)
+						$regex .= mb_substr($parsed_pattern, $currPos);
+						break;
+					}
+				}
+				$regex = '/^' . $regex . '$/u';
+
+				//	URI is not matchced with pattern.
+				if (!preg_match($regex, $parsed_uri, $matches)) {
+					return false;
+				}
+
+				//	Stored matched variables.
+				array_shift($matches);
+				foreach ($varNames as $name) {
+					$params[$name] = array_shift($matches);
+				}
+
+			} else {	//	Not include variable part. Pattern is fixed string.
 				if ($parsed_pattern !== $parsed_uri) {
 					return false;
 				}
@@ -242,9 +281,6 @@ class Router {
 
 		}
 
-		// print_r($parsed_patterns);
-		// echo "<br>";
-		// print_r($parsed_uris);
 
 		return $params;
 	}
