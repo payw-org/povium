@@ -134,6 +134,8 @@ class Router {
 				break;
 			case self::METHOD_NOT_ALLOWED:
 				if($this->namedRoutes['ERR_405'] !== null) {
+					// TODO: Use below code.
+					// $allowed_methods = $routeInfo[0];
 					call_user_func($this->namedRoutes['ERR_405']->handler);
 				}
 				break;
@@ -169,11 +171,8 @@ class Router {
 
 				//	Not found matched method : METHOD_NOT_ALLOWED
 				$return['result'] = self::METHOD_NOT_ALLOWED;
-				$allowedMethods = array();
-				foreach ($matched_routes as $route) {
-					array_push($allowedMethods, $route->http_method);
-				}
-				$return[0] = $allowedMethods;
+				$allowed_methods = array_column($matched_routes, 'http_method');
+				$return[0] = $allowed_methods;
 
 				return $return;
 			}
@@ -227,25 +226,25 @@ class Router {
 			$parsed_pattern = array_shift($parsed_patterns);
 			$parsed_uri = array_shift($parsed_uris);
 
-			//	Pattern include variable part '{}'.
+			//	Pattern include regex part '{}'.
 			if (false !== $pos = mb_strpos($parsed_pattern, '{')) {
 				$regex = '';
-				$varNames = array();
+				$placeholders = array();
 
-				//	Extract variable names and completed regex.
+				//	Extract placeholder and completed regex.
 				$currPos = 0;
 				while ($currPos < mb_strlen($parsed_pattern)) {
-					//	If the variable part still exists
+					//	If the regex part still exists
 					if (false !== $oBracketPos = mb_strpos($parsed_pattern, '{', $currPos)) {
 						//	Parse string before '{'. (fixed part)
 						//	and concatenate to regex
 						$regex .= mb_substr($parsed_pattern, $currPos, $oBracketPos - $currPos);
 
-						//	Parse string between '{' and ':'. (variable name part)
-						//	and save as variable name
+						//	Parse string between '{' and ':'. (placeholder part)
+						//	and save as placeholder
 						$currPos = $oBracketPos + 1;
 						$colonPos = mb_strpos($parsed_pattern, ':', $currPos);
-						array_push($varNames, mb_substr($parsed_pattern, $currPos, $colonPos - $currPos));
+						array_push($placeholders, mb_substr($parsed_pattern, $currPos, $colonPos - $currPos));
 
 						//	Parse string between ':' and '}'. (regex part)
 						//	and parenthesize then concatenate to regex
@@ -267,13 +266,13 @@ class Router {
 					return false;
 				}
 
-				//	Stored matched variables.
+				//	Stored matched things.
 				array_shift($matches);
-				foreach ($varNames as $name) {
-					$params[$name] = array_shift($matches);
+				foreach ($placeholders as $placeholder) {
+					$params[$placeholder] = array_shift($matches);
 				}
 
-			} else {	//	Not include variable part. Pattern is fixed string.
+			} else {	//	Not include regex part. Pattern is fixed string.
 				if ($parsed_pattern !== $parsed_uri) {
 					return false;
 				}
