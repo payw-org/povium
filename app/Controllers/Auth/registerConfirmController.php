@@ -17,17 +17,17 @@ $auth = $factory->createInstance('\Povium\Auth');
 
 /* receive register inputs by ajax */
 $register_inputs = json_decode($_POST['register_inputs'], true);
-$email = $register_inputs['email'];
+$readable_id = $register_inputs['readable_id'];
 $name = $register_inputs['name'];
 $password = $register_inputs['password'];
 
 #	$register_return = array('err' => bool, 'msg' => 'err msg for display', 'redirect' => 'redirect url');
-$register_return = array_merge($auth->register($email, $name, $password), array('redirect' => ''));
+$register_return = array_merge($auth->register($readable_id, $name, $password), array('redirect' => ''));
 
 if ($register_return['err']) {			//	failed to register
 
 } else {								//	register success
-	$auth->login($email, $password, false);
+	$auth->login($readable_id, $password, false);
 	$register_return['redirect'] = '/';
 }
 

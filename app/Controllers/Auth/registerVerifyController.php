@@ -17,18 +17,18 @@ $auth = $factory->createInstance('\Povium\Auth');
 
 /* receive register inputs by ajax */
 $register_inputs = json_decode($_POST['register_inputs'], true);
-$email = $register_inputs['email'];
+$readable_id = $register_inputs['readable_id'];
 $name = $register_inputs['name'];
 $password = $register_inputs['password'];
 
 
-$register_return = array('err' => false, 'email_msg' => '', 'name_msg' => '',
+$register_return = array('err' => false, 'readable_id_msg' => '', 'name_msg' => '',
 'password_msg' => '');
 
-$verify_email = $auth->verifyEmail($email);
-if ($verify_email['err']) {
+$verify_readable_id = $auth->verifyReadableID($readable_id);
+if ($verify_readable_id['err']) {
 	$register_return['err'] = true;
-	$register_return['email_msg'] = $verify_email['msg'];
+	$register_return['readable_id_msg'] = $verify_readable_id['msg'];
 }
 
 $verify_name = $auth->verifyName($name);

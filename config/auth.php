@@ -27,16 +27,23 @@ return [
 	],
 
 
-	'regexp' => [
-		'name_regexp_base_1' => '/^[\xEA-\xED\x80-\xBF\w\s.]{2,30}$/u',
-		'name_regexp_base_2' => '/^[\xEA-\xED\x80-\xBFa-zA-Z0-9].*[\xEA-\xED\x80-\xBFa-zA-Z0-9]$/u',
-		'name_regexp_banned' => '/\s{2,}|\.{2,}|_{2,}/',
+	'regex' => [
+		'readable_id_regex_base' => '/^[a-z0-9_]{3,20}$/',
+		'readable_id_regex_banned_1' => '/^_|_$/',
+		'readable_id_regex_banned_2' => '/_{2,}/',
 
-		'password_regexp' => '/^\S*(?=\S{8,50})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[0-9])\S*$/'
+		'name_regex_base' => '/^[\xEA-\xED\x80-\xBF\w\s.]{2,30}$/u',
+		'name_regex_banned_1' => '/^[\s._]|[\s._]$/',
+		'name_regex_banned_2' => '/\s{2,}|\.{2,}|_{2,}/',
+
+		'password_regex' => '/^\S*(?=\S{8,50})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[0-9])\S*$/'
 	],
 
 
 	'len' => [
+		'readable_id_min_length' => 3,
+		'readable_id_max_length' => 20,
+
 		'email_min_length' => 6,
 		'email_max_length' => 50,
 
@@ -50,16 +57,23 @@ return [
 
 	//	message
 	'msg' => [
-		'system_warning' => '알 수 없는 오류입니다.',
+		'unknown_warning' => '알 수 없는 오류입니다.',
 		'token_insert_to_db_err' => '자동 로그인 설정 오류',
 		'user_insert_to_db_err' => '신규유저 등록 오류',
 
-		'account_incorrect' => '이메일 또는 비밀번호를 다시 확인하세요.',
+		'account_incorrect' => '계정을 다시 확인하세요.',
 		'account_inactive' => '비활성화 계정입니다.',
 		// 'account_invalid' => '없는 계정입니다.',
 
+		'readable_id_istaken' => '이미 사용중인 아이디입니다.',
 		'email_istaken' => '이미 사용중인 이메일입니다.',
 		'name_istaken' => '이미 사용중인 이름입니다.',
+
+		'readable_id_short' => '아이디를 3자 이상 입력해주세요.',
+		'readable_id_long' => '아이디를 20자 이하로 입력해주세요.',
+		'readable_id_both_ends_illegal' => '아이디의 처음 또는 끝에서 _를 사용할 수 없습니다.',
+		'readable_id_continuous_underscore' => '_는 연속으로 사용할 수 없습니다.',
+		'readable_id_invalid' => '영어 소문자, 숫자, _를 조합해 입력해주세요.',
 
 		'email_short' => '이메일을 6자 이상 입력해주세요.',
 		'email_long' => '이메일을 50자 이하로 입력해주세요.',
@@ -67,7 +81,7 @@ return [
 
 		'name_short' => '이름을 2자 이상 입력해주세요.',
 		'name_long' => '이름을 30자 이하로 입력해주세요.',
-		'name_both_ends_illegal' => '이름의 양끝은 한글, 영어 대소문자 또는 숫자로 입력해주세요.',
+		'name_both_ends_illegal' => '이름의 처음 또는 끝에서 띄어쓰기나 특수문자를 사용할 수 없습니다.',
 		'name_continuous_special_chars' => '띄어쓰기와 특수문자는 연속으로 사용할 수 없습니다.',
 		'name_invalid' => '한글, 영어 대소문자, 숫자, . , _ , 띄어쓰기를 조합해 입력해주세요.',
 

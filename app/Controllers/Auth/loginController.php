@@ -18,20 +18,20 @@ $auth_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 
 /* receive login inputs by ajax */
 $login_inputs = json_decode($_POST['login_inputs'], true);
-$email = $login_inputs['email'];
+$identifier = $login_inputs['identifier'];
 $password = $login_inputs['password'];
 $remember = $login_inputs['remember'];
 
 
 #	array('err' => bool, 'msg' => 'err msg for display', 'redirect' => 'redirect url');
-$login_return = array_merge($auth->login($email, $password, $remember), array('redirect' => ''));
+$login_return = array_merge($auth->login($identifier, $password, $remember), array('redirect' => ''));
 
 if ($login_return['err']) {		//	failed to login
 	//	if inactive account,
 	if ($login_return['msg'] == $auth_config['msg']['account_inactive']) {
 		// TODO:	set redirect url to activate user account
 	}
-} else {							//	login success
+} else {						//	login success
 	if (isset($_SESSION['prev_page'])) {
 		$login_return['redirect'] = $_SESSION['prev_page'];
 	} else {
