@@ -1,6 +1,5 @@
 <?php
 /**
-*
 * Receive login inputs and process login.
 *
 * @author H.Chihoon
