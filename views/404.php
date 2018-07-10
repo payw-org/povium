@@ -1,5 +1,4 @@
 <?php
 
-echo "<h1>404 ERROR: File not found.</h1>";
-
+echo "<h1>Povium 404: file not found. ㅇㅅㅇ</h1>"
 ?>

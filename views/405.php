@@ -1,5 +1,5 @@
 <?php
 
-echo "<h1>405 ERROR: Method not allowed.</h1>";
+echo "<h1>Povium 405: method not allowed. ㅇㅅㅇ</h1>"
 
 ?>

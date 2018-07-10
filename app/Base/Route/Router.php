@@ -10,6 +10,7 @@
 namespace Povium\Base;
 
 use Povium\Base\Route;
+use Povium\Exceptions\RouterException;
 
 class Router {
 	const NOT_FOUND = 0;
@@ -145,6 +146,88 @@ class Router {
 
 
 	/**
+	 * Reversed routing
+	 * Generate the URI for a named route. Replace regexes with supplied parameters.
+	 * @param  string $routeName
+	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
+	 * @return string            The URI of the route with named parameters in place.
+	 */
+	public function generateURI ($routeName, array $params=array()) {
+		//	If nonexistent route name, throw exception.
+		if (!isset($this->namedRoutes[$routeName])) {
+			throw new RouterException('Nonexistent route: "' . $routeName . '"',
+ 			RouterException::EXC_NONEXISTENT_ROUTE_NAME);
+		}
+
+		//	Get route's pattern
+		$pattern = $this->namedRoutes[$routeName]->pattern;
+
+		//	Parse pattern by slash and delete blank values
+		$parsed_patterns = explode('/', $pattern);
+		foreach (array_keys($parsed_patterns, '', true) as $key) {
+			unset($parsed_patterns[$key]);
+		}
+
+		//	Generate URI by referring to each parsed pattern
+		$uri = '';
+		foreach ($parsed_patterns as $parsed_pattern) {
+			$uri .= '/';
+			$sub_uri = '';
+
+			//	If pattern include regex part '{}'.
+			if (false !== mb_strpos($parsed_pattern, '{')) {
+				//	Extract prefix, placeholder, and regex from pattern.
+				$extractor = '/([^{}]*)\{([\w]+):([^{}]+)\}/';
+				$match_count = preg_match_all($extractor, $parsed_pattern, $matches);
+				array_shift($matches);
+
+				$placeholders = $matches[1];
+
+				//	Generate sub URI by referring to each regex part
+				for ($idx = 0; $idx < $match_count; $idx++) {
+					$param = $params[$placeholders[$idx]];
+					if (!isset($param)) {
+						throw new RouterException('Invalid params for reversed routing. (Route: "' . $routeName . '")',
+						RouterException::EXC_INVALID_REVERSED_ROUTING);
+					}
+
+					//	Special case: Param is user name.
+					//	Do not encode name.
+					if ($matches[0][$idx] == '@') {
+						$sub_uri .= '@' . $param;
+					} else {	//	Encode param.
+						//	Delete first single quote.
+						//	EX) He's name is 'hoon'. => Hes name is 'hoon'.
+						$param = preg_replace('/\'/', '', $param, 1);
+
+						//	Convert all special chars(include whitespace) to '-'. (Change to suitible form for uri)
+						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
+
+						//	Concatenate prefix and param that encoded to uri form.
+						$sub_uri .= $matches[0][$idx] . $param;
+					}
+				}
+
+				//	Delete '-' of both ends.
+				$sub_uri = ltrim($sub_uri, '-');
+				$sub_uri = rtrim($sub_uri, '-');
+
+				//	Convert consecutive '-' to single thing.
+				$sub_uri = preg_replace("/-{2,}/", '-', $sub_uri);
+
+				$uri .= $sub_uri;
+			} else {	//	Not include regex part. Pattern is fixed string.
+				$uri .= $parsed_pattern;
+			}
+
+		}
+
+		//	Convert to lowercase form.
+		return mb_strtolower($uri);
+	}
+
+
+	/**
 	 * @param  string $http_method One of a HTTP methods
 	 * @param  string $request_uri
 	 * @return array Result and else things
@@ -216,7 +299,7 @@ class Router {
 			unset($parsed_uris[$key]);
 		}
 
-		//	If length is not equal, return false;
+		//	If length is not equal, return false.
 		if (count($parsed_patterns) !== $len = count($parsed_uris)) {
 			return false;
 		}
@@ -227,49 +310,32 @@ class Router {
 			$parsed_uri = array_shift($parsed_uris);
 
 			//	Pattern include regex part '{}'.
-			if (false !== $pos = mb_strpos($parsed_pattern, '{')) {
+			if (false !== mb_strpos($parsed_pattern, '{')) {
 				$regex = '';
 				$placeholders = array();
 
-				//	Extract placeholder and completed regex.
-				$currPos = 0;
-				while ($currPos < mb_strlen($parsed_pattern)) {
-					//	If the regex part still exists
-					if (false !== $oBracketPos = mb_strpos($parsed_pattern, '{', $currPos)) {
-						//	Parse string before '{'. (fixed part)
-						//	and concatenate to regex
-						$regex .= mb_substr($parsed_pattern, $currPos, $oBracketPos - $currPos);
+				//	Extract placeholders and regexes
+				$extractor = '/([^{}]*)\{([\w]+):([^{}]+)\}/';
+				$match_count = preg_match_all($extractor, $parsed_pattern, $matches);
+				array_shift($matches);
 
-						//	Parse string between '{' and ':'. (placeholder part)
-						//	and save as placeholder
-						$currPos = $oBracketPos + 1;
-						$colonPos = mb_strpos($parsed_pattern, ':', $currPos);
-						array_push($placeholders, mb_substr($parsed_pattern, $currPos, $colonPos - $currPos));
+				$placeholders = $matches[1];
 
-						//	Parse string between ':' and '}'. (regex part)
-						//	and parenthesize then concatenate to regex
-						$currPos = $colonPos + 1;
-						$cBracketPos = mb_strpos($parsed_pattern, '}', $currPos);
-						$regex .= '(' . mb_substr($parsed_pattern, $currPos, $cBracketPos - $currPos) . ')';
-
-						$currPos = $cBracketPos + 1;
-					} else {
-						//	Parse string after '}'. (fixed part)
-						$regex .= mb_substr($parsed_pattern, $currPos);
-						break;
-					}
+				for ($idx = 0; $idx < $match_count; $idx++) {		//	Make to one completed regex.
+					$regex .= $matches[0][$idx];
+					$regex .= '(' . $matches[2][$idx] . ')';
 				}
-				$regex = '/^' . $regex . '$/u';
+				$regex = '/^' . $regex . '$/';
 
 				//	URI is not matchced with pattern.
-				if (!preg_match($regex, $parsed_uri, $matches)) {
+				if (!preg_match($regex, $parsed_uri, $matches_value)) {
 					return false;
 				}
 
 				//	Stored matched things.
-				array_shift($matches);
+				array_shift($matches_value);
 				foreach ($placeholders as $placeholder) {
-					$params[$placeholder] = array_shift($matches);
+					$params[$placeholder] = array_shift($matches_value);
 				}
 
 			} else {	//	Not include regex part. Pattern is fixed string.
@@ -279,7 +345,6 @@ class Router {
 			}
 
 		}
-
 
 		return $params;
 	}

@@ -32,7 +32,7 @@ return [
 		'readable_id_regex_banned_1' => '/^_|_$/',
 		'readable_id_regex_banned_2' => '/_{2,}/',
 
-		'name_regex_base' => '/^[\xEA-\xED\x80-\xBF\w\s.]{2,30}$/u',
+		'name_regex_base' => '/^[\xEA-\xED\x80-\xBF\w\s.]{2,30}$/',
 		'name_regex_banned_1' => '/^[\s._]|[\s._]$/',
 		'name_regex_banned_2' => '/\s{2,}|\.{2,}|_{2,}/',
 
