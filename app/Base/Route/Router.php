@@ -196,10 +196,6 @@ class Router {
 					if ($matches[0][$idx] == '@') {
 						$sub_uri .= '@' . $param;
 					} else {	//	Encode param.
-						//	Delete first single quote.
-						//	EX) He's name is 'hoon'. => Hes name is 'hoon'.
-						$param = preg_replace('/\'/', '', $param, 1);
-
 						//	Convert all special chars(include whitespace) to '-'. (Change to suitible form for uri)
 						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
 
