@@ -3,10 +3,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
-// $params = array('name' => 'fairy_hooni_32',
-// 				'title' => "Please Admit You Don’t Like Poor People So We Can Move On",
+
+// $params = array('readable_id' => 'fairy_hooni',
+// 				'post_title' => "황치훈의 '즐거운' PHP 교실 - vol.2",
 // 				'post_id' => '684939');
-// $uri = $router->generateURI('user_post', $params);
+// $uri = $router->generateURI('post', $params);
 //
 // echo "<a href=$uri>go</a>";
 

@@ -147,21 +147,38 @@ class Router {
 
 	/**
 	 * Reversed routing
-	 * Generate the URI for a named route. Replace regexes with supplied parameters.
-	 * @param  string $routeName
-	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
-	 * @return string            The URI of the route with named parameters in place.
+	 * Generate the URI with given argument. Replace regexes with supplied parameters.
+	 * @param  string $arg    	route name or pattern
+	 * @param  array  $params	Associative array of parameters to replace placeholders with.
+	 * @return string 			Suitable URI
 	 */
-	public function generateURI ($routeName, array $params=array()) {
-		//	If nonexistent route name, throw exception.
-		if (!isset($this->namedRoutes[$routeName])) {
-			throw new RouterException('Nonexistent route: "' . $routeName . '"',
- 			RouterException::EXC_NONEXISTENT_ROUTE_NAME);
+	public function generateURI ($arg, array $params=array()) {
+		//	If arg is route name
+		if ($arg[0] != '/') {
+			//	If nonexistent route name, throw exception.
+			if (!isset($this->namedRoutes[$arg])) {
+				throw new RouterException('Nonexistent route: "' . $arg . '"',
+	 			RouterException::EXC_NONEXISTENT_ROUTE_NAME);
+			}
+
+			//	Get route's pattern
+			$pattern = $this->namedRoutes[$arg]->pattern;
+		} else {	//	Arg is pattern.
+			$pattern = $arg;
 		}
 
-		//	Get route's pattern
-		$pattern = $this->namedRoutes[$routeName]->pattern;
+		return $this->generateURIWithPattern($pattern, $params);
+	}
 
+
+	/**
+	 * Reversed routing
+	 * Generate the URI with given pattern. Replace regexes with supplied parameters.
+	 * @param  string $pattern
+	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
+	 * @return string 			 Suitable URI
+	 */
+	private function generateURIWithPattern ($pattern, array $params=array()) {
 		//	Parse pattern by slash and delete blank values
 		$parsed_patterns = explode('/', $pattern);
 		foreach (array_keys($parsed_patterns, '', true) as $key) {
@@ -187,16 +204,17 @@ class Router {
 				for ($idx = 0; $idx < $match_count; $idx++) {
 					$param = $params[$placeholders[$idx]];
 					if (!isset($param)) {
-						throw new RouterException('Invalid params for reversed routing. (Route: "' . $routeName . '")',
+						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
 						RouterException::EXC_INVALID_REVERSED_ROUTING);
 					}
 
-					//	Special case: Param is user name.
-					//	Do not encode name.
+					//	Special case: Param is user's readable id.
+					//	Do not encode this.
 					if ($matches[0][$idx] == '@') {
 						$sub_uri .= '@' . $param;
 					} else {	//	Encode param.
-						//	Convert all special chars(include whitespace) to '-'. (Change to suitible form for uri)
+						//	Convert all special chars(include whitespace) to '-'.
+						//	After convert, param is suitible form for uri.
 						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
 
 						//	Concatenate prefix and param that encoded to uri form.
@@ -228,7 +246,7 @@ class Router {
 	 * @param  string $request_uri
 	 * @return array Result and else things
 	 */
-	public function findMatchedRoute ($http_method, $request_uri) {
+	private function findMatchedRoute ($http_method, $request_uri) {
 		$return = array('result' => '');
 
 		/* Find route that matched URI */
@@ -270,11 +288,11 @@ class Router {
 	 * @param  string $request_uri
 	 * @return mixed array or false
 	 */
-	public function checkMatchedPattern ($pattern, $request_uri) {
+	private function checkMatchedPattern ($pattern, $request_uri) {
 		$params = array();
 
 		//	If pattern is special case, do not compare.
-		if ($pattern === '') {
+		if ($pattern === '/*') {
 			return false;
 		}
 
@@ -282,6 +300,9 @@ class Router {
 		if (false !== $pos = mb_strpos($request_uri, '?')) {
 			$request_uri = mb_substr($request_uri, 0, $pos);
 		}
+
+		//	Decoding two hex digits in raw url to literal characters.
+		$request_uri = rawurldecode($request_uri);
 
 		//	Parse pattern by slash and delete blank values
 		$parsed_patterns = explode('/', $pattern);
