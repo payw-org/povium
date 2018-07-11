@@ -10,13 +10,13 @@
 
 namespace Povium\Base;
 
-use Povium\Lib\SingletonTrait;
+use Povium\Lib\Singleton;
 
 class DBConnection {
 	/**
 	* Apply singleton pattern.
 	*/
-	use SingletonTrait;
+	use Singleton;
 
 
 	/**

@@ -11,7 +11,7 @@
 namespace Povium\Lib;
 
 
-trait SingletonTrait {
+trait Singleton {
 	private static $instance = NULL;
 
 	/**
