@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set("Asia/Seoul");
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
 
