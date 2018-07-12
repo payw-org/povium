@@ -8,11 +8,7 @@
 * @copyright 2018 DesignAndDevelop
 */
 
-
 return [
 	'\Povium\Auth' => '\Povium\Base\ServiceFactory',
 
 ];
-
-
-?>

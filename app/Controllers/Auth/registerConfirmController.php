@@ -32,5 +32,3 @@ if ($register_return['err']) {			//	failed to register
 }
 
 echo json_encode($register_return);
-
-?>

@@ -1,5 +1,4 @@
 <?php
-
 use Povium\Base\TemplateEngine;
 
 $te = new TemplateEngine();
@@ -25,5 +24,3 @@ $te->render("/resources/templates/base.phtml", [
 		"최홍ZUNE", "황장병치훈", "박진둘", "장준끼", "장햄", "청춘나지훈", "조경상병훈", "쿠형"
 	]
 ]);
-
-?>

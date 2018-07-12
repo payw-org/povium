@@ -6,7 +6,6 @@
 * @copyright 2018 DesignAndDevelop
 */
 
-
 $sql = "CREATE TABLE users (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	readable_id VARCHAR(20) NOT NULL UNIQUE,
@@ -24,5 +23,3 @@ $sql = "CREATE TABLE users (
 	REFERENCES editor_types (id) ON DELETE RESTRICT ON UPDATE CASCADE
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-
-?>

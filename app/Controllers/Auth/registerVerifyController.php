@@ -44,6 +44,3 @@ if ($validate_password['err']) {
 }
 
 echo json_encode($register_return);
-
-
-?>

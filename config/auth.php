@@ -6,7 +6,6 @@
 * @copyright 2018 DesignAndDevelop
 */
 
-
 return [
 	'table_users' => 'users',
 	'table_tokens' => 'tokens',
@@ -23,7 +22,7 @@ return [
 
 	'pw_hash_options' => [
 		'cost' => 13,
-		'salt' => md5(openssl_random_pseudo_bytes(16)),
+		'salt' => md5(openssl_random_pseudo_bytes(16))
 	],
 
 
@@ -91,6 +90,3 @@ return [
 	]
 
 ];
-
-
-?>

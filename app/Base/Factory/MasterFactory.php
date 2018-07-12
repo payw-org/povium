@@ -10,13 +10,13 @@
 *
 */
 
-
 namespace Povium\Base;
 
 use Povium\Base\FactoryInterface;
 use Povium\Exceptions\FactoryException;
 
-class MasterFactory implements FactoryInterface {
+class MasterFactory implements FactoryInterface
+{
 	/**
 	* Associative array tracking which factory is responsible for a type.
 	* Array keys are type names, array values are factory names.
@@ -25,14 +25,13 @@ class MasterFactory implements FactoryInterface {
 	*/
 	protected $typeMap;
 
-
 	/**
 	* Initialize type map
 	*/
-	public function __construct () {
+	public function __construct()
+	{
 		$this->typeMap = require($_SERVER['DOCUMENT_ROOT'] . '/../config/factory.php');
 	}
-
 
 	/**
 	* Returns an instance of the requested type by delegating call to
@@ -41,7 +40,8 @@ class MasterFactory implements FactoryInterface {
 	* @param  mixed type and some materials
 	* @return object An instance of given type
 	*/
-	public function createInstance ($type) {
+	public function createInstance($type)
+	{
 		if (!class_exists($type)) {
 			throw new FactoryException('Nonexistent type: "' . $type . '"',
 			FactoryException::EXC_NONEXISTENT_TYPE);
@@ -57,17 +57,16 @@ class MasterFactory implements FactoryInterface {
 		return call_user_func_array(array(new $factory (), 'createInstance'), func_get_args());
 	}
 
-
 	/**
 	* Check if responsible factory for creating instance is exist
 	*
 	* @param  string  $type
 	* @return boolean
 	*/
-	protected function hasFactoryFor ($type) {
+	protected function hasFactoryFor($type)
+	{
 		return isset($this->typeMap[$type]);
 	}
-
 
 	/**
 	* Get responsible factory name for creating instance of given type
@@ -75,13 +74,8 @@ class MasterFactory implements FactoryInterface {
 	* @param  string $type
 	* @return string factory name
 	*/
-	protected function getFactoryFor ($type) {
+	protected function getFactoryFor($type)
+	{
 		return $this->typeMap[$type];
 	}
-
-
 }
-
-
-
-?>

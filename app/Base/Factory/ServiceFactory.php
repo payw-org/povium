@@ -8,20 +8,21 @@
 *
 */
 
-
 namespace Povium\Base;
 
 use Povium\Base\AbstractChildFactory;
 use Povium\Base\DBConnection;
 
-class ServiceFactory extends AbstractChildFactory {
+class ServiceFactory extends AbstractChildFactory
+{
 	/**
 	* Manufacture materials into arguments
 	*
 	* @param mixed materials
 	* @return void
 	*/
-	protected function prepareArgs () {
+	protected function prepareArgs()
+	{
 		$args = func_get_args();
 		$db_conn = DBConnection::getInstance()->getConn();
 
@@ -29,9 +30,4 @@ class ServiceFactory extends AbstractChildFactory {
 
 		$this->args = $args;
 	}
-
 }
-
-
-
-?>

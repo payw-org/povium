@@ -6,7 +6,6 @@
 * @copyright 2018 DesignAndDevelop
 */
 
-
 $sql = "CREATE TABLE tokens (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	selector VARCHAR(20) NOT NULL UNIQUE,
@@ -17,5 +16,3 @@ $sql = "CREATE TABLE tokens (
 	REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-
-?>

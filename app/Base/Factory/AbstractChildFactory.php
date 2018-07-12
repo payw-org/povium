@@ -8,20 +8,18 @@
 *
 */
 
-
 namespace Povium\Base;
 
 use Povium\Base\FactoryInterface;
 
-abstract class AbstractChildFactory implements FactoryInterface {
-
+abstract class AbstractChildFactory implements FactoryInterface
+{
 	/**
 	* Given type of instance
 	*
 	* @var string
 	*/
 	protected $type;
-
 
 	/**
 	* Arguments for creating instance
@@ -30,14 +28,14 @@ abstract class AbstractChildFactory implements FactoryInterface {
 	*/
 	protected $args;
 
-
 	/**
 	* Returns an instance of given type.
 	*
 	* @param  mixed type and some materials
 	* @return object An instance of given type
 	*/
-	public function createInstance ($type) {
+	public function createInstance($type)
+	{
 		$this->type = $type;
 		$materials = array_slice(func_get_args(), 1);
 		call_user_func_array(array($this, 'prepareArgs'), $materials);
@@ -45,22 +43,21 @@ abstract class AbstractChildFactory implements FactoryInterface {
 		return $this->create();
 	}
 
-
 	/**
 	* Manufacture materials into arguments
 	*
 	* @param mixed materials
 	* @return void
 	*/
-	abstract protected function prepareArgs ();
-
+	abstract protected function prepareArgs();
 
 	/**
 	* Create instance.
 	*
 	* @return object
 	*/
-	protected function create () {
+	protected function create()
+	{
 		//	if '...' operator (require upper version of PHP 5.6.0)
 		//	is not working, use below code.
 		#	$reflect  = new ReflectionClass($this->type);
@@ -69,11 +66,4 @@ abstract class AbstractChildFactory implements FactoryInterface {
 
 		return $instance;
 	}
-
-
 }
-
-
-
-
-?>

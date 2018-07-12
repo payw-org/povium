@@ -12,11 +12,11 @@ namespace Povium\Base;
 use Povium\Base\Route;
 use Povium\Exceptions\RouterException;
 
-class Router {
+class Router
+{
 	const NOT_FOUND = 0;
 	const METHOD_NOT_ALLOWED = 1;
 	const FOUND = 2;
-
 
 	/**
 	 * Binding the same patterns
@@ -25,13 +25,11 @@ class Router {
 	 */
 	private $routes = array();
 
-
 	/**
 	 * Array to store named routes in, used for reverse routing.
 	 * @var array
 	 */
 	private $namedRoutes = array();
-
 
 	/**
 	 * @param string|string[] $http_method One of a HTTP methods or
@@ -40,7 +38,8 @@ class Router {
 	 * @param callback $handler
 	 * @param string|string[] $name Router name. It is optional param.
 	 */
-	public function addRoute ($http_method, $pattern, $handler, $name=null) {
+	public function addRoute($http_method, $pattern, $handler, $name = null)
+	{
 		$http_method = (array)$http_method;
 		$name = (array)$name;
 
@@ -56,9 +55,7 @@ class Router {
 				$this->namedRoutes[$temp] = $route;
 			}
 		}
-
 	}
-
 
 	/**
 	 * Add route with GET method
@@ -67,10 +64,10 @@ class Router {
 	 * @param callback $handler
 	 * @param string $name Router name. It is optional param.
 	 */
-	public function get ($pattern, $handler, $name=null) {
+	public function get($pattern, $handler, $name = null)
+	{
 		$this->addRoute('GET', ...func_get_args());
 	}
-
 
 	/**
 	* Add route with POST method
@@ -79,10 +76,10 @@ class Router {
 	* @param callback $handler
 	* @param string $name Router name. It is optional param.
 	 */
-	public function post ($pattern, $handler, $name=null) {
+	public function post($pattern, $handler, $name = null)
+	{
 		$this->addRoute('POST', ...func_get_args());
 	}
-
 
 	/**
 	* Add route with PUT method
@@ -91,10 +88,10 @@ class Router {
 	* @param callback $handler
 	* @param string $name Router name. It is optional param.
 	 */
-	public function put ($pattern, $handler, $name=null) {
+	public function put($pattern, $handler, $name = null)
+	{
 		$this->addRoute('PUT', ...func_get_args());
 	}
-
 
 	/**
 	* Add route with DELETE method
@@ -103,17 +100,18 @@ class Router {
 	* @param callback $handler
 	* @param string $name Router name. It is optional param.
 	 */
-	public function delete ($pattern, $handler, $name=null) {
+	public function delete($pattern, $handler, $name = null)
+	{
 		$this->addRoute('DELETE', ...func_get_args());
 	}
-
 
 	/**
 	 * Dispatch a given Request URI to matched routes.
 	 * @param  string $http_method One of a HTTP methods
 	 * @param  string $request_uri
 	 */
-	public function dispatch ($http_method, $request_uri) {
+	public function dispatch($http_method, $request_uri)
+	{
 		$routeInfo = $this->findMatchedRoute($http_method, $request_uri);
 
 		/* Execute handler */
@@ -128,6 +126,7 @@ class Router {
 				if ($result !== false) {
 					break;
 				}
+				//	no break if $result is false
 			case self::NOT_FOUND:
 				if($this->namedRoutes['ERR_404'] !== null) {
 					call_user_func($this->namedRoutes['ERR_404']->handler);
@@ -144,7 +143,6 @@ class Router {
 
 	}
 
-
 	/**
 	 * Reversed routing
 	 * Generate the URI with given argument. Replace regexes with supplied parameters.
@@ -152,7 +150,8 @@ class Router {
 	 * @param  array  $params	Associative array of parameters to replace placeholders with.
 	 * @return string 			Suitable URI
 	 */
-	public function generateURI ($arg, array $params=array()) {
+	public function generateURI($arg, array $params = array())
+	{
 		//	If arg is route name
 		if ($arg[0] != '/') {
 			//	If nonexistent route name, throw exception.
@@ -170,7 +169,6 @@ class Router {
 		return $this->generateURIWithPattern($pattern, $params);
 	}
 
-
 	/**
 	 * Reversed routing
 	 * Generate the URI with given pattern. Replace regexes with supplied parameters.
@@ -178,7 +176,8 @@ class Router {
 	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
 	 * @return string 			 Suitable URI
 	 */
-	private function generateURIWithPattern ($pattern, array $params=array()) {
+	private function generateURIWithPattern($pattern, array $params = array())
+	{
 		//	Parse pattern by slash and delete blank values
 		$parsed_patterns = explode('/', $pattern);
 		foreach (array_keys($parsed_patterns, '', true) as $key) {
@@ -240,13 +239,13 @@ class Router {
 		return mb_strtolower($uri);
 	}
 
-
 	/**
 	 * @param  string $http_method One of a HTTP methods
 	 * @param  string $request_uri
 	 * @return array Result and else things
 	 */
-	private function findMatchedRoute ($http_method, $request_uri) {
+	private function findMatchedRoute($http_method, $request_uri)
+	{
 		$return = array('result' => '');
 
 		/* Find route that matched URI */
@@ -281,14 +280,14 @@ class Router {
 		return $return;
 	}
 
-
 	/**
 	 * Check that the Request URI matches the pattern.
 	 * @param  string $pattern     uri pattern
 	 * @param  string $request_uri
 	 * @return mixed array or false
 	 */
-	private function checkMatchedPattern ($pattern, $request_uri) {
+	private function checkMatchedPattern($pattern, $request_uri)
+	{
 		$params = array();
 
 		//	If pattern is special case, do not compare.
@@ -365,7 +364,4 @@ class Router {
 
 		return $params;
 	}
-
 }
-
-?>

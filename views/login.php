@@ -1,5 +1,4 @@
 <?php
-
 use Povium\Base\TemplateEngine;
 
 $te = new TemplateEngine();
@@ -9,5 +8,3 @@ $te->render("/resources/templates/base.phtml", [
 	"css" => '<link rel="stylesheet" href="/build/css/login.css">',
 	"script" => '<script src="/build/js/login.built.js"></script>'
 ]);
-
-?>

@@ -9,7 +9,8 @@
 
 namespace Povium\Base;
 
-class Route {
+class Route
+{
 	/**
 	 * One of a HTTP methods
 	 * GET : READ
@@ -20,34 +21,26 @@ class Route {
 	 */
 	public $http_method;
 
-
 	/**
 	 * URI pattern with regular expressions.
 	 * @var string
 	 */
 	public $pattern;
 
-
 	/**
 	 * @var callback
 	 */
 	public $handler;
-
 
 	/**
 	 * @param string $http_method
 	 * @param string $pattern
 	 * @param callback $handler
 	 */
-	public function __construct ($http_method, $pattern, $handler) {
+	public function __construct($http_method, $pattern, $handler)
+	{
 		$this->http_method = strtoupper($http_method);
 		$this->pattern = $pattern;
 		$this->handler = $handler;
 	}
-
-
-
 }
-
-
-?>

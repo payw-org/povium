@@ -39,5 +39,3 @@ if ($login_return['err']) {		//	failed to login
 }
 
 echo json_encode($login_return);
-
-?>

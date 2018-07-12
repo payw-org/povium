@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
@@ -55,5 +57,3 @@ $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 // $router = new Router();
 //
 // $router->checkMatchedPattern('/@{name:.+}/{title:.+}-{id:\d+}', '/@/b');
-
-?>

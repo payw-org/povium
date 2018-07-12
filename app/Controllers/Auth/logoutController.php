@@ -21,5 +21,3 @@ $auth->logout();
 $logout_return['redirect'] = '/';
 
 echo json_encode($logout_return);
-
-?>

@@ -36,5 +36,3 @@ var_dump($server_output);
 //      curl_close($channel);
 //      return $statusCode;
 // }
-
-?>

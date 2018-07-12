@@ -10,8 +10,11 @@
 
 namespace Povium\Base;
 
-class TemplateEngine {
-
+class TemplateEngine
+{
+	/**
+	 * @var array
+	 */
 	private $config = [];
 
 	/**
@@ -20,7 +23,8 @@ class TemplateEngine {
 	 * @param  array   $config        "name" => value
 	 * @return null                   Return nothing
 	 */
-	public function render ($template_dir, $config) {
+	public function render($template_dir, $config)
+	{
 
 		if (is_array($config)) {
 
@@ -36,7 +40,7 @@ class TemplateEngine {
 
 			require_once getcwd() . "/" . $template_dir;
 
-		} else if (is_file($_SERVER['DOCUMENT_ROOT'] . "/.." . $template_dir)) {
+		} elseif (is_file($_SERVER['DOCUMENT_ROOT'] . "/.." . $template_dir)) {
 
 			require_once $_SERVER['DOCUMENT_ROOT'] . "/.." . $template_dir;
 
@@ -53,7 +57,8 @@ class TemplateEngine {
 	 * @param  string $str Config name
 	 * @return null   Return nothing
 	 */
-	public function embrace ($config_name) {
+	public function embrace($config_name)
+	{
 
 		if ($this->isConfigSet($config_name)) {
 
@@ -61,7 +66,7 @@ class TemplateEngine {
 
 				require_once getcwd() . "/" . $this->getConfig($config_name);
 
-			} else if ($this->getConfig($config_name)[0] == "/") {
+			} elseif ($this->getConfig($config_name)[0] == "/") {
 
 				if (is_file($_SERVER['DOCUMENT_ROOT'] . "/.." . $this->getConfig($config_name))) {
 
@@ -83,7 +88,8 @@ class TemplateEngine {
 
 	}
 
-	public function isConfigSet ($config_name) {
+	public function isConfigSet($config_name)
+	{
 
 		if (isset($this->config[$config_name])) {
 
@@ -97,27 +103,35 @@ class TemplateEngine {
 
 	}
 
-	public function getConfig ($config_name) {
+	public function getConfig($config_name)
+	{
 
 		return $this->config[$config_name];
 
 	}
 
-	public function setConfig ($config_name, $new) {
+	public function setConfig($config_name, $new)
+	{
 
 		$this->config[$config_name] = $new;
 
 	}
 
 	/**
-	 * This function automatically includes the template without config set to true. To avoid including the template, set the config to false.
+	 * This function automatically includes the template without config set to true.
+	 * To avoid including the template, set the config to false.
 	 * @param  string  $config_name  Config Name
 	 * @param  string  $dir          Directory
 	 * @return null                  Return Nothing
 	 */
-	public function basis ($config_name, $dir, $config = []) {
+	public function basis($config_name, $dir, $config = [])
+	{
 
-		if (($this->isConfigSet($config_name) && $this->getConfig($config_name)) || !($this->isConfigSet($config_name))) {
+		if (
+			($this->isConfigSet($config_name) &&
+ 			$this->getConfig($config_name)) ||
+ 			!($this->isConfigSet($config_name))
+		) {
 
 			// $this->setConfig($config_name, $dir);
 			// $this->embrace($config_name);
@@ -132,14 +146,12 @@ class TemplateEngine {
 	 * If there is no config, do nothing.
 	 * @param  string $config_name
 	 */
-	public function optional ($config_name) {
+	public function optional($config_name)
+	{
 		if ($this->isConfigSet($config_name)) {
 			$this->embrace($config_name);
 		} else {
 			return;
 		}
 	}
-
 }
-
-?>

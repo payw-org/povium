@@ -9,22 +9,16 @@
 *
 */
 
-
 namespace Povium\Base;
 
-interface FactoryInterface {
-
+interface FactoryInterface
+{
 	/**
 	* Returns an instance of given types.
 	*
 	* @param  mixed type and some materials
 	* @return object An instance of given type
 	*/
-	public function createInstance ($type);
-
+	public function createInstance($type);
 
 }
-
-
-
-?>

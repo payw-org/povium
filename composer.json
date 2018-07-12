@@ -1,11 +1,10 @@
 {
 	"name": "DesignAndDevelop/Povium",
 	"description": "Povium Website",
-	"version": "1.0.0",
+	"version": "v1.0.0",
 	"type": "project",
 	"keywords": [],
 	"homepage": "http://povium.com/",
-	"license": "MIT",
 	"authors": [
 		{
 			"name": "J.Haemin",
@@ -26,7 +25,7 @@
 	"autoload": {
 		"psr-4": {
 			"Povium\\": "app/",
-			"Povium\\Base\\": ["app/Base/Factory/", "app/Base/Route/"]
+			"Povium\\Base\\": ["app/Base/Route/", "app/Base/Factory/"]
 		}
 	}
 }

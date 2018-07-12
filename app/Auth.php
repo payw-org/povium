@@ -9,38 +9,35 @@
 
 namespace Povium;
 
-
-class Auth {
+class Auth
+{
 	/**
 	* @var array
 	*/
 	private $config;
 
-
 	/**
 	* Database connection (PDO)
 	* @var \PDO
 	*/
-	private $conn = NULL;
-
-
+	private $conn = null;
 
 	/**
 	* @param \PDO $conn
 	*/
-	public function __construct (\PDO $conn) {
+	public function __construct(\PDO $conn)
+	{
 		$this->conn = $conn;
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 	}
 
-
 	/**
 	*
 	*/
-	public function __destruct () {
+	public function __destruct()
+	{
 
 	}
-
 
 	/**
 	* Validate account.
@@ -50,7 +47,8 @@ class Auth {
 	* @param  bool $remember flag for auto login
 	* @return array	'err' is an error flag. 'msg' is an error message.
 	*/
-	public function login ($identifier, $password, $remember) {
+	public function login($identifier, $password, $remember)
+	{
 		$return = array('err' => true, 'msg' => '');
 
 
@@ -112,15 +110,14 @@ class Auth {
 		return $return;
 	}
 
-
-
 	/**
 	* Delete session about authentication
 	* Delete cookie about auto login
 	* Delete table record about auto login
 	* @return void
 	*/
-	public function logout () {
+	public function logout()
+	{
 		$this->deleteSession();
 
 		if (isset($_COOKIE['auth_token'])) {			//	if auto login cookie is set
@@ -134,7 +131,6 @@ class Auth {
 		}
 	}
 
-
 	/**
 	* Validate input
 	* Checks if input is already taken
@@ -144,7 +140,8 @@ class Auth {
 	* @param  string $password
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
-	public function register ($readable_id, $name, $password) {
+	public function register($readable_id, $name, $password)
+	{
 		# $return = array('err' => true, 'email_msg' => '', 'name_msg' => '', 'password_msg' => '');
 		$return = array('err' => true, 'msg' => '');
 
@@ -182,14 +179,14 @@ class Auth {
 		return $return;
 	}
 
-
 	/**
 	* Verify readable id input.
 	* Validate and Check if input is already taken.
 	* @param  string $readable_id
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
-	public function verifyReadableID ($readable_id) {
+	public function verifyReadableID($readable_id)
+	{
 		$return = array('err' => true, 'msg' => '');
 
 		$validate_readable_id = $this->validateReadableID($readable_id);
@@ -210,14 +207,14 @@ class Auth {
 		return $return;
 	}
 
-
 	/**
 	* Verify email input.
 	* Validate and Check if input is already taken.
 	* @param  string $email
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
-	public function verifyEmail ($email) {
+	public function verifyEmail($email)
+	{
 		$return = array('err' => true, 'msg' => '');
 
 		$validate_email = $this->validateEmail($email);
@@ -238,14 +235,14 @@ class Auth {
 		return $return;
 	}
 
-
 	/**
 	* Verify name input.
 	* Validate and Check if input is already taken.
 	* @param  string $name
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
-	public function verifyName ($name) {
+	public function verifyName($name)
+	{
 		$return = array('err' => true, 'msg' => '');
 
 		$validate_name = $this->validateName($name);
@@ -266,12 +263,12 @@ class Auth {
 		return $return;
 	}
 
-
 	/**
 	* @param  string $readable_id
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
-	public function validateReadableID ($readable_id) {
+	public function validateReadableID($readable_id)
+	{
 		$return = array('err' => true, 'msg' => '');
 
 
@@ -314,12 +311,12 @@ class Auth {
 		return $return;
 	}
 
-
 	/**
 	* @param  string $email
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
-	public function validateEmail ($email) {
+	public function validateEmail($email)
+	{
 		$return = array('err' => true, 'msg' => '');
 
 
@@ -350,12 +347,12 @@ class Auth {
 		return $return;
 	}
 
-
 	/**
 	* @param  string $name
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
-	public function validateName ($name) {
+	public function validateName($name)
+	{
 		$return = array('err' => true, 'msg' => '');
 
 
@@ -398,12 +395,12 @@ class Auth {
 		return $return;
 	}
 
-
 	/**
 	* @param  string $password
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
-	public function validatePassword ($password) {
+	public function validatePassword($password)
+	{
 		$return = array('err' => true, 'msg' => '');
 
 
@@ -434,14 +431,17 @@ class Auth {
 		return $return;
 	}
 
-
 	/**
 	* Check if the readable id is already taken
 	* @param  string  $readable_id
 	* @return boolean
 	*/
-	public function isReadableIDTaken ($readable_id) {
-		$stmt = $this->conn->prepare("SELECT COUNT(id) FROM {$this->config['table_users']} WHERE readable_id = :readable_id");
+	public function isReadableIDTaken($readable_id)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT COUNT(id) FROM {$this->config['table_users']}
+ 			WHERE readable_id = :readable_id"
+		);
 		$stmt->execute([':readable_id' => $readable_id]);
 
 		if ($stmt->fetchColumn() == 0) {
@@ -451,15 +451,18 @@ class Auth {
 		return true;
 	}
 
-
 	/**
 	* Check if the email is already taken
 	* Compare case-insensitive
 	* @param  string  $email
 	* @return boolean
 	*/
-	public function isEmailTaken ($email) {
-		$stmt = $this->conn->prepare("SELECT COUNT(id) FROM {$this->config['table_users']} WHERE LOWER(email) = LOWER(:email)");
+	public function isEmailTaken($email)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT COUNT(id) FROM {$this->config['table_users']}
+ 			WHERE LOWER(email) = LOWER(:email)"
+		);
 		$stmt->execute([':email' => $email]);
 
 		if ($stmt->fetchColumn() == 0) {
@@ -469,15 +472,18 @@ class Auth {
 		return true;
 	}
 
-
 	/**
 	* Check if the name is already taken
 	* Compare case-insensitive
 	* @param  string  $name
 	* @return boolean
 	*/
-	public function isNameTaken ($name) {
-		$stmt = $this->conn->prepare("SELECT COUNT(id) FROM {$this->config['table_users']} WHERE LOWER(name) = LOWER(:name)");
+	public function isNameTaken($name)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT COUNT(id) FROM {$this->config['table_users']}
+ 			WHERE LOWER(name) = LOWER(:name)"
+		);
 		$stmt->execute([':name' => $name]);
 
 		if ($stmt->fetchColumn() == 0) {
@@ -487,20 +493,26 @@ class Auth {
 		return true;
 	}
 
-
 	/**
 	* @param  string $identifier readable id or email
 	* @return mixed int or false
 	*/
-	public function getID ($identifier) {
-		$stmt = $this->conn->prepare("SELECT id FROM {$this->config['table_users']} WHERE readable_id = :readable_id");
+	public function getID($identifier)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT id FROM {$this->config['table_users']}
+ 			WHERE readable_id = :readable_id"
+		);
 		$stmt->execute([':readable_id' => $identifier]);
 
 		if ($stmt->rowCount() != 0) {
 			return $stmt->fetchColumn();
 		}
 
-		$stmt = $this->conn->prepare("SELECT id FROM {$this->config['table_users']} WHERE email = :email");
+		$stmt = $this->conn->prepare(
+			"SELECT id FROM {$this->config['table_users']}
+ 			WHERE email = :email"
+		);
 		$stmt->execute([':email' => $identifier]);
 
 		if ($stmt->rowCount() != 0) {
@@ -510,14 +522,17 @@ class Auth {
 		return false;
 	}
 
-
 	/**
 	* Get the user's basic inform
 	* @param  int $id
 	* @return mixed array or false
 	*/
-	public function getBaseUser ($id) {
-		$stmt = $this->conn->prepare("SELECT id, readable_id, email, password, is_active FROM {$this->config['table_users']} WHERE id = :id");
+	public function getBaseUser($id)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT id, readable_id, email, password, is_active FROM {$this->config['table_users']}
+ 			WHERE id = :id"
+		);
 		$stmt->execute([':id' => $id]);
 
 		if ($stmt->rowCount() == 0) {
@@ -527,15 +542,18 @@ class Auth {
 		return $stmt->fetch();
 	}
 
-
 	/**
 	* Get entire inform
 	* @param  int  $id
 	* @param  boolean $with_pw If it is true, return with password.
 	* @return mixed array or false
 	*/
-	public function getUser ($id, $with_pw=false) {
-		$stmt = $this->conn->prepare("SELECT * FROM {$this->config['table_users']} WHERE id = :id");
+	public function getUser($id, $with_pw = false)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT * FROM {$this->config['table_users']}
+ 			WHERE id = :id"
+		);
 		$stmt->execute([':id' => $id]);
 
 		if ($stmt->rowCount() == 0) {
@@ -551,7 +569,6 @@ class Auth {
 		return $user;
 	}
 
-
 	/**
 	* Insert new user to DB
 	* @param string $readable_id
@@ -559,18 +576,20 @@ class Auth {
 	* @param string $password
 	* @return bool if adding new user to DB is failed, return false.
 	*/
-	public function addUser ($readable_id, $name, $password) {
+	public function addUser($readable_id, $name, $password)
+	{
 		$password_hash = $this->getPasswordHash($password);
 
-		$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_users']} (readable_id, name, password)
-		VALUES (:readable_id, :name, :password)");
-		if (!$stmt->execute([':readable_id' => $readable_id, ':name' => $name, ':password' => $password_hash])) {
+		$stmt = $this->conn->prepare(
+			"INSERT INTO {$this->config['table_users']} (readable_id, name, password)
+			VALUES (?, ?, ?)"
+		);
+		if (!$stmt->execute([$readable_id, $name, $password_hash])) {
 			return false;
 		}
 
 		return true;
 	}
-
 
 	/**
 	* Update some column values of user
@@ -578,7 +597,8 @@ class Auth {
 	* @param  array $params assoc array(column to update => new value, ...)
 	* @return bool
 	*/
-	public function updateUser ($id, $params) {
+	public function updateUser($id, $params)
+	{
 		$col_list = array();
 		$val_list = array();
 
@@ -590,7 +610,10 @@ class Auth {
 
 		$set_params = implode(', ', $col_list);
 
-		$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET " . $set_params . " WHERE id = ?");
+		$stmt = $this->conn->prepare(
+			"UPDATE {$this->config['table_users']} SET " . $set_params .
+			" WHERE id = ?"
+		);
 		if (!$stmt->execute($val_list)) {
 			return false;
 		}
@@ -598,24 +621,23 @@ class Auth {
 		return true;
 	}
 
-
 	/**
 	* @param  int $len Length of random hash (real length is $len * 2)
 	* @return string
 	*/
-	public function generateRandomHash ($len) {
+	public function generateRandomHash($len)
+	{
 		return bin2hex(openssl_random_pseudo_bytes($len));
 	}
-
 
 	/**
 	* @param  string $raw_pw Raw password
 	* @return string
 	*/
-	private function getPasswordHash ($raw_pw) {
+	private function getPasswordHash($raw_pw)
+	{
 		return password_hash($raw_pw, PASSWORD_DEFAULT, $this->config['pw_hash_options']);
 	}
-
 
 	/**
 	* Verify password and rehash if hash options is changed.
@@ -624,7 +646,8 @@ class Auth {
 	* @param  int $id
 	* @return bool if password match, return true.
 	*/
-	private function passwordVerifyWithRehash ($raw_pw, $hash, $id) {
+	private function passwordVerifyWithRehash($raw_pw, $hash, $id)
+	{
 		if (!password_verify($raw_pw, $hash)) {
 			return false;
 		}
@@ -632,13 +655,15 @@ class Auth {
 		if (password_needs_rehash($hash, PASSWORD_DEFAULT, $this->config['pw_hash_options'])) {
 			$new_hash = getPasswordHash($raw_pw);
 
-			$stmt = $this->conn->prepare("UPDATE {$this->config['table_users']} SET password = :password WHERE id = :id");
+			$stmt = $this->conn->prepare(
+				"UPDATE {$this->config['table_users']} SET password = :password
+ 				WHERE id = :id"
+			);
 			$stmt->execute([':password' => $new_hash, ':id' => $id]);
 		}
 
 		return true;
 	}
-
 
 	/**
 	* Creates a session for a authorized user.
@@ -647,7 +672,8 @@ class Auth {
 	* @param bool $remember Flag for auto login
 	* @return bool
 	*/
-	private function addSessionAndCookie ($id, $remember) {
+	private function addSessionAndCookie($id, $remember)
+	{
 		$_SESSION['user_id'] = $id;
 
 		if ($remember) {
@@ -656,8 +682,10 @@ class Auth {
 
 			$encodedtoken = $this->encodeToken($token);
 
-			$stmt = $this->conn->prepare("INSERT INTO {$this->config['table_tokens']} (selector, validator, user_id, expn_dt)
-			VALUES (:selector, :validator, :user_id, :expn_dt)");
+			$stmt = $this->conn->prepare(
+				"INSERT INTO {$this->config['table_tokens']} (selector, validator, user_id, expn_dt)
+				VALUES (:selector, :validator, :user_id, :expn_dt)"
+			);
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
 			$query_params = [
 				':selector' => $encodedtoken['selector'],
@@ -670,12 +698,19 @@ class Auth {
 				return false;
 			}
 
-			setcookie('auth_token', $token, $expiration_time, $this->config['cookie_params']['path'], $this->config['cookie_params']['domain']);
+			setcookie(
+				'auth_token',
+ 				$token,
+ 				$expiration_time,
+ 				$this->config['cookie_params']['path'],
+ 				$this->config['cookie_params']['domain'],
+				$this->config['cookie_params']['secure'],
+				$this->config['cookie_params']['httponly']
+			);
 		}
 
 		return true;
 	}
-
 
 	/**
 	* Check if visitor is logged in.
@@ -683,7 +718,8 @@ class Auth {
 	* If possible, log in automatically.
 	* @return boolean
 	*/
-	public function isLoggedIn () {
+	public function isLoggedIn()
+	{
 		if ($this->checkSession()) {
 			return true;
 		}
@@ -697,21 +733,21 @@ class Auth {
 		return false;
 	}
 
-
 	/**
 	* Get current user's info from database
 	* @return mixed array or false
 	*/
-	public function getCurrentUser () {
+	public function getCurrentUser()
+	{
 		return $this->getUser($_SESSION['user_id']);
 	}
-
 
 	/**
 	* Check if user_id session is exist.
 	* @return boolean
 	*/
-	private function checkSession () {
+	private function checkSession()
+	{
 		if (!isset($_SESSION['user_id'])) {
 			return false;
 		}
@@ -719,24 +755,26 @@ class Auth {
 		return true;
 	}
 
-
 	/**
 	* Check cookie for auto login
 	* Authenticate token
 	* @return mixed int or false (int: when auto login success, false: otherwise)
 	*/
-	private function checkCookie () {
+	private function checkCookie()
+	{
 		if (!isset($_COOKIE['auth_token'])) {
 			return false;
 		}
 
-		if (!$token_info = $this->getTokenInfo($_COOKIE['auth_token'])) {	//	if can not find the token info in the db
+		//	if can not find the token info in the db
+		if (!$token_info = $this->getTokenInfo($_COOKIE['auth_token'])) {
 			$this->deleteCookie();
 
 			return false;
 		}
 
-		if (strtotime($token_info['expn_dt']) < time()) {				//	if token has already expired
+		//	if token has already expired
+		if (strtotime($token_info['expn_dt']) < time()) {
 			$this->deleteCookie();
 			$this->deleteTokenInfo($token_info['id']);
 
@@ -746,12 +784,12 @@ class Auth {
 		return $token_info['user_id'];
 	}
 
-
 	/**
 	* @param  string $token selector:raw validator
 	* @return array array('selector' => '', 'validator' => '')
 	*/
-	private function encodeToken ($token) {
+	private function encodeToken($token)
+	{
 		$return = array('selector' => '', 'validator' => '');
 
 		$return['selector'] = strtok($token, ':');
@@ -759,7 +797,6 @@ class Auth {
 
 		return $return;
 	}
-
 
 	/**
 	* Encode raw token to selector and validator.
@@ -770,10 +807,14 @@ class Auth {
 	* @return array token info assoc array
 	* @return bool false if token is not selected
 	*/
-	private function getTokenInfo ($token) {
+	private function getTokenInfo($token)
+	{
 		$encodedToken = $this->encodeToken($token);
 
-		$stmt = $this->conn->prepare("SELECT * FROM {$this->config['table_tokens']} WHERE selector = :selector");
+		$stmt = $this->conn->prepare(
+			"SELECT * FROM {$this->config['table_tokens']}
+ 			WHERE selector = :selector"
+		);
 		$stmt->execute([':selector' => $encodedToken['selector']]);
 
 		if ($stmt->rowCount() == 0) {
@@ -789,42 +830,39 @@ class Auth {
 		return $token_info;
 	}
 
-
-
 	/**
 	* Delete session about authentication.
 	* @return void
 	*/
-	private function deleteSession () {
+	private function deleteSession()
+	{
 		unset($_SESSION['user_id']);
 		session_destroy();
 	}
-
 
 	/**
 	* Delete cookie about auto login.
 	* @return void
 	*/
-	private function deleteCookie () {
+	private function deleteCookie()
+	{
 		setcookie('auth_token', '', time() - 3600);
 		unset($_COOKIE['auth_token']);
 	}
-
 
 	/**
 	* Delete token info from table
 	* @param  int $token_id
 	* @return boolean If deletion success, return true.
 	*/
-	private function deleteTokenInfo ($token_id) {
-		$stmt = $this->conn->prepare("DELETE FROM {$this->config['table_tokens']} WHERE id = :id");
+	private function deleteTokenInfo($token_id)
+	{
+		$stmt = $this->conn->prepare(
+			"DELETE FROM {$this->config['table_tokens']}
+ 			WHERE id = :id"
+		);
 		$stmt->execute([':id' => $token_id]);
 
 		return $stmt->rowCount() == 1;
 	}
-
-
-
 }
-
-?>
