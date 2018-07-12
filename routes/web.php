@@ -5,9 +5,10 @@ use Povium\Base\Router;
 use Povium\Base\MasterFactory;
 
 $router = new Router();
-
 $factory = new MasterFactory();
 $auth = $factory->createInstance('\Povium\Auth');
+
+define('BASE_URI', 'http://' . $_SERVER['HTTP_HOST']);
 
 /* Home Page */
 $router->get(
@@ -24,9 +25,8 @@ $router->get(
  	function () use ($auth) {
 		//	If already logged in, send to home.
 		if ($auth->isLoggedIn()) {
-			exit(header('Location: /'));
+			exit(header('Location: ' . BASE_URI . '/'));
 		}
-
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/login.php';
 		return true;
 	}
@@ -38,7 +38,7 @@ $router->get(
  	function () use ($auth) {
 		//	If already logged in, send to home.
 		if ($auth->isLoggedIn()) {
-			exit(header('Location: /'));
+			exit(header('Location: ' . BASE_URI . '/'));
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/register.php';
