@@ -29,11 +29,17 @@ trait Singleton
 	/**
 	* Constructor is private to prevent creating multiple instance
 	*/
-	private function __construct();
+	private function __construct()
+	{
+
+	}
 
 	/**
 	* This function is private to prevent clonning
 	*/
-	private function __clone();
+	private function __clone()
+	{
+
+	}
 
 }
