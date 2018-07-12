@@ -27,7 +27,9 @@ $router->get(
 		if ($auth->isLoggedIn()) {
 			exit(header('Location: ' . BASE_URI . '/'));
 		}
+
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/login.php';
+
 		return true;
 	}
 );
@@ -42,6 +44,7 @@ $router->get(
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/register.php';
+
 		return true;
 	}
 );
