@@ -7,9 +7,9 @@
 *
 */
 
-namespace Povium\Base;
+namespace Povium\Base\Routing;
 
-use Povium\Base\Route;
+use Povium\Base\Routing\Route;
 use Povium\Exceptions\RouterException;
 
 class Router

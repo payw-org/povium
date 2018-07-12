@@ -1,8 +1,8 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
 
-use Povium\Base\Router;
-use Povium\Base\MasterFactory;
+use Povium\Base\Routing\Router;
+use Povium\Base\Factory\MasterFactory;
 
 $router = new Router();
 $factory = new MasterFactory();

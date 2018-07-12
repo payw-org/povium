@@ -10,9 +10,9 @@
 *
 */
 
-namespace Povium\Base;
+namespace Povium\Base\Factory;
 
-use Povium\Base\FactoryInterface;
+use Povium\Base\Factory\FactoryInterface;
 use Povium\Exceptions\FactoryException;
 
 class MasterFactory implements FactoryInterface

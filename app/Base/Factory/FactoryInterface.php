@@ -9,7 +9,7 @@
 *
 */
 
-namespace Povium\Base;
+namespace Povium\Base\Factory;
 
 interface FactoryInterface
 {

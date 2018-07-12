@@ -8,9 +8,9 @@
 *
 */
 
-namespace Povium\Base;
+namespace Povium\Base\Factory;
 
-use Povium\Base\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\DBConnection;
 
 class ServiceFactory extends AbstractChildFactory

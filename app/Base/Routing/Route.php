@@ -7,7 +7,7 @@
 *
 */
 
-namespace Povium\Base;
+namespace Povium\Base\Routing;
 
 class Route
 {

@@ -9,6 +9,6 @@
 */
 
 return [
-	'\Povium\Auth' => '\Povium\Base\ServiceFactory',
+	'\Povium\Auth' => '\Povium\Base\Factory\ServiceFactory',
 
 ];

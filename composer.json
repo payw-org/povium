@@ -24,8 +24,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Povium\\": "app/",
-			"Povium\\Base\\": ["app/Base/Route/", "app/Base/Factory/"]
+			"Povium\\": "app/"
 		}
 	}
 }

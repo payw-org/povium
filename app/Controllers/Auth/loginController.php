@@ -7,7 +7,7 @@
 *
 */
 
-use Povium\Base\MasterFactory;
+use Povium\Base\Factory\MasterFactory;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
 $factory = new MasterFactory();
