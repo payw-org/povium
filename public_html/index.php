@@ -8,7 +8,7 @@ $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 
 // $params = array('readable_id' => 'fairy_hooni',
-// 				'post_title' => "황치훈의 '즐거운' PHP 교실 - vol.2",
+// 				'post_title' => "황치#$^훈의 ગુડબાય ---- ;'즐★거🤯운' PHP 교실 - vol.2",
 // 				'post_id' => '684939');
 // $uri = $router->generateURI('post', $params);
 //
