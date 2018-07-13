@@ -8,8 +8,12 @@ export default class Snapshot {
 
 	}
 
-	revertToSnapshot () {
+	undo () {
 
+	}
+
+	redo () {
+		
 	}
 
 }

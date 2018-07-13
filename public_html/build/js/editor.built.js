@@ -112,6 +112,8 @@ var _PostEditor = __webpack_require__(12);
 
 var _PostEditor2 = _interopRequireDefault(_PostEditor);
 
+__webpack_require__(15);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var editor = new _PostEditor2.default(document.querySelector('#post-editor'));
@@ -129,9 +131,41 @@ document.querySelector('#log-range').addEventListener('click', function () {
 
 	var range = sel.getRangeAt(0);
 
-	console.log(range.startContainer, range.startOffset);
-	console.log(range.endContainer, range.endOffset);
+	console.log(range.startContainer);
+	console.log(range.startOffset);
+	console.log(range.endContainer);
+	console.log(range.endOffset);
 });
+
+document.querySelector('#nodes-in-selection').addEventListener('click', function () {
+
+	console.log(editor.selManager.getAllNodesInSelection());
+});
+
+document.querySelector('#separate').addEventListener('click', function () {
+
+	editor.selManager.splitElementNode2();
+});
+
+document.querySelector('#split-text').addEventListener('click', function () {
+
+	editor.selManager.splitTextNode();
+});
+
+document.querySelector('#get-sel-pos').addEventListener('click', function () {
+
+	console.log(editor.selManager.getSelectionPosition());
+});
+
+document.querySelector('#get-sel-pos-par').addEventListener('click', function () {
+
+	console.log(editor.selManager.getSelectionPositionInParagraph());
+});
+
+// var dom = document.createElement("ol");
+// dom.innerHTML = "<li></li>";
+// console.log(editor.selManager.isEmptyNode(dom));
+// console.log(editor.selManager.isTextEmptyNode(dom));
 
 /***/ }),
 /* 12 */
@@ -141,7 +175,7 @@ document.querySelector('#log-range').addEventListener('click', function () {
 
 
 Object.defineProperty(exports, "__esModule", {
-		value: true
+	value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -160,295 +194,247 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var PostEditor = function () {
 
+	/**
+  * Creates a new PostEditor object.
+  * @param {HTMLElement} editorDOM
+  */
+	function PostEditor(editorDOM) {
+		var _this = this;
+
+		_classCallCheck(this, PostEditor);
+
+		var self = this;
+
+		this.domManager = new _DOMManager2.default(editorDOM);
+		this.selManager = new _SelectionManager2.default(this.domManager);
+
+		this.mouseDownStart = false;
+
+		document.execCommand("defaultParagraphSeparator", false, "p");
+
+		// Event Listeners
+
+		this.domManager.editor.addEventListener('click', function () {
+			_this.onSelectionChanged();
+		});
+
+		this.domManager.editor.addEventListener('mousedown', function () {
+			_this.mouseDownStart = true;
+		});
+		window.addEventListener('mouseup', function () {
+			if (_this.mouseDownStart) {
+				_this.mouseDownStart = false;
+				// this.onSelectionChanged();
+			}
+		});
+
+		this.isBackspaceKeyPressed = false;
+
+		window.addEventListener('keydown', function (e) {
+			_this.onKeyDown(e);
+			_this.onSelectionChanged();
+		});
+		this.domManager.editor.addEventListener('keyup', function (e) {
+			_this.onKeyUp(e);
+
+			_this.onSelectionChanged();
+		});
+		this.domManager.editor.addEventListener('keypress', function (e) {
+			_this.onKeyPress(e);
+		});
+
+		this.domManager.editor.addEventListener('paste', function (e) {
+			_this.onPaste(e);
+		});
+
+		// Toolbar button events
+		this.domManager.body.addEventListener('click', function (e) {
+			_this.selManager.heading('P');
+		});
+		this.domManager.heading1.addEventListener('click', function (e) {
+			_this.selManager.heading('H1');
+		});
+		this.domManager.heading2.addEventListener('click', function (e) {
+			_this.selManager.heading('H2');
+		});
+		this.domManager.heading3.addEventListener('click', function (e) {
+			_this.selManager.heading('H3');
+		});
+
+		this.domManager.boldButton.addEventListener('click', function (e) {
+			_this.selManager.bold();
+		});
+		this.domManager.italicButton.addEventListener('click', function (e) {
+			_this.selManager.italic();
+		});
+		this.domManager.underlineButton.addEventListener('click', function (e) {
+			_this.selManager.underline();
+		});
+		this.domManager.strikeButton.addEventListener('click', function (e) {
+			_this.selManager.strike();
+		});
+
+		this.domManager.alignLeft.addEventListener('click', function (e) {
+			_this.selManager.align('left');
+		});
+		this.domManager.alignCenter.addEventListener('click', function (e) {
+			_this.selManager.align('center');
+		});
+		this.domManager.alignRight.addEventListener('click', function (e) {
+			_this.selManager.align('right');
+		});
+
+		this.domManager.orderedList.addEventListener('click', function (e) {
+			_this.selManager.list('OL');
+		});
+		// this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
+		this.domManager.blockquote.addEventListener('click', function (e) {
+			_this.selManager.blockquote('UL');
+		});
+
+		this.initEditor();
+	}
+
+	// Events
+
+
+	/**
+  *
+  * @param {KeyboardEvent} e
+  */
+
+
+	_createClass(PostEditor, [{
+		key: "onPaste",
+		value: function onPaste(e) {
+
+			var clipboardData = void 0,
+			    pastedData = void 0;
+
+			e.stopPropagation();
+			e.preventDefault();
+
+			// Get data from clipboard and conver
+			clipboardData = e.clipboardData || window.clipboardData;
+			pastedData = clipboardData.getData('Text');
+
+			this.selManager.paste(pastedData);
+		}
+	}, {
+		key: "onKeyPress",
+		value: function onKeyPress(e) {}
+
 		/**
-   * Creates a new PostEditor object.
-   * @param {HTMLElement} editorDOM
+   * Fires when press keyboard inside the editor.
+   * @param {KeyboardEvent} e 
    */
-		function PostEditor(editorDOM) {
-				var _this = this;
 
-				_classCallCheck(this, PostEditor);
+	}, {
+		key: "onKeyUp",
+		value: function onKeyUp(e) {
+			var currentNode = this.selManager.getNodeInSelection();
+			if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
+				currentNode.removeChild(currentNode.querySelector("br"));
+			}
+		}
+	}, {
+		key: "onKeyDown",
+		value: function onKeyDown(e) {
 
-				var self = this;
+			var sel = window.getSelection();
+			if (sel.rangeCount > 0) {
+				if (!this.domManager.editor.contains(sel.getRangeAt(0).startContainer)) {
+					console.warn("The given range is not in the editor. Editor's features will work only inside the editor.");
+					return;
+				}
+			}
 
-				this.domManager = new _DOMManager2.default(editorDOM);
-				this.selManager = new _SelectionManager2.default(this.domManager);
+			var keyCode = e.which;
 
-				document.execCommand("defaultParagraphSeparator", false, "p");
+			// Delete key
+			if (keyCode === 8) {
 
-				// Event Listeners
+				this.selManager.backspace(e);
+			} else if (keyCode === 46) {
+				console.log("delete");
+				this.selManager.delete(e);
+			} else if (keyCode === 13) {
 
-				this.domManager.editor.addEventListener('click', function () {
-						_this.onSelectionChanged();
-				});
-				this.domManager.editor.addEventListener('keydown', function (e) {
-						_this.onKeyDown(e);
-				});
-				this.domManager.editor.addEventListener('keyup', function (e) {
-						_this.onKeyUp(e);
-						_this.onSelectionChanged();
-				});
-				this.domManager.editor.addEventListener('click', function () {
-						_this.onSelectionChanged();
-				});
+				this.selManager.enter(e);
+			}
+		}
+	}, {
+		key: "onSelectionChanged",
+		value: function onSelectionChanged() {
 
-				this.domManager.editor.addEventListener('paste', function (e) {
-						_this.onPaste(e);
-				});
+			// console.log('selection has been changed');
 
-				// Toolbar button events
-				this.domManager.body.addEventListener('click', function (e) {
-						_this.selManager.heading('P');
-				});
-				this.domManager.heading1.addEventListener('click', function (e) {
-						_this.selManager.heading('H1');
-				});
-				this.domManager.heading2.addEventListener('click', function (e) {
-						_this.selManager.heading('H2');
-				});
-				this.domManager.heading3.addEventListener('click', function (e) {
-						_this.selManager.heading('H3');
-				});
 
-				this.domManager.boldButton.addEventListener('click', function (e) {
-						_this.selManager.bold();
-				});
-				this.domManager.italicButton.addEventListener('click', function (e) {
-						_this.selManager.italic();
-				});
-				this.domManager.underlineButton.addEventListener('click', function (e) {
-						_this.selManager.underline();
-				});
-				this.domManager.strikeButton.addEventListener('click', function (e) {
-						_this.selManager.strike();
-				});
-
-				this.domManager.alignLeft.addEventListener('click', function (e) {
-						_this.selManager.align('left');
-				});
-				this.domManager.alignCenter.addEventListener('click', function (e) {
-						_this.selManager.align('center');
-				});
-				this.domManager.alignRight.addEventListener('click', function (e) {
-						_this.selManager.align('right');
-				});
-
-				this.domManager.orderedList.addEventListener('click', function (e) {
-						_this.selManager.list('OL');
-				});
-				// this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
-				this.domManager.blockquote.addEventListener('click', function (e) {
-						_this.selManager.blockquote('UL');
-				});
-
-				this.initEditor();
+			this.selManager.fixSelection();
 		}
 
-		// Events
+		// Methods
 
 		/**
-   *
-   * @param {KeyboardEvent} e
+   * Initialize editor.
    */
 
+	}, {
+		key: "initEditor",
+		value: function initEditor() {
 
-		_createClass(PostEditor, [{
-				key: "onPaste",
-				value: function onPaste(e) {
+			// Fix flickering when add text style first time
+			// in Chrome browser.
+			var emptyNode = document.createElement('p');
+			emptyNode.innerHTML = 'a';
+			emptyNode.style.opacity = '0';
+			this.domManager.editor.appendChild(emptyNode);
+			var range = document.createRange();
+			range.setStart(emptyNode.firstChild, 0);
+			range.setEnd(emptyNode.firstChild, 1);
+			this.selManager.replaceRange(range);
+			document.execCommand('bold', false);
+			this.domManager.editor.removeChild(emptyNode);
+			document.getSelection().removeAllRanges();
 
-						var clipboardData = void 0,
-						    pastedData = void 0;
+			// if (this.isEmpty()) {
+			// 	this.domManager.editor.innerHTML = "";
+			// 	var emptyP = this.domManager.generateEmptyParagraph('p');
+			// 	this.domManager.editor.appendChild(emptyP);
 
-						e.stopPropagation();
-						e.preventDefault();
+			// 	var range = document.createRange();
+			// 	range.setStartBefore(emptyP);
+			// 	range.collapse(true);
 
-						// Get data from clipboard and conver
-						clipboardData = e.clipboardData || window.clipboardData;
-						pastedData = clipboardData.getData('Text');
+			// 	this.selManager.sel.removeAllRanges();
+			// 	this.selManager.sel.addRange(range);
+			// }
+		}
+	}, {
+		key: "clearEditor",
+		value: function clearEditor() {
 
-						this.selManager.paste(pastedData);
-				}
+			this.domManager.editor.innerHTML = "";
+		}
 
-				/**
-     * Fires when press keyboard inside the editor.
-     * @param {KeyboardEvent} e 
-     */
+		/**
+   * Return true if the editor is empty.
+   */
 
-		}, {
-				key: "onKeyUp",
-				value: function onKeyUp(e) {}
-		}, {
-				key: "onKeyDown",
-				value: function onKeyDown(e) {
-						var keyCode = e.which;
+	}, {
+		key: "isEmpty",
+		value: function isEmpty() {
+			var contentInside = this.domManager.editor.textContent;
+			var childNodesCount = this.selManager.getAllNodesInSelection().length;
+			if (contentInside === "" && childNodesCount < 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}]);
 
-						if (keyCode === 13) {
-
-								// Return key
-								var selectionNode = this.selManager.getNodeInSelection();
-								var selPosType = this.selManager.getSelectionPosition();
-
-								if (this.selManager.isBlockquote(selectionNode)) {
-
-										if (selPosType === 2) {
-
-												e.stopPropagation();
-												e.preventDefault();
-
-												var pElm = this.domManager.generateEmptyNode("P");
-
-												this.domManager.editor.insertBefore(pElm, selectionNode.nextSibling);
-
-												var range = document.createRange();
-												range.setStartBefore(pElm.firstChild);
-												range.collapse(true);
-
-												this.selManager.replaceRange(range);
-										} else if (selPosType === 1) {
-
-												e.stopPropagation();
-												e.preventDefault();
-
-												// this.selManager.removeSelection();
-												this.selManager.splitTextNode();
-										}
-								}
-						}
-				}
-		}, {
-				key: "onSelectionChanged",
-				value: function onSelectionChanged() {
-
-						// if (this.isEmpty()) {
-
-						// 	console.log('what');
-						// 	this.clearEditor();
-						// 	var p = this.domManager.generateEmptyParagraph('p');
-						// 	var range = document.createRange();
-						// 	range.setStart(p, 0);
-						// 	this.domManager.editor.appendChild(p);
-						// 	this.selManager.replaceRange(range);
-						// 	console.log('Oops, editor seems empty. Now reset it to initial stat.');
-
-						// }
-
-						// If the selection is not in the available elements
-						// adjust it.
-						var range = this.selManager.getRange();
-						if (!range) {
-								return;
-						}
-
-						var startNode = range.startContainer;
-						var startOffset = range.startOffset;
-						var endNode = range.endContainer;
-						var endOffset = range.endOffset;
-
-						var target;
-
-						var newRange = document.createRange();
-						newRange.setStart(startNode, startOffset);
-						newRange.setEnd(endNode, endOffset);
-
-						var isChanged = false;
-
-						if (startNode.id === 'editor-body') {
-
-								target = startNode.firstElementChild;
-
-								for (var i = 0; i < startOffset; i++) {
-										target = target.nextElementSibling;
-								}
-
-								newRange.setStart(target, 0);
-
-								console.log(target);
-
-								isChanged = true;
-						}
-
-						if (endNode.id === 'editor-body') {
-
-								target = endNode.firstChild;
-
-								for (var i = 0; i < endOffset - 1; i++) {
-										target = target.nextElementSibling;
-								}
-
-								newRange.setEnd(target, 1);
-
-								console.log(target);
-
-								isChanged = true;
-						}
-
-						if (isChanged) {
-								this.selManager.replaceRange(newRange);
-								console.log(newRange);
-						}
-				}
-
-				// Methods
-
-				/**
-     * Initialize editor.
-     */
-
-		}, {
-				key: "initEditor",
-				value: function initEditor() {
-
-						// Fix flickering when add text style first time
-						// in Chrome browser.
-						var emptyNode = document.createElement('p');
-						emptyNode.innerHTML = 'a';
-						emptyNode.style.opacity = '0';
-						this.domManager.editor.appendChild(emptyNode);
-						var range = document.createRange();
-						range.setStart(emptyNode.firstChild, 0);
-						range.setEnd(emptyNode.firstChild, 1);
-						this.selManager.replaceRange(range);
-						document.execCommand('bold', false);
-						this.domManager.editor.removeChild(emptyNode);
-
-						// if (this.isEmpty()) {
-						// 	this.domManager.editor.innerHTML = "";
-						// 	var emptyP = this.domManager.generateEmptyParagraph('p');
-						// 	this.domManager.editor.appendChild(emptyP);
-
-						// 	var range = document.createRange();
-						// 	range.setStartBefore(emptyP);
-						// 	range.collapse(true);
-
-						// 	this.selManager.sel.removeAllRanges();
-						// 	this.selManager.sel.addRange(range);
-						// }
-				}
-		}, {
-				key: "clearEditor",
-				value: function clearEditor() {
-
-						this.domManager.editor.innerHTML = "";
-				}
-
-				/**
-     * Return true if the editor is empty.
-     */
-
-		}, {
-				key: "isEmpty",
-				value: function isEmpty() {
-						var contentInside = this.domManager.editor.textContent;
-						var childNodesCount = this.selManager.getAllNodesInSelection().length;
-						if (contentInside === "" && childNodesCount < 1) {
-								return true;
-						} else {
-								return false;
-						}
-				}
-		}]);
-
-		return PostEditor;
+	return PostEditor;
 }();
 
 exports.default = PostEditor;
@@ -461,7 +447,7 @@ exports.default = PostEditor;
 
 
 Object.defineProperty(exports, "__esModule", {
-		value: true
+	value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -470,62 +456,89 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var DOMManager = function () {
 
-		/**
-   * Manages html DOM.
-   * @param {HTMLElement} editorDOM
-   */
-		function DOMManager(editorDOM) {
-				_classCallCheck(this, DOMManager);
+	/**
+  * Manages html DOM.
+  * @param {HTMLElement} editorDOM
+  */
+	function DOMManager(editorDOM) {
+		_classCallCheck(this, DOMManager);
 
-				this.pHolder = document.createElement('p');
-				this.pHolder.innerHTML = '<br>';
+		this.pHolder = document.createElement('p');
+		this.pHolder.innerHTML = '<br>';
 
-				// Editor body
-				this.editor = editorDOM.querySelector('#editor-body');
+		// Editor body
+		this.editor = editorDOM.querySelector('#editor-body');
 
-				// Toolbar
-				this.toolbar = editorDOM.querySelector('#editor-toolbar');
+		// Toolbar
+		this.toolbar = editorDOM.querySelector('#editor-toolbar');
 
-				// Toolbar buttons
-				this.body = this.toolbar.querySelector('#p');
-				this.heading1 = this.toolbar.querySelector('#h1');
-				this.heading2 = this.toolbar.querySelector('#h2');
-				this.heading3 = this.toolbar.querySelector('#h3');
+		// Toolbar buttons
+		this.body = this.toolbar.querySelector('#p');
+		this.heading1 = this.toolbar.querySelector('#h1');
+		this.heading2 = this.toolbar.querySelector('#h2');
+		this.heading3 = this.toolbar.querySelector('#h3');
 
-				this.boldButton = this.toolbar.querySelector('#bold');
-				this.italicButton = this.toolbar.querySelector('#italic');
-				this.underlineButton = this.toolbar.querySelector('#underline');
-				this.strikeButton = this.toolbar.querySelector('#strike');
+		this.boldButton = this.toolbar.querySelector('#bold');
+		this.italicButton = this.toolbar.querySelector('#italic');
+		this.underlineButton = this.toolbar.querySelector('#underline');
+		this.strikeButton = this.toolbar.querySelector('#strike');
 
-				this.alignLeft = this.toolbar.querySelector('#align-left');
-				this.alignCenter = this.toolbar.querySelector('#align-center');
-				this.alignRight = this.toolbar.querySelector('#align-right');
+		this.alignLeft = this.toolbar.querySelector('#align-left');
+		this.alignCenter = this.toolbar.querySelector('#align-center');
+		this.alignRight = this.toolbar.querySelector('#align-right');
 
-				this.orderedList = this.toolbar.querySelector('#ol');
-				this.unorderedList = this.toolbar.querySelector('#ul');
+		this.orderedList = this.toolbar.querySelector('#ol');
+		this.unorderedList = this.toolbar.querySelector('#ul');
 
-				this.link = this.toolbar.querySelector('#link');
-				this.blockquote = this.toolbar.querySelector('#blockquote');
+		this.link = this.toolbar.querySelector('#link');
+		this.blockquote = this.toolbar.querySelector('#blockquote');
+	}
+
+	/**
+  * 
+  * @param  {String} tagName
+  * @return {HTMLElement}
+  */
+
+
+	_createClass(DOMManager, [{
+		key: 'generateEmptyNode',
+		value: function generateEmptyNode(tagName) {
+			var elm = document.createElement(tagName);
+			var br = document.createElement('br');
+			elm.appendChild(br);
+			return elm;
 		}
 
 		/**
-   * 
-   * @param  {String} tagName
-   * @return {HTMLElement}
+   * Merge two nodes into one node.
+   * @param {Node} firstNode 
+   * @param {Node} secondNode 
    */
 
+	}, {
+		key: 'mergeNodes',
+		value: function mergeNodes(firstNode, secondNode) {
 
-		_createClass(DOMManager, [{
-				key: 'generateEmptyNode',
-				value: function generateEmptyNode(tagName) {
-						var elm = document.createElement(tagName);
-						var br = document.createElement('br');
-						elm.appendChild(br);
-						return elm;
+			if (firstNode === null || secondNode === null) {
+				return;
+			}
+
+			var front = firstNode,
+			    back = secondNode;
+
+			while (1) {
+
+				if (front.nodeName !== back.nodeName) {
+					break;
 				}
-		}]);
 
-		return DOMManager;
+				if (front.nodeType === 3) {} else {}
+			}
+		}
+	}]);
+
+	return DOMManager;
 }();
 
 exports.default = DOMManager;
@@ -549,17 +562,10 @@ var SelectionManager = function () {
 
 	/**
   * 
-  * @param {DOMManager} domManager 
+  * @param {DOMManager} domManager
   */
 	function SelectionManager(domManager) {
 		_classCallCheck(this, SelectionManager);
-
-		this.sel = document.getSelection();
-		this.range;
-		this.startNode;
-		this.startOffset;
-		this.endNode;
-		this.endOffset;
 
 		this.domManager = domManager;
 	}
@@ -662,7 +668,7 @@ var SelectionManager = function () {
 				// 	continue;
 				// }
 
-				if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i]) && !this.isBlockquote(chunks[i])) {
+				if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
 					console.warn('The node is not a paragraph nor a heading.');
 					continue;
 				}
@@ -709,6 +715,8 @@ var SelectionManager = function () {
 
 			var chunks = this.getAllNodesInSelection();
 			var listElm = document.createElement(type);
+			var placedListElm = false;
+			var placedListElmIndex;
 			var node;
 
 			var unlockList = true;
@@ -716,9 +724,9 @@ var SelectionManager = function () {
 
 			for (var i = 0; i < chunks.length; i++) {
 
-				if (chunks[i].textContent === "") {
-					continue;
-				}
+				// if (chunks[i].textContent === "") {
+				// 	continue;
+				// }
 
 				if (this.isParagraph(chunks[i]) || this.isHeading(chunks[i])) {
 
@@ -739,7 +747,12 @@ var SelectionManager = function () {
 
 					listElm.appendChild(itemElm);
 
-					this.domManager.editor.removeChild(chunks[i]);
+					if (!placedListElm) {
+						placedListElmIndex = i;
+						placedListElm = true;
+					} else {
+						chunks[i].parentNode.removeChild(chunks[i]);
+					}
 
 					unlockList = false;
 				} else if (this.isList(chunks[i])) {
@@ -760,7 +773,12 @@ var SelectionManager = function () {
 						listElm.appendChild(node);
 					}
 
-					this.domManager.editor.removeChild(chunks[i]);
+					if (!placedListElm) {
+						placedListElmIndex = i;
+						placedListElm = true;
+					} else {
+						chunks[i].parentNode.removeChild(chunks[i]);
+					}
 				}
 			}
 
@@ -768,7 +786,8 @@ var SelectionManager = function () {
 				return;
 			}
 
-			this.getRange().insertNode(listElm);
+			// this.getRange().insertNode(listElm);
+			chunks[0].parentNode.replaceChild(listElm, chunks[placedListElmIndex]);
 
 			if (unlockList) {
 
@@ -777,8 +796,8 @@ var SelectionManager = function () {
 				var part1 = true,
 				    part2 = false,
 				    part3 = false;
-				var part1ListElm = document.createElement('OL'),
-				    part3ListElm = document.createElement('OL');
+				var part1ListElm = document.createElement(type),
+				    part3ListElm = document.createElement(type);
 				var part1ListElmInserted = false,
 				    part3ListElmInserted = false;
 				var part3Will = false;
@@ -794,6 +813,7 @@ var SelectionManager = function () {
 					nextNode = itemNode.nextElementSibling;
 
 					if (itemNode.nodeName !== "LI") {
+						itemNode = itemNode.nextElementSibling;
 						continue;
 					}
 
@@ -837,11 +857,11 @@ var SelectionManager = function () {
 					}
 
 					if (itemNode === startNode) {
-						startNode = newParagraph;
+						startNode = pElm;
 					}
 
 					if (itemNode === endNode) {
-						endNode = newParagraph;
+						endNode = pElm;
 					}
 
 					if (part3Will) {
@@ -858,11 +878,15 @@ var SelectionManager = function () {
 				}
 			}
 
+			console.log(startNode, endNode);
+
 			var keepRange = document.createRange();
 			keepRange.setStart(startNode, startOffset);
 			keepRange.setEnd(endNode, endOffset);
 
 			this.replaceRange(keepRange);
+
+			this.fixSelection();
 		}
 	}, {
 		key: 'link',
@@ -931,50 +955,249 @@ var SelectionManager = function () {
 		}
 
 		/**
-   * Deprecated
+   * Backspace implementation
    */
 
 	}, {
 		key: 'backspace',
-		value: function backspace() {
+		value: function backspace(e) {
 
-			// this.range.deleteContents();
+			// Get current available node
+			var currentNode = this.getNodeInSelection();
 
-			// If the selection is collapsed
-			// implement default delete action.
-			if (this.isEmpty()) {
-				console.log(this.startOffset);
-				if (this.startOffset === 0) {
-					// If the selection is on the beginning
+			var range = this.getRange();
+			if (!range.collapsed) {
+				e.stopPropagation();
+				e.preventDefault();
+				this.removeSelection("start");
+				return;
+			}
 
+			// Backspace key - Empty node
+			if (currentNode && currentNode.textContent.length === 0) {
+
+				e.stopPropagation();
+				e.preventDefault();
+
+				if ((this.isAvailableChildNode(currentNode) || this.isAvailableParentNode(currentNode)) && this.getPreviousAvailableNode(currentNode)) {
+
+					var previousNode = this.getPreviousAvailableNode(currentNode);
+
+					console.log("empty child node or parent node");
+
+					if (previousNode) {
+						var range = document.createRange();
+						range.setStartAfter(previousNode.lastChild);
+						this.replaceRange(range);
+
+						if (this.isAvailableChildNode(currentNode)) {
+							var parentNode = currentNode.parentNode;
+							currentNode.parentNode.removeChild(currentNode);
+							console.log(parentNode.querySelectorAll("LI"));
+							if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
+								parentNode.parentNode.removeChild(parentNode);
+							}
+						} else {
+							currentNode.parentNode.removeChild(currentNode);
+						}
+					}
 				} else {
-					if (this.startNode.nodeType === 3) {
-						console.log(this.startNode);
-						// TextNode
-						var text = this.startNode.textContent;
-						var suffixNode;
-						var newRange = document.createRange();
+					var range = document.createRange();
+					range.setStart(currentNode, 0);
+					range.setEnd(currentNode, 0);
+					this.replaceRange(range);
+				}
+			} else if (currentNode && this.getSelectionPositionInParagraph() === 1) {
 
-						this.startNode.textContent = text.slice(0, this.startOffset - 1) + text.slice(this.startOffset, text.length);
+				// Delete key - caret position at start of the node
+				e.stopPropagation();
+				e.preventDefault();
+				console.log("move this line to previous line");
 
-						newRange.setEnd(this.startNode, this.startOffset - 1);
-						newRange.collapse(false);
-						newRange.insertNode(suffixNode = document.createTextNode(' '));
-						newRange.setStartAfter(suffixNode);
+				if ((this.isAvailableChildNode(currentNode) || this.isAvailableParentNode(currentNode)) && this.getPreviousAvailableNode(currentNode)) {
 
-						console.log(this.startOffset);
+					console.log("child node or parentnode");
 
-						this.replaceRange(newRange);
+					var previousNode = this.getPreviousAvailableNode(currentNode);
+
+					if (previousNode) {
+
+						var node,
+						    orgRange = this.getRange();
+
+						var startNode = orgRange.startContainer,
+						    startOffset = orgRange.startOffset;
+						var endNode = orgRange.endContainer,
+						    endOffset = orgRange.endOffset;
+
+						var br = previousNode.querySelector("br");
+						if (br) {
+							br.parentNode.removeChild(br);
+						}
+
+						if (this.isAvailableChildNode(currentNode)) {
+							var parentNode = currentNode.parentNode;
+							this.mergeNodes(previousNode, currentNode, true);
+							if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
+								parentNode.parentNode.removeChild(parentNode);
+							}
+						} else {
+							this.mergeNodes(previousNode, currentNode, true);
+						}
 					}
 				}
 			}
 		}
 	}, {
 		key: 'delete',
-		value: function _delete() {}
+		value: function _delete(e) {
+			// Get current available node
+			var currentNode = this.getNodeInSelection();
+
+			var range = this.getRange();
+			if (!range.collapsed) {
+				e.stopPropagation();
+				e.preventDefault();
+				this.removeSelection("start");
+				return;
+			}
+
+			// Delete key - Empty node
+			if (currentNode && currentNode.textContent.length === 0) {
+
+				e.stopPropagation();
+				e.preventDefault();
+
+				if ((this.isAvailableChildNode(currentNode) || this.isAvailableParentNode(currentNode)) && this.getNextAvailableNode(currentNode)) {
+
+					var nextNode = this.getNextAvailableNode(currentNode);
+
+					console.log("empty child node or parent node");
+
+					if (nextNode) {
+						var range = document.createRange();
+						range.setStartBefore(nextNode.firstChild);
+						this.replaceRange(range);
+
+						if (this.isAvailableChildNode(currentNode)) {
+							var parentNode = currentNode.parentNode;
+							currentNode.parentNode.removeChild(currentNode);
+							if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
+								parentNode.parentNode.removeChild(parentNode);
+							}
+						} else {
+							currentNode.parentNode.removeChild(currentNode);
+						}
+					}
+				} else {
+					var range = document.createRange();
+					range.setStart(currentNode, 0);
+					range.setEnd(currentNode, 0);
+					this.replaceRange(range);
+				}
+			} else if (currentNode && this.getSelectionPositionInParagraph() === 3) {
+
+				// Delete key - caret position at start of the node
+				e.stopPropagation();
+				e.preventDefault();
+				console.log("pull the next node to current.");
+
+				if ((this.isAvailableChildNode(currentNode) || this.isAvailableParentNode(currentNode)) && this.getNextAvailableNode(currentNode)) {
+
+					var nextNode = this.getNextAvailableNode(currentNode);
+
+					if (nextNode) {
+
+						var br = nextNode.querySelector("br");
+						if (br) {
+							br.parentNode.removeChild(br);
+						}
+
+						if (this.isAvailableChildNode(nextNode)) {
+							var parentNode = nextNode.parentNode;
+							this.mergeNodes(currentNode, nextNode, true);
+							if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
+								parentNode.parentNode.removeChild(parentNode);
+							}
+						} else {
+							this.mergeNodes(currentNode, nextNode, true);
+						}
+					}
+				}
+			}
+		}
+
+		/**
+   * Prevents default action and implements a return(enter) key press.
+   */
+
 	}, {
 		key: 'enter',
-		value: function enter() {}
+		value: function enter(e) {
+
+			// When press return key
+			var selectionNode = this.getNodeInSelection();
+			var range = this.getRange();
+			if (!range.collapsed) {
+				e.stopPropagation();
+				e.preventDefault();
+				this.removeSelection();
+				// this.backspace(e);
+				console.log(this.getRange());
+				console.log("the range is not collapsed");
+				return;
+			}
+
+			console.log(selectionNode);
+
+			var selPosType = this.getSelectionPositionInParagraph();
+
+			e.stopPropagation();
+			e.preventDefault();
+
+			if (selPosType === 2) {
+				console.log('middle');
+				this.splitElementNode();
+			} else if (selPosType === 1) {
+				console.log('start');
+				var pElm = this.domManager.generateEmptyNode(selectionNode.nodeName);
+
+				selectionNode.parentNode.insertBefore(pElm, selectionNode);
+			} else if (selPosType === 3) {
+				console.log('end');
+				var newNodeName = selectionNode.nodeName;
+				var parentNode = selectionNode.parentNode;
+				var nextNode = selectionNode.nextSibling;
+
+				if (this.isBlockquote(selectionNode)) {
+					newNodeName = "P";
+				} else if (this.isListItem(selectionNode)) {
+					if (this.isEmptyNode(selectionNode)) {
+
+						if (!this.isListItem(this.getNextAvailableNode(selectionNode))) {
+							newNodeName = "P";
+							selectionNode.parentNode.removeChild(selectionNode);
+							nextNode = parentNode.nextSibling;
+							parentNode = parentNode.parentNode;
+						}
+					}
+				}
+
+				var pElm = this.domManager.generateEmptyNode(newNodeName);
+
+				console.log(pElm);
+
+				console.log(parentNode);
+
+				parentNode.insertBefore(pElm, nextNode);
+
+				var range = document.createRange();
+				range.setStartBefore(pElm.firstChild);
+				range.collapse(true);
+
+				this.replaceRange(range);
+			}
+		}
 
 		/**
    * Paste refined data to the selection.
@@ -1031,6 +1254,10 @@ var SelectionManager = function () {
 	}, {
 		key: 'replaceRange',
 		value: function replaceRange(range) {
+			if (!range) {
+				console.warn("range is not available.", range);
+				return;
+			}
 			document.getSelection().removeAllRanges();
 			document.getSelection().addRange(range);
 		}
@@ -1086,19 +1313,377 @@ var SelectionManager = function () {
 		value: function updateSelection() {}
 	}, {
 		key: 'fixSelection',
-		value: function fixSelection() {}
-	}, {
-		key: 'splitElementNode',
-		value: function splitElementNode() {}
+		value: function fixSelection() {
+
+			// If the selection is not in the available elements
+			// adjust it.
+			var range = this.getRange();
+			if (!range) {
+				return;
+			}
+
+			var startNode = range.startContainer;
+			var startOffset = range.startOffset;
+			var endNode = range.endContainer;
+			var endOffset = range.endOffset;
+
+			var orgS = startNode;
+			var orgSO = startOffset;
+			var orgE = endNode;
+			var orgEO = endOffset;
+
+			var target;
+
+			var newRange = document.createRange();
+			newRange.setStart(startNode, startOffset);
+			newRange.setEnd(endNode, endOffset);
+
+			var isChanged = false;
+
+			// if (startNode.id === 'editor-body') {
+			if (startNode === this.domManager.editor) {
+
+				target = startNode.firstElementChild;
+
+				for (var i = 0; i < startOffset; i++) {
+					target = target.nextElementSibling;
+				}
+
+				if (target) {
+
+					startNode = target;
+					newRange.setStart(startNode, 0);
+
+					isChanged = true;
+				}
+			}
+
+			// if (endNode.id === 'editor-body') {
+			if (endNode === this.domManager.editor) {
+
+				target = endNode.firstChild;
+
+				for (var i = 0; i < endOffset - 1; i++) {
+					target = target.nextElementSibling;
+				}
+
+				if (target) {
+					endNode = target;
+
+					newRange.setEnd(endNode, 1);
+
+					isChanged = true;
+				}
+			}
+
+			var travelNode;
+
+			if (this.isTextContainNode(startNode)) {
+
+				if (startOffset === 0) {
+					travelNode = startNode.firstChild;
+					while (1) {
+						if (!travelNode) {
+							break;
+						} else if (travelNode.nodeType === 3) {
+							startNode = travelNode;
+							newRange.setStart(startNode, 0);
+							isChanged = true;
+							break;
+						} else {
+							travelNode = travelNode.firstChild;
+						}
+					}
+				} else if (startOffset > 0) {
+					travelNode = startNode.lastChild;
+					while (1) {
+						if (!travelNode) {
+							break;
+						} else if (travelNode.nodeType === 3) {
+							startNode = travelNode;
+							newRange.setStart(startNode, startNode.textContent.length);
+							isChanged = true;
+							break;
+						} else {
+							travelNode = travelNode.lastChild;
+						}
+					}
+				}
+			}
+
+			if (this.isTextContainNode(endNode)) {
+
+				if (endOffset > 0) {
+					travelNode = endNode.lastChild;
+					while (1) {
+						if (!travelNode) {
+							break;
+						} else if (travelNode.nodeType === 3) {
+							endNode = travelNode;
+							newRange.setEnd(endNode, endNode.textContent.length);
+							isChanged = true;
+							break;
+						} else {
+							travelNode = travelNode.lastChild;
+						}
+					}
+				} else if (endOffset === 0) {
+					travelNode = endNode.firstChild;
+					while (1) {
+						if (!travelNode) {
+							break;
+						} else if (travelNode.nodeType === 3) {
+							endNode = travelNode;
+							newRange.setEnd(endNode, 0);
+							isChanged = true;
+							break;
+						} else {
+							travelNode = travelNode.firstChild;
+						}
+					}
+				}
+			}
+
+			if (isChanged) {
+				// console.log(orgS, orgSO);
+				// console.log(orgE, orgEO);
+				// console.log(orgS, orgSO);
+				// console.log(orgE, orgEO);
+				// console.log("fixed selection");
+				// console.log(newRange.startContainer, newRange.startOffset);
+				// console.log(newRange.endContainer, newRange.endOffset);
+				this.replaceRange(newRange);
+			}
+
+			startNode = this.getRange().startContainer;
+			startOffset = this.getRange().startOffset;
+			if (startNode.nodeType === 3 && startNode.textContent === "") {
+				startNode.parentNode.normalize();
+			}
+		}
 
 		/**
-   * Split text nodes based on the selection.
+   * Implementing return(enter) key inside blockquotes.
+   */
+
+	}, {
+		key: 'splitElementNode',
+		value: function splitElementNode() {
+
+			var range;
+
+			range = this.getRange();
+
+			if (!range) {
+				return;
+			}
+
+			var startNode = range.startContainer;
+			var startOffset = range.startOffset;
+			var endNode = range.endContainer;
+			var endOffset = range.endOffset;
+
+			var frontNode, backNode;
+			var backNodePassed = false;
+
+			var travelNode = startNode;
+
+			var tempNode, nextNode;
+
+			var orgNode;
+			var newNode;
+
+			// Loop from the bottom to the top of the node.
+			var count = 0;
+			while (1) {
+
+				if (this.isAvailableParentNode(travelNode)) {
+					break;
+				} else if (travelNode.nodeType === 3) {
+
+					if (this.getSelectionPosition() === 1) {
+						travelNode = travelNode.parentElement;
+						backNode = startNode.parentElement;
+						startNode = backNode.previousSibling;
+						continue;
+					} else {
+						if (startOffset === 0) {
+							frontNode = startNode.previousSibling;
+							backNode = startNode;
+						} else {
+							this.splitTextNode();
+							frontNode = startNode;
+							backNode = frontNode.nextSibling;
+						}
+					}
+				} else if (this.isTextStyleNode(travelNode)) {
+
+					if (frontNode === undefined) {}
+
+					if (backNode === undefined) {}
+				} else {
+					break;
+				}
+
+				orgNode = travelNode.parentElement;
+
+				newNode = document.createElement(orgNode.nodeName);
+
+				tempNode = orgNode.firstChild;
+
+				if (!frontNode) {
+					frontNode = backNode.previousSibling;
+				}
+
+				if (!backNode) {
+					backNode = frontNode.nextSibling;
+				}
+
+				console.log('-------------------');
+				console.log(frontNode, backNode, newNode);
+
+				while (1) {
+
+					if (!tempNode) {
+						backNodePassed = false;
+						break;
+					} else {
+						nextNode = tempNode.nextSibling;
+					}
+
+					if (tempNode === backNode) {
+						backNodePassed = true;
+					}
+
+					if (backNodePassed) {
+						newNode.appendChild(tempNode);
+					}
+
+					tempNode = nextNode;
+				}
+
+				if (this.isEmptyNode(orgNode)) {
+					orgNode.parentNode.removeChild(orgNode);
+					orgNode = null;
+				}
+
+				if (!this.isEmptyNode(newNode)) {
+					orgNode.parentNode.insertBefore(newNode, orgNode.nextSibling);
+				} else {
+					newNode = null;
+				}
+
+				frontNode = orgNode;
+				backNode = newNode;
+
+				// If there is a newNode inserted,
+				// move a range to it.
+				if (newNode) {
+					range.setStart(newNode, 0);
+					this.replaceRange(range);
+				}
+
+				travelNode = travelNode.parentElement;
+			}
+		}
+	}, {
+		key: 'mergeNodes',
+		value: function mergeNodes(first, second) {
+			var matchTopNode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+			console.log("merge method runs");
+
+			if (!first || !second) {
+				return;
+			}
+
+			var front = first,
+			    back = second;
+			var tempNode;
+			var nextFront, nextBack;
+
+			var range = window.getSelection().getRangeAt(0);
+			var startNode = this.getTextNodeInElementNode(first, "last");
+			var startOffset;
+			if (startNode) {
+				startOffset = startNode.textContent.length;
+			} else {
+				startNode = this.getTextNodeInElementNode(second, "first");
+				if (startNode) {
+					startOffset = 0;
+				}
+			}
+
+			while (1) {
+
+				console.log("front: ", front, " back: ", back);
+
+				if (!front || !back) {
+					break;
+				}
+
+				if (front.nodeName !== back.nodeName) {
+					if (front === first && back === second && matchTopNode) {} else {
+						break;
+					}
+				}
+
+				if (front.nodeType === 3) {
+
+					front.textContent += back.textContent;
+					back.parentNode.removeChild(back);
+
+					if (front.textContent === "" || back.textContent === "") {
+
+						if (front.textContent === "") {
+							front = front.previousSibling;
+							front.parentNode.removeChild(front);
+						}
+
+						if (back.textContent === "") {
+							back = back.nextSibling;
+							back.parentNode.removeChild(back);
+						}
+
+						continue;
+					}
+
+					break;
+				} else {
+
+					console.log("here");
+
+					nextFront = front.lastChild;
+					nextBack = back.firstChild;
+
+					while (tempNode = back.firstChild) {
+						front.appendChild(tempNode);
+					}
+
+					back.parentNode.removeChild(back);
+
+					front = nextFront;
+					back = nextBack;
+				}
+			}
+
+			if (startNode) {
+				var keepRange = document.createRange();
+				keepRange.setStart(startNode, startOffset);
+				keepRange.setEnd(startNode, startOffset);
+				this.replaceRange(keepRange);
+			}
+		}
+
+		/**
+   * Splits text nodes based on the selection and
+   * returns start and end node.
+   * @return {Object.<Text>}
    */
 
 	}, {
 		key: 'splitTextNode',
 		value: function splitTextNode() {
-			console.log('split');
 			var range = this.getRange();
 			if (!range) {
 				return;
@@ -1106,17 +1691,32 @@ var SelectionManager = function () {
 			var startNode = range.startContainer;
 			var startOffset = range.startOffset;
 
-			if (startNode.nodeType === 3 && startOffset > 0) {
-				startNode.splitText(startOffset);
+			var returnNode = {
+				startNode: null,
+				endNode: null
+			};
+
+			returnNode.startNode = startNode;
+
+			// Split start of the range.
+			if (startNode.nodeType === 3 && startOffset > 0 && startOffset < startNode.textContent.length) {
+
+				returnNode.startNode = startNode.splitText(startOffset);
 			}
 
 			range = this.getRange();
 			var endNode = range.endContainer;
 			var endOffset = range.endOffset;
 
-			if (endNode.nodeType === 3 && endOffset < endNode.textContent.length) {
+			returnNode.endNode = endNode;
+
+			// Split end of the range.
+			if (startNode !== endNode && endNode.nodeType === 3 && endOffset < endNode.textContent.length) {
+
 				endNode.splitText(endOffset);
 			}
+
+			return returnNode;
 		}
 
 		/**
@@ -1126,7 +1726,96 @@ var SelectionManager = function () {
 	}, {
 		key: 'removeSelection',
 		value: function removeSelection() {
-			this.getRange().deleteContents();
+			var collapseDirection = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "end";
+
+			var range = this.getRange();
+			var orgRange = range.cloneRange();
+			if (!range) {
+				return;
+			}
+
+			var splitResult = this.splitTextNode();
+
+			var startNode = splitResult.startNode;
+			var endNode = splitResult.endNode;
+
+			var deletionDone = false;
+			var selectionNode = this.getNodeInSelection();
+			var nextParentNode = this.getNextAvailableNode(selectionNode);
+
+			// range.collapse(false);
+
+			range.setStart(range.endContainer, range.endOffset);
+			this.replaceRange(range);
+
+			var currentParentNode = selectionNode;
+			var travelNode = startNode;
+			var nextNode;
+			var parentNode;
+
+			while (1) {
+				if (!currentParentNode.contains(startNode) && !currentParentNode.contains(endNode)) {
+					console.log("nothing contains");
+					console.log(currentParentNode.textContent);
+					currentParentNode.parentNode.removeChild(currentParentNode);
+				} else if (currentParentNode.contains(startNode) && !currentParentNode.contains(endNode)) {
+					travelNode = startNode;
+					console.log("only contains startnode");
+					console.log(currentParentNode.textContent);
+					var metCurrentNode = false;
+
+					var tempRange = document.createRange();
+					tempRange.setStart(startNode, 0);
+					tempRange.setEndAfter(currentParentNode.lastChild);
+
+					tempRange.deleteContents();
+
+					if (this.isTextEmptyNode(currentParentNode)) {
+						currentParentNode.innerHTML = "";
+						currentParentNode.appendChild(document.createElement("br"));
+					}
+				} else if (!currentParentNode.contains(startNode) && currentParentNode.contains(endNode)) {
+					travelNode = endNode;
+					console.log("only contains endnode");
+					console.log(currentParentNode.textContent);
+
+					var tempRange = document.createRange();
+					tempRange.setStartBefore(currentParentNode.firstChild);
+					tempRange.setEnd(endNode, orgRange.endOffset);
+
+					tempRange.deleteContents();
+
+					if (this.isTextEmptyNode(currentParentNode)) {
+						currentParentNode.innerHTML = "";
+						currentParentNode.appendChild(document.createElement("br"));
+					}
+					if (collapseDirection === "start") {
+						this.backspace(document.createEvent("KeyboardEvent"));
+					}
+					break;
+				} else if (currentParentNode.contains(startNode) && currentParentNode.contains(endNode)) {
+					travelNode = startNode;
+					orgRange.deleteContents();
+					if (this.isTextEmptyNode(currentParentNode)) {
+						currentParentNode.innerHTML = "";
+						currentParentNode.appendChild(document.createElement("br"));
+					}
+
+					console.log(startNode);
+					console.log(endNode);
+
+					if (collapseDirection === "end") {
+						this.enter(document.createEvent("KeyboardEvent"));
+					}
+
+					break;
+				}
+				currentParentNode = nextParentNode;
+				nextParentNode = this.getNextAvailableNode(nextParentNode);
+			}
+
+			// this.fixSelection();
+
 		}
 
 		/**
@@ -1137,6 +1826,126 @@ var SelectionManager = function () {
 		key: 'isEmpty',
 		value: function isEmpty() {
 			if (document.getSelection().isCollapsed) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/**
+   * If there isn't any of child nodes including "" text nodes, returns true.
+   * And truly clear the node to real empty.
+   * @param {HTMLElement} node 
+   */
+
+	}, {
+		key: 'isEmptyNode',
+		value: function isEmptyNode(node) {
+
+			if (node.nodeType === 3) {
+				return false;
+			}
+			var travelNode = node.firstChild;
+			var nextNode = travelNode;
+
+			while (1) {
+
+				if (!travelNode) {
+					return true;
+				}
+
+				nextNode = travelNode.nextSibling;
+
+				if (travelNode.nodeType === 3 && travelNode.textContent === "") {
+					node.removeChild(travelNode);
+				} else if (travelNode.nodeName !== "BR") {
+					return false;
+				}
+
+				travelNode = nextNode;
+			}
+		}
+	}, {
+		key: 'isTextEmptyNode',
+		value: function isTextEmptyNode(node) {
+			if (node.nodeType === 3) {
+				return false;
+			}
+
+			if (node.textContent === "" && !node.querySelector("br")) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'isTextContainNode',
+		value: function isTextContainNode(node) {
+			if (this.isParagraph(node) || this.isHeading(node) || this.isList(node) || this.isListItem(node) || this.isBlockquote(node)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'isTextStyleNode',
+		value: function isTextStyleNode(node) {
+			if (this.isBold(node) || this.isItalics(node) || this.isStrike(node) || this.isUnderline(node) || this.isLink(node)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'isBold',
+		value: function isBold(node) {
+			if (!node) {
+				return false;
+			} else if (node.nodeName === 'B' || node.nodeName === 'STRONG') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'isItalics',
+		value: function isItalics(node) {
+			if (!node) {
+				return false;
+			} else if (node.nodeName === 'I' || node.nodeName === 'EM') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'isStrike',
+		value: function isStrike(node) {
+			if (!node) {
+				return false;
+			} else if (node.nodeName === 'STRIKE') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'isUnderline',
+		value: function isUnderline(node) {
+			if (!node) {
+				return false;
+			} else if (node.nodeName === 'U') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'isLink',
+		value: function isLink(node) {
+			if (!node) {
+				return false;
+			} else if (node.nodeName === 'LINK') {
 				return true;
 			} else {
 				return false;
@@ -1182,6 +1991,17 @@ var SelectionManager = function () {
 			}
 		}
 	}, {
+		key: 'isListItem',
+		value: function isListItem(node) {
+			if (!node) {
+				return false;
+			} else if (node.nodeName === 'LI') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
 		key: 'isBlockquote',
 		value: function isBlockquote(node) {
 			if (!node) {
@@ -1210,8 +2030,8 @@ var SelectionManager = function () {
 			}
 		}
 	}, {
-		key: 'isAvailableNode',
-		value: function isAvailableNode(node) {
+		key: 'isAvailableParentNode',
+		value: function isAvailableParentNode(node) {
 			if (this.isParagraph(node) || this.isHeading(node) || this.isList(node) || this.isBlockquote(node) || this.isImageBlock(node)) {
 				return true;
 			} else {
@@ -1219,38 +2039,211 @@ var SelectionManager = function () {
 			}
 		}
 	}, {
+		key: 'isAvailableChildNode',
+		value: function isAvailableChildNode(node) {
+			if (this.isListItem(node)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/**
+   * Get the first or last text node inside the HTMLElement
+   * @param {HTMLElement} node
+   * @param {String} firstOrLast
+   * "first" | "last" 
+   */
+
+	}, {
+		key: 'getTextNodeInElementNode',
+		value: function getTextNodeInElementNode(node, firstOrLast) {
+			var travelNode = node;
+			var returnNode = null;
+			if (!node) {
+				return null;
+			}
+
+			if (firstOrLast === "first") {
+				while (1) {
+					if (travelNode === null) {
+						break;
+					} else if (travelNode.nodeType === 3) {
+						returnNode = travelNode;
+						break;
+					} else {
+						travelNode = travelNode.firstChild;
+					}
+				}
+			} else if (firstOrLast === "last") {
+				while (1) {
+					if (travelNode === null) {
+						break;
+					} else if (travelNode.nodeType === 3) {
+						returnNode = travelNode;
+						break;
+					} else {
+						travelNode = travelNode.lastChild;
+					}
+				}
+			} else {
+				console.error("Second parameter must be 'first' or 'last'.");
+			}
+
+			return returnNode;
+		}
+	}, {
 		key: 'getSelectionPosition',
 		value: function getSelectionPosition() {
-			var orgRange = this.getRange();
+			var customRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+
+			var orgRange;
+
+			if (customRange) {
+				orgRange = customRange;
+			} else {
+				orgRange = this.getRange();
+			}
+
+			if (!orgRange) {
+				return false;
+			}
+
 			var startNode = orgRange.startContainer;
 			var startOffset = orgRange.startOffset;
 			var endNode = orgRange.endContainer;
 			var endOffset = orgRange.endOffset;
 
-			if (!endNode.nextSibling && endNode.textContent.length === endOffset) {
-				// console.log('end of the line');
-				return 2;
-			} else if (!startNode.previousSibling && startOffset === 0) {
-				// console.log('start of the line');
-				return 0;
-			} else {
-				// console.log('middle of the night');
+			var travelNode;
+			var isStart = false;
+			var isEnd = false;
+
+			travelNode = startNode.previousSibling;
+
+			while (1) {
+				if (!travelNode && startOffset === 0) {
+					isStart = true;
+					break;
+				} else if (!travelNode) {
+					break;
+				} else if (travelNode.textContent === "") {
+					travelNode = travelNode.previousSibling;
+				} else {
+					break;
+				}
+			}
+
+			travelNode = endNode.nextSibling;
+
+			while (1) {
+				if (!travelNode && endOffset === endNode.textContent.length) {
+					isEnd = true;
+					break;
+				} else if (!travelNode) {
+					break;
+				} else if (travelNode.textContent === "") {
+					travelNode = travelNode.nextSibling;
+				} else {
+					break;
+				}
+			}
+
+			if (startNode === endNode && this.isEmptyNode(startNode)) {
+				isEnd = true;
+			}
+
+			if (isStart) {
 				return 1;
+			} else if (isEnd) {
+				return 3;
+			} else {
+				return 2;
+			}
+		}
+	}, {
+		key: 'getSelectionPositionInParagraph',
+		value: function getSelectionPositionInParagraph() {
+			var customRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+			var orgRange;
+
+			if (customRange) {
+				orgRange = customRange;
+			} else {
+				orgRange = this.getRange();
+			}
+
+			if (!orgRange) {
+				return false;
+			}
+
+			var startNode = orgRange.startContainer;
+			var startOffset = orgRange.startOffset;
+			var endNode = orgRange.endContainer;
+			var endOffset = orgRange.endOffset;
+
+			var travelNode, parentNode;
+			var isStart = false;
+			var isEnd = false;
+
+			parentNode = startNode.parentElement;
+			travelNode = startNode;
+
+			if (startOffset === 0) {
+				while (1) {
+					if (this.isAvailableParentNode(travelNode) || this.isAvailableChildNode(travelNode)) {
+						isStart = true;
+						break;
+					} else if (travelNode.previousSibling) {
+						if (travelNode.previousSibling.textContent === "" || travelNode.previousSibling.nodeName === "BR") {
+							travelNode = travelNode.previousSibling;
+						} else {
+							isStart = false;
+							break;
+						}
+					} else {
+						travelNode = travelNode.parentElement;
+					}
+				}
+			}
+
+			parentNode = endNode.parentElement;
+			travelNode = endNode;
+			if (endOffset === endNode.textContent.length) {
+				while (1) {
+					if (this.isAvailableParentNode(travelNode) || this.isAvailableChildNode(travelNode)) {
+						isEnd = true;
+						break;
+					} else if (travelNode.nextSibling) {
+						if (travelNode.nextSibling.textContent === "" || travelNode.nextSibling.nodeName === "BR") {
+							travelNode = travelNode.nextSibling;
+						} else {
+							isEnd = false;
+							break;
+						}
+					} else {
+						travelNode = travelNode.parentElement;
+					}
+				}
+			}
+
+			if (startNode === endNode && this.isEmptyNode(startNode)) {
+				isStart = false;
+				isEnd = true;
+			}
+
+			if (isStart) {
+				return 1;
+			} else if (isEnd) {
+				return 3;
+			} else {
+				return 2;
 			}
 		}
 
 		// Getters
 
-
-		/**
-   * @return {Selection}
-   */
-
-	}, {
-		key: 'getSelection',
-		value: function getSelection() {
-			return document.getSelection();
-		}
 
 		/**
    * @return {Range}
@@ -1282,7 +2275,7 @@ var SelectionManager = function () {
 
 				if (!travelNode) {
 					break;
-				} else if (this.isAvailableNode(travelNode)) {
+				} else if (this.isAvailableParentNode(travelNode)) {
 					nodes.push(travelNode);
 					if (travelNode.contains(this.getRange().endContainer)) {
 						break;
@@ -1292,59 +2285,88 @@ var SelectionManager = function () {
 				} else {
 					travelNode = travelNode.parentElement;
 				}
-
-				// if (!travelNode || travelNode.nodeName === 'BODY') {
-
-				// 	break;
-
-				// } else if (travelNode.id === 'editor-body') {
-
-				// 	travelNode = travelNode.firstChild;
-
-				// } else if (this.isAvailableNode(travelNode)) {
-				// 	nodes.push(travelNode);
-
-				// 	if (travelNode.contains(this.getRange().endContainer)) {
-				// 		break;
-				// 	} else {
-				// 		travelNode = travelNode.nextElementSibling;
-				// 	}
-
-				// } else if (travelNode.nextElementSibling === null) {
-				// 	travelNode = travelNode.parentNode;
-				// } else {
-				// 	travelNode = travelNode.nextElementSibling;
-				// }
 			}
 
 			return nodes;
 		}
 	}, {
+		key: 'getPreviousAvailableNode',
+		value: function getPreviousAvailableNode(node) {
+			var previousNode = node;
+			var travelNode = node.previousSibling;
+			var returnNode = null;
+			while (1) {
+				if (travelNode === null) {
+					if (this.isAvailableChildNode(previousNode)) {
+						travelNode = previousNode.parentNode.previousSibling;
+						previousNode = travelNode;
+					} else {
+						break;
+					}
+				} else if (this.isAvailableParentNode(travelNode) || this.isAvailableChildNode(travelNode)) {
+					// Find the available node
+					if (this.isList(travelNode)) {
+						var itemNodes = travelNode.querySelectorAll("LI");
+						travelNode = itemNodes[itemNodes.length - 1];
+					}
+					returnNode = travelNode;
+					break;
+				} else {
+					travelNode = travelNode.previousSibling;
+				}
+			}
+
+			return returnNode;
+		}
+	}, {
+		key: 'getNextAvailableNode',
+		value: function getNextAvailableNode(node) {
+			var previousNode = node;
+			var travelNode = node.nextSibling;
+			var returnNode = null;
+			while (1) {
+				if (travelNode === null) {
+					if (this.isAvailableChildNode(previousNode)) {
+						travelNode = previousNode.parentNode.nextSibling;
+						previousNode = travelNode;
+					} else {
+						break;
+					}
+				} else if (this.isAvailableParentNode(travelNode) || this.isAvailableChildNode(travelNode)) {
+					// Find the available node
+					if (this.isList(travelNode)) {
+						travelNode = travelNode.querySelectorAll("LI")[0];
+					}
+					returnNode = travelNode;
+					break;
+				} else {
+					travelNode = travelNode.nextSibling;
+				}
+			}
+
+			return returnNode;
+		}
+	}, {
 		key: 'getNodeInSelection',
 		value: function getNodeInSelection() {
 
-			var travelNode = this.getRange().startContainer;
-			if (!travelNode) {
+			var range = this.getRange();
+			if (!range) {
 				return;
+			}
+			var travelNode = this.getRange().startContainer;
+			if (travelNode === null) {
+				return null;
 			}
 
 			while (1) {
-				if (this.isAvailableNode(travelNode)) {
+				if (travelNode === null) {
+					return null;
+				} else if (this.isAvailableParentNode(travelNode) || this.isAvailableChildNode(travelNode)) {
 					return travelNode;
-					break;
 				} else {
-					travelNode = travelNode.parentElement;
+					travelNode = travelNode.parentNode;
 				}
-			}
-		}
-	}, {
-		key: 'getCursorPosInParagraph',
-		value: function getCursorPosInParagraph() {
-			if (this.startOffset === 0) {
-				// If the selection is on the beginning
-				return 1;
-			} else {
-				return;
 			}
 		}
 	}]);
@@ -1353,6 +2375,15 @@ var SelectionManager = function () {
 }();
 
 exports.default = SelectionManager;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Node.prototype.merge = function (node) {};
 
 /***/ })
 /******/ ]);

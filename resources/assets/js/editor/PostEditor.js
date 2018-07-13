@@ -14,18 +14,39 @@ export default class PostEditor {
 		this.domManager = new DOMManager(editorDOM);
 		this.selManager = new SelectionManager(this.domManager);
 
+		this.mouseDownStart = false;
+
 		document.execCommand("defaultParagraphSeparator", false, "p");
 
 		// Event Listeners
 
 		this.domManager.editor.addEventListener('click', () => { this.onSelectionChanged(); });
-		this.domManager.editor.addEventListener('keydown', (e) => { this.onKeyDown(e); });
-		this.domManager.editor.addEventListener('keyup', (e) => {
-			this.onKeyUp(e);
+
+		this.domManager.editor.addEventListener('mousedown', () => {
+			this.mouseDownStart = true;
+		});
+		window.addEventListener('mouseup', () => {
+			if (this.mouseDownStart) {
+				this.mouseDownStart = false;
+				// this.onSelectionChanged();
+			}
+			
+		});
+
+
+		this.isBackspaceKeyPressed = false;
+
+		window.addEventListener('keydown', (e) => {
+			this.onKeyDown(e);
 			this.onSelectionChanged();
 		});
-		this.domManager.editor.addEventListener('click', () => {
+		this.domManager.editor.addEventListener('keyup', (e) => {
+			this.onKeyUp(e);
+			
 			this.onSelectionChanged();
+		});
+		this.domManager.editor.addEventListener('keypress', (e) => {
+			this.onKeyPress(e);
 		});
 
 		this.domManager.editor.addEventListener('paste', (e) => { this.onPaste(e); });
@@ -55,6 +76,8 @@ export default class PostEditor {
 
 	// Events
 
+	
+
 	/**
 	 *
 	 * @param {KeyboardEvent} e
@@ -75,130 +98,56 @@ export default class PostEditor {
 	}
 
 
+	onKeyPress (e) {
+
+	}
+
 	/**
 	 * Fires when press keyboard inside the editor.
 	 * @param {KeyboardEvent} e 
 	 */
 	onKeyUp (e) {
-		
+		var currentNode = this.selManager.getNodeInSelection();
+		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
+			currentNode.removeChild(currentNode.querySelector("br"));
+		}
 	}
 
 	onKeyDown (e) {
+
+		var sel = window.getSelection();
+		if (sel.rangeCount > 0) {
+			if (!this.domManager.editor.contains(sel.getRangeAt(0).startContainer)) {
+				console.warn("The given range is not in the editor. Editor's features will work only inside the editor.");
+				return;
+			}
+		}
+
 		var keyCode = e.which;
 
-		if (keyCode === 13) {
+		// Delete key
+		if (keyCode === 8) {
 
-			// Return key
-			var selectionNode = this.selManager.getNodeInSelection();
-			var selPosType = this.selManager.getSelectionPosition()
+			this.selManager.backspace(e);
 
-			if (this.selManager.isBlockquote(selectionNode)) {
+		} else if (keyCode === 46) {
+			console.log("delete");
+			this.selManager.delete(e);
+		} else if (keyCode === 13) {
 
-				if (selPosType === 2) {
-
-					e.stopPropagation();
-					e.preventDefault();
-
-					var pElm = this.domManager.generateEmptyNode("P");
-
-					this.domManager.editor.insertBefore(pElm, selectionNode.nextSibling);
-
-					var range = document.createRange();
-					range.setStartBefore(pElm.firstChild);
-					range.collapse(true);
-
-					this.selManager.replaceRange(range);
-
-				} else if (selPosType === 1) {
-
-					e.stopPropagation();
-					e.preventDefault();
-
-					// this.selManager.removeSelection();
-					this.selManager.splitTextNode();
-
-				}
-
-			}
-
+			this.selManager.enter(e);
 			
 		}
+		
 	}
 
 
 	onSelectionChanged () {
 
-		// if (this.isEmpty()) {
+		// console.log('selection has been changed');
 
-		// 	console.log('what');
-		// 	this.clearEditor();
-		// 	var p = this.domManager.generateEmptyParagraph('p');
-		// 	var range = document.createRange();
-		// 	range.setStart(p, 0);
-		// 	this.domManager.editor.appendChild(p);
-		// 	this.selManager.replaceRange(range);
-		// 	console.log('Oops, editor seems empty. Now reset it to initial stat.');
 		
-		// }
-
-		// If the selection is not in the available elements
-		// adjust it.
-		var range = this.selManager.getRange();
-		if (!range) {
-			return;
-		}
-
-		var startNode = range.startContainer;
-		var startOffset = range.startOffset;
-		var endNode = range.endContainer;
-		var endOffset = range.endOffset;
-
-		var target;
-
-		var newRange = document.createRange();
-		newRange.setStart(startNode, startOffset);
-		newRange.setEnd(endNode, endOffset);
-
-		var isChanged = false;
-
-		if (startNode.id === 'editor-body') {
-
-			target = startNode.firstElementChild;
-
-			for (var i = 0; i < startOffset; i++) {
-				target = target.nextElementSibling;
-			}
-
-			newRange.setStart(target, 0);
-
-			console.log(target);
-
-			isChanged = true;
-			
-		}
-
-		if (endNode.id === 'editor-body') {
-
-			target = endNode.firstChild;
-
-			for (var i = 0; i < endOffset - 1; i++) {
-				target = target.nextElementSibling;
-			}
-
-			newRange.setEnd(target, 1);
-
-			console.log(target);
-
-			isChanged = true;
-			
-		}
-
-
-		if (isChanged) {
-			this.selManager.replaceRange(newRange);
-			console.log(newRange);
-		}
-		
+		this.selManager.fixSelection();		
 
 	}
 
@@ -222,6 +171,7 @@ export default class PostEditor {
 		this.selManager.replaceRange(range);
 		document.execCommand('bold', false);
 		this.domManager.editor.removeChild(emptyNode);
+		document.getSelection().removeAllRanges();
 
 		// if (this.isEmpty()) {
 		// 	this.domManager.editor.innerHTML = "";

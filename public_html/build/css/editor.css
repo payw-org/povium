@@ -7,9 +7,46 @@
   width: calc(100% - 40px);
   max-width: 50rem;
   margin: auto; }
+  #post-editor #caret {
+    display: none;
+    position: fixed;
+    width: 2px;
+    height: 1.2rem;
+    background: #006eff;
+    -webkit-animation-name: caretBlink;
+    animation-name: caretBlink;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    pointer-events: none;
+    -webkit-transition: .1s left ease, .1s top ease;
+    -o-transition: .1s left ease, .1s top ease;
+    transition: .1s left ease, .1s top ease; }
+    #post-editor #caret.stay {
+      -webkit-animation: none;
+      animation: none;
+      opacity: 1; }
 
-p, h1, h2, h3 {
-  position: relative; }
+@-webkit-keyframes caretBlink {
+  0% {
+    opacity: 1; }
+  50% {
+    opacity: 1; }
+  51% {
+    opacity: 0; }
+  100% {
+    opacity: 0; } }
+
+@keyframes caretBlink {
+  0% {
+    opacity: 1; }
+  50% {
+    opacity: 1; }
+  51% {
+    opacity: 0; }
+  100% {
+    opacity: 0; } }
 
 #editor-toolbar {
   margin-bottom: 1rem;
@@ -31,76 +68,41 @@ p, h1, h2, h3 {
     display: inline-block;
     font-size: 1rem;
     cursor: pointer;
-    -webkit-transition: background-color .2s ease, color .2s ease, -webkit-transform .1s ease, -webkit-box-shadow .2s ease;
-    transition: background-color .2s ease, color .2s ease, -webkit-transform .1s ease, -webkit-box-shadow .2s ease;
-    -o-transition: transform .1s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
-    transition: transform .1s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease;
-    transition: transform .1s ease, background-color .2s ease, color .2s ease, box-shadow .2s ease, -webkit-transform .1s ease, -webkit-box-shadow .2s ease; }
+    border-radius: 5px; }
     #editor-toolbar button:hover {
       background: #5f42ff;
-      -webkit-transform: scale(1.1);
-      -ms-transform: scale(1.1);
-      transform: scale(1.1);
-      color: #fff;
-      -webkit-box-shadow: 0 0.5em 1.5em rgba(0, 0, 0, 0.3);
-      box-shadow: 0 0.5em 1.5em rgba(0, 0, 0, 0.3); }
+      color: #fff; }
     #editor-toolbar button:active {
       -webkit-transform: scale(1);
       -ms-transform: scale(1);
       transform: scale(1); }
 
 #editor-body {
+  cursor: text;
+  white-space: pre-wrap;
   margin-top: 2rem;
   outline: none;
   min-height: 500px; }
+  #editor-body .del-junk {
+    background: red;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex; }
   #editor-body:empty {
-    background: red; }
-  #editor-body :empty {
-    background: blue; }
-  #editor-body p, #editor-body li {
-    font-size: 18px;
-    margin-bottom: .5em;
+    background: lightblue; }
+  #editor-body p, #editor-body li, #editor-body blockquote {
+    margin-bottom: .7em;
     line-height: 1.1; }
-    @media only screen and (max-width: 768px) {
-      #editor-body p, #editor-body li {
-        font-size: 16px; } }
-    @media only screen and (min-width: 1441px) {
-      #editor-body p, #editor-body li {
-        font-size: 20px; } }
   #editor-body h1, #editor-body h2, #editor-body h3, #editor-body h4, #editor-body h5, #editor-body h6 {
     line-height: 1.2;
     font-weight: 400;
     margin: 0; }
-  #editor-body h1 {
-    font-size: 35px; }
-    #editor-body h1 + p {
-      margin-top: 1.2em; }
-    @media only screen and (max-width: 768px) {
-      #editor-body h1 {
-        font-size: 32px; } }
-    @media only screen and (min-width: 1441px) {
-      #editor-body h1 {
-        font-size: 40px; } }
-  #editor-body h2 {
-    font-size: 30px; }
-    #editor-body h2 + p {
-      margin-top: 1em; }
-    @media only screen and (max-width: 768px) {
-      #editor-body h2 {
-        font-size: 28px; } }
-    @media only screen and (min-width: 1441px) {
-      #editor-body h2 {
-        font-size: 35px; } }
-  #editor-body h3 {
-    font-size: 27px; }
-    #editor-body h3 + p {
-      margin-top: .8em; }
-    @media only screen and (max-width: 768px) {
-      #editor-body h3 {
-        font-size: 24px; } }
-    @media only screen and (min-width: 1441px) {
-      #editor-body h3 {
-        font-size: 31px; } }
+  #editor-body h1 + p {
+    margin-top: 1.2em; }
+  #editor-body h2 + p {
+    margin-top: 1em; }
+  #editor-body h3 + p {
+    margin-top: .8em; }
   #editor-body ol, #editor-body ul {
     padding: .5em 0; }
   #editor-body ol, #editor-body ul, #editor-body ol > li, #editor-body ul > li {
@@ -116,30 +118,13 @@ p, h1, h2, h3 {
   #editor-body blockquote {
     padding: 0;
     padding-left: 1.2em;
-    position: relative;
     margin: 2em 0 0;
     line-height: 2;
-    font-size: 18px; }
-    @media only screen and (max-width: 768px) {
-      #editor-body blockquote {
-        font-size: 16px; } }
-    @media only screen and (min-width: 1441px) {
-      #editor-body blockquote {
-        font-size: 20px; } }
+    border-left: 2px solid #222; }
     #editor-body blockquote + blockquote {
       margin-top: 0; }
     #editor-body blockquote + p, #editor-body blockquote + h1, #editor-body blockquote + h2, #editor-body blockquote + h3, #editor-body blockquote + h4, #editor-body blockquote + h5, #editor-body blockquote + h6 {
       margin-top: 2em; }
-    #editor-body blockquote::before {
-      content: "";
-      position: absolute;
-      display: inline-block;
-      width: 3px;
-      top: 0;
-      left: 3px;
-      bottom: 0;
-      border-radius: 0;
-      background: #6c6c79; }
     #editor-body blockquote p {
       line-height: 1.2;
       margin: 0; }

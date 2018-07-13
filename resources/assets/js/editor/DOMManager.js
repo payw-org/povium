@@ -44,10 +44,43 @@ export default class DOMManager {
 	 * @return {HTMLElement}
 	 */
 	generateEmptyNode (tagName) {
-		let elm = document.createElement(tagName);
-		let br = document.createElement('br');
+		var elm = document.createElement(tagName);
+		var br = document.createElement('br');
 		elm.appendChild(br);
 		return elm;
+	}
+
+	/**
+	 * Merge two nodes into one node.
+	 * @param {Node} firstNode 
+	 * @param {Node} secondNode 
+	 */
+	mergeNodes (firstNode, secondNode) {
+		
+		if (firstNode === null || secondNode === null) {
+			return;
+		}
+
+		var front = firstNode, back = secondNode;
+
+		while (1) {
+
+			if (front.nodeName !== back.nodeName) {
+				break;
+			}
+
+			if (front.nodeType === 3) {
+
+				
+
+			} else {
+
+
+
+			}
+
+		}
+
 	}
 
 }
