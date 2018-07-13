@@ -1,3 +1,5 @@
-<link rel="stylesheet" href="/global-inclusion/css/globalstyle.css">
-<link rel="stylesheet" href="/global-inclusion/globalnav/css/globalnav.css">
-<link rel="stylesheet" href="/global-inclusion/css/fonts.css">
+<base href="/">
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link rel="stylesheet" href="/build/css/globalstyle.css">
+<link rel="stylesheet" href="/build/css/globalnav.css">
+<link rel="stylesheet" href="/build/css/globalfooter.css">

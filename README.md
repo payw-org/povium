@@ -1,9 +1,5 @@
 # Povium
 
-Plan.md를 읽으세요.
+포비엄은 누구나 글을 쓰고 업로드할 수 있는 출판 플랫폼입니다.
 
-macOS High Sierra 10.13.4
-https://drive.google.com/file/d/1NCYqmwqgbt_PahzmVmiTtYw59lpArjV7/view
-
-tutorial
-https://techsviewer.com/install-macos-high-sierra-vmware-windows/
+우리는 좋은 글에 세상을 바꿀 힘이 있다고 믿습니다.

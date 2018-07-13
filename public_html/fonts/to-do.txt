@@ -1,2 +1,0 @@
-Povium Pro
-- Customized Noto Sans(EN) + Resized Noto Sans(KR)
