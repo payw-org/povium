@@ -32,14 +32,6 @@ class Auth
 	}
 
 	/**
-	*
-	*/
-	public function __destruct()
-	{
-
-	}
-
-	/**
 	* Validate account.
 	* Set auto login
 	* @param  string $identifier email or readable id
