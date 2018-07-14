@@ -52,10 +52,10 @@ export default class PostEditor {
 		this.domManager.editor.addEventListener('paste', (e) => { this.onPaste(e); });
 
 		// Toolbar button events
-		this.domManager.body.addEventListener('click', (e) => { this.selManager.heading('P'); });
-		this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1'); });
-		this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2'); });
-		this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3'); });
+		// this.domManager.paragraph.addEventListener('click', (e) => { this.selManager.heading('P'); });
+		// this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1'); });
+		// this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2'); });
+		// this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3'); });
 
 		this.domManager.boldButton.addEventListener('click', (e) => { this.selManager.bold(); });
 		this.domManager.italicButton.addEventListener('click', (e) => { this.selManager.italic(); });
@@ -66,9 +66,10 @@ export default class PostEditor {
 		this.domManager.alignCenter.addEventListener('click', (e) => { this.selManager.align('center'); });
 		this.domManager.alignRight.addEventListener('click', (e) => { this.selManager.align('right'); });
 
-		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL'); });
+		// this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL'); });
 		// this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
-		this.domManager.blockquote.addEventListener('click', (e) => { this.selManager.blockquote('UL'); });
+		// this.domManager.link.addEventListener('click', (e) => { this.selManager.link("naver.com"); });
+		// this.domManager.blockquote.addEventListener('click', (e) => { this.selManager.blockquote(); });
 
 		this.initEditor();
 
@@ -147,7 +148,16 @@ export default class PostEditor {
 		// console.log('selection has been changed');
 
 		
-		this.selManager.fixSelection();		
+		this.selManager.fixSelection();
+		var range = this.selManager.getRange();
+		if (range && !range.collapsed) {
+			document.querySelector("#poptool").classList.add("active");
+			document.querySelector("#poptool").style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - document.querySelector("#poptool").getBoundingClientRect().width / 2  + "px";
+			console.log(document.querySelector("#post-editor").getBoundingClientRect().top);
+			document.querySelector("#poptool").style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - document.querySelector("#poptool").getBoundingClientRect().height - 5 + "px";
+		} else {
+			document.querySelector("#poptool").classList.remove("active");
+		}
 
 	}
 

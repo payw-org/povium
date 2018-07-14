@@ -151,6 +151,11 @@ export default class SelectionManager
 		if (!orgRange) {
 			return;
 		}
+
+		if (type === undefined) {
+			console.error("List type undefined.");
+		}
+
 		let startNode = orgRange.startContainer;
 		let startOffset = orgRange.startOffset;
 		let endNode = orgRange.endContainer;
@@ -341,6 +346,7 @@ export default class SelectionManager
 
 		}
 
+
 		console.log(startNode, endNode);
 
 		var keepRange = document.createRange();
@@ -355,6 +361,17 @@ export default class SelectionManager
 
 	link(url)
 	{
+		var range = this.getRange();
+		if (!range) {
+			return;
+		}
+
+		if (range.collapsed) {
+			return;
+		}
+
+
+
 		document.execCommand('createLink', false, url);
 	}
 
@@ -478,7 +495,7 @@ export default class SelectionManager
 
 			} else {
 				if (this.isListItem(currentNode)) {
-					this.list();
+					this.list(currentNode.parentNode.nodeName);
 				} else if (this.isAvailableParentNode(currentNode)) {
 					this.changeNodeName(currentNode, "P");
 				}
@@ -677,13 +694,12 @@ export default class SelectionManager
 			} else if (this.isListItem(selectionNode)) {
 				if (this.isEmptyNode(selectionNode)) {
 
-					if (!this.isListItem(this.getNextAvailableNode(selectionNode))) {
-						newNodeName = "P";
-						selectionNode.parentNode.removeChild(selectionNode);
-						nextNode = parentNode.nextSibling;
-						parentNode = parentNode.parentNode;
-					}
+					this.list(selectionNode.parentNode.nodeName);
+					return;
+
+					
 				}
+				
 			}
 
 			var pElm = this.domManager.generateEmptyNode(newNodeName);

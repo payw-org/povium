@@ -121,46 +121,53 @@ var editor = new _PostEditor2.default(document.querySelector('#post-editor'));
 // var a = document.createElement('h1').nodeName;
 // console.log(a);
 
-document.querySelector('#log-range').addEventListener('click', function () {
+// document.querySelector('#log-range').addEventListener('click', function () {
 
-	var sel = window.getSelection();
+// 	var sel = window.getSelection();
 
-	if (sel.rangeCount === 0) {
-		return;
-	}
+// 	if (sel.rangeCount === 0) {
+// 		return;
+// 	}
 
-	var range = sel.getRangeAt(0);
+// 	var range = sel.getRangeAt(0);
 
-	console.log(range.startContainer);
-	console.log(range.startOffset);
-	console.log(range.endContainer);
-	console.log(range.endOffset);
-});
+// 	console.log(range.startContainer);
+// 	console.log(range.startOffset);
+// 	console.log(range.endContainer);
+// 	console.log(range.endOffset);
 
-document.querySelector('#nodes-in-selection').addEventListener('click', function () {
+// });
 
-	console.log(editor.selManager.getAllNodesInSelection());
-});
+// document.querySelector('#nodes-in-selection').addEventListener('click', function () {
 
-document.querySelector('#separate').addEventListener('click', function () {
+// 	console.log(editor.selManager.getAllNodesInSelection());
 
-	editor.selManager.splitElementNode2();
-});
+// });
 
-document.querySelector('#split-text').addEventListener('click', function () {
+// document.querySelector('#separate').addEventListener('click', function () {
 
-	editor.selManager.splitTextNode();
-});
+// 	editor.selManager.splitElementNode2();
 
-document.querySelector('#get-sel-pos').addEventListener('click', function () {
+// });
 
-	console.log(editor.selManager.getSelectionPosition());
-});
+// document.querySelector('#split-text').addEventListener('click', function () {
 
-document.querySelector('#get-sel-pos-par').addEventListener('click', function () {
+// 	editor.selManager.splitTextNode();
 
-	console.log(editor.selManager.getSelectionPositionInParagraph());
-});
+// });
+
+// document.querySelector('#get-sel-pos').addEventListener('click', function () {
+
+// 	console.log(editor.selManager.getSelectionPosition());
+
+// });
+
+// document.querySelector('#get-sel-pos-par').addEventListener('click', function () {
+
+// 	console.log(editor.selManager.getSelectionPositionInParagraph());
+
+// });
+
 
 // var dom = document.createElement("ol");
 // dom.innerHTML = "<li></li>";
@@ -248,18 +255,10 @@ var PostEditor = function () {
 		});
 
 		// Toolbar button events
-		this.domManager.body.addEventListener('click', function (e) {
-			_this.selManager.heading('P');
-		});
-		this.domManager.heading1.addEventListener('click', function (e) {
-			_this.selManager.heading('H1');
-		});
-		this.domManager.heading2.addEventListener('click', function (e) {
-			_this.selManager.heading('H2');
-		});
-		this.domManager.heading3.addEventListener('click', function (e) {
-			_this.selManager.heading('H3');
-		});
+		// this.domManager.paragraph.addEventListener('click', (e) => { this.selManager.heading('P'); });
+		// this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1'); });
+		// this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2'); });
+		// this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3'); });
 
 		this.domManager.boldButton.addEventListener('click', function (e) {
 			_this.selManager.bold();
@@ -284,13 +283,10 @@ var PostEditor = function () {
 			_this.selManager.align('right');
 		});
 
-		this.domManager.orderedList.addEventListener('click', function (e) {
-			_this.selManager.list('OL');
-		});
+		// this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL'); });
 		// this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
-		this.domManager.blockquote.addEventListener('click', function (e) {
-			_this.selManager.blockquote('UL');
-		});
+		// this.domManager.link.addEventListener('click', (e) => { this.selManager.link("naver.com"); });
+		// this.domManager.blockquote.addEventListener('click', (e) => { this.selManager.blockquote(); });
 
 		this.initEditor();
 	}
@@ -371,6 +367,15 @@ var PostEditor = function () {
 
 
 			this.selManager.fixSelection();
+			var range = this.selManager.getRange();
+			if (range && !range.collapsed) {
+				document.querySelector("#poptool").classList.add("active");
+				document.querySelector("#poptool").style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - document.querySelector("#poptool").getBoundingClientRect().width / 2 + "px";
+				console.log(document.querySelector("#post-editor").getBoundingClientRect().top);
+				document.querySelector("#poptool").style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - document.querySelector("#poptool").getBoundingClientRect().height - 5 + "px";
+			} else {
+				document.querySelector("#poptool").classList.remove("active");
+			}
 		}
 
 		// Methods
@@ -473,25 +478,25 @@ var DOMManager = function () {
 		this.toolbar = editorDOM.querySelector('#editor-toolbar');
 
 		// Toolbar buttons
-		this.body = this.toolbar.querySelector('#p');
-		this.heading1 = this.toolbar.querySelector('#h1');
-		this.heading2 = this.toolbar.querySelector('#h2');
-		this.heading3 = this.toolbar.querySelector('#h3');
+		this.paragraph = editorDOM.querySelector('#p');
+		this.heading1 = editorDOM.querySelector('#h1');
+		this.heading2 = editorDOM.querySelector('#h2');
+		this.heading3 = editorDOM.querySelector('#h3');
 
-		this.boldButton = this.toolbar.querySelector('#bold');
-		this.italicButton = this.toolbar.querySelector('#italic');
-		this.underlineButton = this.toolbar.querySelector('#underline');
-		this.strikeButton = this.toolbar.querySelector('#strike');
+		this.boldButton = editorDOM.querySelector('#bold');
+		this.italicButton = editorDOM.querySelector('#italic');
+		this.underlineButton = editorDOM.querySelector('#underline');
+		this.strikeButton = editorDOM.querySelector('#strike');
 
-		this.alignLeft = this.toolbar.querySelector('#align-left');
-		this.alignCenter = this.toolbar.querySelector('#align-center');
-		this.alignRight = this.toolbar.querySelector('#align-right');
+		this.alignLeft = editorDOM.querySelector('#align-left');
+		this.alignCenter = editorDOM.querySelector('#align-center');
+		this.alignRight = editorDOM.querySelector('#align-right');
 
-		this.orderedList = this.toolbar.querySelector('#ol');
-		this.unorderedList = this.toolbar.querySelector('#ul');
+		this.orderedList = editorDOM.querySelector('#ol');
+		this.unorderedList = editorDOM.querySelector('#ul');
 
-		this.link = this.toolbar.querySelector('#link');
-		this.blockquote = this.toolbar.querySelector('#blockquote');
+		this.link = editorDOM.querySelector('#link');
+		this.blockquote = editorDOM.querySelector('#blockquote');
 	}
 
 	/**
@@ -708,6 +713,11 @@ var SelectionManager = function () {
 			if (!orgRange) {
 				return;
 			}
+
+			if (type === undefined) {
+				console.error("List type undefined.");
+			}
+
 			var startNode = orgRange.startContainer;
 			var startOffset = orgRange.startOffset;
 			var endNode = orgRange.endContainer;
@@ -891,6 +901,15 @@ var SelectionManager = function () {
 	}, {
 		key: 'link',
 		value: function link(url) {
+			var range = this.getRange();
+			if (!range) {
+				return;
+			}
+
+			if (range.collapsed) {
+				return;
+			}
+
 			document.execCommand('createLink', false, url);
 		}
 	}, {
@@ -1005,7 +1024,7 @@ var SelectionManager = function () {
 					}
 				} else {
 					if (this.isListItem(currentNode)) {
-						this.list();
+						this.list(currentNode.parentNode.nodeName);
 					} else if (this.isAvailableParentNode(currentNode)) {
 						this.changeNodeName(currentNode, "P");
 					}
@@ -1179,12 +1198,8 @@ var SelectionManager = function () {
 				} else if (this.isListItem(selectionNode)) {
 					if (this.isEmptyNode(selectionNode)) {
 
-						if (!this.isListItem(this.getNextAvailableNode(selectionNode))) {
-							newNodeName = "P";
-							selectionNode.parentNode.removeChild(selectionNode);
-							nextNode = parentNode.nextSibling;
-							parentNode = parentNode.parentNode;
-						}
+						this.list(selectionNode.parentNode.nodeName);
+						return;
 					}
 				}
 
