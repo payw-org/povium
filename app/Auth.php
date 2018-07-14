@@ -27,6 +27,7 @@ class Auth
 	*/
 	public function __construct(\PDO $conn)
 	{
+		session_start();
 		$this->conn = $conn;
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 	}
