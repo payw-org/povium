@@ -1,4 +1,14 @@
 <?php
+
+/* Editor testing page */
+$router->get(
+	'/editor',
+ 	function () {
+		require $_SERVER['DOCUMENT_ROOT'] . '/../views/editor.php';
+		return true;
+	}
+);
+
 /* Home Page */
 $router->get(
 	'/',
