@@ -974,7 +974,7 @@ var SelectionManager = function () {
 			}
 
 			// Backspace key - Empty node
-			if (currentNode && currentNode.textContent.length === 0) {
+			if (currentNode && this.isAvailableEmptyNode(currentNode)) {
 
 				e.stopPropagation();
 				e.preventDefault();
@@ -985,7 +985,9 @@ var SelectionManager = function () {
 
 					console.log("empty child node or parent node");
 
-					if (previousNode) {
+					if (this.isAvailableEmptyNode(previousNode)) {
+						previousNode.parentNode.removeChild(previousNode);
+					} else {
 						var range = document.createRange();
 						range.setStartAfter(previousNode.lastChild);
 						this.replaceRange(range);
@@ -1002,14 +1004,15 @@ var SelectionManager = function () {
 						}
 					}
 				} else {
-					var range = document.createRange();
-					range.setStart(currentNode, 0);
-					range.setEnd(currentNode, 0);
-					this.replaceRange(range);
+					if (this.isListItem(currentNode)) {
+						this.list();
+					} else if (this.isAvailableParentNode(currentNode)) {
+						this.changeNodeName(currentNode, "P");
+					}
 				}
 			} else if (currentNode && this.getSelectionPositionInParagraph() === 1) {
 
-				// Delete key - caret position at start of the node
+				// backspace - caret position at start of the node
 				e.stopPropagation();
 				e.preventDefault();
 				console.log("move this line to previous line");
@@ -1020,7 +1023,9 @@ var SelectionManager = function () {
 
 					var previousNode = this.getPreviousAvailableNode(currentNode);
 
-					if (previousNode) {
+					if (this.isAvailableEmptyNode(previousNode)) {
+						previousNode.parentNode.removeChild(previousNode);
+					} else {
 
 						var node,
 						    orgRange = this.getRange();
@@ -1299,7 +1304,7 @@ var SelectionManager = function () {
 			}
 
 			// 3. replace node
-			this.domManager.editor.replaceChild(newNode, targetNode);
+			targetNode.parentNode.replaceChild(newNode, targetNode);
 
 			return newNode;
 		}
@@ -1873,6 +1878,19 @@ var SelectionManager = function () {
 			}
 
 			if (node.textContent === "" && !node.querySelector("br")) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'isAvailableEmptyNode',
+		value: function isAvailableEmptyNode(node) {
+			if (node.nodeType === 3) {
+				return false;
+			}
+
+			if (node.textContent === "" && node.querySelector("br")) {
 				return true;
 			} else {
 				return false;

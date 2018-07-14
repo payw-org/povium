@@ -190,7 +190,7 @@ var _TextInput2 = __webpack_require__(2);
 
 var _TextInput3 = _interopRequireDefault(_TextInput2);
 
-var _AJAX = __webpack_require__(9);
+var _AJAX = __webpack_require__(7);
 
 var _AJAX2 = _interopRequireDefault(_AJAX);
 
@@ -253,9 +253,7 @@ confirmButton.addEventListener("click", function () {
 });
 
 /***/ }),
-/* 7 */,
-/* 8 */,
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
