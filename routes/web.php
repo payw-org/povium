@@ -1,13 +1,10 @@
 <?php
-
-/* Editor testing page */
-$router->get(
-	'/editor',
- 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/editor.php';
-		return true;
-	}
-);
+/**
+* Set routes of web page
+*
+* @author H.Chihoon
+* @copyright 2018 DesignAndDevelop
+*/
 
 /* Home Page */
 $router->get(
@@ -22,7 +19,7 @@ $router->get(
 $router->get(
 	'/login',
  	function () use ($auth) {
-		//	If already logged in, send to home.
+		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
 			exit(header('Location: ' . BASE_URI . '/'));
 		}
@@ -37,12 +34,27 @@ $router->get(
 $router->get(
 	'/register',
  	function () use ($auth) {
-		//	If already logged in, send to home.
+		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
 			exit(header('Location: ' . BASE_URI . '/'));
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/register.php';
+
+		return true;
+	}
+);
+
+/* Editor test page */
+$router->get(
+	'/editor',
+ 	function () use ($auth) {
+		//	If not logged in, send to login page.
+		if (!$auth->isLoggedIn()) {
+			exit(header('Location: ' . BASE_URI . '/login'));
+		}
+
+		require $_SERVER['DOCUMENT_ROOT'] . '/../views/editor.php';
 
 		return true;
 	}

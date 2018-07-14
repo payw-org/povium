@@ -11,6 +11,8 @@ use Povium\Base\Factory\MasterFactory;
 $router = new Router();
 $factory = new MasterFactory();
 $auth = $factory->createInstance('\Povium\Auth');
+
+//	If possible, log in automatically.
 $auth->isLoggedIn();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
