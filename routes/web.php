@@ -1,15 +1,4 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
-
-use Povium\Base\Routing\Router;
-use Povium\Base\Factory\MasterFactory;
-
-$router = new Router();
-$factory = new MasterFactory();
-$auth = $factory->createInstance('\Povium\Auth');
-
-define('BASE_URI', 'http://' . $_SERVER['HTTP_HOST']);
-
 /* Home Page */
 $router->get(
 	'/',

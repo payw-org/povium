@@ -1,11 +1,21 @@
 <?php
 session_start();
 date_default_timezone_set("Asia/Seoul");
+define('BASE_URI', 'http://' . $_SERVER['HTTP_HOST']);
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
+
+use Povium\Base\Routing\Router;
+use Povium\Base\Factory\MasterFactory;
+
+$router = new Router();
+$factory = new MasterFactory();
+$auth = $factory->createInstance('\Povium\Auth');
+$auth->isLoggedIn();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-
 
 // $params = array('readable_id' => 'fairy_hooni',
 // 				'post_title' => "황치#$^훈의 ગુડબાય ---- ;'즐★거🤯운' PHP 교실 - vol.2",

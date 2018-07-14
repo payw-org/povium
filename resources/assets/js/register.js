@@ -32,12 +32,12 @@ class RegInput extends TextInput {
 
 }
 
-var emailInputDOM = document.querySelector('.input-wrapper.email input');
+var readableIDInputDOM = document.querySelector('.input-wrapper.readable-id input');
 var nameInputDOM = document.querySelector('.input-wrapper.name input');
 var passInputDOM = document.querySelector('.input-wrapper.password input');
 
-if (emailInputDOM) {
-	var emailInputObj = new RegInput(emailInputDOM);
+if (readableIDInputDOM) {
+	var readableIDInputObj = new RegInput(readableIDInputDOM);
 	var nameInputObj = new RegInput(nameInputDOM);
 	var passInputObj = new RegInput(passInputDOM);
 }
@@ -46,7 +46,7 @@ if (emailInputDOM) {
 function checkValidation () {
 
 	var inputData = {
-		email: emailInputDOM.value,
+		readable_id: readableIDInputDOM.value,
 		name: nameInputDOM.value,
 		password: passInputDOM.value
 	}
@@ -54,19 +54,19 @@ function checkValidation () {
 	var ajax = new AJAX();
 	ajax.chirp({
 		type: "post",
-		url: "/test.php",
+		url: "/registerVerifyHandler.php",
 		data: "register_inputs=" + JSON.stringify(inputData),
-		success: function (response) {
+		success: function(response) {
 			var result = JSON.parse(response);
 
 			console.log(result);
 
 			if (result['err']) {
-				emailInputObj.showMsg(result['email_msg']);
+				readableIDInputObj.showMsg(result['readable_id_msg']);
 				nameInputObj.showMsg(result['name_msg']);
 				passInputObj.showMsg(result['password_msg']);
 			} else {
-				emailInputObj.hideMsg();
+				readableIDInputObj.hideMsg();
 				nameInputObj.hideMsg();
 				passInputObj.hideMsg();
 			}
@@ -74,3 +74,29 @@ function checkValidation () {
 	});
 
 }
+
+var startButton = document.querySelector("button.start");
+startButton.addEventListener("click", function() {
+
+	var inputData = {
+		readable_id: readableIDInputDOM.value,
+		name: nameInputDOM.value,
+		password: passInputDOM.value
+	}
+
+	var ajax = new AJAX();
+	ajax.chirp({
+		type: "post",
+		url: "/registerConfirmHandler.php",
+		data: "register_inputs=" + JSON.stringify(inputData),
+		success: function(response) {
+			var result = JSON.parse(response);
+			console.log(response);
+			if (result['err']) {
+				alert("입력 정보에 문제가 있어요.");
+			} else {
+				window.location.replace(result['redirect']);
+			}
+		}
+	});
+});

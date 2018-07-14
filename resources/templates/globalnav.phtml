@@ -23,6 +23,18 @@
 				<a id="gn-home-link" href="/"></a>
 			</div>
 
+			<?php
+			if ($GLOBALS['auth']->isLoggedIn()) {
+			?>
+
+			<div id="gn-user-info">
+				<?php echo $GLOBALS['auth']->getCurrentUser()['name']; ?>
+			</div>
+
+			<?php
+			} else {
+			?>
+
 			<div id="gn-sign-register">
 				<div class="container">
 					<a href="/login" class="sign-in">
@@ -35,6 +47,10 @@
 					</a>
 				</div>
 			</div>
+
+			<?php
+			}
+			?>
 
 			<button class="mobile-btn">
 				<span class="block1"></span>
@@ -49,7 +65,7 @@
 					<li class="gn-m-item">
 						<a class="gn-m-link" href="/login">로그인</a>
 					</li>
-					
+
 					<li class="gn-m-item">
 						<a class="gn-m-link" href="/register">회원가입</a>
 					</li>
