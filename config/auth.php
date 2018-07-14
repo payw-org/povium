@@ -14,7 +14,7 @@ return [
 	'cookie_params' => [
 		'expire' => 60*60*24*30,
 		'path' => '/',
-		'domain' => '.povium.com',
+		'domain' => '',
 		'secure' => false,
 		'httponly' => false
 	],
