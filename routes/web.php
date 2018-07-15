@@ -50,9 +50,9 @@ $router->get(
 	'/editor',
  	function () use ($auth) {
 		//	If not logged in, send to login page.
-		if (!$auth->isLoggedIn()) {
-			exit(header('Location: ' . BASE_URI . '/login'));
-		}
+		// if (!$auth->isLoggedIn()) {
+		// 	exit(header('Location: ' . BASE_URI . '/login'));
+		// }
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/editor.php';
 
