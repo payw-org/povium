@@ -16,7 +16,7 @@ $auth = $factory->createInstance('\Povium\Auth');
 $auth_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 
 /* receive login inputs by ajax */
-$login_inputs = json_decode($_POST['login_inputs'], true);
+$login_inputs = json_decode(file_get_contents('php://input'), true);
 $identifier = $login_inputs['identifier'];
 $password = $login_inputs['password'];
 $remember = $login_inputs['remember'];

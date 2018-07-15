@@ -53,9 +53,9 @@ function checkValidation () {
 
 	var ajax = new AJAX();
 	ajax.chirp({
-		type: "post",
-		url: "/registerVerifyHandler.php",
-		data: "register_inputs=" + JSON.stringify(inputData),
+		type: "put",
+		url: "/register",
+		data: JSON.stringify(inputData),
 		success: function(response) {
 			var result = JSON.parse(response);
 
@@ -87,8 +87,8 @@ startButton.addEventListener("click", function() {
 	var ajax = new AJAX();
 	ajax.chirp({
 		type: "post",
-		url: "/registerConfirmHandler.php",
-		data: "register_inputs=" + JSON.stringify(inputData),
+		url: "/register",
+		data: JSON.stringify(inputData),
 		success: function(response) {
 			var result = JSON.parse(response);
 			console.log(response);

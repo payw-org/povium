@@ -206,7 +206,7 @@ var AJAX = function () {
 	}
 
 	/**
-  * 
+  *
   * @param {Object} config
   */
 
@@ -292,10 +292,15 @@ var AJAX = function () {
 			});
 
 			this.httpRequest.open(type, url, true);
-			if (type === "post") {
-				this.httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			if (type !== "get") {
+				this.httpRequest.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 			}
-			this.httpRequest.send(data);
+
+			if (type === "get") {
+				this.httpRequest.send();
+			} else {
+				this.httpRequest.send(data);
+			}
 		}
 	}]);
 
@@ -389,9 +394,9 @@ function checkValidation() {
 
 	var ajax = new _AJAX2.default();
 	ajax.chirp({
-		type: "post",
-		url: "/registerVerifyHandler.php",
-		data: "register_inputs=" + JSON.stringify(inputData),
+		type: "put",
+		url: "/register",
+		data: JSON.stringify(inputData),
 		success: function success(response) {
 			var result = JSON.parse(response);
 
@@ -422,8 +427,8 @@ startButton.addEventListener("click", function () {
 	var ajax = new _AJAX2.default();
 	ajax.chirp({
 		type: "post",
-		url: "/registerConfirmHandler.php",
-		data: "register_inputs=" + JSON.stringify(inputData),
+		url: "/register",
+		data: JSON.stringify(inputData),
 		success: function success(response) {
 			var result = JSON.parse(response);
 			console.log(response);
