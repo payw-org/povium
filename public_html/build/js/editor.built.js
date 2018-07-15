@@ -255,10 +255,18 @@ var PostEditor = function () {
 		});
 
 		// Toolbar button events
-		// this.domManager.paragraph.addEventListener('click', (e) => { this.selManager.heading('P'); });
-		// this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1'); });
-		// this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2'); });
-		// this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3'); });
+		this.domManager.paragraph.addEventListener('click', function (e) {
+			_this.selManager.heading('P');
+		});
+		this.domManager.heading1.addEventListener('click', function (e) {
+			_this.selManager.heading('H1');
+		});
+		this.domManager.heading2.addEventListener('click', function (e) {
+			_this.selManager.heading('H2');
+		});
+		this.domManager.heading3.addEventListener('click', function (e) {
+			_this.selManager.heading('H3');
+		});
 
 		this.domManager.boldButton.addEventListener('click', function (e) {
 			_this.selManager.bold();
@@ -1193,7 +1201,7 @@ var SelectionManager = function () {
 				var parentNode = selectionNode.parentNode;
 				var nextNode = selectionNode.nextSibling;
 
-				if (this.isBlockquote(selectionNode)) {
+				if (this.isBlockquote(selectionNode) || this.isHeading(selectionNode)) {
 					newNodeName = "P";
 				} else if (this.isListItem(selectionNode)) {
 					if (this.isEmptyNode(selectionNode)) {

@@ -52,10 +52,10 @@ export default class PostEditor {
 		this.domManager.editor.addEventListener('paste', (e) => { this.onPaste(e); });
 
 		// Toolbar button events
-		// this.domManager.paragraph.addEventListener('click', (e) => { this.selManager.heading('P'); });
-		// this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1'); });
-		// this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2'); });
-		// this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3'); });
+		this.domManager.paragraph.addEventListener('click', (e) => { this.selManager.heading('P'); });
+		this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1'); });
+		this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2'); });
+		this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3'); });
 
 		this.domManager.boldButton.addEventListener('click', (e) => { this.selManager.bold(); });
 		this.domManager.italicButton.addEventListener('click', (e) => { this.selManager.italic(); });

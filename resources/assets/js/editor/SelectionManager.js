@@ -689,7 +689,10 @@ export default class SelectionManager
 			var parentNode = selectionNode.parentNode;
 			var nextNode = selectionNode.nextSibling;
 
-			if (this.isBlockquote(selectionNode)) {
+			if (
+				this.isBlockquote(selectionNode) ||
+				this.isHeading(selectionNode)
+			) {
 				newNodeName = "P";
 			} else if (this.isListItem(selectionNode)) {
 				if (this.isEmptyNode(selectionNode)) {
