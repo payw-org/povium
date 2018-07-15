@@ -1,12 +1,12 @@
 <?php
 /**
-* Set routes of middleware
+* Set routes of ajax
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop
 */
 
-/* Login Middleware */
+/* Login Ajax */
 $router->post(
 	'/login',
 	function () {
@@ -15,7 +15,7 @@ $router->post(
 	}
 );
 
-/* Register confirm Middleware */
+/* Register confirm Ajax */
 $router->post(
 	'/register',
 	function () {
@@ -24,7 +24,7 @@ $router->post(
 	}
 );
 
-/* Register verify Middleware */
+/* Register verify Ajax */
 $router->put(
 	'/register',
 	function () {
