@@ -239,7 +239,7 @@ confirmButton.addEventListener("click", function () {
 	ajax.chirp({
 		type: "post",
 		url: "/login",
-		data: "login_inputs=" + JSON.stringify(inputData),
+		data: JSON.stringify(inputData),
 		success: function success(response) {
 			var result = JSON.parse(response);
 			console.log(response);
@@ -370,12 +370,15 @@ var AJAX = function () {
 			});
 
 			this.httpRequest.open(type, url, true);
-			if (type === "post") {
-				this.httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			} else if (type === 'put') {
+			if (type !== "get") {
 				this.httpRequest.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 			}
-			this.httpRequest.send(data);
+
+			if (type === "get") {
+				this.httpRequest.send();
+			} else {
+				this.httpRequest.send(data);
+			}
 		}
 	}]);
 

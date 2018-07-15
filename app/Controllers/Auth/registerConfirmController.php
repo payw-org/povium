@@ -16,7 +16,7 @@ $factory = new MasterFactory();
 $auth = $factory->createInstance('\Povium\Auth');
 
 /* receive register inputs by ajax */
-$register_inputs = json_decode($_POST['register_inputs'], true);
+$register_inputs = json_decode(file_get_contents('php://input'), true);
 $readable_id = $register_inputs['readable_id'];
 $name = $register_inputs['name'];
 $password = $register_inputs['password'];

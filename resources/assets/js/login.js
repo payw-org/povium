@@ -36,7 +36,7 @@ confirmButton.addEventListener("click", function() {
 	ajax.chirp({
 		type: "post",
 		url: "/login",
-		data: "login_inputs=" + JSON.stringify(inputData),
+		data: JSON.stringify(inputData),
 		success: function(response) {
 			var result = JSON.parse(response);
 			console.log(response);

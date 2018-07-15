@@ -88,7 +88,7 @@ startButton.addEventListener("click", function() {
 	ajax.chirp({
 		type: "post",
 		url: "/register",
-		data: "register_inputs=" + JSON.stringify(inputData),
+		data: JSON.stringify(inputData),
 		success: function(response) {
 			var result = JSON.parse(response);
 			console.log(response);
