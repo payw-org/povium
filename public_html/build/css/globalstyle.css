@@ -260,14 +260,6 @@ label {
   -ms-user-select: none;
   user-select: none; }
 
-::-moz-selection {
-  background-color: #5f42ff;
-  color: #fff; }
-
-::selection {
-  background-color: #5f42ff;
-  color: #fff; }
-
 .checkbox-violet {
   display: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0); }

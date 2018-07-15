@@ -16,25 +16,25 @@ export default class DOMManager {
 		this.toolbar = editorDOM.querySelector('#editor-toolbar');
 
 		// Toolbar buttons
-		this.body = this.toolbar.querySelector('#p');
-		this.heading1 = this.toolbar.querySelector('#h1');
-		this.heading2 = this.toolbar.querySelector('#h2');
-		this.heading3 = this.toolbar.querySelector('#h3');
+		this.paragraph = editorDOM.querySelector('#p');
+		this.heading1 = editorDOM.querySelector('#h1');
+		this.heading2 = editorDOM.querySelector('#h2');
+		this.heading3 = editorDOM.querySelector('#h3');
 
-		this.boldButton = this.toolbar.querySelector('#bold');
-		this.italicButton = this.toolbar.querySelector('#italic');
-		this.underlineButton = this.toolbar.querySelector('#underline');
-		this.strikeButton = this.toolbar.querySelector('#strike');
+		this.boldButton = editorDOM.querySelector('#bold');
+		this.italicButton = editorDOM.querySelector('#italic');
+		this.underlineButton = editorDOM.querySelector('#underline');
+		this.strikeButton = editorDOM.querySelector('#strike');
 
-		this.alignLeft = this.toolbar.querySelector('#align-left');
-		this.alignCenter = this.toolbar.querySelector('#align-center');
-		this.alignRight = this.toolbar.querySelector('#align-right');
+		this.alignLeft = editorDOM.querySelector('#align-left');
+		this.alignCenter = editorDOM.querySelector('#align-center');
+		this.alignRight = editorDOM.querySelector('#align-right');
 
-		this.orderedList = this.toolbar.querySelector('#ol');
-		this.unorderedList = this.toolbar.querySelector('#ul');
+		this.orderedList = editorDOM.querySelector('#ol');
+		this.unorderedList = editorDOM.querySelector('#ul');
 
-		this.link = this.toolbar.querySelector('#link');
-		this.blockquote = this.toolbar.querySelector('#blockquote');
+		this.link = editorDOM.querySelector('#link');
+		this.blockquote = editorDOM.querySelector('#blockquote');
 
 	}
 

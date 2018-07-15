@@ -151,6 +151,11 @@ export default class SelectionManager
 		if (!orgRange) {
 			return;
 		}
+
+		if (type === undefined) {
+			console.error("List type undefined.");
+		}
+
 		let startNode = orgRange.startContainer;
 		let startOffset = orgRange.startOffset;
 		let endNode = orgRange.endContainer;
@@ -341,6 +346,7 @@ export default class SelectionManager
 
 		}
 
+
 		console.log(startNode, endNode);
 
 		var keepRange = document.createRange();
@@ -355,6 +361,17 @@ export default class SelectionManager
 
 	link(url)
 	{
+		var range = this.getRange();
+		if (!range) {
+			return;
+		}
+
+		if (range.collapsed) {
+			return;
+		}
+
+
+
 		document.execCommand('createLink', false, url);
 	}
 
@@ -439,7 +456,7 @@ export default class SelectionManager
 		}
 
 		// Backspace key - Empty node
-		if (currentNode && currentNode.textContent.length === 0) {
+		if (currentNode && this.isAvailableEmptyNode(currentNode)) {
 
 			e.stopPropagation();
 			e.preventDefault();
@@ -454,7 +471,9 @@ export default class SelectionManager
 
 				console.log("empty child node or parent node");
 
-				if (previousNode) {
+				if (this.isAvailableEmptyNode(previousNode)) {
+					previousNode.parentNode.removeChild(previousNode);
+				} else {
 					var range = document.createRange();
 					range.setStartAfter(previousNode.lastChild);
 					this.replaceRange(range);
@@ -469,19 +488,23 @@ export default class SelectionManager
 					} else {
 						currentNode.parentNode.removeChild(currentNode);
 					}
-					
 				}
 
+				
+
+
 			} else {
-				var range = document.createRange();
-				range.setStart(currentNode, 0);
-				range.setEnd(currentNode, 0);
-				this.replaceRange(range);
+				if (this.isListItem(currentNode)) {
+					this.list(currentNode.parentNode.nodeName);
+				} else if (this.isAvailableParentNode(currentNode)) {
+					this.changeNodeName(currentNode, "P");
+				}
+				
 			}
 
 		} else if (currentNode && this.getSelectionPositionInParagraph() === 1) {
 
-			// Delete key - caret position at start of the node
+			// backspace - caret position at start of the node
 			e.stopPropagation();
 			e.preventDefault();
 			console.log("move this line to previous line");
@@ -496,7 +519,10 @@ export default class SelectionManager
 
 				var previousNode = this.getPreviousAvailableNode(currentNode);
 
-				if (previousNode) {
+				if (this.isAvailableEmptyNode(previousNode)) {
+					previousNode.parentNode.removeChild(previousNode);
+				} else {
+
 
 					var node, orgRange = this.getRange();
 
@@ -518,9 +544,9 @@ export default class SelectionManager
 						this.mergeNodes(previousNode, currentNode, true);
 					}
 
-					
-
 				}
+
+					
 
 			}
 
@@ -663,18 +689,20 @@ export default class SelectionManager
 			var parentNode = selectionNode.parentNode;
 			var nextNode = selectionNode.nextSibling;
 
-			if (this.isBlockquote(selectionNode)) {
+			if (
+				this.isBlockquote(selectionNode) ||
+				this.isHeading(selectionNode)
+			) {
 				newNodeName = "P";
 			} else if (this.isListItem(selectionNode)) {
 				if (this.isEmptyNode(selectionNode)) {
 
-					if (!this.isListItem(this.getNextAvailableNode(selectionNode))) {
-						newNodeName = "P";
-						selectionNode.parentNode.removeChild(selectionNode);
-						nextNode = parentNode.nextSibling;
-						parentNode = parentNode.parentNode;
-					}
+					this.list(selectionNode.parentNode.nodeName);
+					return;
+
+					
 				}
+				
 			}
 
 			var pElm = this.domManager.generateEmptyNode(newNodeName);
@@ -792,7 +820,7 @@ export default class SelectionManager
 		}
 
 		// 3. replace node
-		this.domManager.editor.replaceChild(newNode, targetNode);
+		targetNode.parentNode.replaceChild(newNode, targetNode);
 
 		return newNode;
 
@@ -1444,6 +1472,21 @@ export default class SelectionManager
 		if (
 			node.textContent === "" &&
 			!(node.querySelector("br"))
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	isAvailableEmptyNode(node) {
+		if (node.nodeType === 3) {
+			return false;
+		}
+
+		if (
+			node.textContent === "" &&
+			node.querySelector("br")
 		) {
 			return true;
 		} else {
