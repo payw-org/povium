@@ -35,7 +35,7 @@ confirmButton.addEventListener("click", function() {
 	var ajax = new AJAX();
 	ajax.chirp({
 		type: "post",
-		url: "/loginHandler.php",
+		url: "/login",
 		data: "login_inputs=" + JSON.stringify(inputData),
 		success: function(response) {
 			var result = JSON.parse(response);
@@ -44,7 +44,7 @@ confirmButton.addEventListener("click", function() {
 				alert(result['msg']);
 			} else {
                 window.location.replace(result['redirect']);
-               
+
 			}
 		}
 	});

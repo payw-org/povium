@@ -14,7 +14,7 @@ export default class AJAX {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param {Object} config
 	 */
 	chirp (config) {
@@ -44,7 +44,7 @@ export default class AJAX {
 		if ("success" in config) {
 
 			success = config["success"];
-			
+
 			if (typeof success !== "function") {
 				console.error(success, "is not a function.");
 				return;
@@ -83,12 +83,12 @@ export default class AJAX {
 					if (success) {
 						success(response);
 					}
-					
+
 				} else {
 					if (fail) {
 						fail();
 					}
-					
+
 				}
 			}
 		});
@@ -96,6 +96,8 @@ export default class AJAX {
 		this.httpRequest.open(type, url, true);
 		if (type === "post") {
 			this.httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		} else if (type === 'put') {
+			this.httpRequest.setRequestHeader('Content-type','application/json; charset=utf-8');
 		}
 		this.httpRequest.send(data);
 

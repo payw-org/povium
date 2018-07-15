@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -178,138 +178,6 @@ document.querySelectorAll(".input-wrapper").forEach(function (self, index) {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(8);
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _TextInput2 = __webpack_require__(2);
-
-var _TextInput3 = _interopRequireDefault(_TextInput2);
-
-var _AJAX = __webpack_require__(9);
-
-var _AJAX2 = _interopRequireDefault(_AJAX);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var RegInput = function (_TextInput) {
-	_inherits(RegInput, _TextInput);
-
-	function RegInput(inputDOM) {
-		_classCallCheck(this, RegInput);
-
-		var _this = _possibleConstructorReturn(this, (RegInput.__proto__ || Object.getPrototypeOf(RegInput)).call(this, inputDOM));
-
-		var self = _this;
-
-		_this.target.addEventListener('keyup', function () {
-
-			clearTimeout(this.wait);
-
-			var inputData = self.target.value;
-
-			if (inputData === "") {
-				self.hideMsg();
-				return;
-			}
-
-			this.wait = setTimeout(function () {
-				checkValidation();
-			}, 300);
-		});
-
-		_this.target.addEventListener('focusout', function () {
-			// console.log('focused out');
-		});
-		return _this;
-	}
-
-	return RegInput;
-}(_TextInput3.default);
-
-var readableIDInputDOM = document.querySelector('.input-wrapper.readable-id input');
-var nameInputDOM = document.querySelector('.input-wrapper.name input');
-var passInputDOM = document.querySelector('.input-wrapper.password input');
-
-if (readableIDInputDOM) {
-	var readableIDInputObj = new RegInput(readableIDInputDOM);
-	var nameInputObj = new RegInput(nameInputDOM);
-	var passInputObj = new RegInput(passInputDOM);
-}
-
-function checkValidation() {
-
-	var inputData = {
-		readable_id: readableIDInputDOM.value,
-		name: nameInputDOM.value,
-		password: passInputDOM.value
-	};
-
-	var ajax = new _AJAX2.default();
-	ajax.chirp({
-		type: "post",
-		url: "/registerVerifyHandler.php",
-		data: "register_inputs=" + JSON.stringify(inputData),
-		success: function success(response) {
-			var result = JSON.parse(response);
-
-			console.log(result);
-
-			if (result['err']) {
-				readableIDInputObj.showMsg(result['readable_id_msg']);
-				nameInputObj.showMsg(result['name_msg']);
-				passInputObj.showMsg(result['password_msg']);
-			} else {
-				readableIDInputObj.hideMsg();
-				nameInputObj.hideMsg();
-				passInputObj.hideMsg();
-			}
-		}
-	});
-}
-
-var startButton = document.querySelector("button.start");
-startButton.addEventListener("click", function () {
-
-	var inputData = {
-		readable_id: readableIDInputDOM.value,
-		name: nameInputDOM.value,
-		password: passInputDOM.value
-	};
-
-	var ajax = new _AJAX2.default();
-	ajax.chirp({
-		type: "post",
-		url: "/registerConfirmHandler.php",
-		data: "register_inputs=" + JSON.stringify(inputData),
-		success: function success(response) {
-			var result = JSON.parse(response);
-			console.log(response);
-			if (result['err']) {
-				alert("입력 정보에 문제가 있어요.");
-			} else {
-				window.location.replace(result['redirect']);
-			}
-		}
-	});
-});
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
 
 
@@ -338,7 +206,7 @@ var AJAX = function () {
 	}
 
 	/**
-  * 
+  *
   * @param {Object} config
   */
 
@@ -426,6 +294,8 @@ var AJAX = function () {
 			this.httpRequest.open(type, url, true);
 			if (type === "post") {
 				this.httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			} else if (type === 'put') {
+				this.httpRequest.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 			}
 			this.httpRequest.send(data);
 		}
@@ -435,6 +305,138 @@ var AJAX = function () {
 }();
 
 exports.default = AJAX;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(9);
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _TextInput2 = __webpack_require__(2);
+
+var _TextInput3 = _interopRequireDefault(_TextInput2);
+
+var _AJAX = __webpack_require__(7);
+
+var _AJAX2 = _interopRequireDefault(_AJAX);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RegInput = function (_TextInput) {
+	_inherits(RegInput, _TextInput);
+
+	function RegInput(inputDOM) {
+		_classCallCheck(this, RegInput);
+
+		var _this = _possibleConstructorReturn(this, (RegInput.__proto__ || Object.getPrototypeOf(RegInput)).call(this, inputDOM));
+
+		var self = _this;
+
+		_this.target.addEventListener('keyup', function () {
+
+			clearTimeout(this.wait);
+
+			var inputData = self.target.value;
+
+			if (inputData === "") {
+				self.hideMsg();
+				return;
+			}
+
+			this.wait = setTimeout(function () {
+				checkValidation();
+			}, 300);
+		});
+
+		_this.target.addEventListener('focusout', function () {
+			// console.log('focused out');
+		});
+		return _this;
+	}
+
+	return RegInput;
+}(_TextInput3.default);
+
+var readableIDInputDOM = document.querySelector('.input-wrapper.readable-id input');
+var nameInputDOM = document.querySelector('.input-wrapper.name input');
+var passInputDOM = document.querySelector('.input-wrapper.password input');
+
+if (readableIDInputDOM) {
+	var readableIDInputObj = new RegInput(readableIDInputDOM);
+	var nameInputObj = new RegInput(nameInputDOM);
+	var passInputObj = new RegInput(passInputDOM);
+}
+
+function checkValidation() {
+
+	var inputData = {
+		readable_id: readableIDInputDOM.value,
+		name: nameInputDOM.value,
+		password: passInputDOM.value
+	};
+
+	var ajax = new _AJAX2.default();
+	ajax.chirp({
+		type: "put",
+		url: "/register",
+		data: JSON.stringify(inputData),
+		success: function success(response) {
+			var result = JSON.parse(response);
+
+			console.log(result);
+
+			if (result['err']) {
+				readableIDInputObj.showMsg(result['readable_id_msg']);
+				nameInputObj.showMsg(result['name_msg']);
+				passInputObj.showMsg(result['password_msg']);
+			} else {
+				readableIDInputObj.hideMsg();
+				nameInputObj.hideMsg();
+				passInputObj.hideMsg();
+			}
+		}
+	});
+}
+
+var startButton = document.querySelector("button.start");
+startButton.addEventListener("click", function () {
+
+	var inputData = {
+		readable_id: readableIDInputDOM.value,
+		name: nameInputDOM.value,
+		password: passInputDOM.value
+	};
+
+	var ajax = new _AJAX2.default();
+	ajax.chirp({
+		type: "post",
+		url: "/register",
+		data: "register_inputs=" + JSON.stringify(inputData),
+		success: function success(response) {
+			var result = JSON.parse(response);
+			console.log(response);
+			if (result['err']) {
+				alert("입력 정보에 문제가 있어요.");
+			} else {
+				window.location.replace(result['redirect']);
+			}
+		}
+	});
+});
 
 /***/ })
 /******/ ]);
