@@ -4,7 +4,6 @@ use Povium\Base\TemplateEngine;
 $te = new TemplateEngine();
 $te->render("/resources/templates/base.phtml", [
 	"title" => "Povium | 좋은 글, 세상을 바꾸는 힘",
-	"css" => '<link rel="stylesheet" href="/build/css/home.css">',
 	"main" => "/resources/templates/home.phtml",
 
 	"post_img_link" => [
