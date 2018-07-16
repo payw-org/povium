@@ -23,7 +23,7 @@
     "autoprefix": "npx postcss public_html/build/css --use autoprefixer -d public_html/build/css",
     "sass:build": "npx node-sass resources/assets/scss/ -o public_html/build/css/",
     "sass:build:autoprefix": "npm run sass:build && npm run autoprefix",
-		"sass:build:autoprefix:watch": "npx nodemon -e scss -x npm run sass:build:autoprefix"
+    "sass:build:autoprefix:watch": "npx nodemon -e scss -x npm run sass:build:autoprefix"
   },
   "browserslist": [
     "> 5%",
