@@ -59,7 +59,7 @@ function checkValidation () {
 		success: function(response) {
 			var result = JSON.parse(response);
 
-			console.log(result);
+			// console.log(result);
 
 			if (result['err']) {
 				readableIDInputObj.showMsg(result['readable_id_msg']);
