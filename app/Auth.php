@@ -30,7 +30,9 @@ class Auth
 		$this->conn = $conn;
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 
-		session_start();
+		if (!isset($_SESSION)) { 
+			session_start(); 
+		}
 	}
 
 	/**
