@@ -55,5 +55,6 @@ pages:
     # Install Node dependencies.
     # comment this out if you don't have a node dependency
     # - npm install
+    - cd /Users/chihoonhwang/Sites/Povium-web/builds/bc3bbe09/0/Design-And-Develop/Povium-web
     - npm run sass:build:autoprefix
     - npm run webpack:build
