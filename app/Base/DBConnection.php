@@ -33,13 +33,12 @@ class DBConnection
 	private $conn = null;
 
 	/**
-	* [__construct description]
 	* Opens the database connection using PDO
 	*/
 	private function __construct()
 	{
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/connection.php');
-		$this->getPDOConnection();
+		$this->generatePDOConnection();
 	}
 
 	/**
@@ -53,7 +52,7 @@ class DBConnection
 	/**
 	* Generate PDO connection to database
 	*/
-	private function getPDOConnection()
+	private function generatePDOConnection()
 	{
 		if ($this->conn == null) {
 			$dsn = "" . $this->config['driver'] .
@@ -82,39 +81,40 @@ class DBConnection
 		return $this->conn;
 	}
 
-	/**
-	* Runs a INSERT, DELETE, UPDATE query using prepared statements
-	* @param  string $sql query string
-	* @return int      num of affected records
-	*/
-	public function runQuery($sql)
-	{
-		try {
-			$stmt = $this->conn->prepare($sql);
-			$stmt->execute();
-
-			$count = $stmt->rowCount();
-		} catch (\PDOException $e) {
-			echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
-		}
-
-		return $count;
-	}
-
-	/**
-	* Runs a SELECT query using prepared statements
-	* @param  string $sql query string
-	* @return PDOStatement you can fetch records using it
-	*/
-	public function getQuery($sql)
-	{
-		try {
-			$stmt = $this->conn->prepare($sql);
-			$stmt->execute();
-		} catch (\PDOException $e) {
-			echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
-		}
-
-		return $stmt;
-	}
+	/* Deprecated */
+	// /**
+	// * Runs a INSERT, DELETE, UPDATE query using prepared statements
+	// * @param  string $sql query string
+	// * @return int      num of affected records
+	// */
+	// public function runQuery($sql)
+	// {
+	// 	try {
+	// 		$stmt = $this->conn->prepare($sql);
+	// 		$stmt->execute();
+	//
+	// 		$count = $stmt->rowCount();
+	// 	} catch (\PDOException $e) {
+	// 		echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
+	// 	}
+	//
+	// 	return $count;
+	// }
+	//
+	// /**
+	// * Runs a SELECT query using prepared statements
+	// * @param  string $sql query string
+	// * @return PDOStatement you can fetch records using it
+	// */
+	// public function getQuery($sql)
+	// {
+	// 	try {
+	// 		$stmt = $this->conn->prepare($sql);
+	// 		$stmt->execute();
+	// 	} catch (\PDOException $e) {
+	// 		echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
+	// 	}
+	//
+	// 	return $stmt;
+	// }
 }
