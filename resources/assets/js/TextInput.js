@@ -13,7 +13,6 @@ export default class TextInput {
 
 		if (message === "") {
 			
-			console.log('no massage');
 			this.hideMsg();
 
 			return;

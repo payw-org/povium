@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (!isset($_SESSION)) { 
+	session_start(); 
+}
 date_default_timezone_set("Asia/Seoul");
 define('BASE_URI', 'http://' . $_SERVER['HTTP_HOST']);
 
