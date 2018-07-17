@@ -20,17 +20,27 @@ export default class PostEditor {
 
 		// Event Listeners
 
-		this.domManager.editor.addEventListener('click', () => { this.onSelectionChanged(); });
-
-		this.domManager.editor.addEventListener('mousedown', () => {
+		window.addEventListener('click', () => {
+			this.onSelectionChanged();
+		});
+		this.domManager.editor.addEventListener('mousedown', (e) => {
+			this.domManager.hidePopTool();
 			this.mouseDownStart = true;
 		});
-		window.addEventListener('mouseup', () => {
+		this.domManager.editor.addEventListener('mouseup', (e) => {
+			this.onSelectionChanged();
+		});
+		this.domManager.editor.addEventListener('dragstart', (e) => {
+			e.preventDefault();
+		});
+		this.domManager.editor.addEventListener('drop', (e) => {
+			e.preventDefault();
+		});
+		window.addEventListener('mouseup', (e) => {
 			if (this.mouseDownStart) {
 				this.mouseDownStart = false;
-				// this.onSelectionChanged();
+				this.onSelectionChanged();
 			}
-			
 		});
 
 
@@ -48,6 +58,7 @@ export default class PostEditor {
 		this.domManager.editor.addEventListener('keypress', (e) => {
 			this.onKeyPress(e);
 		});
+
 
 		this.domManager.editor.addEventListener('paste', (e) => { this.onPaste(e); });
 
@@ -70,6 +81,20 @@ export default class PostEditor {
 		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL'); });
 		this.domManager.link.addEventListener('click', (e) => { this.selManager.link("naver.com"); });
 		this.domManager.blockquote.addEventListener('click', (e) => { this.selManager.blockquote(); });
+
+		// PopTool
+		document.querySelector("#pt-bold").addEventListener('click', (e) => { this.selManager.bold(); });
+		document.querySelector("#pt-italic").addEventListener('click', (e) => { this.selManager.italic(); });
+		document.querySelector("#pt-underline").addEventListener('click', (e) => { this.selManager.underline(); });
+		document.querySelector("#pt-strike").addEventListener('click', (e) => { this.selManager.strike(); });
+
+		document.addEventListener('mousedown', function(e) {
+			if (e.target.nodeName === "A") {
+				e.preventDefault();
+				self.selManager.unlink(e.target);
+				self.domManager.hidePopTool();
+			}
+		});
 
 		this.initEditor();
 
@@ -149,15 +174,7 @@ export default class PostEditor {
 
 		
 		this.selManager.fixSelection();
-		// var range = this.selManager.getRange();
-		// if (range && !range.collapsed) {
-		// 	document.querySelector("#poptool").classList.add("active");
-		// 	document.querySelector("#poptool").style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - document.querySelector("#poptool").getBoundingClientRect().width / 2  + "px";
-		// 	console.log(document.querySelector("#post-editor").getBoundingClientRect().top);
-		// 	document.querySelector("#poptool").style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - document.querySelector("#poptool").getBoundingClientRect().height - 5 + "px";
-		// } else {
-		// 	document.querySelector("#poptool").classList.remove("active");
-		// }
+		this.domManager.togglePopTool();
 
 	}
 
@@ -182,6 +199,10 @@ export default class PostEditor {
 		document.execCommand('bold', false);
 		this.domManager.editor.removeChild(emptyNode);
 		document.getSelection().removeAllRanges();
+
+		this.domManager.editor.normalize();
+
+		this.domManager.editor.innerHTML = this.domManager.editor.innerHTML.replace(/\r?\n|\r/g, "");
 
 		// if (this.isEmpty()) {
 		// 	this.domManager.editor.innerHTML = "";

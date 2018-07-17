@@ -366,13 +366,28 @@ export default class SelectionManager
 			return;
 		}
 
-		if (range.collapsed) {
-			return;
-		}
-
-
+		// if (range.collapsed) {
+		// 	return;
+		// }
 
 		document.execCommand('createLink', false, url);
+		document.getSelection().removeAllRanges();
+
+		this.domManager.hidePopTool();
+		
+	}
+
+	unlink(linkNode) {
+		var node;
+		var tempRange = document.createRange();
+		tempRange.setStartAfter(linkNode);
+		console.log("link is already set");
+		while (node = linkNode.firstChild) {
+			tempRange.insertNode(node);
+			tempRange.setStartAfter(node);
+		}
+		linkNode.parentNode.removeChild(linkNode);
+		document.getSelection().removeAllRanges();
 	}
 
 	blockquote()
@@ -1340,7 +1355,18 @@ export default class SelectionManager
 			) {
 				console.log("nothing contains");
 				console.log(currentParentNode.textContent);
-				currentParentNode.parentNode.removeChild(currentParentNode);
+
+				if (this.isAvailableChildNode(currentParentNode)) {
+					console.log("list is detected");
+					var parentNode = currentParentNode.parentNode;
+					currentParentNode.parentNode.removeChild(currentParentNode);
+					if (this.isTextEmptyNode(parentNode)) {
+						parentNode.parentNode.removeChild(parentNode);
+					}
+				} else {
+					currentParentNode.parentNode.removeChild(currentParentNode);
+				}
+				
 			} else if (
 				currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
@@ -1578,7 +1604,7 @@ export default class SelectionManager
 	{
 		if (!node) {
 			return false;
-		} else if (node.nodeName === 'LINK') {
+		} else if (node.nodeName === 'A') {
 			return true;
 		} else {
 			return false;
