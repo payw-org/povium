@@ -1,8 +1,5 @@
-stages:
-  - build
-
 default-job:
-  stage: build
+  stage: test
   script: "build script"
 
   # Official framework image. Look for the different tagged releases at:
@@ -46,3 +43,9 @@ default-job:
     # Install Composer and project dependencies.
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install
+
+    # Install Node dependencies.
+    # comment this out if you don't have a node dependency
+    - npm install
+    - npm run sass:build:autoprefix
+    - npm run webpack:build
