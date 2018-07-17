@@ -29,10 +29,6 @@ class Auth
 	{
 		$this->conn = $conn;
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
-
-		if (!isset($_SESSION)) { 
-			session_start(); 
-		}
 	}
 
 	/**
@@ -131,7 +127,7 @@ class Auth
 	* Validate input
 	* Checks if input is already taken
 	* Add user to db
-	* @param  string $email
+	* @param  string $readable_id
 	* @param  string $name
 	* @param  string $password
 	* @return array 'err' is an error flag. 'msg' is an error message.
@@ -590,7 +586,7 @@ class Auth
 	/**
 	* Update some column values of user
 	* @param  int $id
-	* @param  array $params assoc array(column to update => new value, ...)
+	* @param  array $params assoc array(column name to update => new value, ...)
 	* @return bool
 	*/
 	public function updateUser($id, $params)
@@ -800,8 +796,7 @@ class Auth
 	* Then check if validator is matched.
 	* If all matched, return token info.
 	* @param  string $token
-	* @return array token info assoc array
-	* @return bool false if token is not selected
+	* @return mixed array or false
 	*/
 	private function getTokenInfo($token)
 	{
