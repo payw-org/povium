@@ -1,5 +1,7 @@
 pages:
   stage: test
+  tags:
+    - Povium-ci
   script:
     - mkdir .public_html
     - cp -r * .public_html
