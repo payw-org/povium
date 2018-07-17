@@ -36,6 +36,8 @@ export default class DOMManager {
 		this.link = editorDOM.querySelector('#link');
 		this.blockquote = editorDOM.querySelector('#blockquote');
 
+		this.popTool = editorDOM.querySelector('#poptool');
+
 	}
 
 	/**
@@ -43,44 +45,35 @@ export default class DOMManager {
 	 * @param  {String} tagName
 	 * @return {HTMLElement}
 	 */
-	generateEmptyNode (tagName) {
+	generateEmptyNode(tagName) {
 		var elm = document.createElement(tagName);
 		var br = document.createElement('br');
 		elm.appendChild(br);
 		return elm;
 	}
 
-	/**
-	 * Merge two nodes into one node.
-	 * @param {Node} firstNode 
-	 * @param {Node} secondNode 
-	 */
-	mergeNodes (firstNode, secondNode) {
-		
-		if (firstNode === null || secondNode === null) {
+	togglePopTool() {
+		if (document.getSelection().rangeCount === 0) {
 			return;
 		}
-
-		var front = firstNode, back = secondNode;
-
-		while (1) {
-
-			if (front.nodeName !== back.nodeName) {
-				break;
-			}
-
-			if (front.nodeType === 3) {
-
-				
-
-			} else {
-
-
-
-			}
-
+		var range = document.getSelection().getRangeAt(0);
+		if (range && !range.collapsed) {
+			this.popTool.classList.add("active");
+			this.popTool.style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2  + "px";
+			this.popTool.style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5 + "px";
+		} else {
+			this.popTool.classList.remove("active");
 		}
+	}
 
+	showPopTool() {
+		this.popTool.classList.add("active");
+		this.popTool.style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2  + "px";
+		this.popTool.style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5 + "px";
+	}
+
+	hidePopTool() {
+		this.popTool.classList.remove("active");
 	}
 
 }
