@@ -1,4 +1,4 @@
-default-job:  
+default-job:
   stage: test
   tags:
     - Povium-ci
@@ -47,6 +47,9 @@ default-job:
 
     # Install Node dependencies.
     # comment this out if you don't have a node dependency
-    # - npm install
-    # - npm run sass:build:autoprefix
+    - npm install
+    - npm run sass:build:autoprefix
     - npm run webpack:build
+
+  script:
+    - echo hi
