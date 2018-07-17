@@ -54,6 +54,6 @@ pages:
 
     # Install Node dependencies.
     # comment this out if you don't have a node dependency
-    - npm install
+    # - npm install
     - npm run sass:build:autoprefix
     - npm run webpack:build
