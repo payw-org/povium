@@ -1,14 +1,7 @@
-pages:
+default-job:
   stage: test
   tags:
     - Povium-ci
-  script:
-    - mkdir .public_html
-    - cp -r * .public_html
-    - mv .public_html public_html
-  artifacts:
-    paths:
-      - public_html
 
   # Official framework image. Look for the different tagged releases at:
   # https://hub.docker.com/r/library/php
