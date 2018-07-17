@@ -464,9 +464,11 @@ export default class SelectionManager
 
 		var range = this.getRange();
 		if (!range.collapsed) {
+			console.log("pressed backspace but the range is not collapsed");
 			e.stopPropagation();
 			e.preventDefault();
 			this.removeSelection("start");
+			
 			return;
 		}
 
@@ -487,7 +489,16 @@ export default class SelectionManager
 				console.log("empty child node or parent node");
 
 				if (this.isAvailableEmptyNode(previousNode)) {
-					previousNode.parentNode.removeChild(previousNode);
+					if (this.isAvailableChildNode(previousNode)) {
+						console.log("list item");
+						var parentNode = previousNode.parentNode;
+						previousNode.parentNode.removeChild(previousNode);
+						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
+							parentNode.parentNode.removeChild(parentNode);
+						}
+					} else {
+						previousNode.parentNode.removeChild(previousNode);
+					}
 				} else {
 					var range = document.createRange();
 					range.setStartAfter(previousNode.lastChild);
@@ -496,7 +507,6 @@ export default class SelectionManager
 					if (this.isAvailableChildNode(currentNode)) {
 						var parentNode = currentNode.parentNode;
 						currentNode.parentNode.removeChild(currentNode);
-						console.log(parentNode.querySelectorAll("LI"));
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
 							parentNode.parentNode.removeChild(parentNode);
 						}
@@ -1214,21 +1224,23 @@ export default class SelectionManager
 				front.textContent += back.textContent;
 				back.parentNode.removeChild(back);
 
-				if (front.textContent === "" || back.textContent === "") {
+				// if (front.textContent === "" || back.textContent === "") {
 
-					if (front.textContent === "") {
-						front = front.previousSibling;
-						front.parentNode.removeChild(front);
-					}
+				// 	if (front.textContent === "") {
+				// 		// tempNode = front.previousSibling;
+				// 		front.parentNode.removeChild(front);
+				// 		front = front.previousSibling;
+				// 	}
 
-					if (back.textContent === "") {
-						back = back.nextSibling;
-						back.parentNode.removeChild(back);
-					}
+				// 	if (back.textContent === "") {
+				// 		// tempNode = back.nextSibling;
+				// 		back.parentNode.removeChild(back);
+				// 		back = back.nextSibling;
+				// 	}
 
-					continue;
+				// 	continue;
 					
-				}
+				// }
 
 				
 
@@ -1330,7 +1342,13 @@ export default class SelectionManager
 
 		var splitResult = this.splitTextNode();
 
-		var startNode = splitResult.startNode;
+		var startNode = range.startContainer;
+		var startOffset = range.startOffset;;
+
+		if (splitResult.startNode !== startNode) {
+			startNode = splitResult.startNode;
+			startOffset = 0;
+		}
 		var endNode = splitResult.endNode;
 		
 		var deletionDone = false;
@@ -1338,6 +1356,8 @@ export default class SelectionManager
 		var nextParentNode = this.getNextAvailableNode(selectionNode);
 
 		// range.collapse(false);
+
+		console.log(startNode);
 
 		range.setStart(range.endContainer, range.endOffset);
 		this.replaceRange(range);
@@ -1377,10 +1397,30 @@ export default class SelectionManager
 				var metCurrentNode = false;
 
 				var tempRange = document.createRange();
-				tempRange.setStart(startNode, 0);
+				tempRange.setStart(startNode, startOffset);
 				tempRange.setEndAfter(currentParentNode.lastChild);
 
 				tempRange.deleteContents();
+
+				// var nextNode;
+
+				// while (1) {
+				// 	if (travelNode === currentParentNode) {
+				// 		break;
+				// 	} else if (travelNode.nextSibling) {
+				// 		nextNode = travelNode.nextSibling;
+				// 		travelNode.parentNode.removeChild(travelNode);
+				// 	} else if (travelNode.parentNode.nextSibling) {
+				// 		if (travelNode.parentNode === currentParentNode) {
+				// 			break;
+				// 		} else {
+				// 			nextNode = travelNode.parentNode.nextSibling;
+				// 			travelNode.parentNode.removeChild(travelNode);
+				// 		}
+						
+				// 	}
+				// 	travelNode = nextNode;
+				// }
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 					currentParentNode.innerHTML = "";

@@ -151,16 +151,19 @@ export default class PostEditor {
 
 		var keyCode = e.which;
 
-		// Delete key
 		if (keyCode === 8) {
 
+			// Backspace
 			this.selManager.backspace(e);
 
 		} else if (keyCode === 46) {
-			console.log("delete");
+
+			// Delete
 			this.selManager.delete(e);
+
 		} else if (keyCode === 13) {
 
+			// Enter(Return)
 			this.selManager.enter(e);
 			
 		}
