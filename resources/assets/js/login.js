@@ -23,6 +23,14 @@ if (identifierInputDOM) {
 	var passInputObj = new SignInInput(passInputDOM);
 }
 
+identifierInputDOM.addEventListener('input', function() {
+	if (this.value.includes("@")) {
+		this.parentElement.classList.add("email");
+	} else {
+		this.parentElement.classList.remove("email");
+	}
+});
+
 var confirmButton = document.querySelector("button.confirm");
 confirmButton.addEventListener("click", function() {
 

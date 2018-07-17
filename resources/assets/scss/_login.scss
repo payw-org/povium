@@ -36,7 +36,11 @@
 
 		margin-top: 1rem;
 
-		&.email .icon {
+		&.identifier .icon {
+			background-image: url('/assets/images/input-icons/person.svg');
+		}
+
+		&.identifier.email .icon {
 			background-image: url('/assets/images/input-icons/email-icon.svg');
 		}
 
