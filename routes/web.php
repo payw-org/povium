@@ -11,6 +11,7 @@ $router->get(
 	'/',
  	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/home.php';
+
 		return true;
 	}
 );
@@ -72,6 +73,7 @@ $router->get(
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/user_home.php';
+
 		return true;
 	},
 	'user_home'
@@ -89,6 +91,7 @@ $router->get(
 		//	둘중 하나라도 다르면 올바른 uri로 redirect시킨 후 (header), exit() 시킴
 		//	둘다 같으면 포스트페이지 require
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/post.php';
+
 		return true;
 	},
  	'post'
