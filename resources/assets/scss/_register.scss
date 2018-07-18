@@ -35,13 +35,13 @@
 	width: 100%;
 	max-width: 20rem;
 	margin: auto;
-	padding-top: 1rem;
+	padding: 1rem 0;
 
 	.input-wrapper {
 		margin-top: 1rem;
 
-		&.email .icon {
-			background-image: url('/assets/images/input-icons/email-icon.svg');
+		&.readable-id .icon {
+			background-image: url('/assets/images/input-icons/person.svg');
 		}
 
 		&.name .icon {

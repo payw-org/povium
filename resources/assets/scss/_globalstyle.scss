@@ -89,6 +89,10 @@ button::-moz-focus-inner {border:0;}
 		background: darken($pvm-violet, 3%);
 		// transform: scale(.97);
 	}
+
+	&:focus {
+		box-shadow: 0 0 0 4px #e2d2ff;
+	}
 }
 
 .btn-aqua {
@@ -114,6 +118,10 @@ button::-moz-focus-inner {border:0;}
 	&:active {
 		background: darken($btn-aqua, 3%);
 		// transform: scale(.97);
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 4px #b6ffe0;
 	}
 }
 
@@ -142,11 +150,11 @@ button::-moz-focus-inner {border:0;}
 		width: $button-height + .1rem;
 		height: $button-height + .2rem;
 		background-repeat: no-repeat;
-		background-position: 50% 50%;
-		background-size: 55% auto;
+		background-position: calc(50% + .1rem) 50%;
+		background-size: 80% auto;
 		opacity: 0;
 		transform: translateX(-1rem);
-		transition: transform .2s ease, opacity .2s ease;
+		transition: transform .2s ease, opacity .2s ease, background-size .1s ease;
 		will-change: transform, opacity;
 	}
 

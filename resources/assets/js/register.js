@@ -35,12 +35,30 @@ class RegInput extends TextInput {
 var readableIDInputDOM = document.querySelector('.input-wrapper.readable-id input');
 var nameInputDOM = document.querySelector('.input-wrapper.name input');
 var passInputDOM = document.querySelector('.input-wrapper.password input');
+var startButton = document.querySelector('button.start');
 
 if (readableIDInputDOM) {
 	var readableIDInputObj = new RegInput(readableIDInputDOM);
 	var nameInputObj = new RegInput(nameInputDOM);
 	var passInputObj = new RegInput(passInputDOM);
 }
+
+
+readableIDInputDOM.addEventListener('keyup', function(e) {
+	if (e.which === 13) {
+		startButton.click();
+	}
+});
+nameInputDOM.addEventListener('keyup', function(e) {
+	if (e.which === 13) {
+		startButton.click();
+	}
+});
+passInputDOM.addEventListener('keyup', function(e) {
+	if (e.which === 13) {
+		startButton.click();
+	}
+});
 
 
 function checkValidation () {
