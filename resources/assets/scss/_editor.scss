@@ -213,13 +213,16 @@
 		&::before {
 			position: absolute;
 			content: '\2022';
-			left: 0;
 			display: inline-block;
 		}
 	}
 
 	ol > li {
-
+		&::before {
+			counter-increment: item;
+			content: counter(item) ".";
+			right: calc(100% - 1em);
+		}
 	}
 
 	ul {
@@ -228,8 +231,7 @@
 
 	ul > li {
 		&::before {
-			counter-increment: item;
-			content: counter(item) ".";
+			left: 0.2em;
 		}
 	}
 
