@@ -490,7 +490,7 @@ export default class SelectionManager
 
 				if (this.isAvailableEmptyNode(previousNode)) {
 					if (this.isAvailableChildNode(previousNode)) {
-						console.log("list item");
+						console.log("previous node is child");
 						var parentNode = previousNode.parentNode;
 						previousNode.parentNode.removeChild(previousNode);
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
@@ -545,7 +545,16 @@ export default class SelectionManager
 				var previousNode = this.getPreviousAvailableNode(currentNode);
 
 				if (this.isAvailableEmptyNode(previousNode)) {
-					previousNode.parentNode.removeChild(previousNode);
+					if (this.isAvailableChildNode(previousNode)) {
+						console.log("previous node is child");
+						var parentNode = previousNode.parentNode;
+						previousNode.parentNode.removeChild(previousNode);
+						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
+							parentNode.parentNode.removeChild(parentNode);
+						}
+					} else {
+						previousNode.parentNode.removeChild(previousNode);
+					}
 				} else {
 
 
@@ -693,7 +702,12 @@ export default class SelectionManager
 			return;
 		}
 
-		console.log(selectionNode);
+		// Delete the br if the current sentence is not empty
+		var currentNode = this.getNodeInSelection();
+
+		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
+			currentNode.removeChild(currentNode.querySelector("br"));
+		}
 
 		var selPosType = this.getSelectionPositionInParagraph();
 
@@ -1401,26 +1415,6 @@ export default class SelectionManager
 				tempRange.setEndAfter(currentParentNode.lastChild);
 
 				tempRange.deleteContents();
-
-				// var nextNode;
-
-				// while (1) {
-				// 	if (travelNode === currentParentNode) {
-				// 		break;
-				// 	} else if (travelNode.nextSibling) {
-				// 		nextNode = travelNode.nextSibling;
-				// 		travelNode.parentNode.removeChild(travelNode);
-				// 	} else if (travelNode.parentNode.nextSibling) {
-				// 		if (travelNode.parentNode === currentParentNode) {
-				// 			break;
-				// 		} else {
-				// 			nextNode = travelNode.parentNode.nextSibling;
-				// 			travelNode.parentNode.removeChild(travelNode);
-				// 		}
-						
-				// 	}
-				// 	travelNode = nextNode;
-				// }
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 					currentParentNode.innerHTML = "";
