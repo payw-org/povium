@@ -4,5 +4,6 @@
 
 composer.lock
 composer.phar
+package-lock.json
 
 .DS_Store
