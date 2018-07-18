@@ -18,15 +18,19 @@ class ServiceFactory extends AbstractChildFactory
 	/**
 	* Manufacture materials into arguments
 	*
-	* @param mixed materials
+	* @param boolean $with_db Is generated with DB connection arguments?
+	* @param mixed materials optional args
 	* @return void
 	*/
 	protected function prepareArgs()
 	{
 		$args = func_get_args();
-		$db_conn = DBConnection::getInstance()->getConn();
+		$with_db = array_shift($args);
 
-		array_unshift($args, $db_conn);
+		if ($with_db) {
+			$conn = DBConnection::getInstance()->getConn();
+			array_unshift($args, $conn);
+		}
 
 		$this->args = $args;
 	}

@@ -34,7 +34,7 @@ $router->put(
 );
 
 /* Logout Ajax */
-$router->get(
+$router->post(
 	'/logout',
 	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/logoutController.php';

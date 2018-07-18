@@ -10,5 +10,5 @@
 
 return [
 	'\Povium\Auth' => '\Povium\Base\Factory\ServiceFactory',
-
+	'\Povium\Base\Routing\Router' => '\Povium\Base\Factory\ServiceFactory',
 ];
