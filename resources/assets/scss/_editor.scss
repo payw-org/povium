@@ -1,6 +1,10 @@
 @import "_global-variables";
 @import "_global-mixins";
 
+html, body {
+	background: #fff;
+}
+
 main {
 	padding: 0;
 }
@@ -104,7 +108,7 @@ main {
 
 #editor-toolbar {
 
-	padding: 1rem;
+	padding: .3rem;
 	background: $white-blue;
 	user-select: none;
 	position: sticky;
@@ -114,7 +118,7 @@ main {
 
 		display: flex;
 		justify-content: space-around;
-		max-width: 900px;
+		max-width: 800px;
 		margin: auto;
 
 		button {
@@ -125,6 +129,32 @@ main {
 			background-size: 70% auto;
 			background-position: 50% 50%;
 			background-repeat: no-repeat;
+
+			transition: background-color .2s ease;
+
+			&:hover {
+				background-color: rgba(255,255,255,2);
+			}
+
+			&:active {
+				background-color: rgba(255,255,255,.4);
+			}
+
+			&#p {
+				background-image: url('/assets/images/editor/paragraph.svg');
+			}
+
+			&#h1 {
+				background-image: url('/assets/images/editor/title1.svg');
+			}
+
+			&#h2 {
+				background-image: url('/assets/images/editor/title2.svg');
+			}
+
+			&#h3 {
+				background-image: url('/assets/images/editor/title3.svg');
+			}
 
 			&#bold {
 				background-image: url('/assets/images/editor/bold.svg');
@@ -140,6 +170,18 @@ main {
 
 			&#strike {
 				background-image: url('/assets/images/editor/strikethrough.svg');
+			}
+
+			&#ol {
+				background-image: url('/assets/images/editor/olist.svg');
+			}
+
+			&#ul {
+				background-image: url('/assets/images/editor/ulist.svg');
+			}
+
+			&#blockquote {
+				background-image: url('/assets/images/editor/blockquote.svg');
 			}
 
 			&#align-left {
@@ -191,7 +233,7 @@ main {
 		font-size: 1.2rem;
 		margin-bottom: .7em;
 
-		line-height: 1.2;
+		line-height: 1.4;
 
 		& + p, & + h1, & + h2, & + h3, & + h4, & + h5, & + h6 {
 			margin-top: 2em;
@@ -209,7 +251,7 @@ main {
 		font-size: 2.4rem;
 
 		& + p, & + blockquote  {
-			margin-top: 1.2em;
+			margin-top: 2em;
 		}
 	}
 
@@ -217,7 +259,7 @@ main {
 		font-size: 2rem;
 
 		& + p, & + blockquote {
-			margin-top: 1em;
+			margin-top: 1.7em;
 		}
 	}
 
@@ -225,7 +267,7 @@ main {
 		font-size: 1.5rem;
 
 		& + p, & + blockquote {
-			margin-top: .8em;
+			margin-top: 1.2em;
 		}
 	}
 
@@ -236,6 +278,10 @@ main {
 		& + p, & + blockquote {
 			margin-top: 1em;
 		}
+	}
+
+	ol {
+		counter-reset: item;
 	}
 
 	li {
