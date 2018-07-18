@@ -16,6 +16,7 @@ class SignInInput extends TextInput {
 
 var identifierInputDOM = document.querySelector('.input-wrapper.identifier input');
 var passInputDOM = document.querySelector('.input-wrapper.password input');
+var confirmButton = document.querySelector('button.confirm');
 var rememberCheckBox = document.querySelector('#auto-chk');
 
 if (identifierInputDOM) {
@@ -23,11 +24,21 @@ if (identifierInputDOM) {
 	var passInputObj = new SignInInput(passInputDOM);
 }
 
-identifierInputDOM.addEventListener('input', function() {
+identifierInputDOM.addEventListener('keyup', function(e) {
 	if (this.value.includes("@")) {
 		this.parentElement.classList.add("email");
 	} else {
 		this.parentElement.classList.remove("email");
+	}
+
+	if (e.which === 13) {
+		confirmButton.click();
+	}
+});
+
+passInputDOM.addEventListener('keyup', function(e) {
+	if (e.which === 13) {
+		confirmButton.click();
 	}
 });
 
