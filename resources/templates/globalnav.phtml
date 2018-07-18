@@ -27,9 +27,20 @@
 			if ($GLOBALS['auth']->isLoggedIn()) {
 			?>
 
-			<div id="gn-user-info">
-				<?php echo $GLOBALS['auth']->getCurrentUser()['name']; ?>
+			<div id="gn-loggedin-view">
+				<div class="container">
+					<a href="" class="user-info">
+						<div class="bg"></div>
+						<span><?php echo $GLOBALS['auth']->getCurrentUser()['name']; ?></span>
+					</a>
+					<a href="/logout" class="sign-out">
+						<div class="bg"></div>
+						<span>로그아웃</span>
+					</a>
+				</div>
 			</div>
+
+			
 
 			<?php
 			} else {

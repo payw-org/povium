@@ -89,6 +89,10 @@ button::-moz-focus-inner {border:0;}
 		background: darken($pvm-violet, 3%);
 		// transform: scale(.97);
 	}
+
+	&:focus {
+		box-shadow: 0 0 0 4px #e2d2ff;
+	}
 }
 
 .btn-aqua {
@@ -114,6 +118,10 @@ button::-moz-focus-inner {border:0;}
 	&:active {
 		background: darken($btn-aqua, 3%);
 		// transform: scale(.97);
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 4px #b6ffe0;
 	}
 }
 
