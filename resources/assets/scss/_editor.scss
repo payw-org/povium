@@ -1,11 +1,15 @@
 @import "_global-variables";
 @import "_global-mixins";
 
+main {
+	padding: 0;
+}
+
 #post-editor {
 	display: block;
 	position: relative;
-	width: calc(100% - 40px);
-	max-width: 50rem;
+	// width: calc(100% - 40px);
+	// max-width: 50rem;
 	margin: auto;
 
 	#caret {
@@ -53,6 +57,7 @@
 		opacity: 0;
 		padding: 5px;
 		display: flex;
+		display: none;
 		transform: translateY(5px);
 		will-change: transform;
 		transition: transform .2s ease, opacity .2s ease;
@@ -98,37 +103,64 @@
 }
 
 #editor-toolbar {
-	margin-bottom: 1rem;
+
 	padding: 1rem;
 	background: $white-blue;
 	user-select: none;
+	position: sticky;
+	top: 0;
 
-	& > div {
+	.et-items {
+
 		display: flex;
+		justify-content: space-around;
+		max-width: 900px;
+		margin: auto;
+
+		button {
+			display: flex;
+			width: 30px;
+			height: 30px;
+
+			background-size: 70% auto;
+			background-position: 50% 50%;
+			background-repeat: no-repeat;
+
+			&#bold {
+				background-image: url('/assets/images/editor/bold.svg');
+			}
+
+			&#italic {
+				background-image: url('/assets/images/editor/italic.svg');
+			}
+
+			&#underline {
+				background-image: url('/assets/images/editor/underline.svg');
+			}
+
+			&#strike {
+				background-image: url('/assets/images/editor/strikethrough.svg');
+			}
+
+			&#align-left {
+				background-image: url('/assets/images/editor/alignleft.svg');
+			}
+
+			&#align-center {
+				background-image: url('/assets/images/editor/alignmiddle.svg');
+			}
+
+			&#align-right {
+				background-image: url('/assets/images/editor/alignright.svg');
+			}
+
+			&#link {
+				background-image: url('/assets/images/editor/link.svg');
+			}
+		}
 	}
 
-	button {
-		// min-width: 50px;
-		font-weight: 700;
-		padding: 3px 5px;
-		margin: 0;
-		color: $soft-black;
-		display: inline-block;
-		font-size: 1rem;
-		cursor: pointer;
-		border-radius: 5px;
-
-		&:hover {
-			background: $pvm-violet;
-			// transform: scale(1.1);
-			color: #fff;
-
-		}
-
-		&:active {
-			transform: scale(1);
-		}
-	}
+	
 }
 
 #editor-body {
@@ -138,13 +170,12 @@
 	// text-shadow: 0 0 0 $soft-black;
 	white-space: pre-wrap;
 
-	margin-top: 2rem;
+	width: calc(100% - 40px);
+	max-width: 50rem;
+	margin: auto;
+	position: relative;
 
-
-	.del-junk {
-		background: red;
-		display: inline-flex;
-	}
+	padding-top: 2rem;
 
 	&:empty {
 		background: lightblue;

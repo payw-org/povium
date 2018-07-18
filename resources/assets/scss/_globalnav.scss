@@ -299,7 +299,7 @@ $search-font-size: floor($search-size / 2.5) + 1;
 			transition-delay: .05s;
 
 			.bg {
-				background-color: #4892f1;
+				background-color: $pvm-blue;
 			}
 
 			.search-active & {
@@ -312,7 +312,7 @@ $search-font-size: floor($search-size / 2.5) + 1;
 			margin-left: 7px;
 
 			.bg {
-				background-color: #fc5454;
+				background-color: $pvm-red;
 			}
 
 			.search-active & {
