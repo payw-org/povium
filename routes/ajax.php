@@ -32,3 +32,12 @@ $router->put(
 		return true;
 	}
 );
+
+/* Logout Ajax */
+$router->post(
+	'/logout',
+	function () {
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/logoutController.php';
+		return true;
+	}
+);
