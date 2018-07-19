@@ -338,18 +338,19 @@ class Router
 			//	Pattern include regex part '{}'.
 			if (false !== mb_strpos($parsed_pattern, '{')) {
 				$regex = '';
-				$placeholders = array();
 
 				//	Extract placeholders and regexes
 				$extractor = '/([^{}]*)\{([\w]+):([^{}]+)\}/';
 				$match_count = preg_match_all($extractor, $parsed_pattern, $matches);
 				array_shift($matches);
 
+				$prefixes = $matches[0];
 				$placeholders = $matches[1];
+				$regexes = $matches[2];
 
 				for ($idx = 0; $idx < $match_count; $idx++) {		//	Make to one completed regex.
-					$regex .= $matches[0][$idx];
-					$regex .= '(' . $matches[2][$idx] . ')';
+					$regex .= $prefixes[$idx];
+					$regex .= '(' . $regexes[$idx] . ')';
 				}
 				$regex = '/^' . $regex . '$/';
 

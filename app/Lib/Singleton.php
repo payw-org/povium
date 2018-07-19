@@ -11,6 +11,9 @@ namespace Povium\Lib;
 
 trait Singleton
 {
+	/**
+	 * @var object
+	 */
 	private static $instance = null;
 
 	/**
