@@ -197,19 +197,29 @@ class Router
 				$match_count = preg_match_all($extractor, $parsed_pattern, $matches);
 				array_shift($matches);
 
+				$prefixes = $matches[0];
 				$placeholders = $matches[1];
+				$regexes = $matches[2];
 
 				//	Generate sub URI by referring to each regex part
 				for ($idx = 0; $idx < $match_count; $idx++) {
 					$param = $params[$placeholders[$idx]];
+
+					//	If param is not exist
 					if (!isset($param)) {
+						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
+						RouterException::EXC_INVALID_REVERSED_ROUTING);
+					}
+
+					//	If the param does not match the regex
+					if (!preg_match('/^' . $regexes[$idx] . '$/', $param)) {
 						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
 						RouterException::EXC_INVALID_REVERSED_ROUTING);
 					}
 
 					//	Special case: Param is user's readable id.
 					//	Do not encode this.
-					if ($matches[0][$idx] == '@') {
+					if ($prefixes[$idx] == '@') {
 						$sub_uri .= '@' . $param;
 					} else {	//	Encode param.
 						//	Convert all special chars(include whitespace) to '-'.
@@ -217,7 +227,7 @@ class Router
 						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
 
 						//	Concatenate prefix and param that encoded to uri form.
-						$sub_uri .= $matches[0][$idx] . $param;
+						$sub_uri .= $prefixes[$idx] . $param;
 					}
 				}
 
