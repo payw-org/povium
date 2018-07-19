@@ -15,7 +15,7 @@ $auth = $factory->createInstance('\Povium\Auth', $with_db=true);
 $auth->isLoggedIn();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/ajax.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php';
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
