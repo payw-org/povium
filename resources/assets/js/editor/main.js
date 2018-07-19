@@ -1,5 +1,4 @@
 import PostEditor from "./PostEditor";
-import "./PoviumNode";
 
 const editor = new PostEditor(document.querySelector('#post-editor'));
 
@@ -15,6 +14,8 @@ document.querySelector('#log-range').addEventListener('click', function () {
 	}
 
 	var range = sel.getRangeAt(0);
+
+	console.log(range);
 
 	console.log(range.startContainer);
 	console.log(range.startOffset);

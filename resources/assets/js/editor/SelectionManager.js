@@ -1371,7 +1371,7 @@ export default class SelectionManager
 
 		// range.collapse(false);
 
-		console.log(startNode);
+		console.log("startNode:", startNode, " endNode: ", endNode);
 
 		range.setStart(range.endContainer, range.endOffset);
 		this.replaceRange(range);
@@ -1383,6 +1383,7 @@ export default class SelectionManager
 		var parentNode;
 
 		while (1) {
+			console.log("currentParentNode: ", currentParentNode);
 			if (
 				!currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
