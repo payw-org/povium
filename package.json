@@ -27,7 +27,8 @@
     "sass:watch": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ -w --output-style compressed --source-map true",
     "sass:autoprefix": "npm run sass:build && npm run autoprefix",
     "sass:autoprefix:watch": "node_modules/.bin/npm-run-all --parallel sass:watch autoprefix:watch",
-    "init": "npm run webpack:build && npm run sass:build && npm run autoprefix"
+	"init": "npm run webpack:build && npm run sass:build && npm run autoprefix",
+	"frontend:watch": "node_modules/.bin/npm-run-all --parallel webpack:watch sass:autoprefix:watch"
   },
   "browserslist": [
     "> 5%",
