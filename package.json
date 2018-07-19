@@ -21,10 +21,10 @@
   "scripts": {
     "webpack:build": "node_modules/.bin/webpack --config webpack.config.js",
     "webpack:watch": "node_modules/.bin/webpack --watch --config webpack.config.js",
-    "autoprefix": "node_modules/.bin/postcss public_html/build/css --use autoprefixer -d public_html/build/css",
+    "autoprefix": "node_modules/.bin/postcss public_html/build/css/*.css --use autoprefixer -d public_html/build/css",
     "autoprefix:watch": "node_modules/.bin/onchange \"public_html/build/css/*.css\" -w -- \"npm run autoprefix && npm run autoprefix:watch\"",
-    "sass:build": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/",
-    "sass:watch": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ -w --output-style compressed",
+    "sass:build": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ --output-style compressed --source-map true",
+    "sass:watch": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ -w --output-style compressed --source-map true",
     "sass:autoprefix": "npm run sass:build && npm run autoprefix",
     "sass:autoprefix:watch": "node_modules/.bin/npm-run-all --parallel sass:watch autoprefix:watch",
     "init": "npm run webpack:build && npm run sass:build && npm run autoprefix"
