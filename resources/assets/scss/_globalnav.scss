@@ -8,7 +8,8 @@ $search-margin: floor($globalnav-height * 0.3);
 $search-font-size: floor($search-size / 2.5) + 1;
 
 #globalnav {
-	position: fixed;
+	// position: fixed;
+	position: sticky;
 	left: 0;
 	top: 0;
 	width: 100%;
