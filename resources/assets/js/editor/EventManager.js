@@ -112,14 +112,14 @@ export default class EventManager
 				this.domManager.hideImageTool();
 				setTimeout(() => {
 					this.domManager.showImageTool(this.domManager.editor.querySelector("figure.image.selected .image-wrapper"));
-				}, 100);
+				}, 200);
 				
 			} else if (e.target.id === "normal" && e.target.nodeName === "BUTTON") {
 				this.domManager.editor.querySelector("figure.image.selected").classList.remove("full");
 				this.domManager.hideImageTool();
 				setTimeout(() => {
 					this.domManager.showImageTool(this.domManager.editor.querySelector("figure.image.selected .image-wrapper"));
-				}, 100);
+				}, 200);
 			} else {
 				if (this.domManager.editor.querySelector(".selected")) {
 					this.domManager.editor.querySelector(".selected").classList.remove("selected");
