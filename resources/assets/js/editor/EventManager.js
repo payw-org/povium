@@ -102,14 +102,30 @@ export default class EventManager
 
 		// Image click event
 		window.addEventListener('click', (e) => {
-			if (e.target.nodeName === "FIGURE") {
+			console.log(e.target);
+			if (e.target.classList.contains("image-wrapper")) {
 				console.log("image clicked");
-				e.target.classList.add("selected");
+				e.target.parentNode.classList.add("selected");
+				this.domManager.showImageTool(e.target);
+			} else if (e.target.id === "full" && e.target.nodeName === "BUTTON") {
+				this.domManager.editor.querySelector("figure.image.selected").classList.add("full");
+				this.domManager.hideImageTool();
+				setTimeout(() => {
+					this.domManager.showImageTool(this.domManager.editor.querySelector("figure.image.selected .image-wrapper"));
+				}, 100);
+				
+			} else if (e.target.id === "normal" && e.target.nodeName === "BUTTON") {
+				this.domManager.editor.querySelector("figure.image.selected").classList.remove("full");
+				this.domManager.hideImageTool();
+				setTimeout(() => {
+					this.domManager.showImageTool(this.domManager.editor.querySelector("figure.image.selected .image-wrapper"));
+				}, 100);
 			} else {
 				if (this.domManager.editor.querySelector(".selected")) {
 					this.domManager.editor.querySelector(".selected").classList.remove("selected");
 				}
-				
+
+				this.domManager.hideImageTool();
 			}
 		});
 
