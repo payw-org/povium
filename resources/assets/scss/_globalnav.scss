@@ -8,7 +8,8 @@ $search-margin: floor($globalnav-height * 0.3);
 $search-font-size: floor($search-size / 2.5) + 1;
 
 #globalnav {
-	position: fixed;
+	// position: fixed;
+	position: sticky;
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -299,7 +300,7 @@ $search-font-size: floor($search-size / 2.5) + 1;
 			transition-delay: .05s;
 
 			.bg {
-				background-color: #4892f1;
+				background-color: $pvm-blue;
 			}
 
 			.search-active & {
@@ -312,7 +313,7 @@ $search-font-size: floor($search-size / 2.5) + 1;
 			margin-left: 7px;
 
 			.bg {
-				background-color: #fc5454;
+				background-color: $pvm-red;
 			}
 
 			.search-active & {
