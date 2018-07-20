@@ -1,39 +1,39 @@
 <div id="post-editor">
 	<div id="editor-toolbar">
-		<div>
-			<button id="p" type="button">P</button>
-			<button id="h1" type="button">H1</button>
-			<button id="h2" type="button">H2</button>
-			<button id="h3" type="button">H3</button>
+
+		<div class="et-items">
+			<button id="p" type="button" title="본문"></button>
+			<button id="h1" type="button" title="제목1"></button>
+			<button id="h2" type="button" title="제목2"></button>
+			<button id="h3" type="button" title="제목3"></button>
+
+			<button id="bold" type="button" title="굵게"></button>
+			<button id="italic" type="button" title="기울임"></button>
+			<button id="underline" type="button" title="밑줄"></button>
+			<button id="strike" type="button" title="취소선"></button>
+
+			<button id="align-left" title="왼쪽 정렬"></button>
+			<button id="align-center" title="가운데 정렬"></button>
+			<button id="align-right" title="오른쪽 정렬"></button>
+
+			<button id="ol" title="순서 있는 목록"></button>
+			<button id="ul" title="순서 없는 목록"></button>
+			<button id="link" title="링크"></button>
+			<button id="blockquote" title="인용구"></button>
+
+			<!-- <div style="display: none;"> -->
+				<button id="log-range"></button>
+				<button id="nodes-in-selection"></button>
+				<button id="separate"></button>
+				<button id="split-text"></button>
+
+				<button id="get-sel-pos"></button>
+				<button id="get-sel-pos-par"></button>
+			<!-- </div> -->
 		</div>
-		<div>
-			<button id="bold" type="button" name="button">Bold</button>
-			<button id="italic" type="button">Italics</button>
-			<button id="underline" type="button">Underline</button>
-			<button id="strike" type="button">Strikethrough</button>
-		</div>
-		<div>
-			<button id="align-left">Left</button>
-			<button id="align-center">Center</button>
-			<button id="align-right">Right</button>
-		</div>
-		<div>
-			<button id="ol">List</button>
-			<button id="link">Link</button>
-			<button id="blockquote">Blockquote</button>
-			<button id="ul">순서가 없는 목록</button>
-		</div>
-		<div>
-			<button id="log-range">Log Range</button>
-			<button id="nodes-in-selection">Nodes In Sel</button>
-			<button id="separate">Separate</button>
-			<button id="split-text">SplitText</button>
-		</div>
-		<div>
-			<button id="get-sel-pos">Get Sel Pos</button>
-			<button id="get-sel-pos-par">Get Sel Pos Par</button>
-		</div>
+
 		
+	
 	</div>
 	<div id="caret"></div>
 	<aside id="poptool">
@@ -42,5 +42,9 @@
 		<button id="pt-underline" type="button"><u>U</u></button>
 		<button id="pt-strike" type="button"><strike>S</strike></button>
 	</aside>
-	<div id="editor-body" contenteditable="true" autocomplete="off" spellcheck="false"><h2><b>김치찌개를 맛있게 끓이는 법</b></h2><ul><li>맛있는 김치를 산다.</li><li>맛있는 돼지고기를 산다.</li><li>김치와 돼지고기와 물을 넣고 끓인다.</li></ul></div>
+	<div id="image-preference-view">
+		<button id="full">꽉 찬</button>
+		<button id="normal">적당히</button>
+	</div>
+	<div id="editor-body" contenteditable="true" autocomplete="off" spellcheck="false"><h2><b>김치찌개를 맛있게 끓이는 법</b></h2><ul><li>맛있는 김치를 산다.</li><li>맛있는 돼지고기를 산다.</li><li>김치와 돼지고기와 물을 넣고 끓인다.</li></ul><figure class="image"><div class="image-wrapper"><img src="https://cbmpress.com/toronto/wp-content/uploads/sites/3/2018/02/IMG_0720.jpg" alt=""></div><figcaption contenteditable="true">이미지 캡션</figcaption></figure><h1><b>코딩을 배우는 순서</b></h1><ol><li>논리적인 생각을 한다.</li><li>문법을 배운다.</li><li>코드를 짠다.</li></ol></div>
 </div>

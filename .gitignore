@@ -2,6 +2,7 @@
 /node_modules
 /public_html/build
 
+package-lock.json
 composer.lock
 composer.phar
 package-lock.json

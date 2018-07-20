@@ -490,7 +490,7 @@ export default class SelectionManager
 
 				if (this.isAvailableEmptyNode(previousNode)) {
 					if (this.isAvailableChildNode(previousNode)) {
-						console.log("list item");
+						console.log("previous node is child");
 						var parentNode = previousNode.parentNode;
 						previousNode.parentNode.removeChild(previousNode);
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
@@ -545,7 +545,16 @@ export default class SelectionManager
 				var previousNode = this.getPreviousAvailableNode(currentNode);
 
 				if (this.isAvailableEmptyNode(previousNode)) {
-					previousNode.parentNode.removeChild(previousNode);
+					if (this.isAvailableChildNode(previousNode)) {
+						console.log("previous node is child");
+						var parentNode = previousNode.parentNode;
+						previousNode.parentNode.removeChild(previousNode);
+						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
+							parentNode.parentNode.removeChild(parentNode);
+						}
+					} else {
+						previousNode.parentNode.removeChild(previousNode);
+					}
 				} else {
 
 
@@ -693,7 +702,12 @@ export default class SelectionManager
 			return;
 		}
 
-		console.log(selectionNode);
+		// Delete the br if the current sentence is not empty
+		var currentNode = this.getNodeInSelection();
+
+		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
+			currentNode.removeChild(currentNode.querySelector("br"));
+		}
 
 		var selPosType = this.getSelectionPositionInParagraph();
 
@@ -862,7 +876,7 @@ export default class SelectionManager
 
 	fixSelection()
 	{
-		
+
 		// If the selection is not in the available elements
 		// adjust it.
 		var range = this.getRange();
@@ -895,7 +909,8 @@ export default class SelectionManager
 			target = startNode.firstElementChild;
 
 			for (var i = 0; i < startOffset; i++) {
-				target = target.nextElementSibling;
+				// target = target.nextElementSibling;
+				target = targe.nextSibling;
 			}
 
 			
@@ -920,7 +935,8 @@ export default class SelectionManager
 			target = endNode.firstChild;
 
 			for (var i = 0; i < endOffset - 1; i++) {
-				target = target.nextElementSibling;
+				// target = target.nextElementSibling;
+				target = target.nextSibling;
 			}
 
 			if (target) {
@@ -1027,11 +1043,11 @@ export default class SelectionManager
 			this.replaceRange(newRange);
 		}
 
-		startNode = this.getRange().startContainer;
-		startOffset = this.getRange().startOffset;
-		if (startNode.nodeType === 3 && startNode.textContent === "") {
-			startNode.parentNode.normalize();
-		}
+		// startNode = this.getRange().startContainer;
+		// startOffset = this.getRange().startOffset;
+		// if (startNode.nodeType === 3 && startNode.textContent === "") {
+		// 	startNode.parentNode.normalize();
+		// }
 		
 		
 	}
@@ -1357,7 +1373,7 @@ export default class SelectionManager
 
 		// range.collapse(false);
 
-		console.log(startNode);
+		console.log("startNode:", startNode, " endNode: ", endNode);
 
 		range.setStart(range.endContainer, range.endOffset);
 		this.replaceRange(range);
@@ -1369,6 +1385,7 @@ export default class SelectionManager
 		var parentNode;
 
 		while (1) {
+			console.log("currentParentNode: ", currentParentNode);
 			if (
 				!currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
@@ -1401,26 +1418,6 @@ export default class SelectionManager
 				tempRange.setEndAfter(currentParentNode.lastChild);
 
 				tempRange.deleteContents();
-
-				// var nextNode;
-
-				// while (1) {
-				// 	if (travelNode === currentParentNode) {
-				// 		break;
-				// 	} else if (travelNode.nextSibling) {
-				// 		nextNode = travelNode.nextSibling;
-				// 		travelNode.parentNode.removeChild(travelNode);
-				// 	} else if (travelNode.parentNode.nextSibling) {
-				// 		if (travelNode.parentNode === currentParentNode) {
-				// 			break;
-				// 		} else {
-				// 			nextNode = travelNode.parentNode.nextSibling;
-				// 			travelNode.parentNode.removeChild(travelNode);
-				// 		}
-						
-				// 	}
-				// 	travelNode = nextNode;
-				// }
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 					currentParentNode.innerHTML = "";
@@ -1551,8 +1548,7 @@ export default class SelectionManager
 		}
 
 		if (
-			node.textContent === "" &&
-			node.querySelector("br")
+			node.textContent === ""
 		) {
 			return true;
 		} else {
@@ -1728,7 +1724,7 @@ export default class SelectionManager
 	{
 		if (!node) {
 			return false;
-		} else if (node.classList && node.classList.contains('image-block')) {
+		} else if (node.nodeName === 'FIGURE' && node.classList && node.classList.contains('image')) {
 			return true;
 		} else {
 			return false;
