@@ -111,7 +111,7 @@ export default class EventManager
 		});
 
 		// disable images contenteditable false
-		var imgs = document.getElementsByTagName("IMG");
+		var imgs = document.getElementsByTagName("figure");
 		for (var i = 0; i < imgs.length; ++i) {
 					imgs[i].contentEditable = false;
 		}

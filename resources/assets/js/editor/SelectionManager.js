@@ -876,7 +876,7 @@ export default class SelectionManager
 
 	fixSelection()
 	{
-		
+
 		// If the selection is not in the available elements
 		// adjust it.
 		var range = this.getRange();
@@ -1546,8 +1546,7 @@ export default class SelectionManager
 		}
 
 		if (
-			node.textContent === "" &&
-			node.querySelector("br")
+			node.textContent === ""
 		) {
 			return true;
 		} else {
@@ -1723,7 +1722,7 @@ export default class SelectionManager
 	{
 		if (!node) {
 			return false;
-		} else if (node.classList && node.classList.contains('image-block')) {
+		} else if (node.nodeName === 'FIGURE' && node.classList && node.classList.contains('image')) {
 			return true;
 		} else {
 			return false;
