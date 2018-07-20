@@ -21,6 +21,7 @@ class Auth
 
 	/**
 	* Database connection (PDO)
+	*
 	* @var \PDO
 	*/
 	private $conn = null;
@@ -37,6 +38,7 @@ class Auth
 	/**
 	* Validate account.
 	* Set auto login
+	*
 	* @param  string $identifier email or readable id
 	* @param  string $password
 	* @param  bool $remember flag for auto login
@@ -109,6 +111,7 @@ class Auth
 	* Delete session about authentication
 	* Delete cookie about auto login
 	* Delete table record about auto login
+	*
 	* @return void
 	*/
 	public function logout()
@@ -130,6 +133,7 @@ class Auth
 	* Validate input
 	* Checks if input is already taken
 	* Add user to db
+	*
 	* @param  string $readable_id
 	* @param  string $name
 	* @param  string $password
@@ -177,6 +181,7 @@ class Auth
 	/**
 	* Verify readable id input.
 	* Validate and Check if input is already taken.
+	*
 	* @param  string $readable_id
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
@@ -205,6 +210,7 @@ class Auth
 	/**
 	* Verify email input.
 	* Validate and Check if input is already taken.
+	*
 	* @param  string $email
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
@@ -233,6 +239,7 @@ class Auth
 	/**
 	* Verify name input.
 	* Validate and Check if input is already taken.
+	*
 	* @param  string $name
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
@@ -428,6 +435,7 @@ class Auth
 
 	/**
 	* Check if the readable id is already taken
+	*
 	* @param  string  $readable_id
 	* @return boolean
 	*/
@@ -449,6 +457,7 @@ class Auth
 	/**
 	* Check if the email is already taken
 	* Compare case-insensitive
+	*
 	* @param  string  $email
 	* @return boolean
 	*/
@@ -470,6 +479,7 @@ class Auth
 	/**
 	* Check if the name is already taken
 	* Compare case-insensitive
+	*
 	* @param  string  $name
 	* @return boolean
 	*/
@@ -519,6 +529,7 @@ class Auth
 
 	/**
 	* Get the user's basic inform
+	*
 	* @param  int $id
 	* @return mixed array or false
 	*/
@@ -539,6 +550,7 @@ class Auth
 
 	/**
 	* Get entire inform
+	*
 	* @param  int  $id
 	* @param  boolean $with_pw If it is true, return with password.
 	* @return mixed array or false
@@ -566,6 +578,7 @@ class Auth
 
 	/**
 	* Insert new user to DB
+	*
 	* @param string $readable_id
 	* @param string $name
 	* @param string $password
@@ -588,6 +601,7 @@ class Auth
 
 	/**
 	* Update some column values of user
+	*
 	* @param  int $id
 	* @param  array $params assoc array(column name to update => new value, ...)
 	* @return bool
@@ -636,6 +650,7 @@ class Auth
 
 	/**
 	* Verify password and rehash if hash options is changed.
+	*
 	* @param  string $raw_pw
 	* @param  string $hash
 	* @param  int $id
@@ -663,6 +678,7 @@ class Auth
 	/**
 	* Creates a session for a authorized user.
 	* Creates cookie and table record about token for auto login.
+	*
 	* @param int $id
 	* @param bool $remember Flag for auto login
 	* @return bool
@@ -711,6 +727,7 @@ class Auth
 	* Check if visitor is logged in.
 	* Check if auto login is possible.
 	* If possible, log in automatically.
+	*
 	* @return boolean
 	*/
 	public function isLoggedIn()
@@ -730,6 +747,7 @@ class Auth
 
 	/**
 	* Get current user's info from database
+	*
 	* @return mixed array or false
 	*/
 	public function getCurrentUser()
@@ -739,6 +757,7 @@ class Auth
 
 	/**
 	* Check if user_id session is exist.
+	*
 	* @return boolean
 	*/
 	private function checkSession()
@@ -753,6 +772,7 @@ class Auth
 	/**
 	* Check cookie for auto login
 	* Authenticate token
+	*
 	* @return mixed int or false (int: when auto login success, false: otherwise)
 	*/
 	private function checkCookie()
@@ -798,6 +818,7 @@ class Auth
 	* First, looking for a matched selector.
 	* Then check if validator is matched.
 	* If all matched, return token info.
+	*
 	* @param  string $token
 	* @return mixed array or false
 	*/
@@ -826,6 +847,7 @@ class Auth
 
 	/**
 	* Delete session about authentication.
+	*
 	* @return void
 	*/
 	private function deleteSession()
@@ -836,6 +858,7 @@ class Auth
 
 	/**
 	* Delete cookie about auto login.
+	*
 	* @return void
 	*/
 	private function deleteCookie()
@@ -846,6 +869,7 @@ class Auth
 
 	/**
 	* Delete token info from table
+	* 
 	* @param  int $token_id
 	* @return boolean If deletion success, return true.
 	*/
