@@ -909,7 +909,8 @@ export default class SelectionManager
 			target = startNode.firstElementChild;
 
 			for (var i = 0; i < startOffset; i++) {
-				target = target.nextElementSibling;
+				// target = target.nextElementSibling;
+				target = targe.nextSibling;
 			}
 
 			
@@ -934,7 +935,8 @@ export default class SelectionManager
 			target = endNode.firstChild;
 
 			for (var i = 0; i < endOffset - 1; i++) {
-				target = target.nextElementSibling;
+				// target = target.nextElementSibling;
+				target = target.nextSibling;
 			}
 
 			if (target) {
@@ -1041,11 +1043,11 @@ export default class SelectionManager
 			this.replaceRange(newRange);
 		}
 
-		startNode = this.getRange().startContainer;
-		startOffset = this.getRange().startOffset;
-		if (startNode.nodeType === 3 && startNode.textContent === "") {
-			startNode.parentNode.normalize();
-		}
+		// startNode = this.getRange().startContainer;
+		// startOffset = this.getRange().startOffset;
+		// if (startNode.nodeType === 3 && startNode.textContent === "") {
+		// 	startNode.parentNode.normalize();
+		// }
 		
 		
 	}

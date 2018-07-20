@@ -13,6 +13,9 @@ export default class EventManager
 	 */
 	constructor(postEditor, domManager, selManager)
 	{
+
+		let self = this;
+
 		// Event Listeners
 
 		this.mouseDownStart = false;
@@ -92,8 +95,8 @@ export default class EventManager
 		document.addEventListener('mousedown', function(e) {
 			if (e.target.nodeName === "A") {
 				e.preventDefault();
-				self.this.selManager.unlink(e.target);
-				self.this.domManager.hidePopTool();
+				self.selManager.unlink(e.target);
+				self.domManager.hidePopTool();
 			}
 		});
 
