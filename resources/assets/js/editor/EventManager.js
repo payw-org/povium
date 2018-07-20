@@ -172,6 +172,8 @@ export default class EventManager
 		var currentNode = this.selManager.getNodeInSelection();
 		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
 			currentNode.removeChild(currentNode.querySelector("br"));
+		} else if (currentNode && currentNode.textContent === "" && !currentNode.querySelector("br")) {
+			currentNode.appendChild(document.createElement("br"));
 		}
 	}
 
