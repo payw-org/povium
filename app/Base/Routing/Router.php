@@ -21,12 +21,14 @@ class Router
 	/**
 	 * Binding the same patterns
 	 * array('$pattern' => Route_array)
+	 *
 	 * @var array
 	 */
 	private $routes = array();
 
 	/**
 	 * Array to store named routes in, used for reverse routing.
+	 *
 	 * @var array
 	 */
 	private $namedRoutes = array();
@@ -60,6 +62,7 @@ class Router
 	/**
 	 * Add route with GET method
 	 * READ mode
+	 *
 	 * @param string $pattern uri pattern
 	 * @param callback $handler
 	 * @param string $name Router name. It is optional param.
@@ -72,6 +75,7 @@ class Router
 	/**
 	* Add route with POST method
 	* CREATE mode
+	*
 	* @param string $pattern uri pattern
 	* @param callback $handler
 	* @param string $name Router name. It is optional param.
@@ -84,6 +88,7 @@ class Router
 	/**
 	* Add route with PUT method
 	* UPDATE mode
+	*
 	* @param string $pattern uri pattern
 	* @param callback $handler
 	* @param string $name Router name. It is optional param.
@@ -96,6 +101,7 @@ class Router
 	/**
 	* Add route with DELETE method
 	* DELETE mode
+	*
 	* @param string $pattern uri pattern
 	* @param callback $handler
 	* @param string $name Router name. It is optional param.
@@ -107,6 +113,7 @@ class Router
 
 	/**
 	 * Dispatch a given Request URI to matched routes.
+	 *
 	 * @param  string $http_method One of a HTTP methods
 	 * @param  string $request_uri
 	 */
@@ -146,6 +153,7 @@ class Router
 	/**
 	 * Reversed routing
 	 * Generate the URI with given argument. Replace regexes with supplied parameters.
+	 *
 	 * @param  string $arg    	route name or pattern
 	 * @param  array  $params	Associative array of parameters to replace placeholders with.
 	 * @return string 			Suitable URI
@@ -172,6 +180,7 @@ class Router
 	/**
 	 * Reversed routing
 	 * Generate the URI with given pattern. Replace regexes with supplied parameters.
+	 *
 	 * @param  string $pattern
 	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
 	 * @return string 			 Suitable URI
@@ -292,6 +301,7 @@ class Router
 
 	/**
 	 * Check that the Request URI matches the pattern.
+	 * 
 	 * @param  string $pattern     uri pattern
 	 * @param  string $request_uri
 	 * @return mixed array or false

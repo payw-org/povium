@@ -1,6 +1,5 @@
 <?php
 /**
-*
 * Receive register inputs and verify them.
 *
 * @author H.Chihoon

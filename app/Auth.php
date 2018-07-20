@@ -9,6 +9,9 @@
 
 namespace Povium;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class Auth
 {
 	/**
@@ -855,5 +858,13 @@ class Auth
 		$stmt->execute([':id' => $token_id]);
 
 		return $stmt->rowCount() == 1;
+	}
+
+	/**
+	 * @return [type] [description]
+	 */
+	private function sendMail()
+	{
+
 	}
 }

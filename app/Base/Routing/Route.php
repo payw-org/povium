@@ -17,12 +17,14 @@ class Route
 	 * POST : CREATE
 	 * PUT : UPDATE
 	 * DELETE : DELETE
+	 *
 	 * @var string
 	 */
 	public $http_method;
 
 	/**
 	 * URI pattern with regular expressions.
+	 * 
 	 * @var string
 	 */
 	public $pattern;

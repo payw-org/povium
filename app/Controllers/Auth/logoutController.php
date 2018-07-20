@@ -1,6 +1,5 @@
 <?php
 /**
-*
 * Logout processing
 *
 * @author H.Chihoon

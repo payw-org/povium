@@ -1,6 +1,5 @@
 <?php
 /**
-*
 * Receive register inputs and process register.
 *
 * @author H.Chihoon

@@ -22,12 +22,14 @@ class DBConnection
 	* Configuration parameters
 	* Array('driver' => '', 'host' => '', 'dbname' => '', 'username' => '',
 	* 'password' => '', 'opt' => '')
+	*
 	* @var array
 	*/
 	private $config;
 
 	/**
 	* Database connection (PDO)
+	*
 	* @var \PDO
 	*/
 	private $conn = null;
@@ -74,6 +76,7 @@ class DBConnection
 
 	/**
 	* Get connection
+	*
 	* @return \PDO pdo connection
 	*/
 	public function getConn()
@@ -84,6 +87,7 @@ class DBConnection
 	/* Deprecated */
 	// /**
 	// * Runs a INSERT, DELETE, UPDATE query using prepared statements
+	// *
 	// * @param  string $sql query string
 	// * @return int      num of affected records
 	// */
@@ -103,6 +107,7 @@ class DBConnection
 	//
 	// /**
 	// * Runs a SELECT query using prepared statements
+	// *
 	// * @param  string $sql query string
 	// * @return PDOStatement you can fetch records using it
 	// */
