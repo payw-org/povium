@@ -442,7 +442,7 @@ class Auth
 	public function isReadableIDTaken($readable_id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT COUNT(id) FROM {$this->config['table_users']}
+			"SELECT COUNT(id) FROM {$this->config['table__users']}
  			WHERE readable_id = :readable_id"
 		);
 		$stmt->execute([':readable_id' => $readable_id]);
@@ -464,7 +464,7 @@ class Auth
 	public function isEmailTaken($email)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT COUNT(id) FROM {$this->config['table_users']}
+			"SELECT COUNT(id) FROM {$this->config['table__users']}
  			WHERE LOWER(email) = LOWER(:email)"
 		);
 		$stmt->execute([':email' => $email]);
@@ -486,7 +486,7 @@ class Auth
 	public function isNameTaken($name)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT COUNT(id) FROM {$this->config['table_users']}
+			"SELECT COUNT(id) FROM {$this->config['table__users']}
  			WHERE LOWER(name) = LOWER(:name)"
 		);
 		$stmt->execute([':name' => $name]);
@@ -505,7 +505,7 @@ class Auth
 	public function getID($identifier)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->config['table_users']}
+			"SELECT id FROM {$this->config['table__users']}
  			WHERE readable_id = :readable_id"
 		);
 		$stmt->execute([':readable_id' => $identifier]);
@@ -515,7 +515,7 @@ class Auth
 		}
 
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->config['table_users']}
+			"SELECT id FROM {$this->config['table__users']}
  			WHERE email = :email"
 		);
 		$stmt->execute([':email' => $identifier]);
@@ -536,7 +536,7 @@ class Auth
 	public function getBaseUser($id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id, readable_id, email, password, is_active FROM {$this->config['table_users']}
+			"SELECT id, readable_id, email, password, is_active FROM {$this->config['table__users']}
  			WHERE id = :id"
 		);
 		$stmt->execute([':id' => $id]);
@@ -558,7 +558,7 @@ class Auth
 	public function getUser($id, $with_pw = false)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['table_users']}
+			"SELECT * FROM {$this->config['table__users']}
  			WHERE id = :id"
 		);
 		$stmt->execute([':id' => $id]);
@@ -589,7 +589,7 @@ class Auth
 		$password_hash = $this->getPasswordHash($password);
 
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['table_users']} (readable_id, name, password)
+			"INSERT INTO {$this->config['table__users']} (readable_id, name, password)
 			VALUES (?, ?, ?)"
 		);
 		if (!$stmt->execute([$readable_id, $name, $password_hash])) {
@@ -620,7 +620,7 @@ class Auth
 		$set_params = implode(', ', $col_list);
 
 		$stmt = $this->conn->prepare(
-			"UPDATE {$this->config['table_users']} SET " . $set_params .
+			"UPDATE {$this->config['table__users']} SET " . $set_params .
 			" WHERE id = ?"
 		);
 		if (!$stmt->execute($val_list)) {
@@ -666,7 +666,7 @@ class Auth
 			$new_hash = getPasswordHash($raw_pw);
 
 			$stmt = $this->conn->prepare(
-				"UPDATE {$this->config['table_users']} SET password = :password
+				"UPDATE {$this->config['table__users']} SET password = :password
  				WHERE id = :id"
 			);
 			$stmt->execute([':password' => $new_hash, ':id' => $id]);
@@ -694,7 +694,7 @@ class Auth
 			$encodedtoken = $this->encodeToken($token);
 
 			$stmt = $this->conn->prepare(
-				"INSERT INTO {$this->config['table_tokens']} (selector, validator, user_id, expn_dt)
+				"INSERT INTO {$this->config['table__auto_login_auth']} (selector, validator, user_id, expn_dt)
 				VALUES (:selector, :validator, :user_id, :expn_dt)"
 			);
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
@@ -827,7 +827,7 @@ class Auth
 		$encodedToken = $this->encodeToken($token);
 
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['table_tokens']}
+			"SELECT * FROM {$this->config['table__auto_login_auth']}
  			WHERE selector = :selector"
 		);
 		$stmt->execute([':selector' => $encodedToken['selector']]);
@@ -869,14 +869,14 @@ class Auth
 
 	/**
 	* Delete token info from table
-	* 
+	*
 	* @param  int $token_id
 	* @return boolean If deletion success, return true.
 	*/
 	private function deleteTokenInfo($token_id)
 	{
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['table_tokens']}
+			"DELETE FROM {$this->config['table__auto_login_auth']}
  			WHERE id = :id"
 		);
 		$stmt->execute([':id' => $token_id]);
@@ -884,9 +884,6 @@ class Auth
 		return $stmt->rowCount() == 1;
 	}
 
-	/**
-	 * @return [type] [description]
-	 */
 	private function sendMail()
 	{
 

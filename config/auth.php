@@ -7,8 +7,8 @@
 */
 
 return [
-	'table_users' => 'users',
-	'table_tokens' => 'tokens',
+	'table__users' => 'users',
+	'table__auto_login_auth' => 'auto_login_auth',
 
 
 	'cookie_params' => [
