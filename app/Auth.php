@@ -800,6 +800,8 @@ class Auth
 	}
 
 	/**
+	* Encode auto login authentication token
+	*
 	* @param  string $token selector:raw validator
 	* @return array array('selector' => '', 'validator' => '')
 	*/
@@ -868,7 +870,7 @@ class Auth
 	}
 
 	/**
-	* Delete token info from table
+	* Delete auto login authentication info from table
 	*
 	* @param  int $token_id
 	* @return boolean If deletion success, return true.
