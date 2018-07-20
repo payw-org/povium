@@ -1731,6 +1731,16 @@ export default class SelectionManager
 		}
 	}
 
+	isImageCaption(node) {
+		if (!node) {
+			return false;
+		} else if (node.nodeName === 'FIGCAPTION') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	isAvailableParentNode(node)
 	{
 		if (
@@ -1749,7 +1759,8 @@ export default class SelectionManager
 	isAvailableChildNode(node)
 	{
 		if (
-			this.isListItem(node)
+			this.isListItem(node) ||
+			this.isImageCaption(node)
 		) {
 			return true;
 		} else {
