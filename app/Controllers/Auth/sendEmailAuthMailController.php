@@ -1,6 +1,7 @@
 <?php
 /**
-* Logout processing
+* Receive input email
+* and send mail for email authentication.
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop
@@ -15,13 +16,4 @@ $factory = new MasterFactory();
 
 $auth = $factory->createInstance('\Povium\Auth', $with_db=true);
 
-$logout_return = array(
-	'err' => false,
-	'msg' => '',
-	'redirect' => ''
-);
-
-$auth->logout();
-$logout_return['redirect'] = '/';
-
-echo json_encode($logout_return);
+/* Receive input email by ajax */

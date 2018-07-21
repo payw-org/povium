@@ -265,7 +265,9 @@ class Router
 	 */
 	private function findMatchedRoute($http_method, $request_uri)
 	{
-		$return = array('result' => '');
+		$return = array(
+			'result' => ''
+		;
 
 		/* Find route that matched URI */
 		foreach ($this->routes as $pattern => $arr) {
@@ -301,7 +303,7 @@ class Router
 
 	/**
 	 * Check that the Request URI matches the pattern.
-	 * 
+	 *
 	 * @param  string $pattern     uri pattern
 	 * @param  string $request_uri
 	 * @return mixed array or false

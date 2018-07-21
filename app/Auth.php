@@ -9,9 +9,6 @@
 
 namespace Povium;
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
 class Auth
 {
 	/**
@@ -46,7 +43,10 @@ class Auth
 	*/
 	public function login($identifier, $password, $remember)
 	{
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 
 		$validate_readable_id = $this->validateReadableID($identifier);
@@ -142,7 +142,10 @@ class Auth
 	public function register($readable_id, $name, $password)
 	{
 		# $return = array('err' => true, 'email_msg' => '', 'name_msg' => '', 'password_msg' => '');
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 
 		$verify_readable_id = $this->verifyReadableID($readable_id);
@@ -187,7 +190,10 @@ class Auth
 	*/
 	public function verifyReadableID($readable_id)
 	{
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 		$validate_readable_id = $this->validateReadableID($readable_id);
 		if ($validate_readable_id['err']) {
@@ -216,7 +222,10 @@ class Auth
 	*/
 	public function verifyEmail($email)
 	{
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 		$validate_email = $this->validateEmail($email);
 		if ($validate_email['err']) {
@@ -245,7 +254,10 @@ class Auth
 	*/
 	public function verifyName($name)
 	{
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 		$validate_name = $this->validateName($name);
 		if ($validate_name['err']) {
@@ -271,7 +283,10 @@ class Auth
 	*/
 	public function validateReadableID($readable_id)
 	{
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 
 		if (empty($readable_id)) {
@@ -319,7 +334,10 @@ class Auth
 	*/
 	public function validateEmail($email)
 	{
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 
 		if (empty($email)) {
@@ -355,7 +373,10 @@ class Auth
 	*/
 	public function validateName($name)
 	{
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 
 		if (empty($name)) {
@@ -403,7 +424,10 @@ class Auth
 	*/
 	public function validatePassword($password)
 	{
-		$return = array('err' => true, 'msg' => '');
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
 
 
 		if (empty($password)) {
@@ -807,7 +831,10 @@ class Auth
 	*/
 	private function encodeToken($token)
 	{
-		$return = array('selector' => '', 'validator' => '');
+		$return = array(
+			'selector' => '',
+			'validator' => ''
+		);
 
 		$return['selector'] = strtok($token, ':');
 		$return['validator'] = hash('sha256', strtok(':'));

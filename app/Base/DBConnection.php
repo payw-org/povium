@@ -57,9 +57,10 @@ class DBConnection
 	private function generatePDOConnection()
 	{
 		if ($this->conn == null) {
-			$dsn = "" . $this->config['driver'] .
-			":host=" . $this->config['host'] .
-			";dbname=" . $this->config['dbname'];
+			$dsn =
+				"" . $this->config['driver'] .
+				":host=" . $this->config['host'] .
+				";dbname=" . $this->config['dbname'];
 
 			try {
 				$this->conn = new \PDO(

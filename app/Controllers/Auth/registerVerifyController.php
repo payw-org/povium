@@ -10,19 +10,24 @@
 use Povium\Base\Factory\MasterFactory;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
+
 $factory = new MasterFactory();
 
 $auth = $factory->createInstance('\Povium\Auth', $with_db=true);
 
-/* receive register inputs by ajax */
+/* Receive register inputs by ajax */
 $register_inputs = json_decode(file_get_contents('php://input'), true);
 $readable_id = $register_inputs['readable_id'];
 $name = $register_inputs['name'];
 $password = $register_inputs['password'];
 
 
-$register_return = array('err' => false, 'readable_id_msg' => '', 'name_msg' => '',
-'password_msg' => '');
+$register_return = array(
+	'err' => false,
+	'readable_id_msg' => '',
+	'name_msg' => '',
+	'password_msg' => ''
+);
 
 $verify_readable_id = $auth->verifyReadableID($readable_id);
 if ($verify_readable_id['err']) {
