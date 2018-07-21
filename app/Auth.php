@@ -912,9 +912,4 @@ class Auth
 
 		return $stmt->rowCount() == 1;
 	}
-
-	private function sendMail()
-	{
-
-	}
 }

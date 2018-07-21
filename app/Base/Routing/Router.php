@@ -267,7 +267,7 @@ class Router
 	{
 		$return = array(
 			'result' => ''
-		;
+		);
 
 		/* Find route that matched URI */
 		foreach ($this->routes as $pattern => $arr) {
