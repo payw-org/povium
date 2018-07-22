@@ -380,11 +380,14 @@
 		display: block;
 		font-size: 0;
 		margin: 3rem 0;
-		transition: margin .3s cubic-bezier(.64,.03,0,1.28);
+		transition: margin 0.4s cubic-bezier(.51,.07,0,1.31);
+		will-change: margin;
 		
 		&.full {
 			margin-left: calc(50% - 50vw);
 			margin-right: calc(50% - 50vw);
+			margin-top: 4rem;
+			margin-bottom: 4rem;
 		}
 
 		.image-wrapper {
@@ -414,19 +417,29 @@
 
 		
 
-		&.selected {
+		&.image-selected {
 			.image-wrapper {
 				box-shadow: 0 0 0 5px $pvm-violet;
 				
 				img {
-					filter: brightness(40%) blur(10px);
-					transform: scale(1.05);
+					// filter: brightness(40%) blur(10px);
+					filter: brightness(50%);
+					// transform: scale(1.05);
 				}
 				
 			}
 
 			figcaption {
 				display: block;
+			}
+		}
+
+		&.caption-selected {
+			figcaption {
+				display: block;
+			}
+			.image-wrapper {
+				box-shadow: 0 0 0 2px $pvm-violet;
 			}
 		}
 

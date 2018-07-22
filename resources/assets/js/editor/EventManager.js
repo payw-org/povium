@@ -103,46 +103,60 @@ export default class EventManager
 
 		// Image click event
 		window.addEventListener('click', (e) => {
-			if (e.target.nodeName === "IMG") {
+			if (e.target.classList.contains("image-wrapper")) {
 				console.log("image clicked");
 				e.preventDefault();
 
-				if (this.domManager.editor.querySelector("figure.selected")) {
-					this.domManager.editor.querySelector(".selected").classList.remove("selected");
+				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected");
+				if (selectedFigure) {
+					selectedFigure.classList.remove("image-selected");
 				}
 
-				e.target.parentNode.parentNode.classList.add("selected");
+				var figure = e.target.parentNode;
+				figure.classList.remove("caption-selected");
+				figure.classList.add("image-selected");
 				this.domManager.showImageTool(e.target);
+
+				if (this.selManager.isTextEmptyNode(figure.querySelector("FIGCAPTION"))) {
+					figure.querySelector("FIGCAPTION").innerHTML = "이미지 주석";
+				}
+
 				window.getSelection().removeAllRanges();
 			} else if (e.target.id === "full" && e.target.nodeName === "BUTTON") {
-				this.domManager.editor.querySelector("figure.image.selected").classList.add("full");
+				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected");
+				selectedFigure.classList.add("full");
 				this.domManager.hideImageTool();
 				setTimeout(() => {
-					this.domManager.showImageTool(this.domManager.editor.querySelector("figure.image.selected .image-wrapper"));
-				}, 200);
+					this.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"));
+				}, 500);
 				
 			} else if (e.target.id === "normal" && e.target.nodeName === "BUTTON") {
-				this.domManager.editor.querySelector("figure.image.selected").classList.remove("full");
+				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected");
+				selectedFigure.classList.remove("full");
 				this.domManager.hideImageTool();
 				setTimeout(() => {
-					this.domManager.showImageTool(this.domManager.editor.querySelector("figure.image.selected .image-wrapper"));
-				}, 200);
+					this.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"));
+				}, 500);
 			} else if (e.target.nodeName === "FIGCAPTION") {
-				// this.domManager.hideImageTool();
+				e.target.parentNode.classList.add("caption-selected");
+				e.target.parentNode.classList.remove("image-selected");
+				this.domManager.hideImageTool();
 				if (!e.target.parentNode.classList.contains("caption-enabled")) {
 					e.target.innerHTML = "<br>";
 				}
 			} else {
-				if (this.domManager.editor.querySelector("figure.selected")) {
-					var selectedImageBlock = this.domManager.editor.querySelector("figure.selected");
-					if (this.selManager.isTextEmptyNode(selectedImageBlock.querySelector("figcaption"))) {
-						selectedImageBlock.querySelector("figcaption").innerHTML = "이미지 주석";
-					}
-					this.domManager.editor.querySelector(".selected").classList.remove("selected");
+				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected, figure.caption-selected");
+				if (selectedFigure) {
+					selectedFigure.classList.remove("image-selected");
+					selectedFigure.classList.remove("caption-selected");
 				}
 
 				this.domManager.hideImageTool();
 			}
+		});
+
+		window.addEventListener("focusin", (e) => {
+			console.log(e.target);
 		});
 
 
@@ -172,8 +186,8 @@ export default class EventManager
 
 		let clipboardData, pastedData;
 
-		e.stopPropagation();
-		e.preventDefault();
+		// e.stopPropagation();
+		// e.preventDefault();
 
 		// Get data from clipboard and conver
 		clipboardData = e.clipboardData || window.clipboardData;

@@ -780,38 +780,7 @@ export default class SelectionManager
 	paste(pastedData)
 	{
 
-		let splitted = pastedData.split(/(?:\r\n|\r|\n)/g);
-
-		var range = document.createRange();
-		range = this.getRange();
-
-		splitted.forEach( (paragraph, index) => {
-
-			var addedNode;
-
-			var line = paragraph;
-
-			if (index === 0) {
-				// line = line.replace(/\s/g, "&nbsp;");
-				addedNode = document.createTextNode(line);
-			} else {
-				addedNode = document.createElement('p');
-				line = line.replace(/\s/g, "&nbsp;");
-				if (line === "") {
-					line = "<br>";
-				}
-				addedNode.innerHTML = line;
-			}
-
-			range.insertNode(addedNode);
-
-			range.setStartAfter(addedNode);
-
-		});
-
-		// console.log(splitted);
-
-		// pastedData = pastedData.replace(/(?:\r\n|\r|\n)/g, '<br>');
+		console.log(pastedData);
  
 	}
 
