@@ -57,19 +57,22 @@
 
 #poptool {
 	position: absolute;
-	background: $pvm-violet;
+	background: #fff;
 	pointer-events: none;
-	// border: 1px solid darken($pvm-violet, 3%);
-	border-radius: 5px;
+	border: 1px solid #cccccc;
+	border-radius: .72rem;
 	opacity: 0;
-	padding: 5px;
+	padding: .2rem;
 	display: flex;
-	display: none;
+	// display: none;
 	transform: translateY(5px);
 	will-change: transform;
 	transition: transform .2s ease, opacity .2s ease;
 	cursor: default;
-	z-index: 9999;
+	z-index: 7777;
+	font-size: 0;
+	// box-shadow: 0 .5rem 1.3rem rgba(0,0,0,.18);
+	// box-shadow: 0 .08rem .1rem rgba(0,0,0,.18);
 
 	&.active {
 		opacity: 1;
@@ -77,35 +80,88 @@
 		pointer-events: all;
 	}
 
-	&::before {
-		content: "";
-		display: inline-block;
-		width: 15px;
-		height: 15px;
-		position: absolute;
-		left: 50%;
-		top: 100%;
-		// border: 2px solid $white-blue;
-		border-radius: 2px;
-		background: $pvm-violet;
-		transform: rotate(45deg) translateX(calc(-50% - 4px));
-		z-index: -1;
-	}
+	// &::before {
+	// 	content: "";
+	// 	display: inline-block;
+	// 	width: 15px;
+	// 	height: 15px;
+	// 	position: absolute;
+	// 	left: 50%;
+	// 	top: 100%;
+	// 	// border: 2px solid $white-blue;
+	// 	border-radius: 2px;
+	// 	background: $pvm-violet;
+	// 	transform: rotate(45deg) translateX(calc(-50% - 4px));
+	// 	z-index: -1;
+	// }
 
 	button {
 		display: inline-block;
 		color: #fff;
 		font-weight: 400;
-		font-size: 17px;
-		width: 35px;
-		height: 35px;
-		border-radius: 3px;
+		font-size: 1rem;
+		width: 2rem;
+		height: 2rem;
+		border-radius: .5rem;
 		transition: background .1s ease;
+		background-position: 50% 50%;
+		background-size: 60% auto;
+		background-repeat: no-repeat;
 
 		&:hover {
-			background: rgba(0, 0, 0, .2);
+			// background-color: rgba(0,0,0,.1);
+			background-color: $white-blue;
+		}
+
+		&#pt-p {
+			background-image: url('/assets/images/editor/paragraph.svg');
+		}
+		&#pt-title-pack {
+			background-image: url('/assets/images/editor/title-pack.svg');
+		}
+		&#pt-h1 {
+			background-image: url('/assets/images/editor/title1.svg');
+		}
+		&#pt-h2 {
+			background-image: url('/assets/images/editor/title2.svg');
+		}
+		&#pt-h3 {
+			background-image: url('/assets/images/editor/title3.svg');
+		}
+		&#pt-bold {
+			background-image: url('/assets/images/editor/bold.svg');
+		}
+		&#pt-italic {
+			background-image: url('/assets/images/editor/italic.svg');
+		}
+		&#pt-underline {
+			background-image: url('/assets/images/editor/underline.svg');
+		}
+		&#pt-strike {
+			background-image: url('/assets/images/editor/strikethrough.svg');
 		}
 	}
+
+	.pack {
+
+		transition: opacity .2s ease;
+		overflow: hidden;
+		white-space: nowrap;
+
+		&.hidden {
+			opacity: 0;
+			pointer-events: none;
+			max-width: 0;
+			visibility: hidden;
+		}
+
+		&.active {
+			opacity: 1;
+			pointer-events: all;
+		}
+	}
+	
+
 }
 
 #editor-toolbar {
@@ -119,6 +175,8 @@
 	left: 0;
 	right: 0;
 	z-index: 9999;
+
+	display: none;
 
 	.et-items {
 
@@ -250,6 +308,8 @@
 	max-width: 50rem;
 	margin: auto;
 	position: relative;
+
+	padding-bottom: 10rem;
 
 	padding-top: calc(50px + 2rem);
 

@@ -76,6 +76,11 @@ export default class DOMManager {
 
 	hidePopTool() {
 		this.popTool.classList.remove("active");
+		setTimeout(() => {
+			document.querySelector("#poptool .top-categories").classList.remove("hidden");
+			document.querySelector("#poptool .title-style").classList.add("hidden");
+		}, 200);
+		
 	}
 
 	/**

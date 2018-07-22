@@ -86,11 +86,22 @@ export default class EventManager
 		this.domManager.link.addEventListener('click', (e) => { this.selManager.link("naver.com"); });
 		this.domManager.blockquote.addEventListener('click', (e) => { this.selManager.blockquote(); });
 
+
 		// PopTool
+		document.querySelector("#pt-p").addEventListener('click', (e) => { this.selManager.heading('P'); });
+		document.querySelector("#pt-h1").addEventListener('click', (e) => { this.selManager.heading('H1'); });
+		document.querySelector("#pt-h2").addEventListener('click', (e) => { this.selManager.heading('H2'); });
+		document.querySelector("#pt-h3").addEventListener('click', (e) => { this.selManager.heading('H3'); });
 		document.querySelector("#pt-bold").addEventListener('click', (e) => { this.selManager.bold(); });
 		document.querySelector("#pt-italic").addEventListener('click', (e) => { this.selManager.italic(); });
 		document.querySelector("#pt-underline").addEventListener('click', (e) => { this.selManager.underline(); });
 		document.querySelector("#pt-strike").addEventListener('click', (e) => { this.selManager.strike(); });
+
+		document.querySelector("#pt-title-pack").addEventListener('click', (e) => {
+			document.querySelector("#poptool .top-categories").classList.add("hidden");
+			document.querySelector("#poptool .title-style").classList.remove("hidden");
+		});
+
 
 		// Disable link by click
 		document.addEventListener('mousedown', function(e) {
@@ -180,12 +191,6 @@ export default class EventManager
 	*/
 	onPaste (e) {
 
-		this.pasteDone = false;
-
-		console.log(this.pasteDone);
-
-		console.log("pasting");
-
 		let originalRange = this.selManager.getRange();
 		if (!originalRange) {
 			return;
@@ -213,7 +218,6 @@ export default class EventManager
 			travelNode = pasteArea.firstChild;
 
 			var metTop = false;
-
 
 			// Loop all node and analyze
 			while (1) {
