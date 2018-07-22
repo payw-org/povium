@@ -135,7 +135,7 @@ export default class SelectionManager
 
 	/**
 	 * 
-	 * @param {string} type 
+	 * @param {string} type
 	 */
 	list(type)
 	{
@@ -160,6 +160,10 @@ export default class SelectionManager
 		let startOffset = orgRange.startOffset;
 		let endNode = orgRange.endContainer;
 		let endOffset = orgRange.endOffset;
+
+		// Multiple range - Experimental
+		endNode = window.getSelection().getRangeAt(window.getSelection().rangeCount - 1).endContainer;
+		endOffset = window.getSelection().getRangeAt(window.getSelection().rangeCount - 1).endOffset;
 
 		let chunks = this.getAllNodesInSelection();
 		let listElm = document.createElement(type);
@@ -709,6 +713,13 @@ export default class SelectionManager
 			currentNode.removeChild(currentNode.querySelector("br"));
 		}
 
+		// Ignore figcaption enter
+		if (this.isImageCaption(currentNode)) {
+			e.stopPropagation();
+			e.preventDefault();
+			return;
+		}
+
 		var selPosType = this.getSelectionPositionInParagraph();
 
 		e.stopPropagation();
@@ -885,169 +896,180 @@ export default class SelectionManager
 		}
 
 
-		var startNode = range.startContainer;
-		var startOffset = range.startOffset;
-		var endNode = range.endContainer;
-		var endOffset = range.endOffset;
+		for (var i = 0; i < window.getSelection().rangeCount; i++) {
+			range = window.getSelection().getRangeAt(i);
 
-		var orgS = startNode;
-		var orgSO = startOffset;
-		var orgE = endNode;
-		var orgEO = endOffset;
+			var startNode = range.startContainer;
+			var startOffset = range.startOffset;
+			var endNode = range.endContainer;
+			var endOffset = range.endOffset;
 
-		var target;
+			var orgS = startNode;
+			var orgSO = startOffset;
+			var orgE = endNode;
+			var orgEO = endOffset;
 
-		var newRange = document.createRange();
-		newRange.setStart(startNode, startOffset);
-		newRange.setEnd(endNode, endOffset);
+			var target;
 
-		var isChanged = false;
+			var newRange = document.createRange();
+			newRange.setStart(startNode, startOffset);
+			newRange.setEnd(endNode, endOffset);
 
-		// if (startNode.id === 'editor-body') {
-		if (startNode === this.domManager.editor) {
+			var isChanged = false;
 
-			target = startNode.firstElementChild;
+			// if (startNode.id === 'editor-body') {
+			if (startNode === this.domManager.editor) {
 
-			for (var i = 0; i < startOffset; i++) {
-				// target = target.nextElementSibling;
-				target = targe.nextSibling;
+				target = startNode.firstElementChild;
+
+				for (var i = 0; i < startOffset; i++) {
+					// target = target.nextElementSibling;
+					target = targe.nextSibling;
+				}
+
+				
+
+				if (target) {
+
+					startNode = target;
+					newRange.setStart(startNode, 0);
+
+					isChanged = true;
+				}
+
+				
+
 			}
 
-			
 
-			if (target) {
+			// if (endNode.id === 'editor-body') {
+			if (endNode === this.domManager.editor) {
 
-				startNode = target;
-				newRange.setStart(startNode, 0);
 
-				isChanged = true;
+				target = endNode.firstChild;
+
+				for (var i = 0; i < endOffset - 1; i++) {
+					// target = target.nextElementSibling;
+					target = target.nextSibling;
+				}
+
+				if (target) {
+					endNode = target;
+
+					newRange.setEnd(endNode, 1);
+
+					isChanged = true;
+				}
+				
+
 			}
 
-			
-
-		}
 
 
-		// if (endNode.id === 'editor-body') {
-		if (endNode === this.domManager.editor) {
+			var travelNode;
 
-
-			target = endNode.firstChild;
-
-			for (var i = 0; i < endOffset - 1; i++) {
-				// target = target.nextElementSibling;
-				target = target.nextSibling;
-			}
-
-			if (target) {
-				endNode = target;
-
-				newRange.setEnd(endNode, 1);
-
-				isChanged = true;
-			}
-			
-
-		}
+			if (this.isTextContainNode(startNode)) {
 
 
 
-		var travelNode;
-
-		if (this.isTextContainNode(startNode)) {
-
-
-
-			if (startOffset === 0) {
-				travelNode = startNode.firstChild;
-				while (1) {
-					if (!travelNode) {
-						break;
-					} else if (travelNode.nodeType === 3) {
-						startNode = travelNode;
-						newRange.setStart(startNode, 0);
-						isChanged = true;
-						break;
-					} else {
-						travelNode = travelNode.firstChild;
+				if (startOffset === 0) {
+					travelNode = startNode.firstChild;
+					while (1) {
+						if (!travelNode) {
+							break;
+						} else if (travelNode.nodeType === 3) {
+							startNode = travelNode;
+							newRange.setStart(startNode, 0);
+							isChanged = true;
+							break;
+						} else {
+							travelNode = travelNode.firstChild;
+						}
+					}
+				} else if (startOffset > 0) {
+					travelNode = startNode.lastChild;
+					while (1) {
+						if (!travelNode) {
+							break;
+						} else if (travelNode.nodeType === 3) {
+							startNode = travelNode;
+							newRange.setStart(startNode, startNode.textContent.length);
+							isChanged = true;
+							break;
+						} else {
+							travelNode = travelNode.lastChild;
+						}
 					}
 				}
-			} else if (startOffset > 0) {
-				travelNode = startNode.lastChild;
-				while (1) {
-					if (!travelNode) {
-						break;
-					} else if (travelNode.nodeType === 3) {
-						startNode = travelNode;
-						newRange.setStart(startNode, startNode.textContent.length);
-						isChanged = true;
-						break;
-					} else {
-						travelNode = travelNode.lastChild;
-					}
-				}
+
+				
+
 			}
 
-			
+			if (this.isTextContainNode(endNode)) {
 
-		}
+				
 
-		if (this.isTextContainNode(endNode)) {
-
-			
-
-			if (endOffset > 0) {
-				travelNode = endNode.lastChild;
-				while (1) {
-					if (!travelNode) {
-						break;
-					} else if (travelNode.nodeType === 3) {
-						endNode = travelNode;
-						newRange.setEnd(endNode, endNode.textContent.length);
-						isChanged = true;
-						break;
-					} else {
-						travelNode = travelNode.lastChild;
+				if (endOffset > 0) {
+					travelNode = endNode.lastChild;
+					while (1) {
+						if (!travelNode) {
+							break;
+						} else if (travelNode.nodeType === 3) {
+							endNode = travelNode;
+							newRange.setEnd(endNode, endNode.textContent.length);
+							isChanged = true;
+							break;
+						} else {
+							travelNode = travelNode.lastChild;
+						}
+					}
+				} else if (endOffset === 0) {
+					travelNode = endNode.firstChild;
+					while (1) {
+						if (!travelNode) {
+							break;
+						} else if (travelNode.nodeType === 3) {
+							endNode = travelNode;
+							newRange.setEnd(endNode, 0);
+							isChanged = true;
+							break;
+						} else {
+							travelNode = travelNode.firstChild;
+						}
 					}
 				}
-			} else if (endOffset === 0) {
-				travelNode = endNode.firstChild;
-				while (1) {
-					if (!travelNode) {
-						break;
-					} else if (travelNode.nodeType === 3) {
-						endNode = travelNode;
-						newRange.setEnd(endNode, 0);
-						isChanged = true;
-						break;
-					} else {
-						travelNode = travelNode.firstChild;
-					}
-				}
+
+				
+
 			}
 
-			
+
+
+			if (isChanged) {
+				// this.replaceRange(newRange);
+				window.getSelection().removeRange(range);
+				window.getSelection().addRange(newRange);
+			}
 
 		}
 
 
+		// Multiple ranges to a single range!!!!!!!!!!!!!
+		// range = window.getSelection().getRangeAt(0);
+		// var rangeCount = window.getSelection().rangeCount;
 
-		if (isChanged) {
-			// console.log(orgS, orgSO);
-			// console.log(orgE, orgEO);
-			// console.log(orgS, orgSO);
-			// console.log(orgE, orgEO);
-			// console.log("fixed selection");
-			// console.log(newRange.startContainer, newRange.startOffset);
-			// console.log(newRange.endContainer, newRange.endOffset);
-			this.replaceRange(newRange);
-		}
+		// startNode = range.startContainer;
+		// startOffset = range.startOffset;
+		
+		// endNode = window.getSelection().getRangeAt(rangeCount - 1).endContainer;
+		// endOffset = window.getSelection().getRangeAt(rangeCount - 1).endOffset;
 
-		// startNode = this.getRange().startContainer;
-		// startOffset = this.getRange().startOffset;
-		// if (startNode.nodeType === 3 && startNode.textContent === "") {
-		// 	startNode.parentNode.normalize();
-		// }
+		// newRange.setStart(startNode, startOffset);
+		// newRange.setEnd(endNode, endOffset);
+
+		// window.getSelection().removeAllRanges();
+		// window.getSelection().addRange(newRange);
 		
 		
 	}
@@ -1533,8 +1555,7 @@ export default class SelectionManager
 		}
 
 		if (
-			node.textContent === "" &&
-			!(node.querySelector("br"))
+			node.textContent === ""
 		) {
 			return true;
 		} else {
@@ -1984,8 +2005,9 @@ export default class SelectionManager
 	 */
 	getRange()
 	{
-		if (document.getSelection().rangeCount > 0) {
-			return document.getSelection().getRangeAt(0);
+		if (window.getSelection().rangeCount > 0) {
+			// let rangeCount = window.getSelection().rangeCount;
+			return window.getSelection().getRangeAt(0);
 		} else {
 			return null;
 		}
@@ -1998,24 +2020,31 @@ export default class SelectionManager
 	getAllNodesInSelection()
 	{
 
-		let travelNode = this.getRange() ? this.getRange().startContainer : null;
+		// let travelNode = this.getRange() ? this.getRange().startContainer : null;
+		let travelNode;
 		let nodes = [];
 
-		while (1) {
+		for (let i = 0; i < window.getSelection().rangeCount; i++) {
+
+			travelNode = window.getSelection().getRangeAt(i).startContainer;
+
+			while (1) {
 
 
-			if (!travelNode) {
-				break;
-			} else if (this.isAvailableParentNode(travelNode)) {
-				nodes.push(travelNode);
-				if (travelNode.contains(this.getRange().endContainer)) {
+				if (!travelNode) {
 					break;
+				} else if (this.isAvailableParentNode(travelNode)) {
+					nodes.push(travelNode);
+					if (travelNode.contains(this.getRange().endContainer)) {
+						break;
+					} else {
+						travelNode = travelNode.nextElementSibling;
+					}
+					
 				} else {
-					travelNode = travelNode.nextElementSibling;
+					travelNode = travelNode.parentElement;
 				}
-				
-			} else {
-				travelNode = travelNode.parentElement;
+
 			}
 
 		}

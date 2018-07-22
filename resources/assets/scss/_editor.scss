@@ -368,7 +368,7 @@
 		text-decoration: underline;
 		color: #006eff;
 		cursor: pointer;
-		user-select: none;
+		// user-select: none;
 
 		&:hover {
 			background: #d5fde6;
@@ -380,9 +380,8 @@
 		display: block;
 		font-size: 0;
 		margin: 3rem 0;
-		transition: margin .1s ease;
+		transition: margin .3s cubic-bezier(.64,.03,0,1.28);
 		
-
 		&.full {
 			margin-left: calc(50% - 50vw);
 			margin-right: calc(50% - 50vw);
@@ -406,8 +405,8 @@
 
 			img {
 				transition: transform .2s ease, filter .2s ease;
-				will-change: transform;
-				cursor: pointer;
+				// will-change: transform;
+				cursor: default;
 				width: 100%;
 				height: 100%;
 			}
@@ -425,12 +424,23 @@
 				}
 				
 			}
+
+			figcaption {
+				display: block;
+			}
 		}
 
 		figcaption {
+			display: none;
 			font-size: 1rem;
 			margin-top: 1rem;
 			text-align: center;
+			color: grey;
+		}
+
+		&.caption-enabled figcaption {
+			display: block;
+			color: inherit;
 		}
 
 	}

@@ -9,18 +9,12 @@ document.querySelector('#log-range').addEventListener('click', function () {
 
 	var sel = window.getSelection();
 
-	if (sel.rangeCount === 0) {
-		return;
+	let rangeCount = sel.rangeCount;
+
+	for (let i = 0; i < rangeCount; i++) {
+		var range = sel.getRangeAt(i);
+		console.log(range);
 	}
-
-	var range = sel.getRangeAt(0);
-
-	console.log(range);
-
-	console.log(range.startContainer);
-	console.log(range.startOffset);
-	console.log(range.endContainer);
-	console.log(range.endOffset);
 
 });
 

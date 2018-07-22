@@ -92,6 +92,7 @@ export default class EventManager
 		document.querySelector("#pt-underline").addEventListener('click', (e) => { this.selManager.underline(); });
 		document.querySelector("#pt-strike").addEventListener('click', (e) => { this.selManager.strike(); });
 
+		// Disable link by click
 		document.addEventListener('mousedown', function(e) {
 			if (e.target.nodeName === "A") {
 				e.preventDefault();
@@ -102,11 +103,17 @@ export default class EventManager
 
 		// Image click event
 		window.addEventListener('click', (e) => {
-			console.log(e.target);
-			if (e.target.classList.contains("image-wrapper")) {
+			if (e.target.nodeName === "IMG") {
 				console.log("image clicked");
-				e.target.parentNode.classList.add("selected");
+				e.preventDefault();
+
+				if (this.domManager.editor.querySelector("figure.selected")) {
+					this.domManager.editor.querySelector(".selected").classList.remove("selected");
+				}
+
+				e.target.parentNode.parentNode.classList.add("selected");
 				this.domManager.showImageTool(e.target);
+				window.getSelection().removeAllRanges();
 			} else if (e.target.id === "full" && e.target.nodeName === "BUTTON") {
 				this.domManager.editor.querySelector("figure.image.selected").classList.add("full");
 				this.domManager.hideImageTool();
@@ -120,8 +127,17 @@ export default class EventManager
 				setTimeout(() => {
 					this.domManager.showImageTool(this.domManager.editor.querySelector("figure.image.selected .image-wrapper"));
 				}, 200);
+			} else if (e.target.nodeName === "FIGCAPTION") {
+				// this.domManager.hideImageTool();
+				if (!e.target.parentNode.classList.contains("caption-enabled")) {
+					e.target.innerHTML = "<br>";
+				}
 			} else {
-				if (this.domManager.editor.querySelector(".selected")) {
+				if (this.domManager.editor.querySelector("figure.selected")) {
+					var selectedImageBlock = this.domManager.editor.querySelector("figure.selected");
+					if (this.selManager.isTextEmptyNode(selectedImageBlock.querySelector("figcaption"))) {
+						selectedImageBlock.querySelector("figcaption").innerHTML = "이미지 주석";
+					}
 					this.domManager.editor.querySelector(".selected").classList.remove("selected");
 				}
 
@@ -129,11 +145,19 @@ export default class EventManager
 			}
 		});
 
+
+		window.addEventListener('mousedown', (e) => {
+			if (e.target.classList.contains("image-wrapper")) {
+				window.getSelection().removeAllRanges();
+				e.preventDefault();
+			}
+		});
+
 		// disable images contenteditable false
-		var imgs = document.getElementsByTagName("figure");
-		for (var i = 0; i < imgs.length; ++i) {
-					imgs[i].contentEditable = false;
-		}
+		// var imgs = document.getElementsByTagName("figure");
+		// for (var i = 0; i < imgs.length; ++i) {
+		// 			imgs[i].contentEditable = false;
+		// }
 	}
 
 	// Events
@@ -174,6 +198,16 @@ export default class EventManager
 			currentNode.removeChild(currentNode.querySelector("br"));
 		} else if (currentNode && currentNode.textContent === "" && !currentNode.querySelector("br")) {
 			currentNode.appendChild(document.createElement("br"));
+		}
+
+		if (this.selManager.isImageCaption(currentNode)) {
+
+			if (this.selManager.isTextEmptyNode(currentNode)) {
+				currentNode.parentNode.classList.remove("caption-enabled");
+			} else {
+				currentNode.parentNode.classList.add("caption-enabled");
+			}
+			
 		}
 	}
 
