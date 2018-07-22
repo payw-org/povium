@@ -155,10 +155,6 @@ export default class EventManager
 			}
 		});
 
-		window.addEventListener("focusin", (e) => {
-			console.log(e.target);
-		});
-
 
 		window.addEventListener('mousedown', (e) => {
 			if (e.target.classList.contains("image-wrapper")) {
@@ -184,16 +180,97 @@ export default class EventManager
 	*/
 	onPaste (e) {
 
-		let clipboardData, pastedData;
+		this.pasteDone = false;
 
-		// e.stopPropagation();
-		// e.preventDefault();
+		console.log(this.pasteDone);
 
-		// Get data from clipboard and conver
-		clipboardData = e.clipboardData || window.clipboardData;
-		pastedData = clipboardData.getData('Text');
+		console.log("pasting");
 
-		this.selManager.paste(pastedData);
+		let originalRange = this.selManager.getRange();
+		if (!originalRange) {
+			return;
+		}
+
+		let pasteArea = document.querySelector("#paste-area");
+		// let pasteArea = document.createElement("div");
+
+
+		let range = document.createRange();
+		range.setStart(pasteArea, 0);
+		range.collapse(true);
+
+		window.getSelection().removeAllRanges();
+		window.getSelection().addRange(range);
+
+		setTimeout(() => {
+
+			window.getSelection().removeAllRanges();
+			window.getSelection().addRange(originalRange);
+			this.selManager.removeSelection("start");
+
+			var node, travelNode, nextNode;
+			node = pasteArea.firstChild;
+			travelNode = pasteArea.firstChild;
+
+			var metTop = false;
+
+
+			// Loop all node and analyze
+			while (1) {
+				// if (!node) {
+				// 	return;
+				// }
+				// for (var i = node.attributes.length - 1; i >= 0; i--){
+				// 	node.removeAttribute(node.attributes[i].name);
+				// }
+				// node = node.nextSibling;
+
+				console.log(travelNode);
+
+				if (!travelNode) {
+					break;
+				} else {
+
+					if (travelNode.attributes) {
+						for (var i = travelNode.attributes.length - 1; i >= 0; i--){
+							if (
+								travelNode.nodeName === "IMG" && travelNode.attributes[i].name === "src"
+							) {
+								continue;
+							}
+							travelNode.removeAttribute(travelNode.attributes[i].name);
+						}
+					}
+					
+
+					if (travelNode.firstChild) {
+						travelNode = travelNode.firstChild;
+					} else if (travelNode.nextSibling) {
+						travelNode = travelNode.nextSibling;
+					} else {
+						while (true) {
+							travelNode = travelNode.parentNode;
+							if (travelNode === pasteArea) {
+								metTop = true;
+							}
+							if (travelNode.nextSibling) {
+								travelNode = travelNode.nextSibling;
+								break;
+							}
+						}
+					}
+				}
+
+				if (metTop) {
+					break;
+				}
+
+			}
+
+			// pasteArea.innerHTML = "";
+
+		}, 1);
+		
 
 	}
 

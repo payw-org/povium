@@ -448,13 +448,17 @@
 			font-size: 1rem;
 			margin-top: 1rem;
 			text-align: center;
-			color: grey;
+			color: #979797;
 		}
 
 		&.caption-enabled figcaption {
 			display: block;
-			color: inherit;
+			color: #494949;
 		}
 
 	}
+}
+
+#paste-area {
+	// display: none;
 }

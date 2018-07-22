@@ -773,17 +773,6 @@ export default class SelectionManager
 
 	}
 
-	/**
-	 * Paste refined data to the selection.
-	 * @param {String} pastedData
-	 */
-	paste(pastedData)
-	{
-
-		console.log(pastedData);
- 
-	}
-
 
 
 	clearRange()
@@ -1077,7 +1066,9 @@ export default class SelectionManager
 		var count = 0;
 		while (1) {
 
-			if (this.isAvailableParentNode(travelNode)) {
+			if (travelNode === null) {
+				break;
+			} else if (this.isAvailableParentNode(travelNode)) {
 				break;
 			} else if (travelNode.nodeType === 3) {
 				
@@ -1341,7 +1332,9 @@ export default class SelectionManager
 	 */
 	removeSelection(collapseDirection = "end")
 	{
-		var range = this.getRange();
+		var range;
+		range = this.getRange();
+
 		var orgRange = range.cloneRange();
 		if (!range) {
 			return;
