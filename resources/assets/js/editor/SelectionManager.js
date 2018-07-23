@@ -99,20 +99,16 @@ export default class SelectionManager
 
 		for (var i = 0; i < chunks.length; i++) {
 
-			if (chunks[i].nodeName === type) {
-				continue;
-			}
-
-			// if (chunks[i].textContent === "") {
-			// 	continue;
-			// }
-
 			if (
 				!this.isParagraph(chunks[i]) &&
 				!this.isHeading(chunks[i])
 			) {
 				console.warn('The node is not a paragraph nor a heading.')
 				continue;
+			}
+
+			if (chunks[i].nodeName === type) {
+				type = "P";
 			}
 
 			var changedNode = this.changeNodeName(chunks[i], type);
@@ -525,7 +521,10 @@ export default class SelectionManager
 			} else {
 				if (this.isListItem(currentNode)) {
 					this.list(currentNode.parentNode.nodeName);
-				} else if (this.isAvailableParentNode(currentNode)) {
+				} else if (
+					this.isAvailableParentNode(currentNode) &&
+					!this.isParagraph(currentNode)
+				) {
 					this.changeNodeName(currentNode, "P");
 				}
 				

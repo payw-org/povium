@@ -60,18 +60,35 @@ export default class DOMManager {
 		}
 		var range = document.getSelection().getRangeAt(0);
 		if (range && !range.collapsed) {
-			this.popTool.classList.add("active");
-			this.popTool.style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2  + "px";
-			this.popTool.style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5 + "px";
+			this.showPopTool();
 		} else {
 			this.popTool.classList.remove("active");
 		}
 	}
 
 	showPopTool() {
+
+		var range = document.getSelection().getRangeAt(0);
+
 		this.popTool.classList.add("active");
-		this.popTool.style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2  + "px";
-		this.popTool.style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5 + "px";
+
+		var left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2;
+
+		if (left < 10) {
+			left = 10;
+		} else if (left + this.popTool.getBoundingClientRect().width > document.body.clientWidth - 10) {
+			left = document.body.clientWidth - 10 - this.popTool.getBoundingClientRect().width;
+		}
+
+		this.popTool.style.left = left + "px";
+
+		var top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5;
+
+		if (top - window.pageYOffset < 10) {
+			top = range.getBoundingClientRect().bottom - document.querySelector("#post-editor").getBoundingClientRect().top + 5;
+		}
+
+		this.popTool.style.top = top + "px";
 	}
 
 	hidePopTool() {
@@ -79,7 +96,10 @@ export default class DOMManager {
 		setTimeout(() => {
 			document.querySelector("#poptool .top-categories").classList.remove("hidden");
 			document.querySelector("#poptool .title-style").classList.add("hidden");
-		}, 200);
+			document.querySelector("#poptool .text-style").classList.add("hidden");
+			document.querySelector("#poptool .align").classList.add("hidden");
+			document.querySelector("#poptool .input").classList.add("hidden");
+		}, 100);
 		
 	}
 

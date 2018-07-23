@@ -10,11 +10,15 @@ export default class PostEditor {
 	 */
 	constructor (editorDOM) {
 
+		// Properties
 		let self = this;
 
 		this.domManager = new DOMManager(editorDOM);
 		this.selManager = new SelectionManager(this.domManager);
 		this.eventManager = new EventManager(this, this.domManager, this.selManager);
+
+
+
 
 		document.execCommand("defaultParagraphSeparator", false, "p");
 

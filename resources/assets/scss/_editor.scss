@@ -60,6 +60,7 @@
 	background: #fff;
 	pointer-events: none;
 	border: 1px solid #cccccc;
+	// border: 1px solid $white-blue;
 	border-radius: .72rem;
 	opacity: 0;
 	padding: .2rem;
@@ -72,7 +73,7 @@
 	z-index: 7777;
 	font-size: 0;
 	// box-shadow: 0 .5rem 1.3rem rgba(0,0,0,.18);
-	// box-shadow: 0 .08rem .1rem rgba(0,0,0,.18);
+	// box-shadow: 0 .01rem .12rem rgba(0,0,0,.18);
 
 	&.active {
 		opacity: 1;
@@ -104,8 +105,8 @@
 		height: 2rem;
 		border-radius: .5rem;
 		transition: background .1s ease;
-		background-position: 50% 50%;
-		background-size: 60% auto;
+		background-position: center;
+		background-size: 1.4rem;
 		background-repeat: no-repeat;
 
 		&:hover {
@@ -113,11 +114,25 @@
 			background-color: $white-blue;
 		}
 
-		&#pt-p {
-			background-image: url('/assets/images/editor/paragraph.svg');
-		}
 		&#pt-title-pack {
 			background-image: url('/assets/images/editor/title-pack.svg');
+		}
+		&#pt-textstyle-pack {
+			background-image: url('/assets/images/editor/text-style.svg');
+		}
+		&#pt-align-pack {
+			background-image: url('/assets/images/editor/alignmiddle.svg');
+		}
+
+		&#pt-link {
+			background-image: url('/assets/images/editor/link.svg');
+		}
+		&#pt-blockquote {
+			background-image: url('/assets/images/editor/blockquote.svg');
+		}
+
+		&#pt-p {
+			background-image: url('/assets/images/editor/paragraph.svg');
 		}
 		&#pt-h1 {
 			background-image: url('/assets/images/editor/title1.svg');
@@ -128,6 +143,7 @@
 		&#pt-h3 {
 			background-image: url('/assets/images/editor/title3.svg');
 		}
+		
 		&#pt-bold {
 			background-image: url('/assets/images/editor/bold.svg');
 		}
@@ -140,11 +156,22 @@
 		&#pt-strike {
 			background-image: url('/assets/images/editor/strikethrough.svg');
 		}
+
+		&#pt-alignleft {
+			background-image: url('/assets/images/editor/alignleft.svg');
+		}
+		&#pt-alignmiddle {
+			background-image: url('/assets/images/editor/alignmiddle.svg');
+		}
+		&#pt-alignright {
+			background-image: url('/assets/images/editor/alignright.svg');
+		}
+		
 	}
 
 	.pack {
 
-		transition: opacity .2s ease;
+		transition: opacity .1s ease;
 		overflow: hidden;
 		white-space: nowrap;
 
@@ -158,6 +185,14 @@
 		&.active {
 			opacity: 1;
 			pointer-events: all;
+		}
+
+		&.input input {
+			width: 10rem;
+			height: 100%;
+			font-size: 1rem;
+			padding: 0 .7rem;
+			text-align: left;
 		}
 	}
 	
