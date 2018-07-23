@@ -445,7 +445,10 @@ export default class EventManager
 
 
 		this.selManager.fixSelection();
-		this.domManager.togglePopTool();
+
+		setTimeout(() => {
+			this.domManager.togglePopTool();
+		}, 0);
 
 	}
 
