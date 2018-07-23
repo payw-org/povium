@@ -155,7 +155,10 @@ export default class EventManager
 
 			this.linkRange = this.selManager.getRange();
 
-			document.querySelector("#poptool .pack.input input").focus();
+			setTimeout(() => {
+				document.querySelector("#poptool .pack.input input").focus();
+			}, 0);
+			
 
 		});
 
