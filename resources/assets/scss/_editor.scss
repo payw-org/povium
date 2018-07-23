@@ -114,6 +114,10 @@
 			background-color: $white-blue;
 		}
 
+		&.hidden {
+			display: none;
+		}
+
 		&#pt-title-pack {
 			background-image: url('/assets/images/editor/title-pack.svg');
 		}

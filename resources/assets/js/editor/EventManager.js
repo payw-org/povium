@@ -159,6 +159,11 @@ export default class EventManager
 				document.querySelector("#poptool .pack.input input").focus();
 			}, 0);
 			
+		});
+
+		document.querySelector("#pt-blockquote").addEventListener('click', (e) => {
+
+			this.selManager.blockquote();
 
 		});
 
@@ -185,8 +190,6 @@ export default class EventManager
 
 		// Disable link by click
 		this.domManager.editor.addEventListener('mousedown', function(e) {
-			console.log(e.target);
-			console.log(e.target.closest("a"));
 			if (e.target.closest("a")) {
 				self.selManager.unlink(e.target.closest("a"));
 				self.domManager.hidePopTool();

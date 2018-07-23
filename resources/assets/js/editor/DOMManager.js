@@ -1,3 +1,5 @@
+import SelectionManager from "./SelectionManager";
+
 export default class DOMManager {
 
 	/**
@@ -70,7 +72,30 @@ export default class DOMManager {
 
 		var range = document.getSelection().getRangeAt(0);
 
-		this.popTool.classList.add("active");
+		
+		// Set the available item
+		var selManager = new SelectionManager(this);
+
+		var currentNode = selManager.getNodeInSelection();
+
+		if (
+			selManager.isListItem(currentNode)
+		) {
+			this.setPopToolMenu({
+				heading: false,
+				align: false,
+				blockquote: false
+			});
+		} else if (
+			selManager.isBlockquote(currentNode)
+		) {
+			this.setPopToolMenu({
+				heading: false,
+				align: false
+			});
+		} else {
+			this.setPopToolMenu({});
+		}
 
 		var left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2;
 
@@ -89,6 +114,12 @@ export default class DOMManager {
 		}
 
 		this.popTool.style.top = top + "px";
+
+
+
+
+		this.popTool.classList.add("active");
+
 	}
 
 	hidePopTool() {
@@ -101,6 +132,42 @@ export default class DOMManager {
 			document.querySelector("#poptool .input").classList.add("hidden");
 		}, 100);
 		
+	}
+
+	setPopToolMenu(config) {
+		
+		// Link and text style is always available
+
+		if ("heading" in config) {
+			if (!config["heading"]) {
+				document.querySelector("#poptool #pt-title-pack").classList.add("hidden");
+			} else {
+				document.querySelector("#poptool #pt-title-pack").classList.remove("hidden");
+			}
+		} else {
+			document.querySelector("#poptool #pt-title-pack").classList.remove("hidden");
+		}
+
+		if ("align" in config) {
+			if (!config["align"]) {
+				document.querySelector("#poptool #pt-align-pack").classList.add("hidden");
+			} else {
+				document.querySelector("#poptool #pt-align-pack").classList.remove("hidden");
+			}
+		} else {
+			document.querySelector("#poptool #pt-align-pack").classList.remove("hidden");
+		}
+
+		if ("blockquote" in config) {
+			if (!config["blockquote"]) {
+				document.querySelector("#poptool #pt-blockquote").classList.add("hidden");
+			} else {
+				document.querySelector("#poptool #pt-blockquote").classList.remove("hidden");
+			}
+		} else {
+			document.querySelector("#poptool #pt-blockquote").classList.remove("hidden");
+		}
+
 	}
 
 	/**
