@@ -1,5 +1,5 @@
-@import "_global-variables";
-@import "_global-mixins";
+@import "global-variables";
+@import "global-mixins";
 
 // Popular
 #popular {
@@ -20,12 +20,12 @@
 			// transform: translateX(-700%);
 			will-change: transform;
 
-			@include responsive((
-				width: calc(100% - 40px)
-			),
-			(
-				width: 50vw
-			));
+			.responsive({
+				width: calc(100% - 40px);
+			},
+			{
+				width: 50vw;
+			});
 
 			.post-container {
 

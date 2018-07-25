@@ -1,5 +1,5 @@
-@import "_global-variables";
-@import "_global-mixins";
+@import "global-variables";
+@import "global-mixins";
 
 // html, body {
 // 	background: #fff;
@@ -111,7 +111,7 @@
 
 		&:hover {
 			// background-color: rgba(0,0,0,.1);
-			background-color: $white-blue;
+			background-color: @white-blue;
 		}
 
 		&.hidden {
@@ -206,7 +206,7 @@
 #editor-toolbar {
 
 	padding: .3rem;
-	background: $white-blue;
+	background: @white-blue;
 	user-select: none;
 	// position: sticky;
 	position: fixed;
@@ -451,7 +451,7 @@
 		padding-left: 1.2em;
 		margin: 2em 0 0;
 		line-height: 2;
-		border-left: 2px solid $soft-black;
+		border-left: 2px solid @soft-black;
 
 		& + blockquote {
 			margin-top: 0;
@@ -495,7 +495,7 @@
 
 		&:hover {
 			.image-wrapper {
-				box-shadow: 0 0 0 2px $pvm-violet;
+				box-shadow: 0 0 0 2px @pvm-violet;
 			}
 		}
 
@@ -518,7 +518,7 @@
 
 		&.image-selected {
 			.image-wrapper {
-				box-shadow: 0 0 0 5px $pvm-violet;
+				box-shadow: 0 0 0 5px @pvm-violet;
 				
 				img {
 					// filter: brightness(40%) blur(10px);
@@ -538,7 +538,7 @@
 				display: block;
 			}
 			.image-wrapper {
-				box-shadow: 0 0 0 2px $pvm-violet;
+				box-shadow: 0 0 0 2px @pvm-violet;
 			}
 		}
 
