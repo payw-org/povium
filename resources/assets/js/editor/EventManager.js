@@ -1,6 +1,7 @@
 import DOMManager from "./DOMManager";
 import PostEditor from "./PostEditor";
 import SelectionManager from "./SelectionManager";
+import UndoManager from "./UndoManager";
 
 export default class EventManager
 {
@@ -9,9 +10,10 @@ export default class EventManager
 	 * 
 	 * @param {PostEditor} postEditor 
 	 * @param {DOMManager} domManager 
-	 * @param {SelectionManager} selManager 
+	 * @param {SelectionManager} selManager
+	 * @param {UndoManager} undoManager
 	 */
-	constructor(postEditor, domManager, selManager)
+	constructor(postEditor, domManager, selManager, undoManager)
 	{
 
 		// Properties
@@ -24,6 +26,7 @@ export default class EventManager
 		this.postEditor = postEditor;
 		this.domManager = domManager;
 		this.selManager = selManager;
+		this.ssManager = undoManager;
 
 		this.linkRange = document.createRange();
 
@@ -76,6 +79,12 @@ export default class EventManager
 		this.domManager.editor.addEventListener('keydown', (e) => {
 			this.onKeyDown(e);
 			this.onSelectionChanged();
+		});
+		window.addEventListener('keydown', (e) => {
+			if (e.which === 90 && e.ctrlKey) {
+				e.preventDefault();
+				this.ssManager.undo();
+			}
 		});
 		this.domManager.editor.addEventListener('keyup', (e) => {
 			this.onKeyUp(e);
@@ -413,6 +422,10 @@ export default class EventManager
 		}
 	}
 
+	/**
+	 * 
+	 * @param {KeyboardEvent} e 
+	 */
 	onKeyDown (e) {
 
 		var sel = window.getSelection();
@@ -440,14 +453,29 @@ export default class EventManager
 			// Enter(Return)
 			this.selManager.enter(e);
 
+		} else if (keyCode === 90 && e.ctrlKey) {
+
+			// e.preventDefault();
+			// this.ssManager.undo();
+
+		} else if (
+			keyCode !== 8 && keyCode !== 9 && keyCode !== 13 && keyCode !== 16 && keyCode !== 17 &&
+			keyCode !== 18 && keyCode !== 19 && keyCode !== 20 && keyCode !== 27 && keyCode !== 32 &&
+			keyCode !== 33 && keyCode !== 34 && keyCode !== 35 && keyCode !== 36 && keyCode !== 37 &&
+			keyCode !== 38 && keyCode !== 39 && keyCode !== 40 && keyCode !== 45 && keyCode !== 46 &&
+			keyCode !== 91 && keyCode !== 219 && keyCode !== 92 && keyCode !== 220 && keyCode !== 93 &&
+			keyCode !== 144 && keyCode !== 145 
+		) {
+			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
+				this.selManager.removeSelection("end");
+				this.selManager.backspace(document.createEvent("KeyboardEvent"));
+			}
 		}
 
 	}
 
 
 	onSelectionChanged () {
-
-		console.log('selection has been changed');
 
 
 		this.selManager.fixSelection();
