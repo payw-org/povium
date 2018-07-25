@@ -22,7 +22,13 @@ $router->get(
  	function () use ($auth) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			exit(header('Location: ' . BASE_URI . '/'));
+			header(
+				'Location: ' . BASE_URI . '/',
+ 				true,
+ 				301
+			);
+
+			exit();
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/login.php';
@@ -37,7 +43,13 @@ $router->get(
  	function () use ($auth) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			exit(header('Location: ' . BASE_URI . '/'));
+			header(
+				'Location: ' . BASE_URI . '/',
+ 				true,
+ 				301
+			);
+
+			exit();
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/register.php';
@@ -50,9 +62,10 @@ $router->get(
 $router->get(
 	'/editor',
  	function () use ($auth) {
-		//	If not logged in, send to login page.
+		// //	If is not logged in, send to login page.
 		// if (!$auth->isLoggedIn()) {
-		// 	exit(header('Location: ' . BASE_URI . '/login'));
+		// 	header('Location: ' . BASE_URI . '/login', true, 301);
+		// 	exit();
 		// }
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../views/editor.php';
@@ -61,7 +74,7 @@ $router->get(
 	}
 );
 
-/* User Home Page (Not User My Page) */
+/* User Profile Page */
 $router->get(
 	'/@{readable_id:.+}',
  	function ($readable_id) use ($auth) {
@@ -76,7 +89,7 @@ $router->get(
 
 		return true;
 	},
-	'user_home'
+	'user_profile'
 );
 
 /* Post Page */
@@ -97,6 +110,30 @@ $router->get(
  	'post'
 );
 
+/* Email Setting Page */
+$router->get(
+	'/me/settings/email',
+	function () use ($auth) {
+		//	If is not logged in, send to register page.
+		if (!$auth->isLoggedIn()) {
+			$querystring = http_build_query(array(
+				'redirect' => BASE_URI . $_SERVER['REQUEST_URI']
+			));
+
+			header(
+				'Location: ' . BASE_URI . '/register' . '?' . $querystring,
+ 				true,
+ 				301
+			);
+
+			exit();
+		}
+
+		//	require page
+
+		return true;
+	}
+);
 
 //	Special Routes
 //	User cannot access below routes via uri.

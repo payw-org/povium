@@ -7,13 +7,8 @@
 *
 */
 
-use Povium\Base\Factory\MasterFactory;
+global $auth;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
-
-$factory = new MasterFactory();
-
-$auth = $factory->createInstance('\Povium\Auth', $with_db=true);
 $auth_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 
 /* Receive login inputs by ajax */
@@ -22,6 +17,9 @@ $identifier = $login_inputs['identifier'];
 $password = $login_inputs['password'];
 $remember = $login_inputs['remember'];
 
+if (isset($login_inputs['querystring'])) {
+	parse_str($login_inputs['querystring'], $query_params);
+}
 
 #	array(
 #		'err' => bool,
@@ -36,8 +34,8 @@ if ($login_return['err']) {		//	failed to login
 		// TODO:	set redirect url to activate user account
 	}
 } else {						//	login success
-	if (isset($_SESSION['prev_page'])) {
-		$login_return['redirect'] = $_SESSION['prev_page'];
+	if (isset($query_params['redirect'])) {
+		$login_return['redirect'] = $query_params['redirect'];
 	} else {
 		$login_return['redirect'] = '/';
 	}

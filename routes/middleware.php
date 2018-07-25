@@ -45,3 +45,24 @@ $router->post(
 		return true;
 	}
 );
+
+/* Register new email address Ajax */
+$router->get(		#	Get is Test mode. Original is post.
+	'/me/settings/email/new-registration',
+	function () {
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/sendEmailForEmailAuthController.php';
+
+		return true;
+	}
+);
+
+/* Email authentication page */
+$router->get(
+	'/c/account/verify',
+	function () {
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/emailAuthController.php';
+
+		return true;
+	},
+	'email_authentication'
+);

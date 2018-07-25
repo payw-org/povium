@@ -48,7 +48,8 @@ confirmButton.addEventListener("click", function() {
 	var inputData = {
 		identifier: identifierInputDOM.value,
         password: passInputDOM.value,
-        remember: rememberCheckBox.checked
+        remember: rememberCheckBox.checked,
+		querystring: window.location.href.split("?")[1]
 	}
 
 	var ajax = new AJAX();

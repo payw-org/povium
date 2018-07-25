@@ -613,7 +613,8 @@ class Auth
 		$password_hash = $this->getPasswordHash($password);
 
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['table__users']} (readable_id, name, password)
+			"INSERT INTO {$this->config['table__users']}
+			(readable_id, name, password)
 			VALUES (?, ?, ?)"
 		);
 		if (!$stmt->execute([$readable_id, $name, $password_hash])) {
@@ -661,6 +662,21 @@ class Auth
 	public function generateRandomHash($len)
 	{
 		return bin2hex(openssl_random_pseudo_bytes($len));
+	}
+
+	/**
+	 * Generate a version 4 (random) UUID(Universal Unique IDentifier)
+	 * UUID format : 8-4-4-4-12
+	 *
+	 * @return string uuid
+	 */
+	public function uuidV4()
+	{
+		$data = openssl_random_pseudo_bytes(16);
+	    $data[6] = chr(ord($data[6]) & 0x0f | 0x40); 	// set version to 0100
+	    $data[8] = chr(ord($data[8]) & 0x3f | 0x80); 	// set bits 6-7 to 10
+
+	    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 	}
 
 	/**
@@ -718,7 +734,8 @@ class Auth
 			$encodedtoken = $this->encodeToken($token);
 
 			$stmt = $this->conn->prepare(
-				"INSERT INTO {$this->config['table__auto_login_auth']} (selector, validator, user_id, expn_dt)
+				"INSERT INTO {$this->config['table__auto_login_auth']}
+				(selector, validator, user_id, expn_dt)
 				VALUES (:selector, :validator, :user_id, :expn_dt)"
 			);
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
@@ -867,7 +884,7 @@ class Auth
 
 		$token_info = $stmt->fetch();
 
-		if (!hash_equals($encodedToken['validator'], $token_info['validator'])) {
+		if (!hash_equals($token_info['validator'], $encodedToken['validator'])) {
 			return false;
 		}
 
@@ -911,5 +928,102 @@ class Auth
 		$stmt->execute([':id' => $token_id]);
 
 		return $stmt->rowCount() == 1;
+	}
+
+	/**
+	 * Add email waiting to be authenticated to DB
+	 *
+	 * @param string $email		Email waiting to be authenticated
+	 * @param string $sid   	selector
+	 * @param string $token 	uuid (for more secure)
+	 * @return boolean
+	 */
+	public function addEmailForWaiting($email, $sid, $token)
+	{
+		//	If is not logged in
+		if (!$this->isLoggedIn()) {
+			return false;
+		}
+
+		$user_id = $this->getCurrentUser()['id'];
+
+		//	Delete record if user id is already exist
+		$stmt = $this->conn->prepare(
+			"DELETE FROM {$this->config['table__email_auth']}
+			WHERE user_id = :user_id"
+		);
+		$stmt->execute([':user_id' => $user_id]);
+
+		//	Add to DB
+		$stmt = $this->conn->prepare(
+			"INSERT INTO {$this->config['table__email_auth']}
+			(sid, token, user_id, input_email, expn_dt)
+			VALUES (:sid, :token, :user_id, :input_email, :expn_dt)"
+		);
+
+		$query_params = array(
+			':sid' => $sid,
+			':token' => $token,
+			':user_id' => $user_id,
+			':input_email' => $email,
+			':expn_dt' => date("Y-m-d H:i:s", time() + $this->config['auth_email_expire'])
+		);
+
+		return $stmt->execute($query_params);
+	}
+
+	/**
+	 * @param  string $sid
+	 * @param  string $token
+	 * @return int
+	 * 0 : NO ERROR
+	 * 1 : NOT MATCH. SID OR TOKEN IS MODIFIED
+	 * 2 : REQUEST EXPIRED
+	 */
+	public function requestEmailAuth($sid, $token)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT * FROM {$this->config['table__email_auth']}
+			WHERE sid = :sid"
+		);
+		$stmt->execute([':sid' => $sid]);
+
+		//	Sid is modified
+		if ($stmt->rowCount() == 0) {
+			return 1;
+		}
+
+		$email_auth_info = $stmt->fetch();
+
+		//	Token is modified
+		if (!hash_equals($email_auth_info['token'], $token)) {
+			return 1;
+		}
+
+		//	Request expired
+		if (strtotime($email_auth_info['expn_dt']) < time()) {
+			$stmt = $this->conn->prepare(
+				"DELETE FROM {$this->config['table__email_auth']}
+				WHERE id = :id"
+			);
+			$stmt->execute([':id' => $email_auth_info['id']]);
+
+			return 2;
+		}
+
+		/* All confirmed */
+		$params = array(
+			'email' => $email_auth_info['input_email'],
+			'is_verified' => true
+		);
+		$this->updateUser($email_auth_info['user_id'], $params);
+
+		$stmt = $this->conn->prepare(
+			"DELETE FROM {$this->config['table__email_auth']}
+			WHERE input_email = :input_email"
+		);
+		$stmt->execute([':input_email' => $email_auth_info['input_email']]);
+
+		return 0;
 	}
 }
