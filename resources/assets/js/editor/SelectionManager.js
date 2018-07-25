@@ -1,14 +1,19 @@
+import DOMManager from "./DOMManager";
+import UndoManager from "./UndoManager";
+
 export default class SelectionManager
 {
 
 	/**
 	 * 
-	 * @param {DOMManager} domManager
+	 * @param {DOMManager} domManager 
+	 * @param {UndoManager} undoManager 
 	 */
-	constructor(domManager)
+	constructor(domManager, undoManager)
 	{
 
 		this.domManager = domManager;
+		this.ssManager = undoManager;
 
 	}
 
@@ -32,6 +37,8 @@ export default class SelectionManager
 		var chunks = this.getAllNodesInSelection();
 		var node;
 
+		var action = [];
+
 		for (var i = 0; i < chunks.length; i++) {
 
 			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
@@ -39,9 +46,17 @@ export default class SelectionManager
 				continue;
 			}
 
+			action.push({
+				targetNode: chunks[i],
+				type: "align",
+				previousState: chunks[i].style.textAlign,
+				nextState: direction
+			});
 			chunks[i].style.textAlign = direction;
 
 		}
+
+		this.ssManager.recordAction(action);
 		
 	}
 
@@ -647,7 +662,7 @@ export default class SelectionManager
 
 		} else if (currentNode && this.getSelectionPositionInParagraph() === 3) {
 
-			// Delete key - caret position at start of the node
+			// Delete key - caret position at the end of the node
 			e.stopPropagation();
 			e.preventDefault();
 			console.log("pull the next node to current.");
@@ -674,7 +689,12 @@ export default class SelectionManager
 							parentNode.parentNode.removeChild(parentNode);
 						}
 					} else {
-						this.mergeNodes(currentNode, nextNode, true);
+						if (this.isImageBlock(nextNode)) {
+							nextNode.parentNode.removeChild(nextNode);
+						} else {
+							this.mergeNodes(currentNode, nextNode, true);
+						}
+						
 					}
 
 				}
@@ -1426,7 +1446,7 @@ export default class SelectionManager
 					currentParentNode.appendChild(document.createElement("br"));
 				}
 				if (collapseDirection === "start") {
-					this.backspace(document.createEvent("KeyboardEvent")); 
+					this.backspace(document.createEvent("KeyboardEvent"));
 				}
 				break;
 			} else if (

@@ -59,15 +59,15 @@
 	position: absolute;
 	background: #fff;
 	pointer-events: none;
-	border: 1px solid #cccccc;
-	// border: 1px solid $white-blue;
+	border: 1px solid #ccc;
+	// border: 1px solid @white-blue;
 	border-radius: .72rem;
 	opacity: 0;
 	padding: .2rem;
 	display: flex;
 	// display: none;
-	transform: translateY(5px);
-	will-change: transform;
+	transform: translateY(.5rem);
+	// will-change: transform; // this attribute will cause clipping bug in chrome
 	transition: transform .2s ease, opacity .2s ease;
 	cursor: default;
 	z-index: 7777;
@@ -79,6 +79,7 @@
 		opacity: 1;
 		transform: translateY(0);
 		pointer-events: all;
+		transition: transform .2s ease, opacity .2s ease, left .1s ease;
 	}
 
 	// &::before {
@@ -89,9 +90,9 @@
 	// 	position: absolute;
 	// 	left: 50%;
 	// 	top: 100%;
-	// 	// border: 2px solid $white-blue;
+	// 	// border: 2px solid @white-blue;
 	// 	border-radius: 2px;
-	// 	background: $pvm-violet;
+	// 	background: @pvm-violet;
 	// 	transform: rotate(45deg) translateX(calc(-50% - 4px));
 	// 	z-index: -1;
 	// }
@@ -340,7 +341,7 @@
 
 	cursor: text;
 	// color: transparent;
-	// text-shadow: 0 0 0 $soft-black;
+	// text-shadow: 0 0 0 @soft-black;
 	white-space: pre-wrap;
 
 	width: calc(100% - 40px);

@@ -1,6 +1,7 @@
 import DOMManager from "./DOMManager";
 import SelectionManager from "./SelectionManager";
 import EventManager from "./EventManager";
+import UndoManager from "./UndoManager";
 
 export default class PostEditor {
 
@@ -14,8 +15,10 @@ export default class PostEditor {
 		let self = this;
 
 		this.domManager = new DOMManager(editorDOM);
-		this.selManager = new SelectionManager(this.domManager);
-		this.eventManager = new EventManager(this, this.domManager, this.selManager);
+		this.ssManager = new UndoManager();
+		this.selManager = new SelectionManager(this.domManager, this.ssManager);
+		this.eventManager = new EventManager(this, this.domManager, this.selManager, this.ssManager);
+		this.selManager.eventManager = this.eventManager;
 
 
 
