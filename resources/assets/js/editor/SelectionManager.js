@@ -49,7 +49,7 @@ export default class SelectionManager
 			action.push({
 				targetNode: chunks[i],
 				type: "align",
-				previousState: chunks[i].style,
+				previousState: chunks[i].style.textAlign,
 				nextState: direction
 			});
 			chunks[i].style.textAlign = direction;
