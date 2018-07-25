@@ -7,9 +7,10 @@ $te->render("/resources/templates/base.phtml", [
 	"main" => "/resources/templates/home.phtml",
 
 	"post_img_link" => [
-		"spongebob", "programmer", "1", "2" , "3", "4", "5", "6"
+		"macbookpro2018", "spongebob", "programmer", "1", "2" , "3", "4", "5", "6"
 	],
 	"post_title" => [
+		"2018년 맥북프로는 너무 뜨거워",
 		"내가 귀여운 이유",
 		"프로그래머처럼 생각해야 한다",
 		"장어덮밥을 먹을 수 없게 된다면?",
@@ -20,6 +21,6 @@ $te->render("/resources/templates/base.phtml", [
 		"사진을 시작한 사람들이 앓는다는 '장비병'"
 	],
 	"post_writer" => [
-		"최홍ZUNE", "황장병치훈", "박진둘", "장준끼", "장햄", "청춘나지훈", "조경상병훈", "쿠형"
+		"앤소니", "최홍ZUNE", "황장병치훈", "박진둘", "장준끼", "장햄", "청춘나지훈", "조경상병훈", "쿠형"
 	]
 ]);

@@ -1,5 +1,5 @@
-@import "_global-variables";
-@import "_global-mixins";
+@import "global-variables";
+@import "global-mixins";
 
 #login-main {
 	text-align: center;
@@ -29,8 +29,8 @@
 	margin: auto;
 	padding-top: 1rem;
 	padding-bottom: 1rem;
-	border-top: 1px solid $white-blue;
-	border-bottom: 1px solid $white-blue;
+	border-top: 1px solid @white-blue;
+	border-bottom: 1px solid @white-blue;
 
 	& > .input-wrapper {
 
@@ -70,7 +70,7 @@
 	margin-top: 1rem;
 
 	a {
-		color: $pvm-violet;
+		color: @pvm-violet;
 		font-weight: 500;
 
 		&:hover {

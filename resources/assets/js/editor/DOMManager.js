@@ -1,3 +1,5 @@
+import SelectionManager from "./SelectionManager";
+
 export default class DOMManager {
 
 	/**
@@ -60,22 +62,112 @@ export default class DOMManager {
 		}
 		var range = document.getSelection().getRangeAt(0);
 		if (range && !range.collapsed) {
-			this.popTool.classList.add("active");
-			this.popTool.style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2  + "px";
-			this.popTool.style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5 + "px";
+			this.showPopTool();
 		} else {
 			this.popTool.classList.remove("active");
 		}
 	}
 
 	showPopTool() {
+
+		var range = document.getSelection().getRangeAt(0);
+
+		
+		// Set the available item
+		var selManager = new SelectionManager(this);
+
+		var currentNode = selManager.getNodeInSelection();
+
+		if (
+			selManager.isListItem(currentNode)
+		) {
+			this.setPopToolMenu({
+				heading: false,
+				align: false,
+				blockquote: false
+			});
+		} else if (
+			selManager.isBlockquote(currentNode)
+		) {
+			this.setPopToolMenu({
+				heading: false,
+				align: false
+			});
+		} else {
+			this.setPopToolMenu({});
+		}
+
+		var left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2;
+
+		if (left < 10) {
+			left = 10;
+		} else if (left + this.popTool.getBoundingClientRect().width > document.body.clientWidth - 10) {
+			left = document.body.clientWidth - 10 - this.popTool.getBoundingClientRect().width;
+		}
+
+		this.popTool.style.left = left + "px";
+
+		var top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5;
+
+		if (top - window.pageYOffset < 10) {
+			top = range.getBoundingClientRect().bottom - document.querySelector("#post-editor").getBoundingClientRect().top + 5;
+		}
+
+		this.popTool.style.top = top + "px";
+
+
+
+
 		this.popTool.classList.add("active");
-		this.popTool.style.left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2  + "px";
-		this.popTool.style.top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5 + "px";
+
 	}
 
 	hidePopTool() {
 		this.popTool.classList.remove("active");
+		setTimeout(() => {
+			document.querySelector("#poptool .top-categories").classList.remove("hidden");
+			document.querySelector("#poptool .title-style").classList.add("hidden");
+			document.querySelector("#poptool .text-style").classList.add("hidden");
+			document.querySelector("#poptool .align").classList.add("hidden");
+			document.querySelector("#poptool .input").classList.add("hidden");
+		}, 100);
+		
+	}
+
+	setPopToolMenu(config) {
+		
+		// Link and text style is always available
+
+		if ("heading" in config) {
+			if (!config["heading"]) {
+				document.querySelector("#poptool #pt-title-pack").classList.add("hidden");
+			} else {
+				document.querySelector("#poptool #pt-title-pack").classList.remove("hidden");
+			}
+		} else {
+			document.querySelector("#poptool #pt-title-pack").classList.remove("hidden");
+		}
+
+		if ("align" in config) {
+			if (!config["align"]) {
+				document.querySelector("#poptool #pt-align-pack").classList.add("hidden");
+			} else {
+				document.querySelector("#poptool #pt-align-pack").classList.remove("hidden");
+			}
+		} else {
+			document.querySelector("#poptool #pt-align-pack").classList.remove("hidden");
+		}
+
+		if ("blockquote" in config) {
+			if (!config["blockquote"]) {
+				document.querySelector("#poptool #pt-blockquote").classList.add("hidden");
+			} else {
+				document.querySelector("#poptool #pt-blockquote").classList.remove("hidden");
+			}
+		} else {
+			document.querySelector("#poptool #pt-blockquote").classList.remove("hidden");
+		}
+
 	}
 
 	/**
