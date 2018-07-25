@@ -13,7 +13,7 @@ export default class SelectionManager
 	{
 
 		this.domManager = domManager;
-		this.ssManager = undoManager;
+		this.undoManager = undoManager;
 
 	}
 
@@ -37,7 +37,11 @@ export default class SelectionManager
 		var chunks = this.getAllNodesInSelection();
 		var node;
 
-		var action = [];
+		var action = {
+			type: "align",
+			nodes: [],
+			range: this.getRange()
+		};
 
 		for (var i = 0; i < chunks.length; i++) {
 
@@ -46,9 +50,8 @@ export default class SelectionManager
 				continue;
 			}
 
-			action.push({
-				targetNode: chunks[i],
-				type: "align",
+			action.nodes.push({
+				target: chunks[i],
 				previousState: chunks[i].style.textAlign,
 				nextState: direction
 			});
@@ -56,7 +59,7 @@ export default class SelectionManager
 
 		}
 
-		this.ssManager.recordAction(action);
+		this.undoManager.recordAction(action);
 		
 	}
 
@@ -713,30 +716,35 @@ export default class SelectionManager
 		
 
 		// When press return key
+
 		var selectionNode = this.getNodeInSelection();
 		var range = this.getRange();
+
 		if (!range.collapsed) {
+
 			e.stopPropagation();
 			e.preventDefault();
 			this.removeSelection();
-			// this.backspace(e);
-			console.log(this.getRange());
-			console.log("the range is not collapsed");
 			return;
+
 		}
 
 		// Delete the br if the current sentence is not empty
 		var currentNode = this.getNodeInSelection();
 
 		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
+
 			currentNode.removeChild(currentNode.querySelector("br"));
+
 		}
 
 		// Ignore figcaption enter
 		if (this.isImageCaption(currentNode)) {
+
 			e.stopPropagation();
 			e.preventDefault();
 			return;
+
 		}
 
 		var selPosType = this.getSelectionPositionInParagraph();
@@ -745,14 +753,19 @@ export default class SelectionManager
 		e.preventDefault();
 
 		if (selPosType === 2) {
+
 			console.log('middle');
 			this.splitElementNode();
+
 		} else if (selPosType === 1) {
+
 			console.log('start');
 			var pElm = this.domManager.generateEmptyNode(selectionNode.nodeName);
 
 			selectionNode.parentNode.insertBefore(pElm, selectionNode);
+
 		} else if (selPosType === 3) {
+
 			console.log('end');
 			var newNodeName = selectionNode.nodeName;
 			var parentNode = selectionNode.parentNode;
@@ -762,13 +775,14 @@ export default class SelectionManager
 				this.isBlockquote(selectionNode) ||
 				this.isHeading(selectionNode)
 			) {
+
 				newNodeName = "P";
+
 			} else if (this.isListItem(selectionNode)) {
 				if (this.isEmptyNode(selectionNode)) {
 
 					this.list(selectionNode.parentNode.nodeName);
 					return;
-
 					
 				}
 				
@@ -782,11 +796,27 @@ export default class SelectionManager
 
 			parentNode.insertBefore(pElm, nextNode);
 
+			// Record action
+			var action = {
+				type: "add",
+				nodes: [],
+				range: this.getRange()
+
+			}
+			action.nodes.push({
+				target: pElm
+			});
+
+			this.undoManager.recordAction(action);
+
+
+
 			var range = document.createRange();
 			range.setStartBefore(pElm.firstChild);
 			range.collapse(true);
 
 			this.replaceRange(range);
+
 		}
 
 
@@ -901,7 +931,7 @@ export default class SelectionManager
 
 				for (var i = 0; i < startOffset; i++) {
 					// target = target.nextElementSibling;
-					target = targe.nextSibling;
+					target = target.nextSibling;
 				}
 
 				
@@ -1082,21 +1112,34 @@ export default class SelectionManager
 		var newNode;
 
 		// Loop from the bottom to the top of the node.
+		
 		var count = 0;
+
 		while (1) {
 
+			console.log(travelNode);
+
 			if (travelNode === null) {
+
+
 				break;
+
 			} else if (this.isAvailableParentNode(travelNode)) {
+
 				break;
+
 			} else if (travelNode.nodeType === 3) {
 				
 				if (this.getSelectionPosition() === 1) {
+
 					travelNode = travelNode.parentElement;
 					backNode = startNode.parentElement;
 					startNode = backNode.previousSibling;
+					console.log("stuck");
 					continue;
+
 				} else {
+
 					if (startOffset === 0) {
 						frontNode = startNode.previousSibling;
 						backNode = startNode;
@@ -1107,18 +1150,26 @@ export default class SelectionManager
 					}
 					
 				}
+
 			} else if (this.isTextStyleNode(travelNode)) {
 
-				if (frontNode === undefined) {
+				console.log("this is a text style node");
 
+				console.log(frontNode);
+				console.log(backNode);
+
+				if (frontNode === undefined) {
+					frontNode = travelNode.previousSibling;
 				}
 
 				if (backNode === undefined) {
-
+					backNode = travelNode;
 				}
 
 			} else {
+
 				break;
+
 			}
 
 			orgNode = travelNode.parentElement;
@@ -1128,11 +1179,15 @@ export default class SelectionManager
 			tempNode = orgNode.firstChild;
 
 			if (!frontNode) {
+
 				frontNode = backNode.previousSibling;
+
 			}
 
 			if (!backNode) {
+
 				backNode = frontNode.nextSibling;
+
 			}
 
 			console.log('-------------------');
@@ -1141,18 +1196,26 @@ export default class SelectionManager
 			while (1) {
 				
 				if (!tempNode) {
+
 					backNodePassed = false;
 					break;
+
 				} else {
+
 					nextNode = tempNode.nextSibling;
+
 				}
 
 				if (tempNode === backNode) {
+
 					backNodePassed = true;
+
 				}
 
 				if (backNodePassed) {
+
 					newNode.appendChild(tempNode);
+
 				}
 
 				tempNode = nextNode;
@@ -1160,14 +1223,33 @@ export default class SelectionManager
 			}
 
 			if (this.isEmptyNode(orgNode)) {
+
 				orgNode.parentNode.removeChild(orgNode);
 				orgNode = null;
+
 			}
 
 			if (!this.isEmptyNode(newNode)) {
+
 				orgNode.parentNode.insertBefore(newNode, orgNode.nextSibling);
+
+				// Record action
+				var action = {
+					type: "split",
+					nodes: [],
+					range: range
+				}
+				action.nodes.push({
+					target: newNode,
+					previousNode: this.getPreviousAvailableNode(newNode)
+				});
+
+				this.undoManager.recordAction(action);
+
 			} else {
+
 				newNode = null;
+
 			}
 
 			frontNode = orgNode;
@@ -1177,10 +1259,11 @@ export default class SelectionManager
 			// If there is a newNode inserted,
 			// move a range to it.
 			if (newNode) {
+
 				range.setStart(newNode, 0);
 				this.replaceRange(range);
+
 			}
-			
 			
 
 			travelNode = travelNode.parentElement;
@@ -1241,31 +1324,13 @@ export default class SelectionManager
 				front.textContent += back.textContent;
 				back.parentNode.removeChild(back);
 
-				// if (front.textContent === "" || back.textContent === "") {
-
-				// 	if (front.textContent === "") {
-				// 		// tempNode = front.previousSibling;
-				// 		front.parentNode.removeChild(front);
-				// 		front = front.previousSibling;
-				// 	}
-
-				// 	if (back.textContent === "") {
-				// 		// tempNode = back.nextSibling;
-				// 		back.parentNode.removeChild(back);
-				// 		back = back.nextSibling;
-				// 	}
-
-				// 	continue;
-					
-				// }
-
-				
-
 				break;
 
 			} else {
 
 				console.log("here");
+
+				console.log("front: ", front, " back: ", back);
 
 				nextFront = front.lastChild;
 				nextBack = back.firstChild;
@@ -1284,10 +1349,12 @@ export default class SelectionManager
 		}
 
 		if (startNode) {
+
 			var keepRange = document.createRange();
 			keepRange.setStart(startNode, startOffset);
 			keepRange.setEnd(startNode, startOffset);
 			this.replaceRange(keepRange);
+
 		}
 		
 
@@ -1376,7 +1443,7 @@ export default class SelectionManager
 
 		// range.collapse(false);
 
-		console.log("startNode:", startNode, " endNode: ", endNode);
+		// console.log("startNode:", startNode, " endNode: ", endNode);
 
 		range.setStart(range.endContainer, range.endOffset);
 		this.replaceRange(range);
@@ -1388,29 +1455,36 @@ export default class SelectionManager
 		var parentNode;
 
 		while (1) {
-			console.log("currentParentNode: ", currentParentNode);
+
 			if (
 				!currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
 			) {
+
 				console.log("nothing contains");
 				console.log(currentParentNode.textContent);
 
 				if (this.isAvailableChildNode(currentParentNode)) {
+
 					console.log("list is detected");
 					var parentNode = currentParentNode.parentNode;
 					currentParentNode.parentNode.removeChild(currentParentNode);
+
 					if (this.isTextEmptyNode(parentNode)) {
 						parentNode.parentNode.removeChild(parentNode);
 					}
+
 				} else {
+					
 					currentParentNode.parentNode.removeChild(currentParentNode);
+
 				}
 				
 			} else if (
 				currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
 			) {
+
 				travelNode = startNode;
 				console.log("only contains startnode");
 				console.log(currentParentNode.textContent);
@@ -1423,13 +1497,17 @@ export default class SelectionManager
 				tempRange.deleteContents();
 
 				if (this.isTextEmptyNode(currentParentNode)) {
+
 					currentParentNode.innerHTML = "";
 					currentParentNode.appendChild(document.createElement("br"));
+
 				}
+
 			} else if (
 				!currentParentNode.contains(startNode) &&
 				currentParentNode.contains(endNode)
 			) {
+
 				travelNode = endNode;
 				console.log("only contains endnode");
 				console.log(currentParentNode.textContent);
@@ -1449,35 +1527,37 @@ export default class SelectionManager
 					this.backspace(document.createEvent("KeyboardEvent"));
 				}
 				break;
+
 			} else if (
 				currentParentNode.contains(startNode) &&
 				currentParentNode.contains(endNode)
 			) {
+
 				travelNode = startNode;
-				orgRange.deleteContents();
+				var splitResult = this.splitTextNode();
+				console.log(splitResult.startNode);
+				splitResult.startNode.parentNode.removeChild(splitResult.startNode);
+
 				if (this.isTextEmptyNode(currentParentNode)) {
 					currentParentNode.innerHTML = "";
 					currentParentNode.appendChild(document.createElement("br"));
 				}
 
-				console.log(startNode);
-				console.log(endNode);
+				// console.log(startNode);
+				// console.log(endNode);
 
 				if (collapseDirection === "end") {
 					this.enter(document.createEvent("KeyboardEvent")); 
 				}
 
-				
-				
 				break;
+
 			}
+
 			currentParentNode = nextParentNode;
 			nextParentNode = this.getNextAvailableNode(nextParentNode);
+
 		}
-
-		// this.fixSelection();
-
-
 
 	}
 

@@ -82,8 +82,14 @@ export default class EventManager
 		});
 		window.addEventListener('keydown', (e) => {
 			if (e.which === 90 && e.ctrlKey) {
-				e.preventDefault();
-				this.ssManager.undo();
+				if (e.shiftKey) {
+					e.preventDefault();
+					this.ssManager.redo();
+				} else {
+					e.preventDefault();
+					this.ssManager.undo();
+				}
+				
 			}
 		});
 		this.domManager.editor.addEventListener('keyup', (e) => {

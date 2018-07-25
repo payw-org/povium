@@ -15,9 +15,9 @@ export default class PostEditor {
 		let self = this;
 
 		this.domManager = new DOMManager(editorDOM);
-		this.ssManager = new UndoManager();
-		this.selManager = new SelectionManager(this.domManager, this.ssManager);
-		this.eventManager = new EventManager(this, this.domManager, this.selManager, this.ssManager);
+		this.undoManager = new UndoManager();
+		this.selManager = new SelectionManager(this.domManager, this.undoManager);
+		this.eventManager = new EventManager(this, this.domManager, this.selManager, this.undoManager);
 		this.selManager.eventManager = this.eventManager;
 
 
