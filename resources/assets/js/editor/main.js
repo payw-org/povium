@@ -36,11 +36,11 @@ document.querySelector('#split-text').addEventListener('click', function () {
 
 });
 
-document.querySelector('#get-sel-pos').addEventListener('click', function () {
+// document.querySelector('#get-sel-pos').addEventListener('click', function () {
 
-	console.log(editor.selManager.getSelectionPosition());
+// 	console.log(editor.selManager.getSelectionPosition());
 
-});
+// });
 
 document.querySelector('#get-sel-pos-par').addEventListener('click', function () {
 
