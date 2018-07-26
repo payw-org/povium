@@ -755,7 +755,7 @@ export default class SelectionManager
 		if (selPosType === 2) {
 
 			console.log('middle');
-			this.splitElementNode();
+			this.splitElementNode3();
 
 		} else if (selPosType === 1) {
 
@@ -1055,6 +1055,8 @@ export default class SelectionManager
 
 			if (isChanged) {
 				// this.replaceRange(newRange);
+				console.log(range);
+				console.log("fixed selection");
 				window.getSelection().removeRange(range);
 				window.getSelection().addRange(newRange);
 			}
@@ -1085,188 +1087,335 @@ export default class SelectionManager
 	/**
 	 * Implementing return(enter) key inside blockquotes.
 	 */
-	splitElementNode()
-	{
 
-		var range;
+	// Deprecated
 
-		range = this.getRange();
+	// splitElementNode()
+	// {
+
+	// 	var range;
+
+	// 	range = this.getRange();
 		
-		if (!range) {
-			return;
-		}
+	// 	if (!range) {
+	// 		return;
+	// 	}
 
-		var startNode = range.startContainer;
-		var startOffset = range.startOffset;
-		var endNode = range.endContainer;
-		var endOffset = range.endOffset;
+	// 	var startNode = range.startContainer;
+	// 	var startOffset = range.startOffset;
+	// 	var endNode = range.endContainer;
+	// 	var endOffset = range.endOffset;
 
-		var frontNode, backNode;
-		var backNodePassed = false;
+	// 	var frontNode, backNode;
+	// 	var backNodePassed = false;
+
+	// 	var travelNode = startNode;
+
+	// 	var tempNode, nextNode;
+
+	// 	var orgNode;
+	// 	var newNode;
+
+	// 	// Loop from the bottom to the top of the node.
+		
+	// 	while (1) {
+
+	// 		console.log(travelNode);
+
+	// 		if (travelNode === null) {
+
+	// 			break;
+
+	// 		} else if (this.isAvailableParentNode(travelNode)) {
+
+	// 			break;
+
+	// 		} else if (travelNode.nodeType === 3) {
+
+	// 			if (startOffset === 0) {
+
+	// 				if (startNode.previousSibling) {
+	// 					frontNode = startNode.previousSibling;
+	// 					backNode = startNode;
+	// 				} else if (this.isTextStyleNode(startNode.parentNode)) {
+	// 					travelNode = startNode.parentNode;
+	// 				}
+
+	// 			} else {
+	// 				this.splitTextNode();
+	// 				frontNode = startNode;
+	// 				backNode = frontNode.nextSibling;
+	// 				console.log("3");
+	// 			}
+					
+	// 			// }
+
+	// 		} else if (this.isTextStyleNode(travelNode)) {
+
+	// 			console.log("this is a text style node");
+
+	// 			console.log(frontNode);
+	// 			console.log(backNode);
+
+	// 			if (frontNode === undefined) {
+	// 				frontNode = travelNode.previousSibling;
+	// 			}
+
+	// 			if (backNode === undefined) {
+	// 				backNode = travelNode;
+	// 			}
+
+	// 		} else {
+
+	// 			break;
+
+	// 		}
+
+	// 		orgNode = travelNode.parentElement;
+			
+	// 		newNode = document.createElement(orgNode.nodeName);
+
+	// 		tempNode = orgNode.firstChild;
+
+	// 		if (!frontNode) {
+
+	// 			frontNode = backNode.previousSibling;
+
+	// 		}
+
+	// 		if (!backNode) {
+
+	// 			backNode = frontNode.nextSibling;
+
+	// 		}
+
+	// 		console.log('-------------------');
+	// 		console.log(frontNode, backNode, newNode);
+
+	// 		while (1) {
+				
+	// 			if (!tempNode) {
+
+	// 				backNodePassed = false;
+	// 				break;
+
+	// 			} else {
+
+	// 				nextNode = tempNode.nextSibling;
+
+	// 			}
+
+	// 			if (tempNode === backNode) {
+
+	// 				backNodePassed = true;
+
+	// 			}
+
+	// 			if (backNodePassed) {
+
+	// 				newNode.appendChild(tempNode);
+
+	// 			}
+
+	// 			tempNode = nextNode;
+
+	// 		}
+
+	// 		if (this.isEmptyNode(orgNode)) {
+
+	// 			orgNode.parentNode.removeChild(orgNode);
+	// 			orgNode = null;
+
+	// 		}
+
+	// 		if (!this.isEmptyNode(newNode)) {
+
+	// 			orgNode.parentNode.insertBefore(newNode, orgNode.nextSibling);
+
+	// 			// Record action
+	// 			var action = {
+	// 				type: "split",
+	// 				nodes: [],
+	// 				range: range
+	// 			}
+	// 			action.nodes.push({
+	// 				target: newNode,
+	// 				previousNode: this.getPreviousAvailableNode(newNode)
+	// 			});
+
+	// 			this.undoManager.recordAction(action);
+
+	// 		} else {
+
+	// 			newNode = null;
+
+	// 		}
+
+	// 		frontNode = orgNode;
+	// 		backNode = newNode;
+
+
+	// 		// If there is a newNode inserted,
+	// 		// move a range to it.
+	// 		if (newNode) {
+
+	// 			range.setStart(newNode, 0);
+	// 			this.replaceRange(range);
+
+	// 		}
+			
+
+	// 		travelNode = travelNode.parentNode;
+
+	// 	}
+
+	// }
+
+	splitElementNode3()
+	{
+		
+		var orgRange = this.getRange();
+		var startNode = orgRange.startContainer;
+		console.log(startNode);
 
 		var travelNode = startNode;
 
-		var tempNode, nextNode;
+		var frontNode, backNode;
 
-		var orgNode;
-		var newNode;
-
-		// Loop from the bottom to the top of the node.
-		
-		var count = 0;
+		// Textnode
 
 		while (1) {
 
-			console.log(travelNode);
+			if (
+				this.isAvailableParentNode(travelNode) ||
+				this.isAvailableChildNode(travelNode)
+			) {
 
-			if (travelNode === null) {
-
-
-				break;
-
-			} else if (this.isAvailableParentNode(travelNode)) {
-
-				break;
+				return;
 
 			} else if (travelNode.nodeType === 3) {
-				
-				if (this.getSelectionPosition() === 1) {
 
-					travelNode = travelNode.parentElement;
-					backNode = startNode.parentElement;
-					startNode = backNode.previousSibling;
-					console.log("stuck");
-					continue;
+				if (orgRange.startOffset === 0) {
+
+					if (travelNode.previousSibling) {
+
+						frontNode = travelNode.previousSibling;
+						backNode = travelNode;
+
+					} else if (travelNode.parentNode) {
+
+						travelNode = travelNode.parentNode;
+
+						continue;
+
+					}
+
+				} else if (orgRange.startOffset < travelNode.textContent.length) {
+
+					this.splitTextNode();
+
+					frontNode = travelNode;
+					backNode = travelNode.nextSibling;
 
 				} else {
 
-					if (startOffset === 0) {
-						frontNode = startNode.previousSibling;
-						backNode = startNode;
-					} else {
-						this.splitTextNode();
-						frontNode = startNode;
-						backNode = frontNode.nextSibling;
+					if (travelNode.nextSibling) {
+
+						frontNode = travelNode;
+						backNode = travelNode.nextSibling;
+
+					} else if (travelNode.parentNode) {
+
+						travelNode = travelNode.parentNode;
+
+						continue;
+
+					}
+
+				}
+
+			} else if (frontNode === undefined && backNode === undefined) {
+
+				if (orgRange.startOffset === 0) {
+
+					if (travelNode.previousSibling) {
+
+						frontNode = travelNode.previousSibling;
+						backNode = travelNode;
+
+					} else if (travelNode.parentNode) {
+
+						travelNode = travelNode.parentNode;
+						continue;
+
 					}
 					
+
+				} else if (orgRange.startOffset > 0) {
+
+					if (travelNode.nextSibling) {
+
+						frontNode = travelNode;
+						backNode = travelNode.nextSibling;
+
+					} else if (travelNode.parentNode) {
+
+						travelNode = travelNode.parentNode;
+
+						continue;
+
+					}
+
 				}
-
-			} else if (this.isTextStyleNode(travelNode)) {
-
-				console.log("this is a text style node");
-
-				console.log(frontNode);
-				console.log(backNode);
-
-				if (frontNode === undefined) {
-					frontNode = travelNode.previousSibling;
-				}
-
-				if (backNode === undefined) {
-					backNode = travelNode;
-				}
-
-			} else {
-
-				break;
 
 			}
 
-			orgNode = travelNode.parentElement;
+			travelNode = frontNode;
 			
-			newNode = document.createElement(orgNode.nodeName);
 
-			tempNode = orgNode.firstChild;
+			var newNode = document.createElement(travelNode.parentNode.nodeName);
 
-			if (!frontNode) {
+			var tempNode = backNode;
+			var nextNode;
 
-				frontNode = backNode.previousSibling;
+			console.log("front: ", frontNode, " back: ", backNode, " newNode: ", newNode);
 
-			}
+			while(1) {
 
-			if (!backNode) {
-
-				backNode = frontNode.nextSibling;
-
-			}
-
-			console.log('-------------------');
-			console.log(frontNode, backNode, newNode);
-
-			while (1) {
-				
 				if (!tempNode) {
-
-					backNodePassed = false;
 					break;
-
-				} else {
-
-					nextNode = tempNode.nextSibling;
-
 				}
 
-				if (tempNode === backNode) {
+				nextNode = tempNode.nextSibling;
 
-					backNodePassed = true;
-
-				}
-
-				if (backNodePassed) {
-
-					newNode.appendChild(tempNode);
-
-				}
+				newNode.appendChild(tempNode);
 
 				tempNode = nextNode;
 
 			}
 
-			if (this.isEmptyNode(orgNode)) {
+			travelNode.parentNode.parentNode.insertBefore(newNode, travelNode.parentNode.nextSibling);
+			var newRange = document.createRange();
+			newRange.setStart(this.getTextNodeInElementNode(newNode, "first"), 0);
+			newRange.collapse(true);
+			this.replaceRange(newRange);
 
-				orgNode.parentNode.removeChild(orgNode);
-				orgNode = null;
+			frontNode = frontNode.parentNode;
+			backNode = backNode.parentNode;
 
+			travelNode = travelNode.parentNode;
+
+			// Record action
+			var action = {
+				type: "split",
+				nodes: [],
+				range: this.getRange()
 			}
+			action.nodes.push({
+				target: pElm
+			});
 
-			if (!this.isEmptyNode(newNode)) {
-
-				orgNode.parentNode.insertBefore(newNode, orgNode.nextSibling);
-
-				// Record action
-				var action = {
-					type: "split",
-					nodes: [],
-					range: range
-				}
-				action.nodes.push({
-					target: newNode,
-					previousNode: this.getPreviousAvailableNode(newNode)
-				});
-
-				this.undoManager.recordAction(action);
-
-			} else {
-
-				newNode = null;
-
-			}
-
-			frontNode = orgNode;
-			backNode = newNode;
-
-
-			// If there is a newNode inserted,
-			// move a range to it.
-			if (newNode) {
-
-				range.setStart(newNode, 0);
-				this.replaceRange(range);
-
-			}
-			
-
-			travelNode = travelNode.parentElement;
+			this.undoManager.recordAction(action);
 
 		}
 
@@ -1456,7 +1605,11 @@ export default class SelectionManager
 
 		while (1) {
 
-			if (
+			if (this.isImageBlock(currentParentNode)) {
+
+				currentParentNode.parentNode.removeChild(currentParentNode);
+
+			} else if (
 				!currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
 			) {
@@ -1525,7 +1678,7 @@ export default class SelectionManager
 				}
 				if (collapseDirection === "start") {
 					this.backspace(document.createEvent("KeyboardEvent"));
-				}
+				} 
 				break;
 
 			} else if (
@@ -1533,10 +1686,7 @@ export default class SelectionManager
 				currentParentNode.contains(endNode)
 			) {
 
-				travelNode = startNode;
-				var splitResult = this.splitTextNode();
-				console.log(splitResult.startNode);
-				splitResult.startNode.parentNode.removeChild(splitResult.startNode);
+				orgRange.deleteContents();
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 					currentParentNode.innerHTML = "";
@@ -1895,78 +2045,78 @@ export default class SelectionManager
 		
 	}
 
-	getSelectionPosition(customRange = null)
-	{
+	// getSelectionPosition(customRange = null)
+	// {
 
-		var orgRange;
+	// 	var orgRange;
 
-		if (customRange) {
-			orgRange = customRange;
-		} else {
-			orgRange = this.getRange();
-		}
+	// 	if (customRange) {
+	// 		orgRange = customRange;
+	// 	} else {
+	// 		orgRange = this.getRange();
+	// 	}
 
-		if (!orgRange) {
-			return false;
-		}
+	// 	if (!orgRange) {
+	// 		return false;
+	// 	}
 
-		var startNode   = orgRange.startContainer;
-		var startOffset = orgRange.startOffset;
-		var endNode     = orgRange.endContainer;
-		var endOffset   = orgRange.endOffset;
-
-
-		var travelNode;
-		var isStart = false;
-		var isEnd   = false;
+	// 	var startNode   = orgRange.startContainer;
+	// 	var startOffset = orgRange.startOffset;
+	// 	var endNode     = orgRange.endContainer;
+	// 	var endOffset   = orgRange.endOffset;
 
 
-		travelNode = startNode.previousSibling;
-
-		while (1) {
-			if (!travelNode && startOffset === 0) {
-				isStart = true;
-				break;
-			} else if (!travelNode) {
-				break;
-			} else if (travelNode.textContent === "") {
-				travelNode = travelNode.previousSibling;
-			} else {
-				break;
-			}
-		}
+	// 	var travelNode;
+	// 	var isStart = false;
+	// 	var isEnd   = false;
 
 
+	// 	travelNode = startNode.previousSibling;
 
-		travelNode = endNode.nextSibling;
-
-		while (1) {
-			if (!travelNode && endOffset === endNode.textContent.length) {
-				isEnd = true;
-				break;
-			} else if (!travelNode) {
-				break;
-			} else if (travelNode.textContent === "") {
-				travelNode = travelNode.nextSibling;
-			} else {
-				break;
-			}
-		}
+	// 	while (1) {
+	// 		if (!travelNode && startOffset === 0) {
+	// 			isStart = true;
+	// 			break;
+	// 		} else if (!travelNode) {
+	// 			break;
+	// 		} else if (travelNode.textContent === "") {
+	// 			travelNode = travelNode.previousSibling;
+	// 		} else {
+	// 			break;
+	// 		}
+	// 	}
 
 
-		if (startNode === endNode && this.isEmptyNode(startNode)) {
-			isEnd = true;
-		}
 
-		if (isStart) {
-			return 1;
-		} else if (isEnd) {
-			return 3;
-		} else {
-			return 2;
-		}
+	// 	travelNode = endNode.nextSibling;
 
-	}
+	// 	while (1) {
+	// 		if (!travelNode && endOffset === endNode.textContent.length) {
+	// 			isEnd = true;
+	// 			break;
+	// 		} else if (!travelNode) {
+	// 			break;
+	// 		} else if (travelNode.textContent === "") {
+	// 			travelNode = travelNode.nextSibling;
+	// 		} else {
+	// 			break;
+	// 		}
+	// 	}
+
+
+	// 	if (startNode === endNode && this.isEmptyNode(startNode)) {
+	// 		isEnd = true;
+	// 	}
+
+	// 	if (isStart) {
+	// 		return 1;
+	// 	} else if (isEnd) {
+	// 		return 3;
+	// 	} else {
+	// 		return 2;
+	// 	}
+
+	// }
 
 	getSelectionPositionInParagraph(customRange = null)
 	{
