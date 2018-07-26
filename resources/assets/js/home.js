@@ -119,7 +119,6 @@ class HomeView {
 			if (e.which !== 1) {
 				return;
 			}
-			console.log(e.which);
 			this.stopAutoFlick();
 			this.popPostContainer.classList.add('moving');
 			this.distX = 0;
