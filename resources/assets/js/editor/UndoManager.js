@@ -54,9 +54,8 @@ export default class UndoManager {
 
 			for (var i = 0; i < action.nodes.length; i++) {
 
-				// action.nodes[i].target.parentNode.removeChild(action.nodes[i].target);
-
-				this.selManager.mergeNodes(action.nodes[i].previousNode, action.nodes[i].target);
+				action.nodes[i].originalNodeRef.parentNode.replaceChild(action.nodes[i].originalNodeClone, action.nodes[i].originalNodeRef);
+				action.nodes[i].newAddedNode.parentNode.removeChild(action.nodes[i].newAddedNode);
 
 			}
 

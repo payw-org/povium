@@ -40,13 +40,19 @@ export default class EventManager
 			// 	this.onSelectionChanged();
 			// }
 		});
-		this.domManager.editor.addEventListener('mousedown', (e) => {
-			this.domManager.hidePopTool();
-			this.mouseDownStart = true;
+		window.addEventListener('mousedown', (e) => {
+			if (!e.target.closest("#poptool")) {
+				this.domManager.hidePopTool();
+				this.mouseDownStart = true;
+			}
+			
 		});
-		this.domManager.editor.addEventListener('touchstart', (e) => {
-			this.domManager.hidePopTool();
-			this.mouseDownStart = true;
+		window.addEventListener('touchstart', (e) => {
+			if (!e.target.closest("#poptool")) {
+				this.domManager.hidePopTool();
+				this.mouseDownStart = true;
+			}
+			
 		});
 		this.domManager.editor.addEventListener('mouseup', (e) => {
 			this.onSelectionChanged();

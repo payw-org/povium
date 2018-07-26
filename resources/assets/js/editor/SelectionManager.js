@@ -37,6 +37,7 @@ export default class SelectionManager
 		var chunks = this.getAllNodesInSelection();
 		var node;
 
+		// Record action
 		var action = {
 			type: "align",
 			nodes: [],
@@ -1276,7 +1277,12 @@ export default class SelectionManager
 		
 		var orgRange = this.getRange();
 		var startNode = orgRange.startContainer;
-		console.log(startNode);
+
+		var currentParentNode = this.getNodeInSelection();
+		var currentParentNodeClone = currentParentNode.cloneNode(true);
+
+		console.log(currentParentNode);
+		console.log(currentParentNodeClone);
 
 		var travelNode = startNode;
 
@@ -1291,7 +1297,7 @@ export default class SelectionManager
 				this.isAvailableChildNode(travelNode)
 			) {
 
-				return;
+				break;
 
 			} else if (travelNode.nodeType === 3) {
 
@@ -1406,6 +1412,22 @@ export default class SelectionManager
 			travelNode = travelNode.parentNode;
 
 		}
+
+		var action = {
+			type: "split",
+			nodes: [],
+			range: orgRange
+		};
+
+		action.nodes.push({
+			originalNodeRef: currentParentNode,
+			originalNodeClone: currentParentNodeClone,
+			newAddedNode: newNode
+		});
+
+		console.log("Hello world");
+
+		this.undoManager.recordAction(action);
 
 	}
 
