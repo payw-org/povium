@@ -81,28 +81,38 @@ export default class DOMManager {
 		if (
 			selManager.isListItem(currentNode)
 		) {
+
 			this.setPopToolMenu({
 				heading: false,
 				align: false,
 				blockquote: false
 			});
+
 		} else if (
 			selManager.isBlockquote(currentNode)
 		) {
+
 			this.setPopToolMenu({
 				heading: false,
 				align: false
 			});
+
 		} else {
+
 			this.setPopToolMenu({});
+
 		}
 
 		var left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.popTool.getBoundingClientRect().width / 2;
 
 		if (left < 10) {
+
 			left = 10;
+
 		} else if (left + this.popTool.getBoundingClientRect().width > document.body.clientWidth - 10) {
+
 			left = document.body.clientWidth - 10 - this.popTool.getBoundingClientRect().width;
+
 		}
 
 		this.popTool.style.left = left + "px";
@@ -110,12 +120,12 @@ export default class DOMManager {
 		var top = range.getBoundingClientRect().top - document.querySelector("#post-editor").getBoundingClientRect().top - this.popTool.getBoundingClientRect().height - 5;
 
 		if (top - window.pageYOffset < 10) {
+
 			top = range.getBoundingClientRect().bottom - document.querySelector("#post-editor").getBoundingClientRect().top + 5;
+
 		}
 
 		this.popTool.style.top = top + "px";
-
-
 
 
 		this.popTool.classList.add("active");
