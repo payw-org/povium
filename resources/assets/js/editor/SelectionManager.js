@@ -1405,18 +1405,6 @@ export default class SelectionManager
 
 			travelNode = travelNode.parentNode;
 
-			// Record action
-			var action = {
-				type: "split",
-				nodes: [],
-				range: this.getRange()
-			}
-			action.nodes.push({
-				target: pElm
-			});
-
-			this.undoManager.recordAction(action);
-
 		}
 
 	}
