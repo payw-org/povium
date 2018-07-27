@@ -34,6 +34,8 @@ export default class UndoManager {
 		var action = this.actionStack[this.currentStep];
 		this.currentStep--;
 
+		console.log(action);
+
 		if (action.type === "align") {
 
 			for (var i = 0; i < action.nodes.length; i++) {
@@ -53,8 +55,6 @@ export default class UndoManager {
 			}
 
 		} else if (action.type === "split") {
-
-			console.log(action);
 
 			let reverts = this.selManager.cloneNodeAndRange(action.previousState.content, action.previousState.range);
 
@@ -107,6 +107,8 @@ export default class UndoManager {
 
 		this.currentStep++;
 		var action = this.actionStack[this.currentStep];
+
+		console.log(action);
 		
 		if (action.type === "align") {
 
@@ -119,12 +121,12 @@ export default class UndoManager {
 
 		} else if (action.type === "split") {
 
-			console.log(action);
 			action.target.parentNode.insertBefore(action.nextState.newNode, action.target.nextSibling);
 			// action.target.parentNode.appendChild(action.nextState.newNode);
 
 			action.target.innerHTML = "";
-			let node = action.nextState.oldNode.firstChild;
+			let revertedNode = this.selManager.cloneNodeAndRange(action.nextState.oldNode)[0];
+			let node = revertedNode.firstChild;
 
 			while (1) {
 				if (node === null) {

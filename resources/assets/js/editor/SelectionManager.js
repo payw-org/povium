@@ -41,7 +41,7 @@ export default class SelectionManager
 		var action = {
 			type: "align",
 			nodes: [],
-			range: this.getRange()
+			range: window.getSelection().getRangeAt(0).cloneRange()
 		};
 
 		for (var i = 0; i < chunks.length; i++) {
