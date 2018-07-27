@@ -54,14 +54,23 @@ export default class UndoManager {
 
 		} else if (action.type === "split") {
 
-			action.target.innerHTML = "";
+			console.log(action);
 
 			let reverts = this.selManager.cloneNodeAndRange(action.previousState.content, action.previousState.range);
 
 			let revertedNode = reverts[0];
 			let revertedRange = reverts[1];
 
-			console.log(revertedRange);
+			let startNode = revertedRange.startContainer;
+			let startOffset = revertedRange.startOffset;
+			let endNode = revertedRange.endContainer;
+			let endOffset = revertedRange.endOffset;
+
+
+			action.nextState.newNode.parentNode.removeChild(action.nextState.newNode);
+
+
+			action.target.innerHTML = "";
 
 			let node = revertedNode.firstChild;
 
@@ -73,7 +82,13 @@ export default class UndoManager {
 				node = node.nextSibling;
 			}
 
-			this.selManager.replaceRange(revertedRange);
+			let range = document.createRange();
+			range.setStart(startNode, startOffset);
+			range.setEnd(endNode, endOffset);
+
+
+			window.getSelection().removeAllRanges();
+			window.getSelection().addRange(range);
 
 		}
 		
@@ -104,14 +119,26 @@ export default class UndoManager {
 
 		} else if (action.type === "split") {
 
-			var range = document.createRange();
-			range.setStart(action.range.startContainer, action.range.startOffset);
-			range.setEnd(action.range.endContainer, action.range.endOffset);
+			console.log(action);
+			action.target.parentNode.insertBefore(action.nextState.newNode, action.target.nextSibling);
+			// action.target.parentNode.appendChild(action.nextState.newNode);
+
+			action.target.innerHTML = "";
+			let node = action.nextState.oldNode.firstChild;
+
+			while (1) {
+				if (node === null) {
+					break;
+				}
+				action.target.appendChild(node);
+				node = node.nextSibling;
+			}
+
+			let newRange = document.createRange();
+			newRange.setStart(this.selManager.getTextNodeInElementNode(action.nextState.newNode, "first"), 0);
 
 			window.getSelection().removeAllRanges();
-			window.getSelection().addRange(range);
-
-			this.selManager.splitElementNode3();
+			window.getSelection().addRange(newRange);
 
 		}
 

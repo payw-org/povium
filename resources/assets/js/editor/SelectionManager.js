@@ -1414,6 +1414,7 @@ export default class SelectionManager
 		}
 
 		// Record action
+		let afterClones = this.cloneNodeAndRange(currentParentNode, window.getSelection().getRangeAt(0));
 		let action = {
 			type: "split",
 			target: currentParentNode,
@@ -1422,6 +1423,7 @@ export default class SelectionManager
 				range: rangeClone
 			},
 			nextState: {
+				oldNode: afterClones[0],
 				newNode: newNode
 			}
 		}
@@ -2376,10 +2378,14 @@ export default class SelectionManager
 
 		// Loop node
 		let nodeClone = document.createElement(node.nodeName);
+		let rangeClone;
 
-		let rangeClone = document.createRange();
-		rangeClone.setStart(range.startContainer, range.startOffset);
-		rangeClone.setEnd(range.endContainer, range.endOffset);
+		if (range) {
+			rangeClone = document.createRange();
+			rangeClone.setStart(range.startContainer, range.startOffset);
+			rangeClone.setEnd(range.endContainer, range.endOffset);
+		}
+		
 		
 		let travelNode = node.firstChild;
 		let tempNode;
