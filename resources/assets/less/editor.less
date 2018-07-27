@@ -490,24 +490,21 @@
 			margin-bottom: 4rem;
 		}
 
-		.image-wrapper {
-			transition: box-shadow .2s ease;
-		}
-
 		&:hover {
-			.image-wrapper {
+			.image-wrapper img {
 				box-shadow: 0 0 0 2px @pvm-violet;
 			}
 		}
 
 
 		.image-wrapper {
+			
 			cursor: default;
 			width: 100%;
-			overflow: hidden;
+			// overflow: hidden;
 
 			img {
-				transition: transform .2s ease, filter .2s ease;
+				transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
 				// will-change: transform;
 				cursor: default;
 				width: 100%;
@@ -518,14 +515,10 @@
 		
 
 		&.image-selected {
-			.image-wrapper {
-				box-shadow: 0 0 0 5px @pvm-violet;
+			
+			.image-wrapper img {
 				
-				img {
-					// filter: brightness(40%) blur(10px);
-					filter: brightness(50%);
-					// transform: scale(1.05);
-				}
+				box-shadow: 0 0 0 5px @pvm-violet;
 				
 			}
 
@@ -538,7 +531,7 @@
 			figcaption {
 				display: block;
 			}
-			.image-wrapper {
+			.image-wrapper img {
 				box-shadow: 0 0 0 2px @pvm-violet;
 			}
 		}

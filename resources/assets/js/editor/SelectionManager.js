@@ -1056,7 +1056,7 @@ export default class SelectionManager
 
 			if (isChanged) {
 				// this.replaceRange(newRange);
-				console.log(range);
+				// console.log(range);
 				console.log("fixed selection");
 				window.getSelection().removeRange(range);
 				window.getSelection().addRange(newRange);
@@ -1272,21 +1272,21 @@ export default class SelectionManager
 
 	// }
 
-	splitElementNode3()
+	splitElementNode3(recordAction = true)
 	{
 		
-		var orgRange = this.getRange();
-		var startNode = orgRange.startContainer;
+		let orgRange = this.getRange();
+		let startNode = orgRange.startContainer;
 
-		var currentParentNode = this.getNodeInSelection();
-		var currentParentNodeClone = currentParentNode.cloneNode(true);
+		let currentParentNode = this.getNodeInSelection();
 
-		console.log(currentParentNode);
-		console.log(currentParentNodeClone);
+		let clones = this.cloneNodeAndRange(currentParentNode, orgRange);
+		let currentParentNodeClone = clones[0];
+		let rangeClone = clones[1];
 
-		var travelNode = startNode;
+		let travelNode = startNode;
 
-		var frontNode, backNode;
+		let frontNode, backNode;
 
 		// Textnode
 
@@ -1384,7 +1384,7 @@ export default class SelectionManager
 			var tempNode = backNode;
 			var nextNode;
 
-			console.log("front: ", frontNode, " back: ", backNode, " newNode: ", newNode);
+			// console.log("front: ", frontNode, " back: ", backNode, " newNode: ", newNode);
 
 			while(1) {
 
@@ -1413,21 +1413,23 @@ export default class SelectionManager
 
 		}
 
-		var action = {
+		// Record action
+		let action = {
 			type: "split",
-			nodes: [],
-			range: orgRange
-		};
-
-		action.nodes.push({
-			originalNodeRef: currentParentNode,
-			originalNodeClone: currentParentNodeClone,
-			newAddedNode: newNode
-		});
-
-		console.log("Hello world");
+			target: currentParentNode,
+			previousState: {
+				content: currentParentNodeClone,
+				range: rangeClone
+			},
+			nextState: {
+				newNode: newNode
+			}
+		}
 
 		this.undoManager.recordAction(action);
+
+
+
 
 	}
 
@@ -2361,6 +2363,99 @@ export default class SelectionManager
 				travelNode = travelNode.parentNode;
 			}
 		}
+
+	}
+
+	/**
+	 * 
+	 * @param {HTMLElement} node 
+	 * @param {Range} range 
+	 */
+	cloneNodeAndRange(node, range = null)
+	{
+
+		// Loop node
+		let nodeClone = document.createElement(node.nodeName);
+
+		let rangeClone = document.createRange();
+		rangeClone.setStart(range.startContainer, range.startOffset);
+		rangeClone.setEnd(range.endContainer, range.endOffset);
+		
+		let travelNode = node.firstChild;
+		let tempNode;
+
+		let insertTarget = nodeClone;
+
+		let loopDone = false;
+
+		while (1) {
+
+			tempNode = travelNode.cloneNode(false);
+			insertTarget.appendChild(tempNode);
+
+			// console.log("travelNode: ", travelNode.cloneNode(true));
+
+			if (range) {
+				if (travelNode.isEqualNode(range.startContainer)) {
+					rangeClone.setStart(tempNode, range.startOffset);
+				}
+				if (travelNode.isEqualNode(range.endContainer)) {
+					rangeClone.setEnd(tempNode, range.endOffset);
+				}
+			}
+
+			if (travelNode.firstChild) {
+
+				insertTarget = tempNode;
+				travelNode = travelNode.firstChild;
+
+			} else if (travelNode.nextSibling) {
+
+				travelNode = travelNode.nextSibling;
+
+			} else {
+
+				let parentNode = travelNode.parentNode;
+				insertTarget = insertTarget.parentNode;
+
+				while (1) {
+
+					if (parentNode.isEqualNode(node)) {
+
+						loopDone = true;
+						break;
+
+					} else if (parentNode.nextSibling) {
+
+						travelNode = parentNode.nextSibling;
+						break;
+
+					} else {
+						parentNode = parentNode.parentNode;
+					}
+					
+				}
+
+			}
+
+			if (loopDone) {
+				break;
+			}
+
+
+
+			
+			// tempNode = travelNode.cloneNode(false);
+			// if (travelNode.isSameNode(range.startContainer)) {
+			// 	rangeClone.startContainer = tempNode;
+			// }
+			// nodeClone.appendChild(tempNode);
+
+			// travelNode = travelNode.nextSibling;
+
+		}
+
+		return [nodeClone, rangeClone];
 
 	}
 

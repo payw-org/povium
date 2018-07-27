@@ -10,7 +10,7 @@
 $router->get(
 	'/',
  	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/home.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php';
 		return true;
 	}
 );
@@ -24,7 +24,7 @@ $router->get(
 			exit(header('Location: ' . BASE_URI . '/'));
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/login.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/login.php';
 
 		return true;
 	}
@@ -39,7 +39,7 @@ $router->get(
 			exit(header('Location: ' . BASE_URI . '/'));
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/register.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/register.php';
 
 		return true;
 	}
@@ -54,7 +54,7 @@ $router->get(
 		// 	exit(header('Location: ' . BASE_URI . '/login'));
 		// }
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/editor.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php';
 
 		return true;
 	}
