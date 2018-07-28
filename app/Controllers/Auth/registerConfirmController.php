@@ -15,8 +15,10 @@ $readable_id = $register_inputs['readable_id'];
 $name = $register_inputs['name'];
 $password = $register_inputs['password'];
 
-if (isset($register_inputs['querystring'])) {
-	parse_str($register_inputs['querystring'], $query_params);
+//	Get querystring of referer
+$querystring = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+if (isset($querystring)) {
+	parse_str($querystring, $query_params);
 }
 
 #	$register_return = array(
@@ -24,7 +26,10 @@ if (isset($register_inputs['querystring'])) {
 #		'msg' => 'err msg for display',
 #		'redirect' => 'redirect url'
 #	);
-$register_return = array_merge($auth->register($readable_id, $name, $password), array('redirect' => ''));
+$register_return = array_merge(
+	$auth->register($readable_id, $name, $password),
+ 	array('redirect' => '')
+);
 
 if ($register_return['err']) {			//	failed to register
 

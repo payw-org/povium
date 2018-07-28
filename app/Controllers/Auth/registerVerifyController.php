@@ -23,18 +23,21 @@ $register_return = array(
 	'password_msg' => ''
 );
 
+//	Verify readable id
 $verify_readable_id = $auth->verifyReadableID($readable_id);
 if ($verify_readable_id['err']) {
 	$register_return['err'] = true;
 	$register_return['readable_id_msg'] = $verify_readable_id['msg'];
 }
 
+//	Verify name
 $verify_name = $auth->verifyName($name);
 if ($verify_name['err']) {
 	$register_return['err'] = true;
 	$register_return['name_msg'] = $verify_name['msg'];
 }
 
+//	Verify password
 $validate_password = $auth->validatePassword($password);
 if ($validate_password['err']) {
 	$register_return['err'] = true;

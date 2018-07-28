@@ -931,73 +931,72 @@ class Auth
 	}
 
 	/**
-	 * Add email waiting to be authenticated to DB
+	 * Request email authentication.
+	 * Add new request info in database.
+	 * And delete old request info.
 	 *
-	 * @param string $email		Email waiting to be authenticated
-	 * @param string $sid   	selector
-	 * @param string $token 	uuid (for more secure)
+	 * @param string $email		Email to authenticate
+	 * @param string $token 	Uuid
 	 * @return boolean
 	 */
-	public function addEmailForWaiting($email, $sid, $token)
+	public function requestEmailAuth($email, $token)
 	{
-		//	If is not logged in
-		if (!$this->isLoggedIn()) {
-			return false;
-		}
-
 		$user_id = $this->getCurrentUser()['id'];
 
-		//	Delete record if user id is already exist
+		//	Delete old request info
 		$stmt = $this->conn->prepare(
 			"DELETE FROM {$this->config['table__email_auth']}
 			WHERE user_id = :user_id"
 		);
 		$stmt->execute([':user_id' => $user_id]);
 
-		//	Add to DB
+		//	Add new request info
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['table__email_auth']}
-			(sid, token, user_id, input_email, expn_dt)
-			VALUES (:sid, :token, :user_id, :input_email, :expn_dt)"
+			(token, user_id, input_email, expn_dt)
+			VALUES (:token, :user_id, :input_email, :expn_dt)"
 		);
 
 		$query_params = array(
-			':sid' => $sid,
 			':token' => $token,
 			':user_id' => $user_id,
 			':input_email' => $email,
-			':expn_dt' => date("Y-m-d H:i:s", time() + $this->config['auth_email_expire'])
+			':expn_dt' => date("Y-m-d H:i:s", time() + $this->config['email_auth_expire'])
 		);
 
 		return $stmt->execute($query_params);
 	}
 
 	/**
-	 * @param  string $sid
+	 * Confirm that the email authentication request is valid.
+	 * And update user info.
+	 * Delete the authenticated request.
+	 *
 	 * @param  string $token
 	 * @return int
 	 * 0 : NO ERROR
-	 * 1 : NOT MATCH. SID OR TOKEN IS MODIFIED
-	 * 2 : REQUEST EXPIRED
+	 * 1 : NONEXISTENT USER ID
+	 * 2 : NOT MATCHED TOKEN
+	 * 3 : REQUEST EXPIRED
 	 */
-	public function requestEmailAuth($sid, $token)
+	public function confirmEmailAuth($token)
 	{
 		$stmt = $this->conn->prepare(
 			"SELECT * FROM {$this->config['table__email_auth']}
-			WHERE sid = :sid"
+			WHERE user_id = :user_id"
 		);
-		$stmt->execute([':sid' => $sid]);
+		$stmt->execute([':user_id' => $this->getCurrentUser()['id']]);
 
-		//	Sid is modified
+		//	Nonexistent user id
 		if ($stmt->rowCount() == 0) {
 			return 1;
 		}
 
 		$email_auth_info = $stmt->fetch();
 
-		//	Token is modified
+		//	Not matched token
 		if (!hash_equals($email_auth_info['token'], $token)) {
-			return 1;
+			return 2;
 		}
 
 		//	Request expired
@@ -1008,10 +1007,10 @@ class Auth
 			);
 			$stmt->execute([':id' => $email_auth_info['id']]);
 
-			return 2;
+			return 3 ;
 		}
 
-		/* All confirmed */
+		//	All requires are satisfied
 		$params = array(
 			'email' => $email_auth_info['input_email'],
 			'is_verified' => true

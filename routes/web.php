@@ -1,6 +1,6 @@
 <?php
 /**
-* Set routes of web page
+* Set routes for web page.
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop
@@ -10,7 +10,7 @@
 $router->get(
 	'/',
  	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/home.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php';
 
 		return true;
 	}
@@ -31,7 +31,27 @@ $router->get(
 			exit();
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/login.php';
+		//	If referer is register page
+		if (
+			isset($_SERVER['HTTP_REFERER']) &&
+ 			'/register' == parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)
+		) {
+			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+			if (isset($prev_query) && !isset($curr_query)) {
+				//	Concatenate referer's query to current url.
+				//	Then redirect.
+				header(
+					'Location: ' . BASE_URI . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?' . $prev_query,
+					true,
+	 				301
+				);
+
+				exit();
+			}
+		}
+
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/login.php';
 
 		return true;
 	}
@@ -52,7 +72,27 @@ $router->get(
 			exit();
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/register.php';
+		//	If referer is login page
+		if (
+			isset($_SERVER['HTTP_REFERER']) &&
+ 			'/login' == parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)
+		) {
+			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+			if (isset($prev_query) && !isset($curr_query)) {
+				//	Concatenate referer's query to current url.
+				//	Then redirect.
+				header(
+					'Location: ' . BASE_URI . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?' . $prev_query,
+					true,
+	 				301
+				);
+
+				exit();
+			}
+		}
+
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/register.php';
 
 		return true;
 	}
@@ -64,11 +104,20 @@ $router->get(
  	function () use ($auth) {
 		// //	If is not logged in, send to login page.
 		// if (!$auth->isLoggedIn()) {
-		// 	header('Location: ' . BASE_URI . '/login', true, 301);
+		// 	$querystring = http_build_query(array(
+		// 		'redirect' => BASE_URI . $_SERVER['REQUEST_URI']
+		// 	));
+		//
+		// 	header(
+		// 		'Location: ' . BASE_URI . '/register' . '?' . $querystring,
+ 		// 		true,
+ 		// 		301
+		// 	);
+		//
 		// 	exit();
 		// }
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/editor.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php';
 
 		return true;
 	}
@@ -85,7 +134,7 @@ $router->get(
 			return false;
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/user_home.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_home.php';
 
 		return true;
 	},
@@ -103,7 +152,7 @@ $router->get(
 		//	대소문자 무시하고 가져온 title과 파라미터 title값을 비교 (가져온 title은 raw한 형태 -> 특문과 공백이 섞여있음)
 		//	둘중 하나라도 다르면 올바른 uri로 redirect시킨 후 (header), exit() 시킴
 		//	둘다 같으면 포스트페이지 require
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/post.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/post.php';
 
 		return true;
 	},
@@ -133,26 +182,4 @@ $router->get(
 
 		return true;
 	}
-);
-
-//	Special Routes
-//	User cannot access below routes via uri.
-//	DO NOT GENERATE URI FOR BELOW ROUTES
-
-/* 404 Not Found Page */
-$router->get(
-	'/*',
- 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/404.php';
-	},
- 	'ERR_404'
-);
-
-/* 405 Method Not Allowed Page */
-$router->get(
-	'/*',
- 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/405.php';
-	},
- 	'ERR_405'
 );

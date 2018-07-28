@@ -1,6 +1,6 @@
 <?php
 /**
-* Set routes of middleware
+* Set routes for middleware.
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop
@@ -47,7 +47,8 @@ $router->post(
 );
 
 /* Register new email address Ajax */
-$router->get(		#	Get is Test mode. Original is post.
+#	Get is Test mode. Original is post.
+$router->get(
 	'/me/settings/email/new-registration',
 	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/sendEmailForEmailAuthController.php';
@@ -59,7 +60,22 @@ $router->get(		#	Get is Test mode. Original is post.
 /* Email authentication page */
 $router->get(
 	'/c/account/verify',
-	function () {
+	function () use ($auth) {
+		//	If is not logged in, send to login page.
+		if (!$auth->isLoggedIn()) {
+			$querystring = http_build_query(array(
+				'redirect' => BASE_URI . $_SERVER['REQUEST_URI']
+			));
+
+			header(
+				'Location: ' . BASE_URI . '/login' . '?' . $querystring,
+ 				true,
+ 				301
+			);
+
+			exit();
+		}
+
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/emailAuthController.php';
 
 		return true;

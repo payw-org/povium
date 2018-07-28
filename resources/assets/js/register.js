@@ -99,8 +99,7 @@ startButton.addEventListener("click", function() {
 	var inputData = {
 		readable_id: readableIDInputDOM.value,
 		name: nameInputDOM.value,
-		password: passInputDOM.value,
-		querystring: window.location.href.split("?")[1]
+		password: passInputDOM.value
 	}
 
 	var ajax = new AJAX();

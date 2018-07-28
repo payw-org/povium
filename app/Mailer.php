@@ -1,6 +1,6 @@
 <?php
 /**
-* Manipulate sending mail.
+* Manage sending mail.
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop

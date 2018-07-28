@@ -1,6 +1,6 @@
 <?php
 /**
-* Receive input email address
+* Receive email address
 * and send email for user's email address authentication.
 *
 * @author H.Chihoon
@@ -25,14 +25,13 @@ $send_mail_return = $auth->verifyEmail($email);
 if ($send_mail_return['err']) {		//	This email is not possible to authenticate
 
 } else {	//	Valid email. Send mail for email authentication.
-	$sid = $auth->generateRandomHash(8);
-	$token = $auth->uuidV4();
+	$token = $auth->uuidV4();	//	Generate authentication token
 
-	if ($auth->addEmailForWaiting($email, $sid, $token)) {
+	if ($auth->requestEmailAuth($email, $token)) {
 		$auth_uri =
 			BASE_URI .
 			$router->generateURI('email_authentication') .
-			'?' . http_build_query(array('sid' => $sid, 'token' => $token));
+			'?' . http_build_query(array('token' => $token));
 		$mailer->sendEmailForEmailAuth($email, $auth_uri);
 	}
 }

@@ -5,13 +5,14 @@ module.exports = {
 		main: [
 		'./resources/assets/js/globalscript',
 		'./resources/assets/js/globalnav',
-		'./resources/assets/js/home'
+		'./resources/assets/js/home',
+		'./resources/assets/js/logout'
 		],
 
 		login: [
 			'./resources/assets/js/login'
 		],
-		
+
 		register: [
 			'./resources/assets/js/register'
 		],
@@ -30,7 +31,7 @@ module.exports = {
 
 		path: __dirname + '/public_html/build/js',
 		filename: '[name].built.js'
-		
+
 	},
 
 	module: {

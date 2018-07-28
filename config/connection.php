@@ -1,6 +1,6 @@
 <?php
 /**
-* config array for database connection
+* Config array for database connection
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop

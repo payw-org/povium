@@ -1,6 +1,6 @@
 <?php
 /**
-* config array for authentication
+* Config array for authentication
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop
@@ -11,7 +11,7 @@ return [
 	'table__auto_login_auth' => 'auto_login_auth',
 	'table__email_auth' => 'email_auth',
 
-	'auth_email_expire' => 60*30,	//	Authentication email expiration time
+	'email_auth_expire' => 60*30,	//	Email authentication expiration time
 
 	'cookie_params' => [
 		'expire' => 60*60*24*30,	//	Auto login cookie expiration time

@@ -9,7 +9,7 @@
 
 global $auth;
 
-$auth_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
+$auth_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php';
 
 /* Receive login inputs by ajax */
 $login_inputs = json_decode(file_get_contents('php://input'), true);
@@ -17,8 +17,10 @@ $identifier = $login_inputs['identifier'];
 $password = $login_inputs['password'];
 $remember = $login_inputs['remember'];
 
-if (isset($login_inputs['querystring'])) {
-	parse_str($login_inputs['querystring'], $query_params);
+//	Get querystring of referer
+$querystring = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+if (isset($querystring)) {
+	parse_str($querystring, $query_params);
 }
 
 #	array(
@@ -26,7 +28,10 @@ if (isset($login_inputs['querystring'])) {
 #		'msg' => 'err msg for display',
 #		'redirect' => 'redirect url'
 #	);
-$login_return = array_merge($auth->login($identifier, $password, $remember), array('redirect' => ''));
+$login_return = array_merge(
+	$auth->login($identifier, $password, $remember),
+ 	array('redirect' => '')
+);
 
 if ($login_return['err']) {		//	failed to login
 	//	If inactive account,

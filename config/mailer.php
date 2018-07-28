@@ -1,13 +1,13 @@
 <?php
 /**
-* config array for mailer
+* Config array for mailer
 *
 * @author H.Chihoon
 * @copyright 2018 DesignAndDevelop
 */
 
 return [
-	'use_smtp' => false,						//	Set mailer to use SMTP
+	'use_smtp' => false,					//	Set mailer to use SMTP
 	'smtp_debug' => 0,						//	Enable verbose debug output
 	'smtp_host' => 'smtp.gmail.com',		//	Specify main and backup SMTP servers
 	'smtp_auth' => true,					//	Enable SMTP authentication
@@ -25,5 +25,5 @@ return [
 		'mail_subject' => '[Povium] 이메일을 인증해주세요.',
 		'mail_body' => '인증링크: ',
 		'mail_altbody' => ''
-	],
+	]
 ];

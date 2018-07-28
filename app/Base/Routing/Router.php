@@ -34,6 +34,14 @@ class Router
 	private $namedRoutes = array();
 
 	/**
+	 * @return array
+	 */
+	public function getNamedRoutes()
+	{
+		return $this->namedRoutes;
+	}
+
+	/**
 	 * @param string|string[] $http_method One of a HTTP methods or
 	 * an array of multiple HTTP Methods (GET, POST, PUT, DELETE)
 	 * @param string $pattern     uri pattern
@@ -135,16 +143,14 @@ class Router
 				}
 				//	no break if $result is false
 			case self::NOT_FOUND:
-				if($this->namedRoutes['ERR_404'] !== null) {
-					call_user_func($this->namedRoutes['ERR_404']->handler);
-				}
+				call_user_func($this->namedRoutes['ERR_404']->handler);
+
 				break;
 			case self::METHOD_NOT_ALLOWED:
-				if($this->namedRoutes['ERR_405'] !== null) {
-					// TODO: Use below code.
-					// $allowed_methods = $routeInfo[0];
-					call_user_func($this->namedRoutes['ERR_405']->handler);
-				}
+				// TODO: Use below code.
+				// $allowed_methods = $routeInfo[0];
+				call_user_func($this->namedRoutes['ERR_405']->handler);
+
 				break;
 		}
 
