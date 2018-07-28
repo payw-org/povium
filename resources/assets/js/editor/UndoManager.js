@@ -1,4 +1,5 @@
 import SelectionManager from "./SelectionManager";
+import PRange from "./PRange";
 
 export default class UndoManager {
 
@@ -16,7 +17,9 @@ export default class UndoManager {
 		this.actionStack.push(actionData);
 		this.currentStep = this.actionStack.length - 1;
 
+		console.group("Actions history stack recorded");
 		console.log(this.actionStack);
+		console.groupEnd();
 	}
 
 	undo()
@@ -26,68 +29,79 @@ export default class UndoManager {
 			console.log('no more action records');
 			return;
 		} else {
-			console.log('undo');
+			console.group("undo");
 		}
 		
 		// get action type
 
-		var action = this.actionStack[this.currentStep];
+		let action = this.actionStack[this.currentStep];
+		console.log(action);
+		console.groupEnd();
 		this.currentStep--;
 
-		console.log(action);
+		
 
 		if (action.type === "align") {
 
-			for (var i = 0; i < action.nodes.length; i++) {
+			for (let i = 0; i < action.nodes.length; i++) {
 
 				action.nodes[i].target.style.textAlign = action.nodes[i].previousState;
-				this.selManager.replaceRange(action.range);
+
+				let range = document.createRange();
+				let pRange = new PRange();
+
+				pRange.setStart(action.pRange.startNode, action.pRange.startTextOffset);
+				pRange.setEnd(action.pRange.endNode, action.pRange.endTextOffset);
+
+				range.setStart(pRange.startContainer, pRange.startOffset);
+				range.setEnd(pRange.endContainer, pRange.endOffset);
+
+				window.getSelection().removeAllRanges();
+				window.getSelection().addRange(range);
 
 			}
 
 		} else if (action.type === "add") {
 
-			for (var i = 0; i < action.nodes.length; i++) {
-
-				action.nodes[i].target.parentNode.removeChild(action.nodes[i].target);
-				this.selManager.replaceRange(action.range);
-
+			if (action.previousSibling) {
+				action.newNode.parentNode.removeChild(action.newNode);
+				this.selManager.setCursorAt(action.previousSibling, -1);
+			} else if (action.nextSibling) {
+				action.newNode.parentNode.removeChild(action.newNode);
 			}
 
 		} else if (action.type === "split") {
 
-			let reverts = this.selManager.cloneNodeAndRange(action.previousState.content, action.previousState.range);
-
-			let revertedNode = reverts[0];
-			let revertedRange = reverts[1];
-
-			let startNode = revertedRange.startContainer;
-			let startOffset = revertedRange.startOffset;
-			let endNode = revertedRange.endContainer;
-			let endOffset = revertedRange.endOffset;
-
 
 			action.nextState.newNode.parentNode.removeChild(action.nextState.newNode);
 
+			action.target.innerHTML = action.previousState.content;
 
-			action.target.innerHTML = "";
+			this.selManager.setCursorAt(action.target, action.nextState.length);
 
-			let node = revertedNode.firstChild;
+		} else if (action.type === "change") {
 
-			while (1) {
-				if (node === null) {
-					break;
+			let node;
+
+			for (let i = 0; i < action.targets.length; i++) {
+
+				window.getSelection().removeAllRanges();
+
+				while (node = action.targets[i].nextTarget.firstChild) {
+					action.targets[i].previousTarget.appendChild(node);
 				}
-				action.target.appendChild(node);
-				node = node.nextSibling;
+				
+				action.targets[i].nextTarget.parentNode.replaceChild(action.targets[i].previousTarget, action.targets[i].nextTarget);
+
 			}
 
+			let pRange = new PRange();
+			pRange.setStart(action.targets[0].previousTarget, action.range.startTextOffset);
+			pRange.setEnd(action.targets[action.targets.length - 1].previousTarget, action.range.endTextOffset);
 			let range = document.createRange();
-			range.setStart(startNode, startOffset);
-			range.setEnd(endNode, endOffset);
+			range.setStart(pRange.startContainer, pRange.startOffset);
+			range.setEnd(pRange.endContainer, pRange.endOffset);
 
-
-			window.getSelection().removeAllRanges();
 			window.getSelection().addRange(range);
 
 		}
@@ -99,48 +113,78 @@ export default class UndoManager {
 	{
 		
 		if (this.currentStep >= this.actionStack.length - 1) {
-			console.log('no more actions to recover');
+			console.info('no more actions to recover');
 			return;
 		} else {
-			console.log('redo');
+			console.group('redo');
 		}
 
 		this.currentStep++;
 		var action = this.actionStack[this.currentStep];
-
 		console.log(action);
+		console.groupEnd();
 		
 		if (action.type === "align") {
 
 			for (var i = 0; i < action.nodes.length; i++) {
 
 				action.nodes[i].target.style.textAlign = action.nodes[i].nextState;
-				this.selManager.replaceRange(action.range);
+				
+				let range = document.createRange();
+				let pRange = new PRange();
 
+				pRange.setStart(action.pRange.startNode, action.pRange.startTextOffset);
+				pRange.setEnd(action.pRange.endNode, action.pRange.endTextOffset);
+
+				range.setStart(pRange.startContainer, pRange.startOffset);
+				range.setEnd(pRange.endContainer, pRange.endOffset);
+
+				window.getSelection().removeAllRanges();
+				window.getSelection().addRange(range);
+
+			}
+
+		} else if (action.type === "add") {
+
+			if (action.previousSibling) {
+				action.previousSibling.parentNode.insertBefore(action.newNode, action.previousSibling.nextSibling);
+				this.selManager.setCursorAt(action.newNode, 0);
+			} else if (action.nextSibling) {
+				action.nextSibling.parentNode.insertBefore(action.newNode, action.nextSibling);
 			}
 
 		} else if (action.type === "split") {
 
 			action.target.parentNode.insertBefore(action.nextState.newNode, action.target.nextSibling);
-			// action.target.parentNode.appendChild(action.nextState.newNode);
 
-			action.target.innerHTML = "";
-			let revertedNode = this.selManager.cloneNodeAndRange(action.nextState.oldNode)[0];
-			let node = revertedNode.firstChild;
+			action.target.innerHTML = action.nextState.content;
 
-			while (1) {
-				if (node === null) {
-					break;
+			this.selManager.setCursorAt(action.nextState.newNode, 0);
+
+		} else if (action.type === "change") {
+
+			let node;
+
+			for (let i = 0; i < action.targets.length; i++) {
+
+				window.getSelection().removeAllRanges();
+
+				while (node = action.targets[i].previousTarget.firstChild) {
+					action.targets[i].nextTarget.appendChild(node);
 				}
-				action.target.appendChild(node);
-				node = node.nextSibling;
+
+				action.targets[i].previousTarget.parentNode.replaceChild(action.targets[i].nextTarget, action.targets[i].previousTarget);
+
 			}
 
-			let newRange = document.createRange();
-			newRange.setStart(this.selManager.getTextNodeInElementNode(action.nextState.newNode, "first"), 0);
+			let pRange = new PRange();
+			pRange.setStart(action.targets[0].nextTarget, action.range.startTextOffset);
+			pRange.setEnd(action.targets[action.targets.length - 1].nextTarget, action.range.endTextOffset);
+			let range = document.createRange();
+			range.setStart(pRange.startContainer, pRange.startOffset);
+			range.setEnd(pRange.endContainer, pRange.endOffset);
 
-			window.getSelection().removeAllRanges();
-			window.getSelection().addRange(newRange);
+			window.getSelection().addRange(range);
 
 		}
 

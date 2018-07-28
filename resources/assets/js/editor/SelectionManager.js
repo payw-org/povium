@@ -1,5 +1,6 @@
 import DOMManager from "./DOMManager";
 import UndoManager from "./UndoManager";
+import PRange from "./PRange";
 
 export default class SelectionManager
 {
@@ -34,17 +35,30 @@ export default class SelectionManager
 		// document.execCommand('styleWithCSS', true);
 		// document.execCommand(direction, false);
 
-		var chunks = this.getAllNodesInSelection();
-		var node;
+		let chunks = this.getAllNodesInSelection();
+		let node;
+
+		let range = window.getSelection().getRangeAt(0);
+
+		let pRange = new PRange();
+		let startParentNode = this.getNodeOfNode(range.startContainer);
+		let startTextOffset = pRange.getTextOffset(startParentNode, range.startContainer, range.startOffset);
+		let endParentNode = this.getNodeOfNode(range.endContainer);
+		let endTextOffset = pRange.getTextOffset(endParentNode, range.endContainer, range.endOffset);
 
 		// Record action
-		var action = {
+		let action = {
 			type: "align",
 			nodes: [],
-			range: window.getSelection().getRangeAt(0).cloneRange()
+			pRange: {
+				startNode: startParentNode,
+				startTextOffset: startTextOffset,
+				endNode: endParentNode,
+				endTextOffset: endTextOffset
+			}
 		};
 
-		for (var i = 0; i < chunks.length; i++) {
+		for (let i = 0; i < chunks.length; i++) {
 
 			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
 				console.warn('The node is not a paragraph nor a heading.')
@@ -65,12 +79,22 @@ export default class SelectionManager
 	}
 
 
+	styleText(tagName)
+	{
+		console.log(this.splitTextNode());
+		let tag = document.createElement(tagName);
+
+		// tag
+	}
+
 	/**
 	 * Make the selection bold.
 	 */
 	bold()
 	{
-		document.execCommand('bold', false);
+		// console.log(document.execCommand('bold', false));
+		// this.itmotnTT("strong");
+		this.styleText("strong");
 	}
 
 	/**
@@ -114,8 +138,27 @@ export default class SelectionManager
 		let endOffset = orgRange.endOffset;
 		let chunks = this.getAllNodesInSelection();
 
-		
+		// record action
+		let pRange = new PRange();
+		let previousStartNode = this.getNodeOfNode(startNode);
+		let startTextOffset = pRange.getTextOffset(previousStartNode, startNode, startOffset);
+		let previousEndNode = this.getNodeOfNode(endNode);
+		let endTextOffset = pRange.getTextOffset(previousEndNode, endNode, endOffset);
 
+		let action = {
+			type: "change",
+			targets: [],
+			range: {
+				startTextOffset: startTextOffset,
+				endTextOffset: endTextOffset
+			}
+		}
+
+		let isNextStartNodeSet = false;
+
+
+
+		// Change nodes
 		for (var i = 0; i < chunks.length; i++) {
 
 			if (
@@ -130,7 +173,14 @@ export default class SelectionManager
 				type = "P";
 			}
 
-			var changedNode = this.changeNodeName(chunks[i], type);
+			var changedNode = this.changeNodeName(chunks[i], type, true, false);
+
+			action.targets.push({
+				previousTarget: chunks[i],
+				nextTarget: changedNode
+			});
+			
+
 			if (chunks[i] === startNode) {
 				startNode = changedNode;
 			}
@@ -139,6 +189,9 @@ export default class SelectionManager
 			}
 
 		}
+
+		// record action
+		this.undoManager.recordAction(action);
 
 		
 		var keepRange = document.createRange();
@@ -492,7 +545,7 @@ export default class SelectionManager
 		}
 
 		// Backspace key - Empty node
-		if (currentNode && this.isAvailableEmptyNode(currentNode)) {
+		if (currentNode && this.isTextEmptyNode(currentNode)) {
 
 			e.stopPropagation();
 			e.preventDefault();
@@ -503,48 +556,62 @@ export default class SelectionManager
 				this.getPreviousAvailableNode(currentNode)
 			) {
 
+				// There is an available node before the current node
+
 				var previousNode = this.getPreviousAvailableNode(currentNode);
 
 				console.log("empty child node or parent node");
 
 				if (this.isAvailableEmptyNode(previousNode)) {
+
 					if (this.isAvailableChildNode(previousNode)) {
+
 						console.log("previous node is child");
 						var parentNode = previousNode.parentNode;
 						previousNode.parentNode.removeChild(previousNode);
+
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
 							parentNode.parentNode.removeChild(parentNode);
 						}
+
 					} else {
+
 						previousNode.parentNode.removeChild(previousNode);
+
 					}
+
 				} else {
+
 					var range = document.createRange();
 					range.setStartAfter(previousNode.lastChild);
 					this.replaceRange(range);
 
 					if (this.isAvailableChildNode(currentNode)) {
+
 						var parentNode = currentNode.parentNode;
 						currentNode.parentNode.removeChild(currentNode);
+
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
 							parentNode.parentNode.removeChild(parentNode);
 						}
+
 					} else {
+
 						currentNode.parentNode.removeChild(currentNode);
+
 					}
 				}
 
-				
-
-
 			} else {
+
 				if (this.isListItem(currentNode)) {
 					this.list(currentNode.parentNode.nodeName);
 				} else if (
 					this.isAvailableParentNode(currentNode) &&
 					!this.isParagraph(currentNode)
 				) {
-					this.changeNodeName(currentNode, "P");
+					let changedNode = this.changeNodeName(currentNode, "P");
+					this.setCursorAt(changedNode);
 				}
 				
 			}
@@ -552,9 +619,9 @@ export default class SelectionManager
 		} else if (currentNode && this.getSelectionPositionInParagraph() === 1) {
 
 			// backspace - caret position at start of the node
+
 			e.stopPropagation();
 			e.preventDefault();
-			console.log("move this line to previous line");
 
 			if (
 				(this.isAvailableChildNode(currentNode) ||
@@ -562,21 +629,29 @@ export default class SelectionManager
 				this.getPreviousAvailableNode(currentNode)
 			) {
 
-				console.log("child node or parentnode");
+				console.info("Available node exists");
+				console.info("move this line to previous line");
 
 				var previousNode = this.getPreviousAvailableNode(currentNode);
 
-				if (this.isAvailableEmptyNode(previousNode)) {
+				if (this.isTextEmptyNode(previousNode)) {
+
 					if (this.isAvailableChildNode(previousNode)) {
+
 						console.log("previous node is child");
 						var parentNode = previousNode.parentNode;
 						previousNode.parentNode.removeChild(previousNode);
+
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
 							parentNode.parentNode.removeChild(parentNode);
 						}
+
 					} else {
+
 						previousNode.parentNode.removeChild(previousNode);
+
 					}
+
 				} else {
 
 
@@ -586,23 +661,34 @@ export default class SelectionManager
 					var endNode = orgRange.endContainer, endOffset = orgRange.endOffset;
 
 					var br = previousNode.querySelector("br");
+
 					if (br) {
 						br.parentNode.removeChild(br);
 					}
 
 					if (this.isAvailableChildNode(currentNode)) {
+
 						var parentNode = currentNode.parentNode;
 						this.mergeNodes(previousNode, currentNode, true);
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
 							parentNode.parentNode.removeChild(parentNode);
 						}
+
 					} else {
+
 						this.mergeNodes(previousNode, currentNode, true);
+
 					}
 
 				}
 
-					
+			} else {
+
+				// cursor at the start of the node
+				// and no available node before current node.
+				// do nothing
+
+				console.info("No available node before current node");
 
 			}
 
@@ -718,7 +804,7 @@ export default class SelectionManager
 
 		// When press return key
 
-		var selectionNode = this.getNodeInSelection();
+		var currentNode = this.getNodeInSelection();
 		var range = this.getRange();
 
 		if (!range.collapsed) {
@@ -755,34 +841,42 @@ export default class SelectionManager
 
 		if (selPosType === 2) {
 
-			console.log('middle');
+			console.info('Press enter: middle');
 			this.splitElementNode3();
 
 		} else if (selPosType === 1) {
 
-			console.log('start');
-			var pElm = this.domManager.generateEmptyNode(selectionNode.nodeName);
+			console.info('Press enter: start');
+			var pElm = this.domManager.generateEmptyNode(currentNode.nodeName);
 
-			selectionNode.parentNode.insertBefore(pElm, selectionNode);
+			currentNode.parentNode.insertBefore(pElm, currentNode);
+
+			// Record action
+			var action = {
+				type: "add",
+				nextSibling: currentNode,
+				newNode: pElm
+			}
+			this.undoManager.recordAction(action);
 
 		} else if (selPosType === 3) {
 
-			console.log('end');
-			var newNodeName = selectionNode.nodeName;
-			var parentNode = selectionNode.parentNode;
-			var nextNode = selectionNode.nextSibling;
+			console.info('Press enter: end');
+			var newNodeName = currentNode.nodeName;
+			var parentNode = currentNode.parentNode;
+			var nextNode = currentNode.nextSibling;
 
 			if (
-				this.isBlockquote(selectionNode) ||
-				this.isHeading(selectionNode)
+				this.isBlockquote(currentNode) ||
+				this.isHeading(currentNode)
 			) {
 
 				newNodeName = "P";
 
-			} else if (this.isListItem(selectionNode)) {
-				if (this.isEmptyNode(selectionNode)) {
+			} else if (this.isListItem(currentNode)) {
+				if (this.isEmptyNode(currentNode)) {
 
-					this.list(selectionNode.parentNode.nodeName);
+					this.list(currentNode.parentNode.nodeName);
 					return;
 					
 				}
@@ -791,23 +885,14 @@ export default class SelectionManager
 
 			var pElm = this.domManager.generateEmptyNode(newNodeName);
 
-			console.log(pElm);
-
-			console.log(parentNode);
-
 			parentNode.insertBefore(pElm, nextNode);
 
 			// Record action
 			var action = {
 				type: "add",
-				nodes: [],
-				range: this.getRange()
-
+				previousSibling: currentNode,
+				newNode: pElm
 			}
-			action.nodes.push({
-				target: pElm
-			});
-
 			this.undoManager.recordAction(action);
 
 
@@ -850,7 +935,7 @@ export default class SelectionManager
 	 * @param {HTMLElement} targetNode An HTML element you want to change its node name.
 	 * @param {String} newNodeName New node name for the target element.
 	 */
-	changeNodeName(targetNode, newNodeName, keepStyle = true)
+	changeNodeName(targetNode, newNodeName, keepStyle = true, recordAction = true)
 	{
 
 		// Move all the nodes inside the target node
@@ -879,6 +964,23 @@ export default class SelectionManager
 
 		// 3. replace node
 		targetNode.parentNode.replaceChild(newNode, targetNode);
+
+		if (recordAction) {
+			let action = {
+				type: "change",
+				targets: [
+					{
+						previousTarget: targetNode,
+						nextTarget: newNode
+					}
+				],
+				range: {
+					startTextOffset: 0,
+					endTextOffset: 0
+				}
+			}
+			this.undoManager.recordAction(action);
+		}
 
 		return newNode;
 
@@ -1280,9 +1382,8 @@ export default class SelectionManager
 
 		let currentParentNode = this.getNodeInSelection();
 
-		let clones = this.cloneNodeAndRange(currentParentNode, orgRange);
-		let currentParentNodeClone = clones[0];
-		let rangeClone = clones[1];
+		let originalContent = currentParentNode.innerHTML;
+		let originalTextLength = currentParentNode.textContent.length;
 
 		let travelNode = startNode;
 
@@ -1419,11 +1520,12 @@ export default class SelectionManager
 			type: "split",
 			target: currentParentNode,
 			previousState: {
-				content: currentParentNodeClone,
-				range: rangeClone
+				content: originalContent,
+				length: originalTextLength
 			},
 			nextState: {
-				oldNode: afterClones[0],
+				content: currentParentNode.innerHTML,
+				length: currentParentNode.textContent.length,
 				newNode: newNode
 			}
 		}
@@ -1611,15 +1713,31 @@ export default class SelectionManager
 		range.setStart(range.endContainer, range.endOffset);
 		this.replaceRange(range);
 		
-
 		var currentParentNode = selectionNode;
 		var travelNode = startNode;
 		var nextNode;
 		var parentNode;
 
+		var pRange = new PRange();
+		var startTextOffset = pRange.getTextOffset(this.getNodeOfNode(orgRange.startContainer), orgRange.startContainer, orgRange.startOffset);
+		var endTextOffset = pRange.getTextOffset(this.getNodeOfNode(orgRange.endContainer), orgRange.endContainer, orgRange.endOffset);
+
+		var action = {
+			type: "remove",
+			targets: [],
+			range: {
+				startTextOffset: startTextOffset,
+				endTextOffset: endTextOffset
+			}
+		};
+
+		console.group("Remove Selection");
+
 		while (1) {
 
 			if (this.isImageBlock(currentParentNode)) {
+
+				// Remove image block
 
 				currentParentNode.parentNode.removeChild(currentParentNode);
 
@@ -1628,8 +1746,10 @@ export default class SelectionManager
 				!currentParentNode.contains(endNode)
 			) {
 
-				console.log("nothing contains");
+				console.group("nothing contains");
 				console.log(currentParentNode.textContent);
+
+				let originalContent = currentParentNode.innerHTML;
 
 				if (this.isAvailableChildNode(currentParentNode)) {
 
@@ -1646,6 +1766,8 @@ export default class SelectionManager
 					currentParentNode.parentNode.removeChild(currentParentNode);
 
 				}
+
+				console.groupEnd();
 				
 			} else if (
 				currentParentNode.contains(startNode) &&
@@ -1653,7 +1775,7 @@ export default class SelectionManager
 			) {
 
 				travelNode = startNode;
-				console.log("only contains startnode");
+				console.group("only contains startnode");
 				console.log(currentParentNode.textContent);
 				var metCurrentNode = false;
 
@@ -1669,6 +1791,8 @@ export default class SelectionManager
 					currentParentNode.appendChild(document.createElement("br"));
 
 				}
+
+				console.groupEnd();
 
 			} else if (
 				!currentParentNode.contains(startNode) &&
@@ -2370,6 +2494,28 @@ export default class SelectionManager
 
 	/**
 	 * 
+	 * @param {Node} node 
+	 */
+	getNodeOfNode(node)
+	{
+		let tempNode = node;
+		let returnNode = null;
+		while (1) {
+			if (tempNode.isEqualNode(this.domManager.editor) || tempNode.isEqualNode(document.body) || tempNode === null) {
+				break;
+			} else if (this.isAvailableChildNode(tempNode) || this.isAvailableParentNode(tempNode)) {
+				returnNode = tempNode;
+				break;
+			} else {
+				tempNode = tempNode.parentNode;
+			}
+		}
+
+		return returnNode;
+	}
+
+	/**
+	 * 
 	 * @param {HTMLElement} node 
 	 * @param {Range} range 
 	 */
@@ -2463,6 +2609,31 @@ export default class SelectionManager
 
 		return [nodeClone, rangeClone];
 
+	}
+
+	/**
+	 * 
+	 * @param {Node} node 
+	 * @param {Number} offset 
+	 */
+	setCursorAt(node, offset = 0)
+	{
+
+		if (offset > node.textContent.length) {
+			offset = -1;
+		}
+
+		if (offset === -1) {
+			offset = node.textContent.length;
+		}
+
+		let pRange = new PRange();
+		pRange.setStart(node, offset);
+		let range = document.createRange();
+		range.setStart(pRange.startContainer, pRange.startOffset);
+		range.collapse(true);
+		window.getSelection().removeAllRanges();
+		window.getSelection().addRange(range);
 	}
 
 }
