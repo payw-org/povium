@@ -3,9 +3,10 @@ module.exports = {
 	entry: {
 
 		main: [
-		'./resources/assets/js/globalscript',
-		'./resources/assets/js/globalnav',
-		'./resources/assets/js/home'
+			'./resources/assets/js/globalscript',
+			'./resources/assets/js/globalnav',
+			'./resources/assets/js/home',
+			'./resources/assets/js/logout'
 		],
 
 		login: [
