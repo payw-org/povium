@@ -70,6 +70,39 @@ export default class UndoManager {
 				action.newNode.parentNode.removeChild(action.newNode);
 			}
 
+		} else if (action.type === "remove") {
+
+			for (let i = 0; i < action.targets.length; i++) {
+
+				if (action.targets[i].previousNode) {
+
+					action.targets[i].previousNode.parentNode.insertBefore(action.targets[i].removedNode, action.targets[i].previousNode.nextSibling);
+
+				} else if (action.targets[i].parentNode) {
+
+					action.targets[i].parentNode.appendChild(action.targets[i].removedNode);
+
+				} else if (action.targets[i].nextNode) {
+					
+					action.targets[i].previousNode.parentNode.insertBefore(action.targets[i].removedNodem, action.targets[i].nextNode);
+
+				} else if (action.targets[i].originalContent) {
+
+					action.targets[i].removedNode.innerHTML = action.targets[i].originalContent;
+
+				}
+
+			}
+
+			let pRange = new PRange();
+			pRange.setStart(action.targets[0].removedNode, action.range.startTextOffset);
+			pRange.setEnd(action.targets[action.targets.length - 1].removedNode, action.range.endTextOffset);
+			let range = document.createRange();
+			range.setStart(pRange.startContainer, pRange.startOffset);
+			range.setEnd(pRange.endContainer, pRange.endOffset);
+			window.getSelection().removeAllRanges();
+			window.getSelection().addRange(range);
+
 		} else if (action.type === "split") {
 
 

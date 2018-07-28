@@ -1730,6 +1730,7 @@ export default class SelectionManager
 				endTextOffset: endTextOffset
 			}
 		};
+		this.undoManager.recordAction(action);
 
 		console.group("Remove Selection");
 
@@ -1753,15 +1754,40 @@ export default class SelectionManager
 
 				if (this.isAvailableChildNode(currentParentNode)) {
 
+					// record action
+					action.targets.push({
+						previousNode: currentParentNode.previousSibling,
+						removedNode: currentParentNode,
+						nextNode: currentParentNode.nextSibling,
+						parentNode: currentParentNode.parentNode
+					});
+
 					console.log("list is detected");
 					var parentNode = currentParentNode.parentNode;
 					currentParentNode.parentNode.removeChild(currentParentNode);
 
 					if (this.isTextEmptyNode(parentNode)) {
+
+						// record action
+						action.targets.push({
+							previousNode: parentNode.previousSibling,
+							removedNode: parentNode,
+							nextNode: parentNode.nextSibling,
+							parentNode: parentNode.parentNode
+						});
+
 						parentNode.parentNode.removeChild(parentNode);
 					}
 
 				} else {
+
+					// record action
+					action.targets.push({
+						previousNode: currentParentNode.previousSibling,
+						removedNode: currentParentNode,
+						nextNode: currentParentNode.nextSibling,
+						parentNode: currentParentNode.parentNode
+					});
 					
 					currentParentNode.parentNode.removeChild(currentParentNode);
 
@@ -1783,7 +1809,16 @@ export default class SelectionManager
 				tempRange.setStart(startNode, startOffset);
 				tempRange.setEndAfter(currentParentNode.lastChild);
 
+				let originalContent = currentParentNode.innerHTML;
+
 				tempRange.deleteContents();
+
+				// record action
+				action.targets.push({
+					removedNode: currentParentNode,
+					originalContent: originalContent,
+					modifiedContent: currentParentNode.innerHTML
+				});
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 
@@ -1808,7 +1843,16 @@ export default class SelectionManager
 				tempRange.setStartBefore(currentParentNode.firstChild);
 				tempRange.setEnd(endNode, orgRange.endOffset);
 
+				let originalContent = currentParentNode.innerHTML;
+
 				tempRange.deleteContents();
+
+				// record action
+				action.targets.push({
+					removedNode: currentParentNode,
+					originalContent: originalContent,
+					modifiedContent: currentParentNode.innerHTML
+				});
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 					currentParentNode.innerHTML = "";
@@ -1846,6 +1890,7 @@ export default class SelectionManager
 			nextParentNode = this.getNextAvailableNode(nextParentNode);
 
 		}
+
 
 	}
 
