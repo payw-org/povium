@@ -2,10 +2,10 @@ export default class PRange {
 
 	constructor()
 	{
-		this.startContainer = null;
-		this.startOffset = null;
-		this.endContainer = null;
-		this.endOffset = null;
+		this.startContainer = null
+		this.startOffset = null
+		this.endContainer = null
+		this.endOffset = null
 	}
 
 	/**
@@ -16,12 +16,12 @@ export default class PRange {
 	setStart(node, textOffset)
 	{
 
-		let travelNode = node.firstChild;
-		let length = 0;
-		let loopDone = false;
+		let travelNode = node.firstChild
+		let length = 0
+		let loopDone = false
 
-		this.startContainer = node;
-		this.startOffset = 0;
+		this.startContainer = node
+		this.startOffset = 0
 
 		while (1) {
 
@@ -29,13 +29,13 @@ export default class PRange {
 
 				if (length + travelNode.textContent.length >= textOffset) {
 
-					this.startContainer = travelNode;
-					this.startOffset = textOffset - length;
-					break;
+					this.startContainer = travelNode
+					this.startOffset = textOffset - length
+					break
 
 				} else {
 
-					length += travelNode.textContent.length;
+					length += travelNode.textContent.length
 
 				}
 
@@ -43,26 +43,26 @@ export default class PRange {
 
 			if (travelNode.firstChild) {
 
-				travelNode = travelNode.firstChild;
+				travelNode = travelNode.firstChild
 
 			} else if (travelNode.nextSibling) {
 
-				travelNode = travelNode.nextSibling;
+				travelNode = travelNode.nextSibling
 
 			} else {
 
-				travelNode = travelNode.parentNode;
+				travelNode = travelNode.parentNode
 
 				while (1) {
 
 					if (travelNode.isEqualNode(node)) {
-						loopDone = true;
-						break;
+						loopDone = true
+						break
 					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling;
-						break;
+						travelNode = travelNode.nextSibling
+						break
 					} else {
-						travelNode = travelNode.parentNode;
+						travelNode = travelNode.parentNode
 					}
 
 				}
@@ -70,7 +70,7 @@ export default class PRange {
 			}
 
 			if (loopDone) {
-				break;
+				break
 			}
 
 		}
@@ -84,12 +84,12 @@ export default class PRange {
 	 */
 	setEnd(node, textOffset)
 	{
-		let travelNode = node.firstChild;
-		let length = 0;
-		let loopDone = false;
+		let travelNode = node.firstChild
+		let length = 0
+		let loopDone = false
 
-		this.endContainer = node;
-		this.endOffset = 0;
+		this.endContainer = node
+		this.endOffset = 0
 
 		while (1) {
 
@@ -97,13 +97,13 @@ export default class PRange {
 
 				if (length + travelNode.textContent.length >= textOffset) {
 
-					this.endContainer = travelNode;
-					this.endOffset = textOffset - length;
-					break;
+					this.endContainer = travelNode
+					this.endOffset = textOffset - length
+					break
 
 				} else {
 
-					length += travelNode.textContent.length;
+					length += travelNode.textContent.length
 
 				}
 
@@ -111,26 +111,26 @@ export default class PRange {
 
 			if (travelNode.firstChild) {
 
-				travelNode = travelNode.firstChild;
+				travelNode = travelNode.firstChild
 
 			} else if (travelNode.nextSibling) {
 
-				travelNode = travelNode.nextSibling;
+				travelNode = travelNode.nextSibling
 
 			} else {
 
-				travelNode = travelNode.parentNode;
+				travelNode = travelNode.parentNode
 
 				while (1) {
 
 					if (travelNode.isEqualNode(node)) {
-						loopDone = true;
-						break;
+						loopDone = true
+						break
 					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling;
-						break;
+						travelNode = travelNode.nextSibling
+						break
 					} else {
-						travelNode = travelNode.parentNode;
+						travelNode = travelNode.parentNode
 					}
 
 				}
@@ -138,7 +138,7 @@ export default class PRange {
 			}
 
 			if (loopDone) {
-				break;
+				break
 			}
 
 		}
@@ -153,9 +153,9 @@ export default class PRange {
 	getTextOffset(node, container, rangeOffset)
 	{
 
-		let travelNode = node.firstChild;
-		let length = 0;
-		let loopDone = false;
+		let travelNode = node.firstChild
+		let length = 0
+		let loopDone = false
 
 		while (1) {
 
@@ -163,12 +163,12 @@ export default class PRange {
 
 				if (travelNode.isEqualNode(container)) {
 
-					length += rangeOffset;
-					break;
+					length += rangeOffset
+					break
 
 				} else {
 
-					length += travelNode.textContent.length;
+					length += travelNode.textContent.length
 
 				}
 
@@ -176,26 +176,26 @@ export default class PRange {
 
 			if (travelNode.firstChild) {
 
-				travelNode = travelNode.firstChild;
+				travelNode = travelNode.firstChild
 
 			} else if (travelNode.nextSibling) {
 
-				travelNode = travelNode.nextSibling;
+				travelNode = travelNode.nextSibling
 
 			} else {
 
-				travelNode = travelNode.parentNode;
+				travelNode = travelNode.parentNode
 
 				while (1) {
 
 					if (travelNode.isEqualNode(node)) {
-						loopDone = true;
-						break;
+						loopDone = true
+						break
 					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling;
-						break;
+						travelNode = travelNode.nextSibling
+						break
 					} else {
-						travelNode = travelNode.parentNode;
+						travelNode = travelNode.parentNode
 					}
 
 				}
@@ -203,12 +203,12 @@ export default class PRange {
 			}
 
 			if (loopDone) {
-				break;
+				break
 			}
 
 		}
 
-		return length;
+		return length
 	}
 
 	setThisRange()

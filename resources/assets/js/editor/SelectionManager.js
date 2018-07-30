@@ -1,6 +1,6 @@
-import DOMManager from "./DOMManager";
-import UndoManager from "./UndoManager";
-import PRange from "./PRange";
+import DOMManager from "./DOMManager"
+import UndoManager from "./UndoManager"
+import PRange from "./PRange"
 
 export default class SelectionManager
 {
@@ -13,8 +13,8 @@ export default class SelectionManager
 	constructor(domManager, undoManager)
 	{
 
-		this.domManager = domManager;
-		this.undoManager = undoManager;
+		this.domManager = domManager
+		this.undoManager = undoManager
 
 	}
 
@@ -32,19 +32,19 @@ export default class SelectionManager
 	align(direction)
 	{
 
-		// document.execCommand('styleWithCSS', true);
-		// document.execCommand(direction, false);
+		// document.execCommand('styleWithCSS', true)
+		// document.execCommand(direction, false)
 
-		let chunks = this.getAllNodesInSelection();
-		let node;
+		let chunks = this.getAllNodesInSelection()
+		let node
 
-		let range = window.getSelection().getRangeAt(0);
+		let range = window.getSelection().getRangeAt(0)
 
-		let pRange = new PRange();
-		let startParentNode = this.getNodeOfNode(range.startContainer);
-		let startTextOffset = pRange.getTextOffset(startParentNode, range.startContainer, range.startOffset);
-		let endParentNode = this.getNodeOfNode(range.endContainer);
-		let endTextOffset = pRange.getTextOffset(endParentNode, range.endContainer, range.endOffset);
+		let pRange = new PRange()
+		let startParentNode = this.getNodeOfNode(range.startContainer)
+		let startTextOffset = pRange.getTextOffset(startParentNode, range.startContainer, range.startOffset)
+		let endParentNode = this.getNodeOfNode(range.endContainer)
+		let endTextOffset = pRange.getTextOffset(endParentNode, range.endContainer, range.endOffset)
 
 		// Record action
 		let action = {
@@ -56,33 +56,33 @@ export default class SelectionManager
 				endNode: endParentNode,
 				endTextOffset: endTextOffset
 			}
-		};
+		}
 
 		for (let i = 0; i < chunks.length; i++) {
 
 			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
 				console.warn('The node is not a paragraph nor a heading.')
-				continue;
+				continue
 			}
 
 			action.nodes.push({
 				target: chunks[i],
 				previousState: chunks[i].style.textAlign,
 				nextState: direction
-			});
-			chunks[i].style.textAlign = direction;
+			})
+			chunks[i].style.textAlign = direction
 
 		}
 
-		this.undoManager.recordAction(action);
+		this.undoManager.recordAction(action)
 		
 	}
 
 
 	styleText(tagName)
 	{
-		console.log(this.splitTextNode());
-		let tag = document.createElement(tagName);
+		console.log(this.splitTextNode())
+		let tag = document.createElement(tagName)
 
 		// tag
 	}
@@ -92,9 +92,9 @@ export default class SelectionManager
 	 */
 	bold()
 	{
-		// console.log(document.execCommand('bold', false));
-		// this.itmotnTT("strong");
-		this.styleText("strong");
+		// console.log(document.execCommand('bold', false))
+		// this.itmotnTT("strong")
+		this.styleText("strong")
 	}
 
 	/**
@@ -102,17 +102,17 @@ export default class SelectionManager
 	 */
 	italic()
 	{
-		document.execCommand('italic', false);
+		document.execCommand('italic', false)
 	}
 
 	underline()
 	{
-		document.execCommand('underline', false);
+		document.execCommand('underline', false)
 	}
 
 	strike()
 	{
-		document.execCommand('strikeThrough', false);
+		document.execCommand('strikeThrough', false)
 	}
 
 	/**
@@ -127,23 +127,23 @@ export default class SelectionManager
 		// heading 적용 시 range 유지 안됨. range가 document 벗어났다고 에러뜸.
 		// -> 빈 태그는 heading 적용하지 않음.
 		
-		let orgRange = this.getRange();
+		let orgRange = this.getRange()
 		if (!orgRange) {
-			return;
+			return
 		}
 
-		let startNode = orgRange.startContainer;
-		let startOffset = orgRange.startOffset;
-		let endNode = orgRange.endContainer;
-		let endOffset = orgRange.endOffset;
-		let chunks = this.getAllNodesInSelection();
+		let startNode = orgRange.startContainer
+		let startOffset = orgRange.startOffset
+		let endNode = orgRange.endContainer
+		let endOffset = orgRange.endOffset
+		let chunks = this.getAllNodesInSelection()
 
 		// record action
-		let pRange = new PRange();
-		let previousStartNode = this.getNodeOfNode(startNode);
-		let startTextOffset = pRange.getTextOffset(previousStartNode, startNode, startOffset);
-		let previousEndNode = this.getNodeOfNode(endNode);
-		let endTextOffset = pRange.getTextOffset(previousEndNode, endNode, endOffset);
+		let pRange = new PRange()
+		let previousStartNode = this.getNodeOfNode(startNode)
+		let startTextOffset = pRange.getTextOffset(previousStartNode, startNode, startOffset)
+		let previousEndNode = this.getNodeOfNode(endNode)
+		let endTextOffset = pRange.getTextOffset(previousEndNode, endNode, endOffset)
 
 		let action = {
 			type: "change",
@@ -154,7 +154,7 @@ export default class SelectionManager
 			}
 		}
 
-		let isNextStartNodeSet = false;
+		let isNextStartNodeSet = false
 
 
 
@@ -166,38 +166,38 @@ export default class SelectionManager
 				!this.isHeading(chunks[i])
 			) {
 				console.warn('The node is not a paragraph nor a heading.')
-				continue;
+				continue
 			}
 
 			if (chunks[i].nodeName === type) {
-				type = "P";
+				type = "P"
 			}
 
-			var changedNode = this.changeNodeName(chunks[i], type, true, false);
+			var changedNode = this.changeNodeName(chunks[i], type, true, false)
 
 			action.targets.push({
 				previousTarget: chunks[i],
 				nextTarget: changedNode
-			});
+			})
 			
 
 			if (chunks[i] === startNode) {
-				startNode = changedNode;
+				startNode = changedNode
 			}
 			if (chunks[i] === endNode) {
-				endNode = changedNode;
+				endNode = changedNode
 			}
 
 		}
 
 		// record action
-		this.undoManager.recordAction(action);
+		this.undoManager.recordAction(action)
 
 		
-		var keepRange = document.createRange();
-		keepRange.setStart(startNode, startOffset);
-		keepRange.setEnd(endNode, endOffset);
-		this.replaceRange(keepRange);
+		var keepRange = document.createRange()
+		keepRange.setStart(startNode, startOffset)
+		keepRange.setEnd(endNode, endOffset)
+		this.replaceRange(keepRange)
 
 	}
 
@@ -215,37 +215,37 @@ export default class SelectionManager
 		// If all selection is already a list
 		// restore them to 'P' node.
 
-		let orgRange = this.getRange();
+		let orgRange = this.getRange()
 		if (!orgRange) {
-			return;
+			return
 		}
 
 		if (type === undefined) {
-			console.error("List type undefined.");
+			console.error("List type undefined.")
 		}
 
-		let startNode = orgRange.startContainer;
-		let startOffset = orgRange.startOffset;
-		let endNode = orgRange.endContainer;
-		let endOffset = orgRange.endOffset;
+		let startNode = orgRange.startContainer
+		let startOffset = orgRange.startOffset
+		let endNode = orgRange.endContainer
+		let endOffset = orgRange.endOffset
 
 		// Multiple range - Experimental
-		endNode = window.getSelection().getRangeAt(window.getSelection().rangeCount - 1).endContainer;
-		endOffset = window.getSelection().getRangeAt(window.getSelection().rangeCount - 1).endOffset;
+		endNode = window.getSelection().getRangeAt(window.getSelection().rangeCount - 1).endContainer
+		endOffset = window.getSelection().getRangeAt(window.getSelection().rangeCount - 1).endOffset
 
-		let chunks = this.getAllNodesInSelection();
-		let listElm = document.createElement(type);
-		var placedListElm = false;
-		var placedListElmIndex;
-		var node;
+		let chunks = this.getAllNodesInSelection()
+		let listElm = document.createElement(type)
+		var placedListElm = false
+		var placedListElmIndex
+		var node
 
-		var unlockList = true;
-		var recordList = [];
+		var unlockList = true
+		var recordList = []
 
 		for (var i = 0; i < chunks.length; i++) {
 
 			// if (chunks[i].textContent === "") {
-			// 	continue;
+			// 	continue
 			// }
 
 			if (
@@ -253,33 +253,33 @@ export default class SelectionManager
 				this.isHeading(chunks[i])
 			) {
 
-				var itemElm = document.createElement('LI');
+				var itemElm = document.createElement('LI')
 
 				while (node = chunks[i].firstChild) {
 
-					itemElm.appendChild(node);
+					itemElm.appendChild(node)
 
 				}
 
 				if (chunks[i] === startNode) {
-					startNode = itemElm;
+					startNode = itemElm
 				}
 	
 				if (chunks[i] === endNode) {
-					endNode = itemElm;
+					endNode = itemElm
 				}
 
-				listElm.appendChild(itemElm);
+				listElm.appendChild(itemElm)
 
 				if (!placedListElm) {
-					placedListElmIndex = i;
-					placedListElm = true;
+					placedListElmIndex = i
+					placedListElm = true
 				} else {
-					chunks[i].parentNode.removeChild(chunks[i]);
+					chunks[i].parentNode.removeChild(chunks[i])
 				}
 				
 
-				unlockList = false;
+				unlockList = false
 
 			} else if (this.isList(chunks[i])) {
 
@@ -287,25 +287,25 @@ export default class SelectionManager
 				// move items inside to the new list element.
 
 				if (!recordList.includes(chunks[i])) {
-					recordList.push(chunks[i]);
+					recordList.push(chunks[i])
 				}
 
 				if (recordList.length > 1) {
-					unlockList = false;
+					unlockList = false
 				}
 
 				while (node = chunks[i].firstChild) {
 
-					listElm.appendChild(node);
+					listElm.appendChild(node)
 
 				}
 				
 
 				if (!placedListElm) {
-					placedListElmIndex = i;
-					placedListElm = true;
+					placedListElmIndex = i
+					placedListElm = true
 				} else {
-					chunks[i].parentNode.removeChild(chunks[i]);
+					chunks[i].parentNode.removeChild(chunks[i])
 				}
 
 			}
@@ -313,44 +313,44 @@ export default class SelectionManager
 		}
 
 		if (listElm.childElementCount < 1) {
-			return;
+			return
 		}
 
-		// this.getRange().insertNode(listElm);
-		chunks[0].parentNode.replaceChild(listElm, chunks[placedListElmIndex]);
+		// this.getRange().insertNode(listElm)
+		chunks[0].parentNode.replaceChild(listElm, chunks[placedListElmIndex])
 
 		if (unlockList) {
 
-			var range = document.createRange();
-			var itemNode, nextNode;
-			var part1 = true, part2 = false, part3 = false;
-			var part1ListElm = document.createElement(type), part3ListElm = document.createElement(type);
-			var part1ListElmInserted = false, part3ListElmInserted = false;
-			var part3Will = false;
+			var range = document.createRange()
+			var itemNode, nextNode
+			var part1 = true, part2 = false, part3 = false
+			var part1ListElm = document.createElement(type), part3ListElm = document.createElement(type)
+			var part1ListElmInserted = false, part3ListElmInserted = false
+			var part3Will = false
 
-			range.setStartAfter(listElm);
-			this.replaceRange(range);
+			range.setStartAfter(listElm)
+			this.replaceRange(range)
 
-			itemNode = listElm.firstChild;
-			nextNode = itemNode;
+			itemNode = listElm.firstChild
+			nextNode = itemNode
 
 			while (itemNode) {
 
-				nextNode = itemNode.nextElementSibling;
+				nextNode = itemNode.nextElementSibling
 
 				if (itemNode.nodeName !== "LI") {
-					itemNode = itemNode.nextElementSibling;
-					continue;
+					itemNode = itemNode.nextElementSibling
+					continue
 				}
 
 				if (itemNode.contains(startNode)) {
-					part1 = false;
-					part2 = true;
-					part3 = false;
+					part1 = false
+					part2 = true
+					part3 = false
 				}
 
 				if (itemNode.contains(endNode)) {
-					part3Will = true;
+					part3Will = true
 				}
 
 
@@ -359,147 +359,147 @@ export default class SelectionManager
 
 				if (part1) {
 
-					part1ListElm.appendChild(itemNode);
+					part1ListElm.appendChild(itemNode)
 
 					if (!part1ListElmInserted) {
-						range.insertNode(part1ListElm);
-						range.setStartAfter(part1ListElm);
-						part1ListElmInserted = true;
+						range.insertNode(part1ListElm)
+						range.setStartAfter(part1ListElm)
+						part1ListElmInserted = true
 					}
 					
 				} else if (part2) {
 
-					var pElm = document.createElement('P');
+					var pElm = document.createElement('P')
 					while (node = itemNode.firstChild) {
 						pElm.appendChild(node)
 					}
 
-					range.insertNode(pElm);
-					range.setStartAfter(pElm);
+					range.insertNode(pElm)
+					range.setStartAfter(pElm)
 
 				} else if (part3) {
 
-					part3ListElm.appendChild(itemNode);
+					part3ListElm.appendChild(itemNode)
 					
 					if (!part3ListElmInserted) {
-						range.insertNode(part3ListElm);
-						range.setStartAfter(part3ListElm);
-						part3ListElmInserted = true;
+						range.insertNode(part3ListElm)
+						range.setStartAfter(part3ListElm)
+						part3ListElmInserted = true
 					}
 
 				}
 
 				if (itemNode === startNode) {
-					startNode = pElm;
+					startNode = pElm
 				}
 	
 				if (itemNode === endNode) {
-					endNode = pElm;
+					endNode = pElm
 				}
 
 			
 
 				if (part3Will) {
-					part1 = false;
-					part2 = false;
-					part3 = true;
+					part1 = false
+					part2 = false
+					part3 = true
 				}
 			
 
-				itemNode = nextNode;
+				itemNode = nextNode
 
 
 			}
 
 			if (this.domManager.editor.contains(listElm)) {
-				this.domManager.editor.removeChild(listElm);
+				this.domManager.editor.removeChild(listElm)
 			}
 			
 
 		}
 
 
-		console.log(startNode, endNode);
+		console.log(startNode, endNode)
 
-		var keepRange = document.createRange();
-		keepRange.setStart(startNode, startOffset);
-		keepRange.setEnd(endNode, endOffset);
+		var keepRange = document.createRange()
+		keepRange.setStart(startNode, startOffset)
+		keepRange.setEnd(endNode, endOffset)
 
-		this.replaceRange(keepRange);
+		this.replaceRange(keepRange)
 
-		this.fixSelection();
+		this.fixSelection()
 
 	}
 
 	link(url)
 	{
-		var range = this.getRange();
+		var range = this.getRange()
 		if (!range) {
-			return;
+			return
 		}
 
 		// if (range.collapsed) {
-		// 	return;
+		// 	return
 		// }
 
-		document.execCommand('createLink', false, url);
-		document.getSelection().removeAllRanges();
+		document.execCommand('createLink', false, url)
+		document.getSelection().removeAllRanges()
 
-		this.domManager.hidePopTool();
+		this.domManager.hidePopTool()
 		
 	}
 
 	unlink(linkNode) {
-		var node;
-		var tempRange = document.createRange();
-		tempRange.setStartAfter(linkNode);
-		console.log("link is already set");
+		var node
+		var tempRange = document.createRange()
+		tempRange.setStartAfter(linkNode)
+		console.log("link is already set")
 		while (node = linkNode.firstChild) {
-			tempRange.insertNode(node);
-			tempRange.setStartAfter(node);
+			tempRange.insertNode(node)
+			tempRange.setStartAfter(node)
 		}
-		linkNode.parentNode.removeChild(linkNode);
-		document.getSelection().removeAllRanges();
+		linkNode.parentNode.removeChild(linkNode)
+		document.getSelection().removeAllRanges()
 	}
 
 	blockquote()
 	{
-		let orgRange = this.getRange();
+		let orgRange = this.getRange()
 		if (!orgRange) {
-			return;
+			return
 		}
 
-		let startNode = orgRange.startContainer;
-		let startOffset = orgRange.startOffset;
-		let endNode = orgRange.endContainer;
-		let endOffset = orgRange.endOffset;
-		let chunks = this.getAllNodesInSelection();
+		let startNode = orgRange.startContainer
+		let startOffset = orgRange.startOffset
+		let endNode = orgRange.endContainer
+		let endOffset = orgRange.endOffset
+		let chunks = this.getAllNodesInSelection()
 
-		var isAllBlockquote = true;
+		var isAllBlockquote = true
 
 		for (var i = 0; i < chunks.length; i++) {
 
 			if (chunks[i].nodeName === "BLOCKQUOTE") {
-				continue;
+				continue
 			} else {
-				isAllBlockquote = false;
+				isAllBlockquote = false
 			}
 
 			// if (chunks[i].textContent === "") {
-			// 	continue;
+			// 	continue
 			// }
 
 			if (!this.isParagraph(chunks[i]) && !this.isHeading(chunks[i])) {
 				console.warn('The node is not a paragraph nor a heading.')
-				continue;
+				continue
 			}
 
-			var changedNode = this.changeNodeName(chunks[i], "blockquote", false);
+			var changedNode = this.changeNodeName(chunks[i], "blockquote", false)
 			if (chunks[i] === startNode) {
-				startNode = changedNode;
+				startNode = changedNode
 			}
 			if (chunks[i] === endNode) {
-				endNode = changedNode;
+				endNode = changedNode
 			}
 
 		}
@@ -507,21 +507,21 @@ export default class SelectionManager
 		// Selection is all blockquote
 		if (isAllBlockquote) {
 			for (var i = 0; i < chunks.length; i++) {
-				var changedNode = this.changeNodeName(chunks[i], "P", false);
+				var changedNode = this.changeNodeName(chunks[i], "P", false)
 				if (chunks[i] === startNode) {
-					startNode = changedNode;
+					startNode = changedNode
 				}
 				if (chunks[i] === endNode) {
-					endNode = changedNode;
+					endNode = changedNode
 				}
 			}
 		}
 
 
-		var keepRange = document.createRange();
-		keepRange.setStart(startNode, startOffset);
-		keepRange.setEnd(endNode, endOffset);
-		this.replaceRange(keepRange);
+		var keepRange = document.createRange()
+		keepRange.setStart(startNode, startOffset)
+		keepRange.setEnd(endNode, endOffset)
+		this.replaceRange(keepRange)
 	}
 
 
@@ -532,23 +532,23 @@ export default class SelectionManager
 	{
 
 		// Get current available node
-		var currentNode = this.getNodeInSelection();
+		var currentNode = this.getNodeInSelection()
 
-		var range = this.getRange();
+		var range = this.getRange()
 		if (!range.collapsed) {
-			console.log("pressed backspace but the range is not collapsed");
-			e.stopPropagation();
-			e.preventDefault();
-			this.removeSelection("start");
+			console.log("pressed backspace but the range is not collapsed")
+			e.stopPropagation()
+			e.preventDefault()
+			this.removeSelection("start")
 			
-			return;
+			return
 		}
 
 		// Backspace key - Empty node
 		if (currentNode && this.isTextEmptyNode(currentNode)) {
 
-			e.stopPropagation();
-			e.preventDefault();
+			e.stopPropagation()
+			e.preventDefault()
 
 			if (
 				(this.isAvailableChildNode(currentNode) ||
@@ -558,46 +558,46 @@ export default class SelectionManager
 
 				// There is an available node before the current node
 
-				var previousNode = this.getPreviousAvailableNode(currentNode);
+				var previousNode = this.getPreviousAvailableNode(currentNode)
 
-				console.log("empty child node or parent node");
+				console.log("empty child node or parent node")
 
 				if (this.isAvailableEmptyNode(previousNode)) {
 
 					if (this.isAvailableChildNode(previousNode)) {
 
-						console.log("previous node is child");
-						var parentNode = previousNode.parentNode;
-						previousNode.parentNode.removeChild(previousNode);
+						console.log("previous node is child")
+						var parentNode = previousNode.parentNode
+						previousNode.parentNode.removeChild(previousNode)
 
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode);
+							parentNode.parentNode.removeChild(parentNode)
 						}
 
 					} else {
 
-						previousNode.parentNode.removeChild(previousNode);
+						previousNode.parentNode.removeChild(previousNode)
 
 					}
 
 				} else {
 
-					var range = document.createRange();
-					range.setStartAfter(previousNode.lastChild);
-					this.replaceRange(range);
+					var range = document.createRange()
+					range.setStartAfter(previousNode.lastChild)
+					this.replaceRange(range)
 
 					if (this.isAvailableChildNode(currentNode)) {
 
-						var parentNode = currentNode.parentNode;
-						currentNode.parentNode.removeChild(currentNode);
+						var parentNode = currentNode.parentNode
+						currentNode.parentNode.removeChild(currentNode)
 
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode);
+							parentNode.parentNode.removeChild(parentNode)
 						}
 
 					} else {
 
-						currentNode.parentNode.removeChild(currentNode);
+						currentNode.parentNode.removeChild(currentNode)
 
 					}
 				}
@@ -605,13 +605,13 @@ export default class SelectionManager
 			} else {
 
 				if (this.isListItem(currentNode)) {
-					this.list(currentNode.parentNode.nodeName);
+					this.list(currentNode.parentNode.nodeName)
 				} else if (
 					this.isAvailableParentNode(currentNode) &&
 					!this.isParagraph(currentNode)
 				) {
-					let changedNode = this.changeNodeName(currentNode, "P");
-					this.setCursorAt(changedNode);
+					let changedNode = this.changeNodeName(currentNode, "P")
+					this.setCursorAt(changedNode)
 				}
 				
 			}
@@ -620,8 +620,8 @@ export default class SelectionManager
 
 			// backspace - caret position at start of the node
 
-			e.stopPropagation();
-			e.preventDefault();
+			e.stopPropagation()
+			e.preventDefault()
 
 			if (
 				(this.isAvailableChildNode(currentNode) ||
@@ -629,54 +629,54 @@ export default class SelectionManager
 				this.getPreviousAvailableNode(currentNode)
 			) {
 
-				console.info("Available node exists");
-				console.info("move this line to previous line");
+				console.info("Available node exists")
+				console.info("move this line to previous line")
 
-				var previousNode = this.getPreviousAvailableNode(currentNode);
+				var previousNode = this.getPreviousAvailableNode(currentNode)
 
 				if (this.isTextEmptyNode(previousNode)) {
 
 					if (this.isAvailableChildNode(previousNode)) {
 
-						console.log("previous node is child");
-						var parentNode = previousNode.parentNode;
-						previousNode.parentNode.removeChild(previousNode);
+						console.log("previous node is child")
+						var parentNode = previousNode.parentNode
+						previousNode.parentNode.removeChild(previousNode)
 
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode);
+							parentNode.parentNode.removeChild(parentNode)
 						}
 
 					} else {
 
-						previousNode.parentNode.removeChild(previousNode);
+						previousNode.parentNode.removeChild(previousNode)
 
 					}
 
 				} else {
 
 
-					var node, orgRange = this.getRange();
+					var node, orgRange = this.getRange()
 
-					var startNode = orgRange.startContainer, startOffset = orgRange.startOffset;
-					var endNode = orgRange.endContainer, endOffset = orgRange.endOffset;
+					var startNode = orgRange.startContainer, startOffset = orgRange.startOffset
+					var endNode = orgRange.endContainer, endOffset = orgRange.endOffset
 
-					var br = previousNode.querySelector("br");
+					var br = previousNode.querySelector("br")
 
 					if (br) {
-						br.parentNode.removeChild(br);
+						br.parentNode.removeChild(br)
 					}
 
 					if (this.isAvailableChildNode(currentNode)) {
 
-						var parentNode = currentNode.parentNode;
-						this.mergeNodes(previousNode, currentNode, true);
+						var parentNode = currentNode.parentNode
+						this.mergeNodes(previousNode, currentNode, true)
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode);
+							parentNode.parentNode.removeChild(parentNode)
 						}
 
 					} else {
 
-						this.mergeNodes(previousNode, currentNode, true);
+						this.mergeNodes(previousNode, currentNode, true)
 
 					}
 
@@ -688,7 +688,7 @@ export default class SelectionManager
 				// and no available node before current node.
 				// do nothing
 
-				console.info("No available node before current node");
+				console.info("No available node before current node")
 
 			}
 
@@ -700,21 +700,21 @@ export default class SelectionManager
 	delete(e)
 	{
 		// Get current available node
-		var currentNode = this.getNodeInSelection();
+		var currentNode = this.getNodeInSelection()
 
-		var range = this.getRange();
+		var range = this.getRange()
 		if (!range.collapsed) {
-			e.stopPropagation();
-			e.preventDefault();
-			this.removeSelection("start");
-			return;
+			e.stopPropagation()
+			e.preventDefault()
+			this.removeSelection("start")
+			return
 		}
 
 		// Delete key - Empty node
 		if (currentNode && currentNode.textContent.length === 0) {
 
-			e.stopPropagation();
-			e.preventDefault();
+			e.stopPropagation()
+			e.preventDefault()
 
 			if (
 				(this.isAvailableChildNode(currentNode) ||
@@ -722,40 +722,40 @@ export default class SelectionManager
 				this.getNextAvailableNode(currentNode)
 			) {
 
-				var nextNode = this.getNextAvailableNode(currentNode);
+				var nextNode = this.getNextAvailableNode(currentNode)
 
-				console.log("empty child node or parent node");
+				console.log("empty child node or parent node")
 
 				if (nextNode) {
-					var range = document.createRange();
-					range.setStartBefore(nextNode.firstChild);
-					this.replaceRange(range);
+					var range = document.createRange()
+					range.setStartBefore(nextNode.firstChild)
+					this.replaceRange(range)
 
 					if (this.isAvailableChildNode(currentNode)) {
-						var parentNode = currentNode.parentNode;
-						currentNode.parentNode.removeChild(currentNode);
+						var parentNode = currentNode.parentNode
+						currentNode.parentNode.removeChild(currentNode)
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode);
+							parentNode.parentNode.removeChild(parentNode)
 						}
 					} else {
-						currentNode.parentNode.removeChild(currentNode);
+						currentNode.parentNode.removeChild(currentNode)
 					}
 
 				}
 
 			} else {
-				var range = document.createRange();
-				range.setStart(currentNode, 0);
-				range.setEnd(currentNode, 0);
-				this.replaceRange(range);
+				var range = document.createRange()
+				range.setStart(currentNode, 0)
+				range.setEnd(currentNode, 0)
+				this.replaceRange(range)
 			}
 
 		} else if (currentNode && this.getSelectionPositionInParagraph() === 3) {
 
 			// Delete key - caret position at the end of the node
-			e.stopPropagation();
-			e.preventDefault();
-			console.log("pull the next node to current.");
+			e.stopPropagation()
+			e.preventDefault()
+			console.log("pull the next node to current.")
 
 			if (
 				(this.isAvailableChildNode(currentNode) ||
@@ -763,26 +763,26 @@ export default class SelectionManager
 				this.getNextAvailableNode(currentNode)
 			) {
 
-				var nextNode = this.getNextAvailableNode(currentNode);
+				var nextNode = this.getNextAvailableNode(currentNode)
 
 				if (nextNode) {
 
-					var br = nextNode.querySelector("br");
+					var br = nextNode.querySelector("br")
 					if (br) {
-						br.parentNode.removeChild(br);
+						br.parentNode.removeChild(br)
 					}
 
 					if (this.isAvailableChildNode(nextNode)) {
-						var parentNode = nextNode.parentNode;
-						this.mergeNodes(currentNode, nextNode, true);
+						var parentNode = nextNode.parentNode
+						this.mergeNodes(currentNode, nextNode, true)
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode);
+							parentNode.parentNode.removeChild(parentNode)
 						}
 					} else {
 						if (this.isImageBlock(nextNode)) {
-							nextNode.parentNode.removeChild(nextNode);
+							nextNode.parentNode.removeChild(nextNode)
 						} else {
-							this.mergeNodes(currentNode, nextNode, true);
+							this.mergeNodes(currentNode, nextNode, true)
 						}
 						
 					}
@@ -804,52 +804,52 @@ export default class SelectionManager
 
 		// When press return key
 
-		var currentNode = this.getNodeInSelection();
-		var range = this.getRange();
+		var currentNode = this.getNodeInSelection()
+		var range = this.getRange()
 
 		if (!range.collapsed) {
 
-			e.stopPropagation();
-			e.preventDefault();
-			this.removeSelection();
-			return;
+			e.stopPropagation()
+			e.preventDefault()
+			this.removeSelection()
+			return
 
 		}
 
 		// Delete the br if the current sentence is not empty
-		var currentNode = this.getNodeInSelection();
+		var currentNode = this.getNodeInSelection()
 
 		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
 
-			currentNode.removeChild(currentNode.querySelector("br"));
+			currentNode.removeChild(currentNode.querySelector("br"))
 
 		}
 
 		// Ignore figcaption enter
 		if (this.isImageCaption(currentNode)) {
 
-			e.stopPropagation();
-			e.preventDefault();
-			return;
+			e.stopPropagation()
+			e.preventDefault()
+			return
 
 		}
 
-		var selPosType = this.getSelectionPositionInParagraph();
+		var selPosType = this.getSelectionPositionInParagraph()
 
-		e.stopPropagation();
-		e.preventDefault();
+		e.stopPropagation()
+		e.preventDefault()
 
 		if (selPosType === 2) {
 
-			console.info('Press enter: middle');
-			this.splitElementNode3();
+			console.info('Press enter: middle')
+			this.splitElementNode3()
 
 		} else if (selPosType === 1) {
 
-			console.info('Press enter: start');
-			var pElm = this.domManager.generateEmptyNode(currentNode.nodeName);
+			console.info('Press enter: start')
+			var pElm = this.domManager.generateEmptyNode(currentNode.nodeName)
 
-			currentNode.parentNode.insertBefore(pElm, currentNode);
+			currentNode.parentNode.insertBefore(pElm, currentNode)
 
 			// Record action
 			var action = {
@@ -857,35 +857,35 @@ export default class SelectionManager
 				nextSibling: currentNode,
 				newNode: pElm
 			}
-			this.undoManager.recordAction(action);
+			this.undoManager.recordAction(action)
 
 		} else if (selPosType === 3) {
 
-			console.info('Press enter: end');
-			var newNodeName = currentNode.nodeName;
-			var parentNode = currentNode.parentNode;
-			var nextNode = currentNode.nextSibling;
+			console.info('Press enter: end')
+			var newNodeName = currentNode.nodeName
+			var parentNode = currentNode.parentNode
+			var nextNode = currentNode.nextSibling
 
 			if (
 				this.isBlockquote(currentNode) ||
 				this.isHeading(currentNode)
 			) {
 
-				newNodeName = "P";
+				newNodeName = "P"
 
 			} else if (this.isListItem(currentNode)) {
 				if (this.isEmptyNode(currentNode)) {
 
-					this.list(currentNode.parentNode.nodeName);
-					return;
+					this.list(currentNode.parentNode.nodeName)
+					return
 					
 				}
 				
 			}
 
-			var pElm = this.domManager.generateEmptyNode(newNodeName);
+			var pElm = this.domManager.generateEmptyNode(newNodeName)
 
-			parentNode.insertBefore(pElm, nextNode);
+			parentNode.insertBefore(pElm, nextNode)
 
 			// Record action
 			var action = {
@@ -893,15 +893,15 @@ export default class SelectionManager
 				previousSibling: currentNode,
 				newNode: pElm
 			}
-			this.undoManager.recordAction(action);
+			this.undoManager.recordAction(action)
 
 
 
-			var range = document.createRange();
-			range.setStartBefore(pElm.firstChild);
-			range.collapse(true);
+			var range = document.createRange()
+			range.setStartBefore(pElm.firstChild)
+			range.collapse(true)
 
-			this.replaceRange(range);
+			this.replaceRange(range)
 
 		}
 
@@ -912,7 +912,7 @@ export default class SelectionManager
 
 	clearRange()
 	{
-		document.getSelection().removeAllRanges();
+		document.getSelection().removeAllRanges()
 	}
 
 	/**
@@ -922,11 +922,11 @@ export default class SelectionManager
 	replaceRange(range)
 	{
 		if (!range) {
-			console.warn("range is not available.", range);
-			return;
+			console.warn("range is not available.", range)
+			return
 		}
-		document.getSelection().removeAllRanges();
-		document.getSelection().addRange(range);
+		document.getSelection().removeAllRanges()
+		document.getSelection().addRange(range)
 	}
 
 	/**
@@ -946,24 +946,24 @@ export default class SelectionManager
 
 		if (targetNode.nodeType !== 1) {
 			// If the node is not an HTML element do nothing.
-			return;
+			return
 		}
 
 		// 1. Change node
-		var node;
-		var newNode = document.createElement(newNodeName);
+		var node
+		var newNode = document.createElement(newNodeName)
 
 		if (keepStyle) {
-			newNode.style.textAlign = targetNode.style.textAlign;
+			newNode.style.textAlign = targetNode.style.textAlign
 		}
 		
 
 		while (node = targetNode.firstChild) {
-			newNode.appendChild(node);
+			newNode.appendChild(node)
 		}
 
 		// 3. replace node
-		targetNode.parentNode.replaceChild(newNode, targetNode);
+		targetNode.parentNode.replaceChild(newNode, targetNode)
 
 		if (recordAction) {
 			let action = {
@@ -979,10 +979,10 @@ export default class SelectionManager
 					endTextOffset: 0
 				}
 			}
-			this.undoManager.recordAction(action);
+			this.undoManager.recordAction(action)
 		}
 
-		return newNode;
+		return newNode
 
 	}
 
@@ -1000,51 +1000,51 @@ export default class SelectionManager
 
 		// If the selection is not in the available elements
 		// adjust it.
-		var range = this.getRange();
+		var range = this.getRange()
 		if (!range) {
-			return;
+			return
 		}
 
 
 		for (var i = 0; i < window.getSelection().rangeCount; i++) {
-			range = window.getSelection().getRangeAt(i);
+			range = window.getSelection().getRangeAt(i)
 
-			var startNode = range.startContainer;
-			var startOffset = range.startOffset;
-			var endNode = range.endContainer;
-			var endOffset = range.endOffset;
+			var startNode = range.startContainer
+			var startOffset = range.startOffset
+			var endNode = range.endContainer
+			var endOffset = range.endOffset
 
-			var orgS = startNode;
-			var orgSO = startOffset;
-			var orgE = endNode;
-			var orgEO = endOffset;
+			var orgS = startNode
+			var orgSO = startOffset
+			var orgE = endNode
+			var orgEO = endOffset
 
-			var target;
+			var target
 
-			var newRange = document.createRange();
-			newRange.setStart(startNode, startOffset);
-			newRange.setEnd(endNode, endOffset);
+			var newRange = document.createRange()
+			newRange.setStart(startNode, startOffset)
+			newRange.setEnd(endNode, endOffset)
 
-			var isChanged = false;
+			var isChanged = false
 
 			// if (startNode.id === 'editor-body') {
 			if (startNode === this.domManager.editor) {
 
-				target = startNode.firstElementChild;
+				target = startNode.firstElementChild
 
 				for (var i = 0; i < startOffset; i++) {
-					// target = target.nextElementSibling;
-					target = target.nextSibling;
+					// target = target.nextElementSibling
+					target = target.nextSibling
 				}
 
 				
 
 				if (target) {
 
-					startNode = target;
-					newRange.setStart(startNode, 0);
+					startNode = target
+					newRange.setStart(startNode, 0)
 
-					isChanged = true;
+					isChanged = true
 				}
 
 				
@@ -1056,19 +1056,19 @@ export default class SelectionManager
 			if (endNode === this.domManager.editor) {
 
 
-				target = endNode.firstChild;
+				target = endNode.firstChild
 
 				for (var i = 0; i < endOffset - 1; i++) {
-					// target = target.nextElementSibling;
-					target = target.nextSibling;
+					// target = target.nextElementSibling
+					target = target.nextSibling
 				}
 
 				if (target) {
-					endNode = target;
+					endNode = target
 
-					newRange.setEnd(endNode, 1);
+					newRange.setEnd(endNode, 1)
 
-					isChanged = true;
+					isChanged = true
 				}
 				
 
@@ -1076,38 +1076,38 @@ export default class SelectionManager
 
 
 
-			var travelNode;
+			var travelNode
 
 			if (this.isTextContainNode(startNode)) {
 
 
 
 				if (startOffset === 0) {
-					travelNode = startNode.firstChild;
+					travelNode = startNode.firstChild
 					while (1) {
 						if (!travelNode) {
-							break;
+							break
 						} else if (travelNode.nodeType === 3) {
-							startNode = travelNode;
-							newRange.setStart(startNode, 0);
-							isChanged = true;
-							break;
+							startNode = travelNode
+							newRange.setStart(startNode, 0)
+							isChanged = true
+							break
 						} else {
-							travelNode = travelNode.firstChild;
+							travelNode = travelNode.firstChild
 						}
 					}
 				} else if (startOffset > 0) {
-					travelNode = startNode.lastChild;
+					travelNode = startNode.lastChild
 					while (1) {
 						if (!travelNode) {
-							break;
+							break
 						} else if (travelNode.nodeType === 3) {
-							startNode = travelNode;
-							newRange.setStart(startNode, startNode.textContent.length);
-							isChanged = true;
-							break;
+							startNode = travelNode
+							newRange.setStart(startNode, startNode.textContent.length)
+							isChanged = true
+							break
 						} else {
-							travelNode = travelNode.lastChild;
+							travelNode = travelNode.lastChild
 						}
 					}
 				}
@@ -1121,31 +1121,31 @@ export default class SelectionManager
 				
 
 				if (endOffset > 0) {
-					travelNode = endNode.lastChild;
+					travelNode = endNode.lastChild
 					while (1) {
 						if (!travelNode) {
-							break;
+							break
 						} else if (travelNode.nodeType === 3) {
-							endNode = travelNode;
-							newRange.setEnd(endNode, endNode.textContent.length);
-							isChanged = true;
-							break;
+							endNode = travelNode
+							newRange.setEnd(endNode, endNode.textContent.length)
+							isChanged = true
+							break
 						} else {
-							travelNode = travelNode.lastChild;
+							travelNode = travelNode.lastChild
 						}
 					}
 				} else if (endOffset === 0) {
-					travelNode = endNode.firstChild;
+					travelNode = endNode.firstChild
 					while (1) {
 						if (!travelNode) {
-							break;
+							break
 						} else if (travelNode.nodeType === 3) {
-							endNode = travelNode;
-							newRange.setEnd(endNode, 0);
-							isChanged = true;
-							break;
+							endNode = travelNode
+							newRange.setEnd(endNode, 0)
+							isChanged = true
+							break
 						} else {
-							travelNode = travelNode.firstChild;
+							travelNode = travelNode.firstChild
 						}
 					}
 				}
@@ -1157,31 +1157,31 @@ export default class SelectionManager
 
 
 			if (isChanged) {
-				// this.replaceRange(newRange);
-				// console.log(range);
-				console.log("fixed selection");
-				window.getSelection().removeRange(range);
-				window.getSelection().addRange(newRange);
+				// this.replaceRange(newRange)
+				// console.log(range)
+				console.log("fixed selection")
+				window.getSelection().removeRange(range)
+				window.getSelection().addRange(newRange)
 			}
 
 		}
 
 
 		// Multiple ranges to a single range!!!!!!!!!!!!!
-		// range = window.getSelection().getRangeAt(0);
-		// var rangeCount = window.getSelection().rangeCount;
+		// range = window.getSelection().getRangeAt(0)
+		// var rangeCount = window.getSelection().rangeCount
 
-		// startNode = range.startContainer;
-		// startOffset = range.startOffset;
+		// startNode = range.startContainer
+		// startOffset = range.startOffset
 		
-		// endNode = window.getSelection().getRangeAt(rangeCount - 1).endContainer;
-		// endOffset = window.getSelection().getRangeAt(rangeCount - 1).endOffset;
+		// endNode = window.getSelection().getRangeAt(rangeCount - 1).endContainer
+		// endOffset = window.getSelection().getRangeAt(rangeCount - 1).endOffset
 
-		// newRange.setStart(startNode, startOffset);
-		// newRange.setEnd(endNode, endOffset);
+		// newRange.setStart(startNode, startOffset)
+		// newRange.setEnd(endNode, endOffset)
 
-		// window.getSelection().removeAllRanges();
-		// window.getSelection().addRange(newRange);
+		// window.getSelection().removeAllRanges()
+		// window.getSelection().addRange(newRange)
 		
 		
 	}
@@ -1196,144 +1196,144 @@ export default class SelectionManager
 	// splitElementNode()
 	// {
 
-	// 	var range;
+	// 	var range
 
-	// 	range = this.getRange();
+	// 	range = this.getRange()
 		
 	// 	if (!range) {
-	// 		return;
+	// 		return
 	// 	}
 
-	// 	var startNode = range.startContainer;
-	// 	var startOffset = range.startOffset;
-	// 	var endNode = range.endContainer;
-	// 	var endOffset = range.endOffset;
+	// 	var startNode = range.startContainer
+	// 	var startOffset = range.startOffset
+	// 	var endNode = range.endContainer
+	// 	var endOffset = range.endOffset
 
-	// 	var frontNode, backNode;
-	// 	var backNodePassed = false;
+	// 	var frontNode, backNode
+	// 	var backNodePassed = false
 
-	// 	var travelNode = startNode;
+	// 	var travelNode = startNode
 
-	// 	var tempNode, nextNode;
+	// 	var tempNode, nextNode
 
-	// 	var orgNode;
-	// 	var newNode;
+	// 	var orgNode
+	// 	var newNode
 
 	// 	// Loop from the bottom to the top of the node.
 		
 	// 	while (1) {
 
-	// 		console.log(travelNode);
+	// 		console.log(travelNode)
 
 	// 		if (travelNode === null) {
 
-	// 			break;
+	// 			break
 
 	// 		} else if (this.isAvailableParentNode(travelNode)) {
 
-	// 			break;
+	// 			break
 
 	// 		} else if (travelNode.nodeType === 3) {
 
 	// 			if (startOffset === 0) {
 
 	// 				if (startNode.previousSibling) {
-	// 					frontNode = startNode.previousSibling;
-	// 					backNode = startNode;
+	// 					frontNode = startNode.previousSibling
+	// 					backNode = startNode
 	// 				} else if (this.isTextStyleNode(startNode.parentNode)) {
-	// 					travelNode = startNode.parentNode;
+	// 					travelNode = startNode.parentNode
 	// 				}
 
 	// 			} else {
-	// 				this.splitTextNode();
-	// 				frontNode = startNode;
-	// 				backNode = frontNode.nextSibling;
-	// 				console.log("3");
+	// 				this.splitTextNode()
+	// 				frontNode = startNode
+	// 				backNode = frontNode.nextSibling
+	// 				console.log("3")
 	// 			}
 					
 	// 			// }
 
 	// 		} else if (this.isTextStyleNode(travelNode)) {
 
-	// 			console.log("this is a text style node");
+	// 			console.log("this is a text style node")
 
-	// 			console.log(frontNode);
-	// 			console.log(backNode);
+	// 			console.log(frontNode)
+	// 			console.log(backNode)
 
 	// 			if (frontNode === undefined) {
-	// 				frontNode = travelNode.previousSibling;
+	// 				frontNode = travelNode.previousSibling
 	// 			}
 
 	// 			if (backNode === undefined) {
-	// 				backNode = travelNode;
+	// 				backNode = travelNode
 	// 			}
 
 	// 		} else {
 
-	// 			break;
+	// 			break
 
 	// 		}
 
-	// 		orgNode = travelNode.parentElement;
+	// 		orgNode = travelNode.parentElement
 			
-	// 		newNode = document.createElement(orgNode.nodeName);
+	// 		newNode = document.createElement(orgNode.nodeName)
 
-	// 		tempNode = orgNode.firstChild;
+	// 		tempNode = orgNode.firstChild
 
 	// 		if (!frontNode) {
 
-	// 			frontNode = backNode.previousSibling;
+	// 			frontNode = backNode.previousSibling
 
 	// 		}
 
 	// 		if (!backNode) {
 
-	// 			backNode = frontNode.nextSibling;
+	// 			backNode = frontNode.nextSibling
 
 	// 		}
 
-	// 		console.log('-------------------');
-	// 		console.log(frontNode, backNode, newNode);
+	// 		console.log('-------------------')
+	// 		console.log(frontNode, backNode, newNode)
 
 	// 		while (1) {
 				
 	// 			if (!tempNode) {
 
-	// 				backNodePassed = false;
-	// 				break;
+	// 				backNodePassed = false
+	// 				break
 
 	// 			} else {
 
-	// 				nextNode = tempNode.nextSibling;
+	// 				nextNode = tempNode.nextSibling
 
 	// 			}
 
 	// 			if (tempNode === backNode) {
 
-	// 				backNodePassed = true;
+	// 				backNodePassed = true
 
 	// 			}
 
 	// 			if (backNodePassed) {
 
-	// 				newNode.appendChild(tempNode);
+	// 				newNode.appendChild(tempNode)
 
 	// 			}
 
-	// 			tempNode = nextNode;
+	// 			tempNode = nextNode
 
 	// 		}
 
 	// 		if (this.isEmptyNode(orgNode)) {
 
-	// 			orgNode.parentNode.removeChild(orgNode);
-	// 			orgNode = null;
+	// 			orgNode.parentNode.removeChild(orgNode)
+	// 			orgNode = null
 
 	// 		}
 
 	// 		if (!this.isEmptyNode(newNode)) {
 
-	// 			orgNode.parentNode.insertBefore(newNode, orgNode.nextSibling);
+	// 			orgNode.parentNode.insertBefore(newNode, orgNode.nextSibling)
 
 	// 			// Record action
 	// 			var action = {
@@ -1344,31 +1344,31 @@ export default class SelectionManager
 	// 			action.nodes.push({
 	// 				target: newNode,
 	// 				previousNode: this.getPreviousAvailableNode(newNode)
-	// 			});
+	// 			})
 
-	// 			this.undoManager.recordAction(action);
+	// 			this.undoManager.recordAction(action)
 
 	// 		} else {
 
-	// 			newNode = null;
+	// 			newNode = null
 
 	// 		}
 
-	// 		frontNode = orgNode;
-	// 		backNode = newNode;
+	// 		frontNode = orgNode
+	// 		backNode = newNode
 
 
 	// 		// If there is a newNode inserted,
 	// 		// move a range to it.
 	// 		if (newNode) {
 
-	// 			range.setStart(newNode, 0);
-	// 			this.replaceRange(range);
+	// 			range.setStart(newNode, 0)
+	// 			this.replaceRange(range)
 
 	// 		}
 			
 
-	// 		travelNode = travelNode.parentNode;
+	// 		travelNode = travelNode.parentNode
 
 	// 	}
 
@@ -1377,17 +1377,17 @@ export default class SelectionManager
 	splitElementNode3(recordAction = true)
 	{
 		
-		let orgRange = this.getRange();
-		let startNode = orgRange.startContainer;
+		let orgRange = this.getRange()
+		let startNode = orgRange.startContainer
 
-		let currentParentNode = this.getNodeInSelection();
+		let currentParentNode = this.getNodeInSelection()
 
-		let originalContent = currentParentNode.innerHTML;
-		let originalTextLength = currentParentNode.textContent.length;
+		let originalContent = currentParentNode.innerHTML
+		let originalTextLength = currentParentNode.textContent.length
 
-		let travelNode = startNode;
+		let travelNode = startNode
 
-		let frontNode, backNode;
+		let frontNode, backNode
 
 		// Textnode
 
@@ -1398,7 +1398,7 @@ export default class SelectionManager
 				this.isAvailableChildNode(travelNode)
 			) {
 
-				break;
+				break
 
 			} else if (travelNode.nodeType === 3) {
 
@@ -1406,36 +1406,36 @@ export default class SelectionManager
 
 					if (travelNode.previousSibling) {
 
-						frontNode = travelNode.previousSibling;
-						backNode = travelNode;
+						frontNode = travelNode.previousSibling
+						backNode = travelNode
 
 					} else if (travelNode.parentNode) {
 
-						travelNode = travelNode.parentNode;
+						travelNode = travelNode.parentNode
 
-						continue;
+						continue
 
 					}
 
 				} else if (orgRange.startOffset < travelNode.textContent.length) {
 
-					this.splitTextNode();
+					this.splitTextNode()
 
-					frontNode = travelNode;
-					backNode = travelNode.nextSibling;
+					frontNode = travelNode
+					backNode = travelNode.nextSibling
 
 				} else {
 
 					if (travelNode.nextSibling) {
 
-						frontNode = travelNode;
-						backNode = travelNode.nextSibling;
+						frontNode = travelNode
+						backNode = travelNode.nextSibling
 
 					} else if (travelNode.parentNode) {
 
-						travelNode = travelNode.parentNode;
+						travelNode = travelNode.parentNode
 
-						continue;
+						continue
 
 					}
 
@@ -1447,13 +1447,13 @@ export default class SelectionManager
 
 					if (travelNode.previousSibling) {
 
-						frontNode = travelNode.previousSibling;
-						backNode = travelNode;
+						frontNode = travelNode.previousSibling
+						backNode = travelNode
 
 					} else if (travelNode.parentNode) {
 
-						travelNode = travelNode.parentNode;
-						continue;
+						travelNode = travelNode.parentNode
+						continue
 
 					}
 					
@@ -1462,14 +1462,14 @@ export default class SelectionManager
 
 					if (travelNode.nextSibling) {
 
-						frontNode = travelNode;
-						backNode = travelNode.nextSibling;
+						frontNode = travelNode
+						backNode = travelNode.nextSibling
 
 					} else if (travelNode.parentNode) {
 
-						travelNode = travelNode.parentNode;
+						travelNode = travelNode.parentNode
 
-						continue;
+						continue
 
 					}
 
@@ -1477,45 +1477,45 @@ export default class SelectionManager
 
 			}
 
-			travelNode = frontNode;
+			travelNode = frontNode
 			
 
-			var newNode = document.createElement(travelNode.parentNode.nodeName);
+			var newNode = document.createElement(travelNode.parentNode.nodeName)
 
-			var tempNode = backNode;
-			var nextNode;
+			var tempNode = backNode
+			var nextNode
 
-			// console.log("front: ", frontNode, " back: ", backNode, " newNode: ", newNode);
+			// console.log("front: ", frontNode, " back: ", backNode, " newNode: ", newNode)
 
 			while(1) {
 
 				if (!tempNode) {
-					break;
+					break
 				}
 
-				nextNode = tempNode.nextSibling;
+				nextNode = tempNode.nextSibling
 
-				newNode.appendChild(tempNode);
+				newNode.appendChild(tempNode)
 
-				tempNode = nextNode;
+				tempNode = nextNode
 
 			}
 
-			travelNode.parentNode.parentNode.insertBefore(newNode, travelNode.parentNode.nextSibling);
-			var newRange = document.createRange();
-			newRange.setStart(this.getTextNodeInElementNode(newNode, "first"), 0);
-			newRange.collapse(true);
-			this.replaceRange(newRange);
+			travelNode.parentNode.parentNode.insertBefore(newNode, travelNode.parentNode.nextSibling)
+			var newRange = document.createRange()
+			newRange.setStart(this.getTextNodeInElementNode(newNode, "first"), 0)
+			newRange.collapse(true)
+			this.replaceRange(newRange)
 
-			frontNode = frontNode.parentNode;
-			backNode = backNode.parentNode;
+			frontNode = frontNode.parentNode
+			backNode = backNode.parentNode
 
-			travelNode = travelNode.parentNode;
+			travelNode = travelNode.parentNode
 
 		}
 
 		// Record action
-		let afterClones = this.cloneNodeAndRange(currentParentNode, window.getSelection().getRangeAt(0));
+		let afterClones = this.cloneNodeAndRange(currentParentNode, window.getSelection().getRangeAt(0))
 		let action = {
 			type: "split",
 			target: currentParentNode,
@@ -1530,7 +1530,7 @@ export default class SelectionManager
 			}
 		}
 
-		this.undoManager.recordAction(action);
+		this.undoManager.recordAction(action)
 
 
 
@@ -1539,25 +1539,25 @@ export default class SelectionManager
 
 	mergeNodes(first, second, matchTopNode = false)
 	{
-		console.log("merge method runs");
+		console.log("merge method runs")
 
 		if (!first || !second) {
-			return;
+			return
 		}
 
-		var front = first, back = second;
-		var tempNode;
-		var nextFront, nextBack;
+		var front = first, back = second
+		var tempNode
+		var nextFront, nextBack
 
-		var range = window.getSelection().getRangeAt(0);
-		var startNode = this.getTextNodeInElementNode(first, "last");
-		var startOffset;
+		var range = window.getSelection().getRangeAt(0)
+		var startNode = this.getTextNodeInElementNode(first, "last")
+		var startOffset
 		if (startNode) {
-			startOffset = startNode.textContent.length;
+			startOffset = startNode.textContent.length
 		} else {
-			startNode = this.getTextNodeInElementNode(second, "first");
+			startNode = this.getTextNodeInElementNode(second, "first")
 			if (startNode) {
-				startOffset = 0;
+				startOffset = 0
 			}
 		}
 
@@ -1565,10 +1565,10 @@ export default class SelectionManager
 
 		while (1) {
 
-			console.log("front: ", front, " back: ", back);
+			console.log("front: ", front, " back: ", back)
 
 			if (!front || !back) {
-				break;
+				break
 			}
 
 			if (front.nodeName !== back.nodeName) {
@@ -1579,35 +1579,35 @@ export default class SelectionManager
 				) {
 					
 				} else {
-					break;
+					break
 				}
 				
 			}
 
 			if (front.nodeType === 3) {
 
-				front.textContent += back.textContent;
-				back.parentNode.removeChild(back);
+				front.textContent += back.textContent
+				back.parentNode.removeChild(back)
 
-				break;
+				break
 
 			} else {
 
-				console.log("here");
+				console.log("here")
 
-				console.log("front: ", front, " back: ", back);
+				console.log("front: ", front, " back: ", back)
 
-				nextFront = front.lastChild;
-				nextBack = back.firstChild;
+				nextFront = front.lastChild
+				nextBack = back.firstChild
 
 				while (tempNode = back.firstChild) {
-					front.appendChild(tempNode);
+					front.appendChild(tempNode)
 				}
 
-				back.parentNode.removeChild(back);
+				back.parentNode.removeChild(back)
 
-				front = nextFront;
-				back = nextBack;
+				front = nextFront
+				back = nextBack
 
 			}
 
@@ -1615,10 +1615,10 @@ export default class SelectionManager
 
 		if (startNode) {
 
-			var keepRange = document.createRange();
-			keepRange.setStart(startNode, startOffset);
-			keepRange.setEnd(startNode, startOffset);
-			this.replaceRange(keepRange);
+			var keepRange = document.createRange()
+			keepRange.setStart(startNode, startOffset)
+			keepRange.setEnd(startNode, startOffset)
+			this.replaceRange(keepRange)
 
 		}
 		
@@ -1632,19 +1632,19 @@ export default class SelectionManager
 	 */
 	splitTextNode()
 	{
-		var range = this.getRange();
+		var range = this.getRange()
 		if (!range) {
-			return;
+			return
 		}
-		var startNode = range.startContainer;
-		var startOffset = range.startOffset;
+		var startNode = range.startContainer
+		var startOffset = range.startOffset
 
 		var returnNode = {
 			startNode: null,
 			endNode: null
 		}
 
-		returnNode.startNode = startNode;
+		returnNode.startNode = startNode
 		
 		// Split start of the range.
 		if (
@@ -1653,15 +1653,15 @@ export default class SelectionManager
 			startOffset < startNode.textContent.length
 		) {
 			
-			returnNode.startNode = startNode.splitText(startOffset);
+			returnNode.startNode = startNode.splitText(startOffset)
 
 		}
 
-		range = this.getRange();
-		var endNode = range.endContainer;
-		var endOffset = range.endOffset;
+		range = this.getRange()
+		var endNode = range.endContainer
+		var endOffset = range.endOffset
 
-		returnNode.endNode = endNode;
+		returnNode.endNode = endNode
 
 		// Split end of the range.
 		if (
@@ -1670,11 +1670,11 @@ export default class SelectionManager
 			endOffset < endNode.textContent.length
 		) {
 
-			endNode.splitText(endOffset);
+			endNode.splitText(endOffset)
 
 		}
 
-		return returnNode;
+		return returnNode
 
 	}
 
@@ -1683,44 +1683,44 @@ export default class SelectionManager
 	 */
 	removeSelection(collapseDirection = "end")
 	{
-		var range;
-		range = this.getRange();
+		var range
+		range = this.getRange()
 
-		var orgRange = range.cloneRange();
+		var orgRange = range.cloneRange()
 		if (!range) {
-			return;
+			return
 		}
 
-		var splitResult = this.splitTextNode();
+		var splitResult = this.splitTextNode()
 
-		var startNode = range.startContainer;
-		var startOffset = range.startOffset;;
+		var startNode = range.startContainer
+		var startOffset = range.startOffset
 
 		if (splitResult.startNode !== startNode) {
-			startNode = splitResult.startNode;
-			startOffset = 0;
+			startNode = splitResult.startNode
+			startOffset = 0
 		}
-		var endNode = splitResult.endNode;
+		var endNode = splitResult.endNode
 		
-		var deletionDone = false;
-		var selectionNode = this.getNodeInSelection();
-		var nextParentNode = this.getNextAvailableNode(selectionNode);
+		var deletionDone = false
+		var selectionNode = this.getNodeInSelection()
+		var nextParentNode = this.getNextAvailableNode(selectionNode)
 
-		// range.collapse(false);
+		// range.collapse(false)
 
-		// console.log("startNode:", startNode, " endNode: ", endNode);
+		// console.log("startNode:", startNode, " endNode: ", endNode)
 
-		range.setStart(range.endContainer, range.endOffset);
-		this.replaceRange(range);
+		range.setStart(range.endContainer, range.endOffset)
+		this.replaceRange(range)
 		
-		var currentParentNode = selectionNode;
-		var travelNode = startNode;
-		var nextNode;
-		var parentNode;
+		var currentParentNode = selectionNode
+		var travelNode = startNode
+		var nextNode
+		var parentNode
 
-		var pRange = new PRange();
-		var startTextOffset = pRange.getTextOffset(this.getNodeOfNode(orgRange.startContainer), orgRange.startContainer, orgRange.startOffset);
-		var endTextOffset = pRange.getTextOffset(this.getNodeOfNode(orgRange.endContainer), orgRange.endContainer, orgRange.endOffset);
+		var pRange = new PRange()
+		var startTextOffset = pRange.getTextOffset(this.getNodeOfNode(orgRange.startContainer), orgRange.startContainer, orgRange.startOffset)
+		var endTextOffset = pRange.getTextOffset(this.getNodeOfNode(orgRange.endContainer), orgRange.endContainer, orgRange.endOffset)
 
 		var action = {
 			type: "remove",
@@ -1729,10 +1729,10 @@ export default class SelectionManager
 				startTextOffset: startTextOffset,
 				endTextOffset: endTextOffset
 			}
-		};
-		this.undoManager.recordAction(action);
+		}
+		this.undoManager.recordAction(action)
 
-		console.group("Remove Selection");
+		console.group("Remove Selection")
 
 		while (1) {
 
@@ -1740,17 +1740,17 @@ export default class SelectionManager
 
 				// Remove image block
 
-				currentParentNode.parentNode.removeChild(currentParentNode);
+				currentParentNode.parentNode.removeChild(currentParentNode)
 
 			} else if (
 				!currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
 			) {
 
-				console.group("nothing contains");
-				console.log(currentParentNode.textContent);
+				console.group("nothing contains")
+				console.log(currentParentNode.textContent)
 
-				let originalContent = currentParentNode.innerHTML;
+				let originalContent = currentParentNode.innerHTML
 
 				if (this.isAvailableChildNode(currentParentNode)) {
 
@@ -1760,11 +1760,11 @@ export default class SelectionManager
 						removedNode: currentParentNode,
 						nextNode: currentParentNode.nextSibling,
 						parentNode: currentParentNode.parentNode
-					});
+					})
 
-					console.log("list is detected");
-					var parentNode = currentParentNode.parentNode;
-					currentParentNode.parentNode.removeChild(currentParentNode);
+					console.log("list is detected")
+					var parentNode = currentParentNode.parentNode
+					currentParentNode.parentNode.removeChild(currentParentNode)
 
 					if (this.isTextEmptyNode(parentNode)) {
 
@@ -1774,9 +1774,9 @@ export default class SelectionManager
 							removedNode: parentNode,
 							nextNode: parentNode.nextSibling,
 							parentNode: parentNode.parentNode
-						});
+						})
 
-						parentNode.parentNode.removeChild(parentNode);
+						parentNode.parentNode.removeChild(parentNode)
 					}
 
 				} else {
@@ -1787,107 +1787,107 @@ export default class SelectionManager
 						removedNode: currentParentNode,
 						nextNode: currentParentNode.nextSibling,
 						parentNode: currentParentNode.parentNode
-					});
+					})
 					
-					currentParentNode.parentNode.removeChild(currentParentNode);
+					currentParentNode.parentNode.removeChild(currentParentNode)
 
 				}
 
-				console.groupEnd();
+				console.groupEnd()
 				
 			} else if (
 				currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
 			) {
 
-				travelNode = startNode;
-				console.group("only contains startnode");
-				console.log(currentParentNode.textContent);
-				var metCurrentNode = false;
+				travelNode = startNode
+				console.group("only contains startnode")
+				console.log(currentParentNode.textContent)
+				var metCurrentNode = false
 
-				var tempRange = document.createRange();
-				tempRange.setStart(startNode, startOffset);
-				tempRange.setEndAfter(currentParentNode.lastChild);
+				var tempRange = document.createRange()
+				tempRange.setStart(startNode, startOffset)
+				tempRange.setEndAfter(currentParentNode.lastChild)
 
-				let originalContent = currentParentNode.innerHTML;
+				let originalContent = currentParentNode.innerHTML
 
-				tempRange.deleteContents();
+				tempRange.deleteContents()
 
 				// record action
 				action.targets.push({
 					removedNode: currentParentNode,
 					originalContent: originalContent,
 					modifiedContent: currentParentNode.innerHTML
-				});
+				})
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 
-					currentParentNode.innerHTML = "";
-					currentParentNode.appendChild(document.createElement("br"));
+					currentParentNode.innerHTML = ""
+					currentParentNode.appendChild(document.createElement("br"))
 
 				}
 
-				console.groupEnd();
+				console.groupEnd()
 
 			} else if (
 				!currentParentNode.contains(startNode) &&
 				currentParentNode.contains(endNode)
 			) {
 
-				travelNode = endNode;
-				console.log("only contains endnode");
-				console.log(currentParentNode.textContent);
+				travelNode = endNode
+				console.log("only contains endnode")
+				console.log(currentParentNode.textContent)
 
 
-				var tempRange = document.createRange();
-				tempRange.setStartBefore(currentParentNode.firstChild);
-				tempRange.setEnd(endNode, orgRange.endOffset);
+				var tempRange = document.createRange()
+				tempRange.setStartBefore(currentParentNode.firstChild)
+				tempRange.setEnd(endNode, orgRange.endOffset)
 
-				let originalContent = currentParentNode.innerHTML;
+				let originalContent = currentParentNode.innerHTML
 
-				tempRange.deleteContents();
+				tempRange.deleteContents()
 
 				// record action
 				action.targets.push({
 					removedNode: currentParentNode,
 					originalContent: originalContent,
 					modifiedContent: currentParentNode.innerHTML
-				});
+				})
 
 				if (this.isTextEmptyNode(currentParentNode)) {
-					currentParentNode.innerHTML = "";
-					currentParentNode.appendChild(document.createElement("br"));
+					currentParentNode.innerHTML = ""
+					currentParentNode.appendChild(document.createElement("br"))
 				}
 				if (collapseDirection === "start") {
-					this.backspace(document.createEvent("KeyboardEvent"));
+					this.backspace(document.createEvent("KeyboardEvent"))
 				} 
-				break;
+				break
 
 			} else if (
 				currentParentNode.contains(startNode) &&
 				currentParentNode.contains(endNode)
 			) {
 
-				orgRange.deleteContents();
+				orgRange.deleteContents()
 
 				if (this.isTextEmptyNode(currentParentNode)) {
-					currentParentNode.innerHTML = "";
-					currentParentNode.appendChild(document.createElement("br"));
+					currentParentNode.innerHTML = ""
+					currentParentNode.appendChild(document.createElement("br"))
 				}
 
-				// console.log(startNode);
-				// console.log(endNode);
+				// console.log(startNode)
+				// console.log(endNode)
 
 				if (collapseDirection === "end") {
-					this.enter(document.createEvent("KeyboardEvent")); 
+					this.enter(document.createEvent("KeyboardEvent")) 
 				}
 
-				break;
+				break
 
 			}
 
-			currentParentNode = nextParentNode;
-			nextParentNode = this.getNextAvailableNode(nextParentNode);
+			currentParentNode = nextParentNode
+			nextParentNode = this.getNextAvailableNode(nextParentNode)
 
 		}
 
@@ -1900,9 +1900,9 @@ export default class SelectionManager
 	isEmpty()
 	{
 		if (document.getSelection().isCollapsed) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
@@ -1918,26 +1918,26 @@ export default class SelectionManager
 	{
 
 		if (node.nodeType === 3) {
-			return false;
+			return false
 		}
-		var travelNode = node.firstChild;
-		var nextNode = travelNode;
+		var travelNode = node.firstChild
+		var nextNode = travelNode
 
 		while (1) {
 
 			if (!travelNode) {
-				return true;
+				return true
 			}
 
-			nextNode = travelNode.nextSibling;
+			nextNode = travelNode.nextSibling
 
 			if (travelNode.nodeType === 3 && travelNode.textContent === "") {
-				node.removeChild(travelNode);
+				node.removeChild(travelNode)
 			} else if (travelNode.nodeName !== "BR") {
-				return false;
+				return false
 			}
 
-			travelNode = nextNode;
+			travelNode = nextNode
 
 		}
 	}
@@ -1945,29 +1945,29 @@ export default class SelectionManager
 	isTextEmptyNode(node)
 	{
 		if (node.nodeType === 3) {
-			return false;
+			return false
 		}
 
 		if (
 			node.textContent === ""
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isAvailableEmptyNode(node) {
 		if (node.nodeType === 3) {
-			return false;
+			return false
 		}
 
 		if (
 			node.textContent === ""
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
@@ -1980,9 +1980,9 @@ export default class SelectionManager
 			this.isListItem(node)  ||
 			this.isBlockquote(node)
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
@@ -1995,70 +1995,70 @@ export default class SelectionManager
 			this.isUnderline(node)  ||
 			this.isLink(node)
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isBold(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (
 			node.nodeName === 'B' ||
 			node.nodeName === 'STRONG'
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isItalics(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (
 			node.nodeName === 'I' ||
 			node.nodeName === 'EM'
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isStrike(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (node.nodeName === 'STRIKE') {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isUnderline(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (node.nodeName === 'U') {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isLink(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (node.nodeName === 'A') {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
@@ -2069,18 +2069,18 @@ export default class SelectionManager
 	isParagraph(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (node.nodeName === 'P') {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isHeading(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (
 			node.nodeName === 'H1' ||
 			node.nodeName === 'H2' ||
@@ -2089,45 +2089,45 @@ export default class SelectionManager
 			node.nodeName === 'H5' ||
 			node.nodeName === 'H6'
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isList(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (
 			node.nodeName === 'OL' ||
 			node.nodeName === 'UL'
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isListItem(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (node.nodeName === 'LI') {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isBlockquote(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (node.nodeName === 'BLOCKQUOTE') {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
@@ -2138,21 +2138,21 @@ export default class SelectionManager
 	isImageBlock(node)
 	{
 		if (!node) {
-			return false;
+			return false
 		} else if (node.nodeName === 'FIGURE' && node.classList && node.classList.contains('image')) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
 	isImageCaption(node) {
 		if (!node) {
-			return false;
+			return false
 		} else if (node.nodeName === 'FIGCAPTION') {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
@@ -2165,9 +2165,9 @@ export default class SelectionManager
 			this.isBlockquote(node) ||
 			this.isImageBlock(node)
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
@@ -2177,9 +2177,9 @@ export default class SelectionManager
 			this.isListItem(node) ||
 			this.isImageCaption(node)
 		) {
-			return true;
+			return true
 		} else {
-			return false;
+			return false
 		}
 	}
 
@@ -2192,142 +2192,142 @@ export default class SelectionManager
 	 */
 	getTextNodeInElementNode(node, firstOrLast)
 	{
-		var travelNode = node;
-		var returnNode = null;
+		var travelNode = node
+		var returnNode = null
 		if (!node) {
-			return null;
+			return null
 		}
 
 		if (firstOrLast === "first") {
 			while (1) {
 				if (travelNode === null) {
-					break;
+					break
 				} else if (travelNode.nodeType === 3) {
-					returnNode = travelNode;
-					break;
+					returnNode = travelNode
+					break
 				} else {
-					travelNode = travelNode.firstChild;
+					travelNode = travelNode.firstChild
 				}
 			}
 		} else if (firstOrLast === "last") {
 			while (1) {
 				if (travelNode === null) {
-					break;
+					break
 				} else if (travelNode.nodeType === 3) {
-					returnNode = travelNode;
-					break;
+					returnNode = travelNode
+					break
 				} else {
-					travelNode = travelNode.lastChild;
+					travelNode = travelNode.lastChild
 				}
 			}
 		} else {
-			console.error("Second parameter must be 'first' or 'last'.");
+			console.error("Second parameter must be 'first' or 'last'.")
 		}
 
-		return returnNode;
+		return returnNode
 		
 	}
 
 	// getSelectionPosition(customRange = null)
 	// {
 
-	// 	var orgRange;
+	// 	var orgRange
 
 	// 	if (customRange) {
-	// 		orgRange = customRange;
+	// 		orgRange = customRange
 	// 	} else {
-	// 		orgRange = this.getRange();
+	// 		orgRange = this.getRange()
 	// 	}
 
 	// 	if (!orgRange) {
-	// 		return false;
+	// 		return false
 	// 	}
 
-	// 	var startNode   = orgRange.startContainer;
-	// 	var startOffset = orgRange.startOffset;
-	// 	var endNode     = orgRange.endContainer;
-	// 	var endOffset   = orgRange.endOffset;
+	// 	var startNode   = orgRange.startContainer
+	// 	var startOffset = orgRange.startOffset
+	// 	var endNode     = orgRange.endContainer
+	// 	var endOffset   = orgRange.endOffset
 
 
-	// 	var travelNode;
-	// 	var isStart = false;
-	// 	var isEnd   = false;
+	// 	var travelNode
+	// 	var isStart = false
+	// 	var isEnd   = false
 
 
-	// 	travelNode = startNode.previousSibling;
+	// 	travelNode = startNode.previousSibling
 
 	// 	while (1) {
 	// 		if (!travelNode && startOffset === 0) {
-	// 			isStart = true;
-	// 			break;
+	// 			isStart = true
+	// 			break
 	// 		} else if (!travelNode) {
-	// 			break;
+	// 			break
 	// 		} else if (travelNode.textContent === "") {
-	// 			travelNode = travelNode.previousSibling;
+	// 			travelNode = travelNode.previousSibling
 	// 		} else {
-	// 			break;
+	// 			break
 	// 		}
 	// 	}
 
 
 
-	// 	travelNode = endNode.nextSibling;
+	// 	travelNode = endNode.nextSibling
 
 	// 	while (1) {
 	// 		if (!travelNode && endOffset === endNode.textContent.length) {
-	// 			isEnd = true;
-	// 			break;
+	// 			isEnd = true
+	// 			break
 	// 		} else if (!travelNode) {
-	// 			break;
+	// 			break
 	// 		} else if (travelNode.textContent === "") {
-	// 			travelNode = travelNode.nextSibling;
+	// 			travelNode = travelNode.nextSibling
 	// 		} else {
-	// 			break;
+	// 			break
 	// 		}
 	// 	}
 
 
 	// 	if (startNode === endNode && this.isEmptyNode(startNode)) {
-	// 		isEnd = true;
+	// 		isEnd = true
 	// 	}
 
 	// 	if (isStart) {
-	// 		return 1;
+	// 		return 1
 	// 	} else if (isEnd) {
-	// 		return 3;
+	// 		return 3
 	// 	} else {
-	// 		return 2;
+	// 		return 2
 	// 	}
 
 	// }
 
 	getSelectionPositionInParagraph(customRange = null)
 	{
-		var orgRange;
+		var orgRange
 
 		if (customRange) {
-			orgRange = customRange;
+			orgRange = customRange
 		} else {
-			orgRange = this.getRange();
+			orgRange = this.getRange()
 		}
 
 		if (!orgRange) {
-			return false;
+			return false
 		}
 
-		var startNode   = orgRange.startContainer;
-		var startOffset = orgRange.startOffset;
-		var endNode     = orgRange.endContainer;
-		var endOffset   = orgRange.endOffset;
+		var startNode   = orgRange.startContainer
+		var startOffset = orgRange.startOffset
+		var endNode     = orgRange.endContainer
+		var endOffset   = orgRange.endOffset
 
 
-		var travelNode, parentNode;
-		var isStart = false;
-		var isEnd   = false;
+		var travelNode, parentNode
+		var isStart = false
+		var isEnd   = false
 
 
-		parentNode = startNode.parentElement;
-		travelNode = startNode;
+		parentNode = startNode.parentElement
+		travelNode = startNode
 		
 		if (startOffset === 0) {
 			while (1) {
@@ -2335,57 +2335,57 @@ export default class SelectionManager
 					this.isAvailableParentNode(travelNode) ||
 					this.isAvailableChildNode(travelNode)
 				) {
-					isStart = true;
-					break;
+					isStart = true
+					break
 				} else if (travelNode.previousSibling) {
 					if (travelNode.previousSibling.textContent === "" || travelNode.previousSibling.nodeName === "BR") {
-						travelNode = travelNode.previousSibling;
+						travelNode = travelNode.previousSibling
 					} else {
-						isStart = false;
-						break;
+						isStart = false
+						break
 					}
 				} else {
-					travelNode = travelNode.parentElement;
+					travelNode = travelNode.parentElement
 				}
 			}
 		}
 		
 
 
-		parentNode = endNode.parentElement;
-		travelNode = endNode;
+		parentNode = endNode.parentElement
+		travelNode = endNode
 		if (endOffset === endNode.textContent.length) {
 			while (1) {
 				if (
 					this.isAvailableParentNode(travelNode) ||
 					this.isAvailableChildNode(travelNode)
 				) {
-					isEnd = true;
-					break;
+					isEnd = true
+					break
 				} else if (travelNode.nextSibling) {
 					if (travelNode.nextSibling.textContent === "" || travelNode.nextSibling.nodeName === "BR") {
-						travelNode = travelNode.nextSibling;
+						travelNode = travelNode.nextSibling
 					} else {
-						isEnd = false;
-						break;
+						isEnd = false
+						break
 					}
 				} else {
-					travelNode = travelNode.parentElement;
+					travelNode = travelNode.parentElement
 				}
 			}
 		}
 
 		if (startNode === endNode && this.isEmptyNode(startNode)) {
-			isStart = false;
-			isEnd = true;
+			isStart = false
+			isEnd = true
 		}
 
 		if (isStart) {
-			return 1;
+			return 1
 		} else if (isEnd) {
-			return 3;
+			return 3
 		} else {
-			return 2;
+			return 2
 		}
 	}
 
@@ -2400,10 +2400,10 @@ export default class SelectionManager
 	getRange()
 	{
 		if (window.getSelection().rangeCount > 0) {
-			// let rangeCount = window.getSelection().rangeCount;
-			return window.getSelection().getRangeAt(0);
+			// let rangeCount = window.getSelection().rangeCount
+			return window.getSelection().getRangeAt(0)
 		} else {
-			return null;
+			return null
 		}
 	}
 
@@ -2414,51 +2414,51 @@ export default class SelectionManager
 	getAllNodesInSelection()
 	{
 
-		// let travelNode = this.getRange() ? this.getRange().startContainer : null;
-		let travelNode;
-		let nodes = [];
+		// let travelNode = this.getRange() ? this.getRange().startContainer : null
+		let travelNode
+		let nodes = []
 
 		for (let i = 0; i < window.getSelection().rangeCount; i++) {
 
-			travelNode = window.getSelection().getRangeAt(i).startContainer;
+			travelNode = window.getSelection().getRangeAt(i).startContainer
 
 			while (1) {
 
 
 				if (!travelNode) {
-					break;
+					break
 				} else if (this.isAvailableParentNode(travelNode)) {
-					nodes.push(travelNode);
+					nodes.push(travelNode)
 					if (travelNode.contains(this.getRange().endContainer)) {
-						break;
+						break
 					} else {
-						travelNode = travelNode.nextElementSibling;
+						travelNode = travelNode.nextElementSibling
 					}
 					
 				} else {
-					travelNode = travelNode.parentElement;
+					travelNode = travelNode.parentElement
 				}
 
 			}
 
 		}
 
-		return nodes;
+		return nodes
 
 	}
 
 	getPreviousAvailableNode(node)
 	{
-		var previousNode = node;
-		var travelNode = node.previousSibling;
-		var returnNode = null;
+		var previousNode = node
+		var travelNode = node.previousSibling
+		var returnNode = null
 		while (1) {
 			if (travelNode === null) {
 				if (this.isAvailableChildNode(previousNode)) {
-					travelNode = previousNode.parentNode.previousSibling;
-					previousNode = travelNode;
+					travelNode = previousNode.parentNode.previousSibling
+					previousNode = travelNode
 				} else {
-					break;
+					break
 				}
 			} else if (
 				this.isAvailableParentNode(travelNode) ||
@@ -2466,31 +2466,31 @@ export default class SelectionManager
 			) {
 				// Find the available node
 				if (this.isList(travelNode)) {
-					var itemNodes = travelNode.querySelectorAll("LI");
-					travelNode = itemNodes[itemNodes.length - 1];
+					var itemNodes = travelNode.querySelectorAll("LI")
+					travelNode = itemNodes[itemNodes.length - 1]
 				}
-				returnNode = travelNode;
-				break;
+				returnNode = travelNode
+				break
 			} else {
-				travelNode = travelNode.previousSibling;
+				travelNode = travelNode.previousSibling
 			}
 		}
 
-		return returnNode;
+		return returnNode
 	}
 
 	getNextAvailableNode(node)
 	{
-		var previousNode = node;
-		var travelNode = node.nextSibling;
-		var returnNode = null;
+		var previousNode = node
+		var travelNode = node.nextSibling
+		var returnNode = null
 		while (1) {
 			if (travelNode === null) {
 				if (this.isAvailableChildNode(previousNode)) {
-					travelNode = previousNode.parentNode.nextSibling;
-					previousNode = travelNode;
+					travelNode = previousNode.parentNode.nextSibling
+					previousNode = travelNode
 				} else {
-					break;
+					break
 				}
 			} else if (
 				this.isAvailableParentNode(travelNode) ||
@@ -2498,40 +2498,40 @@ export default class SelectionManager
 			) {
 				// Find the available node
 				if (this.isList(travelNode)) {
-					travelNode = travelNode.querySelectorAll("LI")[0];
+					travelNode = travelNode.querySelectorAll("LI")[0]
 				}
-				returnNode = travelNode;
-				break;
+				returnNode = travelNode
+				break
 			} else {
-				travelNode = travelNode.nextSibling;
+				travelNode = travelNode.nextSibling
 			}
 		}
 
-		return returnNode;
+		return returnNode
 	}
 
 	getNodeInSelection()
 	{
 
-		var range = this.getRange();
+		var range = this.getRange()
 		if (!range) {
-			return;
+			return
 		}
-		var travelNode = this.getRange().startContainer;
+		var travelNode = this.getRange().startContainer
 		if (travelNode === null) {
-			return null;
+			return null
 		}
 
 		while (1) {
 			if (travelNode === null) {
-				return null;
+				return null
 			} else if (
 				this.isAvailableParentNode(travelNode) ||
 				this.isAvailableChildNode(travelNode)
 			) {
-				return travelNode;
+				return travelNode
 			} else {
-				travelNode = travelNode.parentNode;
+				travelNode = travelNode.parentNode
 			}
 		}
 
@@ -2543,20 +2543,20 @@ export default class SelectionManager
 	 */
 	getNodeOfNode(node)
 	{
-		let tempNode = node;
-		let returnNode = null;
+		let tempNode = node
+		let returnNode = null
 		while (1) {
 			if (tempNode.isEqualNode(this.domManager.editor) || tempNode.isEqualNode(document.body) || tempNode === null) {
-				break;
+				break
 			} else if (this.isAvailableChildNode(tempNode) || this.isAvailableParentNode(tempNode)) {
-				returnNode = tempNode;
-				break;
+				returnNode = tempNode
+				break
 			} else {
-				tempNode = tempNode.parentNode;
+				tempNode = tempNode.parentNode
 			}
 		}
 
-		return returnNode;
+		return returnNode
 	}
 
 	/**
@@ -2568,67 +2568,67 @@ export default class SelectionManager
 	{
 
 		// Loop node
-		let nodeClone = document.createElement(node.nodeName);
-		let rangeClone;
+		let nodeClone = document.createElement(node.nodeName)
+		let rangeClone
 
 		if (range) {
-			rangeClone = document.createRange();
-			rangeClone.setStart(range.startContainer, range.startOffset);
-			rangeClone.setEnd(range.endContainer, range.endOffset);
+			rangeClone = document.createRange()
+			rangeClone.setStart(range.startContainer, range.startOffset)
+			rangeClone.setEnd(range.endContainer, range.endOffset)
 		}
 		
 		
-		let travelNode = node.firstChild;
-		let tempNode;
+		let travelNode = node.firstChild
+		let tempNode
 
-		let insertTarget = nodeClone;
+		let insertTarget = nodeClone
 
-		let loopDone = false;
+		let loopDone = false
 
 		while (1) {
 
-			tempNode = travelNode.cloneNode(false);
-			insertTarget.appendChild(tempNode);
+			tempNode = travelNode.cloneNode(false)
+			insertTarget.appendChild(tempNode)
 
-			// console.log("travelNode: ", travelNode.cloneNode(true));
+			// console.log("travelNode: ", travelNode.cloneNode(true))
 
 			if (range) {
 				if (travelNode.isEqualNode(range.startContainer)) {
-					rangeClone.setStart(tempNode, range.startOffset);
+					rangeClone.setStart(tempNode, range.startOffset)
 				}
 				if (travelNode.isEqualNode(range.endContainer)) {
-					rangeClone.setEnd(tempNode, range.endOffset);
+					rangeClone.setEnd(tempNode, range.endOffset)
 				}
 			}
 
 			if (travelNode.firstChild) {
 
-				insertTarget = tempNode;
-				travelNode = travelNode.firstChild;
+				insertTarget = tempNode
+				travelNode = travelNode.firstChild
 
 			} else if (travelNode.nextSibling) {
 
-				travelNode = travelNode.nextSibling;
+				travelNode = travelNode.nextSibling
 
 			} else {
 
-				let parentNode = travelNode.parentNode;
-				insertTarget = insertTarget.parentNode;
+				let parentNode = travelNode.parentNode
+				insertTarget = insertTarget.parentNode
 
 				while (1) {
 
 					if (parentNode.isEqualNode(node)) {
 
-						loopDone = true;
-						break;
+						loopDone = true
+						break
 
 					} else if (parentNode.nextSibling) {
 
-						travelNode = parentNode.nextSibling;
-						break;
+						travelNode = parentNode.nextSibling
+						break
 
 					} else {
-						parentNode = parentNode.parentNode;
+						parentNode = parentNode.parentNode
 					}
 					
 				}
@@ -2636,23 +2636,23 @@ export default class SelectionManager
 			}
 
 			if (loopDone) {
-				break;
+				break
 			}
 
 
 
 			
-			// tempNode = travelNode.cloneNode(false);
+			// tempNode = travelNode.cloneNode(false)
 			// if (travelNode.isSameNode(range.startContainer)) {
-			// 	rangeClone.startContainer = tempNode;
+			// 	rangeClone.startContainer = tempNode
 			// }
-			// nodeClone.appendChild(tempNode);
+			// nodeClone.appendChild(tempNode)
 
-			// travelNode = travelNode.nextSibling;
+			// travelNode = travelNode.nextSibling
 
 		}
 
-		return [nodeClone, rangeClone];
+		return [nodeClone, rangeClone]
 
 	}
 
@@ -2665,20 +2665,20 @@ export default class SelectionManager
 	{
 
 		if (offset > node.textContent.length) {
-			offset = -1;
+			offset = -1
 		}
 
 		if (offset === -1) {
-			offset = node.textContent.length;
+			offset = node.textContent.length
 		}
 
-		let pRange = new PRange();
-		pRange.setStart(node, offset);
-		let range = document.createRange();
-		range.setStart(pRange.startContainer, pRange.startOffset);
-		range.collapse(true);
-		window.getSelection().removeAllRanges();
-		window.getSelection().addRange(range);
+		let pRange = new PRange()
+		pRange.setStart(node, offset)
+		let range = document.createRange()
+		range.setStart(pRange.startContainer, pRange.startOffset)
+		range.collapse(true)
+		window.getSelection().removeAllRanges()
+		window.getSelection().addRange(range)
 	}
 
 }
