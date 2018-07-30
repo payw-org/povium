@@ -476,7 +476,10 @@ export default class EventManager
 			keyCode !== 33 && keyCode !== 34 && keyCode !== 35 && keyCode !== 36 && keyCode !== 37 &&
 			keyCode !== 38 && keyCode !== 39 && keyCode !== 40 && keyCode !== 45 && keyCode !== 46 &&
 			keyCode !== 91 && keyCode !== 219 && keyCode !== 92 && keyCode !== 220 && keyCode !== 93 &&
-			keyCode !== 144 && keyCode !== 145 && !e.altKey && !e.ctrlKey && !e.shiftKey
+			keyCode !== 144 && keyCode !== 145 && keyCode !== 112 && keyCode !== 113 && keyCode !== 114 &&
+			keyCode !== 115 && keyCode !== 116 && keyCode !== 117 && keyCode !== 118 && keyCode !== 119 &&
+			keyCode !== 120 && keyCode !== 121 && keyCode !== 122 && keyCode !== 123 && keyCode !== 229 &&
+			 !e.altKey && !e.ctrlKey && !e.shiftKey
 		) {
 			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
 				this.selManager.removeSelection("end")
