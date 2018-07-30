@@ -494,7 +494,7 @@ export default class SelectionManager
 				continue
 			}
 
-			var changedNode = this.changeNodeName(chunks[i], "blockquote", false)
+			var changedNode = this.changeNodeName(chunks[i], "blockquote", false, false)
 			if (chunks[i] === startNode) {
 				startNode = changedNode
 			}
@@ -507,7 +507,7 @@ export default class SelectionManager
 		// Selection is all blockquote
 		if (isAllBlockquote) {
 			for (var i = 0; i < chunks.length; i++) {
-				var changedNode = this.changeNodeName(chunks[i], "P", false)
+				var changedNode = this.changeNodeName(chunks[i], "P", false, false)
 				if (chunks[i] === startNode) {
 					startNode = changedNode
 				}
