@@ -482,8 +482,7 @@ export default class EventManager
 			 !e.altKey && !e.ctrlKey && !e.shiftKey
 		) {
 			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
-				this.selManager.removeSelection("end")
-				this.selManager.backspace(document.createEvent("KeyboardEvent"))
+				this.selManager.removeSelection("first")
 			}
 		}
 

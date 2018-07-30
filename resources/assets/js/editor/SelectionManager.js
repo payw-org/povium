@@ -562,44 +562,16 @@ export default class SelectionManager
 
 				console.log("empty child node or parent node")
 
-				if (this.isAvailableEmptyNode(previousNode)) {
+				if (this.isTextEmptyNode(previousNode)) {
 
-					if (this.isAvailableChildNode(previousNode)) {
-
-						console.log("previous node is child")
-						var parentNode = previousNode.parentNode
-						previousNode.parentNode.removeChild(previousNode)
-
-						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode)
-						}
-
-					} else {
-
-						previousNode.parentNode.removeChild(previousNode)
-
-					}
+					this.removeNode(previousNode)
 
 				} else {
 
-					var range = document.createRange()
-					range.setStartAfter(previousNode.lastChild)
-					this.replaceRange(range)
+					this.setCursorAt(previousNode, -1)
 
-					if (this.isAvailableChildNode(currentNode)) {
+					this.removeNode(currentNode)
 
-						var parentNode = currentNode.parentNode
-						currentNode.parentNode.removeChild(currentNode)
-
-						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode)
-						}
-
-					} else {
-
-						currentNode.parentNode.removeChild(currentNode)
-
-					}
 				}
 
 			} else {
@@ -636,21 +608,7 @@ export default class SelectionManager
 
 				if (this.isTextEmptyNode(previousNode)) {
 
-					if (this.isAvailableChildNode(previousNode)) {
-
-						console.log("previous node is child")
-						var parentNode = previousNode.parentNode
-						previousNode.parentNode.removeChild(previousNode)
-
-						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode)
-						}
-
-					} else {
-
-						previousNode.parentNode.removeChild(previousNode)
-
-					}
+					this.removeNode(previousNode)
 
 				} else {
 
@@ -669,7 +627,9 @@ export default class SelectionManager
 					if (this.isAvailableChildNode(currentNode)) {
 
 						var parentNode = currentNode.parentNode
+
 						this.mergeNodes(previousNode, currentNode, true)
+
 						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
 							parentNode.parentNode.removeChild(parentNode)
 						}
@@ -1503,7 +1463,7 @@ export default class SelectionManager
 
 			travelNode.parentNode.parentNode.insertBefore(newNode, travelNode.parentNode.nextSibling)
 			var newRange = document.createRange()
-			newRange.setStart(this.getTextNodeInElementNode(newNode, "first"), 0)
+			newRange.setStart(this.getTextNodeInElementNode(newNode, "start"), 0)
 			newRange.collapse(true)
 			this.replaceRange(newRange)
 
@@ -1537,6 +1497,12 @@ export default class SelectionManager
 
 	}
 
+	/**
+	 * Merge two nodes into a single node
+	 * @param {Node} first 
+	 * @param {Node} second 
+	 * @param {Boolean} matchTopNode 
+	 */
 	mergeNodes(first, second, matchTopNode = false)
 	{
 		console.log("merge method runs")
@@ -1560,12 +1526,9 @@ export default class SelectionManager
 				startOffset = 0
 			}
 		}
-
 		
 
 		while (1) {
-
-			console.log("front: ", front, " back: ", back)
 
 			if (!front || !back) {
 				break
@@ -1593,10 +1556,6 @@ export default class SelectionManager
 
 			} else {
 
-				console.log("here")
-
-				console.log("front: ", front, " back: ", back)
-
 				nextFront = front.lastChild
 				nextBack = back.firstChild
 
@@ -1604,7 +1563,7 @@ export default class SelectionManager
 					front.appendChild(tempNode)
 				}
 
-				back.parentNode.removeChild(back)
+				this.removeNode(back)
 
 				front = nextFront
 				back = nextBack
@@ -1726,13 +1685,19 @@ export default class SelectionManager
 			type: "remove",
 			targets: [],
 			range: {
-				startTextOffset: startTextOffset,
-				endTextOffset: endTextOffset
+				previousState: {
+					startTextOffset: startTextOffset,
+					endTextOffset: endTextOffset,
+					startNode: this.getNodeOfNode(orgRange.startContainer),
+					endNode: this.getNodeOfNode(orgRange.endContainer)
+				},
+				nextState: {
+					startTextOffset: 0,
+					endTextOffset: 0
+				}
 			}
 		}
 		this.undoManager.recordAction(action)
-
-		console.group("Remove Selection")
 
 		while (1) {
 
@@ -1812,13 +1777,7 @@ export default class SelectionManager
 				let originalContent = currentParentNode.innerHTML
 
 				tempRange.deleteContents()
-
-				// record action
-				action.targets.push({
-					removedNode: currentParentNode,
-					originalContent: originalContent,
-					modifiedContent: currentParentNode.innerHTML
-				})
+				currentParentNode.normalize()
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 
@@ -1827,7 +1786,16 @@ export default class SelectionManager
 
 				}
 
+				// record action
+				action.targets.push({
+					removedNode: currentParentNode,
+					originalContent: originalContent,
+					modifiedContent: currentParentNode.innerHTML
+				})
+
 				console.groupEnd()
+
+				this.setCursorAt(currentParentNode, -1)
 
 			} else if (
 				!currentParentNode.contains(startNode) &&
@@ -1846,6 +1814,12 @@ export default class SelectionManager
 				let originalContent = currentParentNode.innerHTML
 
 				tempRange.deleteContents()
+				currentParentNode.normalize()
+
+				if (this.isTextEmptyNode(currentParentNode)) {
+					currentParentNode.innerHTML = ""
+					currentParentNode.appendChild(document.createElement("br"))
+				}
 
 				// record action
 				action.targets.push({
@@ -1854,13 +1828,12 @@ export default class SelectionManager
 					modifiedContent: currentParentNode.innerHTML
 				})
 
-				if (this.isTextEmptyNode(currentParentNode)) {
-					currentParentNode.innerHTML = ""
-					currentParentNode.appendChild(document.createElement("br"))
-				}
+				this.setCursorAt(currentParentNode)
+				
 				if (collapseDirection === "start") {
 					this.backspace(document.createEvent("KeyboardEvent"))
-				} 
+				}
+
 				break
 
 			} else if (
@@ -1868,19 +1841,30 @@ export default class SelectionManager
 				currentParentNode.contains(endNode)
 			) {
 
+				// Contains both startnode and endnode
+				console.log("contains both")
+
+				let originalContent = currentParentNode.innerHTML;
+
 				orgRange.deleteContents()
+				currentParentNode.normalize()
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 					currentParentNode.innerHTML = ""
 					currentParentNode.appendChild(document.createElement("br"))
 				}
 
-				// console.log(startNode)
-				// console.log(endNode)
+				// record action
+				action.targets.push({
+					removedNode: currentParentNode,
+					originalContent: originalContent,
+					modifiedContent: currentParentNode.innerHTML
+				})
 
 				if (collapseDirection === "end") {
 					this.enter(document.createEvent("KeyboardEvent")) 
 				}
+
 
 				break
 
@@ -1891,6 +1875,81 @@ export default class SelectionManager
 
 		}
 
+		let afterRange = window.getSelection().getRangeAt(0)
+		startTextOffset = pRange.getTextOffset(this.getNodeOfNode(afterRange.startContainer), afterRange.startContainer, afterRange.startOffset)
+		endTextOffset = pRange.getTextOffset(this.getNodeOfNode(afterRange.endContainer), afterRange.endContainer, afterRange.endOffset)
+
+		action.range.nextState.startTextOffset = startTextOffset
+		action.range.nextState.endTextOffset = endTextOffset
+
+		action.range.nextState.startNode = this.getNodeOfNode(afterRange.startContainer)
+		action.range.nextState.endNode = this.getNodeOfNode(afterRange.endContainer)
+
+	}
+
+	/**
+	 * Remove node from the editor
+	 * @param {Node} node 
+	 */
+	removeNode(node, cursorAt, recordAction = false)
+	{
+
+		let parentNode = node.parentNode
+
+		let cursorTarget
+		let cursorIndex
+
+		if (cursorAt) {
+			cursorTarget = cursorAt
+			cursorIndex = -1
+		} else {
+			cursorTarget = node
+			cursorIndex = 0
+		}
+
+		// record action
+		let action = {
+			type: "remove",
+			targets: [],
+			range: {
+				previousState: {
+					startNode: node,
+					startTextOffset: 0,
+					endNode: node,
+					endTextOffset: 0
+				},
+				nextState: {
+					startNode: node,
+					startTextOffset: 0,
+					endNode: node,
+					endTextOffset: 0
+				}
+			}
+		}
+		
+		if (this.isList(parentNode)) {
+
+			if (parentNode.querySelectorAll("LI").length === 0) {
+
+				parentNode.parentNode.removeChild(parentNode)
+
+			}
+
+		} else {
+
+			// record action
+			action.targets.push({
+				removedNode: node,
+				previousNode: node.previousSibling,
+				nextNode: node.nextSibling,
+				parentNode: node.parentNode
+			})
+
+			this.undoManager.recordAction(action)
+
+			parentNode.removeChild(node)
+
+		}
 
 	}
 
@@ -2447,6 +2506,11 @@ export default class SelectionManager
 
 	}
 
+	/**
+	 * 
+	 * @param {Node} node
+	 * @return {Node}
+	 */
 	getPreviousAvailableNode(node)
 	{
 		var previousNode = node

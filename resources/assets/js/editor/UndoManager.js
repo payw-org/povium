@@ -78,13 +78,13 @@ export default class UndoManager {
 
 					action.targets[i].previousNode.parentNode.insertBefore(action.targets[i].removedNode, action.targets[i].previousNode.nextSibling)
 
-				} else if (action.targets[i].parentNode) {
-
-					action.targets[i].parentNode.appendChild(action.targets[i].removedNode)
-
 				} else if (action.targets[i].nextNode) {
+
+					action.targets[i].nextNode.parentNode.insertBefore(action.targets[i].removedNode, action.targets[i].nextNode)
+
+				} else if (action.targets[i].parentNode) {
 					
-					action.targets[i].previousNode.parentNode.insertBefore(action.targets[i].removedNodem, action.targets[i].nextNode)
+					action.targets[i].parentNode.appendChild(action.targets[i].removedNode)
 
 				} else if (action.targets[i].originalContent) {
 
@@ -95,8 +95,8 @@ export default class UndoManager {
 			}
 
 			let pRange = new PRange()
-			pRange.setStart(action.targets[0].removedNode, action.range.startTextOffset)
-			pRange.setEnd(action.targets[action.targets.length - 1].removedNode, action.range.endTextOffset)
+			pRange.setStart(action.range.previousState.startNode, action.range.previousState.startTextOffset)
+			pRange.setEnd(action.range.previousState.endNode, action.range.previousState.endTextOffset)
 			let range = document.createRange()
 			range.setStart(pRange.startContainer, pRange.startOffset)
 			range.setEnd(pRange.endContainer, pRange.endOffset)
@@ -104,7 +104,6 @@ export default class UndoManager {
 			window.getSelection().addRange(range)
 
 		} else if (action.type === "split") {
-
 
 			action.nextState.newNode.parentNode.removeChild(action.nextState.newNode)
 
@@ -134,6 +133,7 @@ export default class UndoManager {
 			let range = document.createRange()
 			range.setStart(pRange.startContainer, pRange.startOffset)
 			range.setEnd(pRange.endContainer, pRange.endOffset)
+			range.collapse(true)
 
 			window.getSelection().addRange(range)
 
@@ -185,6 +185,45 @@ export default class UndoManager {
 			} else if (action.nextSibling) {
 				action.nextSibling.parentNode.insertBefore(action.newNode, action.nextSibling)
 			}
+
+		} else if (action.type === "remove") {
+
+			for (let i = 0; i < action.targets.length; i++) {
+
+				// while (node = action.targets[i].previousTarget.firstChild) {
+				// 	action.targets[i].nextTarget.appendChild(node)
+				// }
+
+				// action.targets[i].previousTarget.parentNode.replaceChild(action.targets[i].nextTarget, action.targets[i].previousTarget)
+
+				if (action.targets[i].previousNode) {
+
+					action.targets[i].previousNode.parentNode.removeChild(action.targets[i].removedNode)
+
+				} else if (action.targets[i].nextNode) {
+					
+					action.targets[i].nextNode.parentNode.removeChild(action.targets[i].removedNode)
+
+				} else if (action.targets[i].parentNode) {
+
+					action.targets[i].parentNode.removeChild(action.targets[i].removedNode)
+
+				} else if (action.targets[i].modifiedContent) {
+
+					console.log(action.targets[i].modifiedContent)
+					action.targets[i].removedNode.innerHTML = action.targets[i].modifiedContent
+
+				}
+
+			}
+
+			let pRange = new PRange()
+			pRange.setEnd(action.range.previousState.endNode, action.range.nextState.endTextOffset)
+			let range = document.createRange()
+			range.setEnd(pRange.endContainer, pRange.endOffset)
+			range.collapse(false)
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
 
 		} else if (action.type === "split") {
 

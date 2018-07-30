@@ -23,6 +23,10 @@ export default class PRange {
 		this.startContainer = node
 		this.startOffset = 0
 
+		if (textOffset === -1) {
+			textOffset = node.textContent.length
+		}
+
 		while (1) {
 
 			if (travelNode.nodeType === 3) {
@@ -90,6 +94,10 @@ export default class PRange {
 
 		this.endContainer = node
 		this.endOffset = 0
+
+		if (textOffset === -1) {
+			textOffset = node.textContent.length
+		}
 
 		while (1) {
 
