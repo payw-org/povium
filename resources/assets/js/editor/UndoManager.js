@@ -72,15 +72,15 @@ export default class UndoManager {
 
 		} else if (action.type === "remove") {
 
-			for (let i = 0; i < action.targets.length; i++) {
+			for (let i = action.targets.length - 1; i >= 0; i--) {
 
-				if (action.targets[i].previousNode) {
-
-					action.targets[i].previousNode.parentNode.insertBefore(action.targets[i].removedNode, action.targets[i].previousNode.nextSibling)
-
-				} else if (action.targets[i].nextNode) {
+				if (action.targets[i].nextNode && action.targets[i].nextNode.parentNode) {
 
 					action.targets[i].nextNode.parentNode.insertBefore(action.targets[i].removedNode, action.targets[i].nextNode)
+
+				} else if (action.targets[i].previousNode && action.targets[i].previousNode.parentNode) {
+
+					action.targets[i].previousNode.parentNode.insertBefore(action.targets[i].removedNode, action.targets[i].previousNode.nextSibling)
 
 				} else if (action.targets[i].parentNode) {
 					
@@ -133,10 +133,32 @@ export default class UndoManager {
 			let range = document.createRange()
 			range.setStart(pRange.startContainer, pRange.startOffset)
 			range.setEnd(pRange.endContainer, pRange.endOffset)
-			range.collapse(true)
-
 			window.getSelection().addRange(range)
 
+		} else if (action.type === "merge") {
+
+			action.mergedNode.innerHTML = action.mergedNodeOriginalContent
+			if (action.removedNodePreviousNode && action.removedNodePreviousNode.parentNode) {
+
+				action.removedNodePreviousNode.parentNode.insertBefore(action.removedNode, action.removedNodePreviousNode.nextSibling)
+
+			} else if (action.removedNodeNextNode && action.removedNodeNextNode.parentNode) {
+
+				action.removedNodeNextNode.parentNode.insertBefore(action.removedNode, action.removedNodeNextNode)
+
+			}
+			
+			action.removedContentTarget.innerHTML = action.removedContent
+
+			let pRange = new PRange()
+			pRange.setStart(action.range.previousState.startNode, action.range.previousState.startTextOffset)
+			pRange.setEnd(action.range.previousState.endNode, action.range.previousState.endTextOffset)
+			let range = document.createRange()
+			range.setStart(pRange.startContainer, pRange.startOffset)
+			range.setEnd(pRange.endContainer, pRange.endOffset)
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
+			
 		}
 		
 
@@ -196,11 +218,11 @@ export default class UndoManager {
 
 				// action.targets[i].previousTarget.parentNode.replaceChild(action.targets[i].nextTarget, action.targets[i].previousTarget)
 
-				if (action.targets[i].previousNode) {
+				if (action.targets[i].previousNode && action.targets[i].previousNode.parentNode) {
 
 					action.targets[i].previousNode.parentNode.removeChild(action.targets[i].removedNode)
 
-				} else if (action.targets[i].nextNode) {
+				} else if (action.targets[i].nextNode && action.targets[i].nextNode.parentNode) {
 					
 					action.targets[i].nextNode.parentNode.removeChild(action.targets[i].removedNode)
 
@@ -215,13 +237,14 @@ export default class UndoManager {
 
 				}
 
-			}
+			} 
 
 			let pRange = new PRange()
-			pRange.setEnd(action.range.previousState.endNode, action.range.nextState.endTextOffset)
+			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
+			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
 			let range = document.createRange()
+			range.setStart(pRange.startContainer, pRange.startOffset)
 			range.setEnd(pRange.endContainer, pRange.endOffset)
-			range.collapse(false)
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
@@ -256,6 +279,20 @@ export default class UndoManager {
 			range.setStart(pRange.startContainer, pRange.startOffset)
 			range.setEnd(pRange.endContainer, pRange.endOffset)
 
+			window.getSelection().addRange(range)
+
+		} else if (action.type === "merge") {
+
+			action.removedNode.parentNode.removeChild(action.removedNode)
+			action.mergedNode.innerHTML = action.mergedContent
+			
+			let pRange = new PRange()
+			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
+			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
+			let range = document.createRange()
+			range.setStart(pRange.startContainer, pRange.startOffset)
+			range.setEnd(pRange.endContainer, pRange.endOffset)
+			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
 		}

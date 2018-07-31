@@ -535,14 +535,24 @@ export default class SelectionManager
 		var currentNode = this.getNodeInSelection()
 
 		var range = this.getRange()
+
+		let linkedAction = false
+
 		if (!range.collapsed) {
 			console.log("pressed backspace but the range is not collapsed")
 			e.stopPropagation()
 			e.preventDefault()
-			this.removeSelection("start")
+
+			linkedAction = true
+
+			if (!this.removeSelection("backspace", linkedAction)) {
+				return;
+			}
 			
-			return
+			// return
 		}
+
+		currentNode = this.getNodeInSelection()
 
 		// Backspace key - Empty node
 		if (currentNode && this.isTextEmptyNode(currentNode)) {
@@ -564,13 +574,39 @@ export default class SelectionManager
 
 				if (this.isTextEmptyNode(previousNode)) {
 
-					this.removeNode(previousNode)
+					this.removeNode(previousNode, {
+						previousState: {
+							startNode: currentNode,
+							startTextOffset: 0,
+							endNode: currentNode,
+							endTextOffset: 0
+						},
+						nextState: {
+							startNode: currentNode,
+							startTextOffset: 0,
+							endNode: currentNode,
+							endTextOffset: 0
+						}
+					}, linkedAction)
 
 				} else {
 
 					this.setCursorAt(previousNode, -1)
 
-					this.removeNode(currentNode)
+					this.removeNode(currentNode, {
+						previousState: {
+							startNode: currentNode,
+							startTextOffset: 0,
+							endNode: currentNode,
+							endTextOffset: 0
+						},
+						nextState: {
+							startNode: previousNode,
+							startTextOffset: previousNode.textContent.length,
+							endNode: previousNode,
+							endTextOffset: previousNode.textContent.length
+						}
+					}, linkedAction)
 
 				}
 
@@ -608,7 +644,20 @@ export default class SelectionManager
 
 				if (this.isTextEmptyNode(previousNode)) {
 
-					this.removeNode(previousNode)
+					this.removeNode(previousNode, {
+						previousState: {
+							startNode: currentNode,
+							startTextOffset: 0,
+							endNode: currentNode,
+							endTextOffset: 0
+						},
+						nextState: {
+							startNode: currentNode,
+							startTextOffset: 0,
+							endNode: currentNode,
+							endTextOffset: 0
+						}
+					}, linkedAction)
 
 				} else {
 
@@ -624,21 +673,20 @@ export default class SelectionManager
 						br.parentNode.removeChild(br)
 					}
 
-					if (this.isAvailableChildNode(currentNode)) {
-
-						var parentNode = currentNode.parentNode
-
-						this.mergeNodes(previousNode, currentNode, true)
-
-						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode)
+					this.mergeNodes(previousNode, currentNode, true, {
+						previousState: {
+							startNode: currentNode,
+							startTextOffset: 0,
+							endNode: currentNode,
+							endTextOffset: 0
+						},
+						nextState: {
+							startNode: previousNode,
+							startTextOffset: previousNode.textContent.length,
+							endNode: previousNode,
+							endTextOffset: previousNode.textContent.length
 						}
-
-					} else {
-
-						this.mergeNodes(previousNode, currentNode, true)
-
-					}
+					}, linkedAction)
 
 				}
 
@@ -663,15 +711,25 @@ export default class SelectionManager
 		var currentNode = this.getNodeInSelection()
 
 		var range = this.getRange()
+
+		let linkedAction = false
+
 		if (!range.collapsed) {
 			e.stopPropagation()
 			e.preventDefault()
-			this.removeSelection("start")
-			return
+
+			linkedAction = true
+
+			if (!this.removeSelection("delete", linkedAction)) {
+				return;
+			}
+			// return
 		}
 
+		currentNode = this.getNodeInSelection()
+
 		// Delete key - Empty node
-		if (currentNode && currentNode.textContent.length === 0) {
+		if (currentNode && this.isTextEmptyNode(currentNode)) {
 
 			e.stopPropagation()
 			e.preventDefault()
@@ -686,28 +744,12 @@ export default class SelectionManager
 
 				console.log("empty child node or parent node")
 
-				if (nextNode) {
-					var range = document.createRange()
-					range.setStartBefore(nextNode.firstChild)
-					this.replaceRange(range)
+				this.removeNode(currentNode)
 
-					if (this.isAvailableChildNode(currentNode)) {
-						var parentNode = currentNode.parentNode
-						currentNode.parentNode.removeChild(currentNode)
-						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode)
-						}
-					} else {
-						currentNode.parentNode.removeChild(currentNode)
-					}
-
-				}
+				this.setCursorAt(nextNode, 0)
 
 			} else {
-				var range = document.createRange()
-				range.setStart(currentNode, 0)
-				range.setEnd(currentNode, 0)
-				this.replaceRange(range)
+				// do nothing
 			}
 
 		} else if (currentNode && this.getSelectionPositionInParagraph() === 3) {
@@ -727,24 +769,45 @@ export default class SelectionManager
 
 				if (nextNode) {
 
-					var br = nextNode.querySelector("br")
-					if (br) {
-						br.parentNode.removeChild(br)
-					}
+					if (this.isTextEmptyNode(nextNode)) {
 
-					if (this.isAvailableChildNode(nextNode)) {
-						var parentNode = nextNode.parentNode
-						this.mergeNodes(currentNode, nextNode, true)
-						if (this.isList(parentNode) && parentNode.querySelectorAll("LI").length === 0) {
-							parentNode.parentNode.removeChild(parentNode)
-						}
+						this.removeNode(nextNode, {
+							previousState: {
+								startNode: currentNode,
+								startTextOffset: currentNode.textContent.length,
+								endNode: currentNode,
+								endTextOffset: currentNode.textContent.length
+							},
+							nextState: {
+								startNode: currentNode,
+								startTextOffset: currentNode.textContent.length,
+								endNode: currentNode,
+								endTextOffset: currentNode.textContent.length
+							}
+						}, linkedAction)
+
 					} else {
-						if (this.isImageBlock(nextNode)) {
-							nextNode.parentNode.removeChild(nextNode)
-						} else {
-							this.mergeNodes(currentNode, nextNode, true)
+
+						var br = nextNode.querySelector("br")
+						if (br) {
+							br.parentNode.removeChild(br)
 						}
-						
+
+						this.mergeNodes(currentNode, nextNode, true, {
+							previousState: {
+								startNode: currentNode,
+								startTextOffset: currentNode.textContent.length,
+								endNode: currentNode,
+								endTextOffset: currentNode.textContent.length
+							},
+							nextState: {
+								startNode: currentNode,
+								startTextOffset: currentNode.textContent.length,
+								endNode: currentNode,
+								endTextOffset: currentNode.textContent.length
+							}
+						}, linkedAction)
+
 					}
 
 				}
@@ -766,18 +829,24 @@ export default class SelectionManager
 
 		var currentNode = this.getNodeInSelection()
 		var range = this.getRange()
+		let linkedAction = false
 
 		if (!range.collapsed) {
 
 			e.stopPropagation()
 			e.preventDefault()
-			this.removeSelection()
-			return
+
+			linkedAction = true
+
+			if (!this.removeSelection("enter", linkedAction)) {
+				return
+			}
+			// return
 
 		}
 
 		// Delete the br if the current sentence is not empty
-		var currentNode = this.getNodeInSelection()
+		currentNode = this.getNodeInSelection()
 
 		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
 
@@ -802,7 +871,7 @@ export default class SelectionManager
 		if (selPosType === 2) {
 
 			console.info('Press enter: middle')
-			this.splitElementNode3()
+			this.splitElementNode3(linkedAction)
 
 		} else if (selPosType === 1) {
 
@@ -815,7 +884,8 @@ export default class SelectionManager
 			var action = {
 				type: "add",
 				nextSibling: currentNode,
-				newNode: pElm
+				newNode: pElm,
+				linked: linkedAction
 			}
 			this.undoManager.recordAction(action)
 
@@ -851,7 +921,8 @@ export default class SelectionManager
 			var action = {
 				type: "add",
 				previousSibling: currentNode,
-				newNode: pElm
+				newNode: pElm,
+				linked: linkedAction
 			}
 			this.undoManager.recordAction(action)
 
@@ -909,6 +980,12 @@ export default class SelectionManager
 			return
 		}
 
+		// 0. record action
+		let range = window.getSelection().getRangeAt(0)
+		let pRange = new PRange()
+		let startTextOffset = pRange.getTextOffset(this.getNodeOfNode(range.startContainer), range.startContainer, range.startOffset)
+		let endTextOffset = pRange.getTextOffset(this.getNodeOfNode(range.endContainer), range.endContainer, range.endOffset)
+
 		// 1. Change node
 		var node
 		var newNode = document.createElement(newNodeName)
@@ -925,6 +1002,8 @@ export default class SelectionManager
 		// 3. replace node
 		targetNode.parentNode.replaceChild(newNode, targetNode)
 
+		
+
 		if (recordAction) {
 			let action = {
 				type: "change",
@@ -935,8 +1014,8 @@ export default class SelectionManager
 					}
 				],
 				range: {
-					startTextOffset: 0,
-					endTextOffset: 0
+					startTextOffset: startTextOffset,
+					endTextOffset: endTextOffset
 				}
 			}
 			this.undoManager.recordAction(action)
@@ -1334,7 +1413,7 @@ export default class SelectionManager
 
 	// }
 
-	splitElementNode3(recordAction = true)
+	splitElementNode3(linkedRecord = false)
 	{
 		
 		let orgRange = this.getRange()
@@ -1463,7 +1542,7 @@ export default class SelectionManager
 
 			travelNode.parentNode.parentNode.insertBefore(newNode, travelNode.parentNode.nextSibling)
 			var newRange = document.createRange()
-			newRange.setStart(this.getTextNodeInElementNode(newNode, "start"), 0)
+			newRange.setStart(this.getTextNodeInElementNode(newNode, "first"), 0)
 			newRange.collapse(true)
 			this.replaceRange(newRange)
 
@@ -1487,12 +1566,11 @@ export default class SelectionManager
 				content: currentParentNode.innerHTML,
 				length: currentParentNode.textContent.length,
 				newNode: newNode
-			}
+			},
+			linked: linkedRecord
 		}
 
 		this.undoManager.recordAction(action)
-
-
 
 
 	}
@@ -1503,7 +1581,7 @@ export default class SelectionManager
 	 * @param {Node} second 
 	 * @param {Boolean} matchTopNode 
 	 */
-	mergeNodes(first, second, matchTopNode = false)
+	mergeNodes(first, second, matchTopNode = false, recordRangeState, linkedRecord = false)
 	{
 		console.log("merge method runs")
 
@@ -1526,7 +1604,13 @@ export default class SelectionManager
 				startOffset = 0
 			}
 		}
-		
+
+		// record action
+		let mergedNodeOriginalContent = first.innerHTML
+		let mergedNodeOriginalContentLength = first.textContent.length
+		let removedContent = second.innerHTML
+		let removedContentTarget = second
+		let removedNode, removedNodePreviousNode, removedNodeNextNode
 
 		while (1) {
 
@@ -1563,7 +1647,25 @@ export default class SelectionManager
 					front.appendChild(tempNode)
 				}
 
-				this.removeNode(back)
+				// this.removeNode(back)
+				let parentNode = back.parentNode
+				if (this.isListItem(back) && parentNode.querySelectorAll("LI").length === 1) {
+
+					removedNode = parentNode
+					removedNodePreviousNode = parentNode.previousSibling
+					removedNodeNextNode = parentNode.nextSibling
+
+					parentNode.parentNode.removeChild(parentNode)
+
+				} else {
+
+					removedNode = back
+					removedNodePreviousNode = back.previousSibling
+					removedNodeNextNode = back.nextSibling
+
+					back.parentNode.removeChild(back)
+
+				}
 
 				front = nextFront
 				back = nextBack
@@ -1580,7 +1682,27 @@ export default class SelectionManager
 			this.replaceRange(keepRange)
 
 		}
-		
+
+		//record action
+		let action = {
+			type: "merge",
+			mergedNode: first,
+			mergedNodeOriginalContent: mergedNodeOriginalContent,
+			mergedNodeOriginalContentLength: mergedNodeOriginalContentLength,
+			mergedContent: first.innerHTML,
+			removedNode: removedNode,
+			removedNodePreviousNode: removedNodePreviousNode,
+			removedNodeNextNode: removedNodeNextNode,
+			removedContent: removedContent,
+			removedContentTarget: removedContentTarget,
+			range: recordRangeState
+		}
+
+		if (linkedRecord) {
+			action.linked = true
+		}
+
+		this.undoManager.recordAction(action)
 
 	}
 
@@ -1640,10 +1762,12 @@ export default class SelectionManager
 	/**
 	 * Remove selection.
 	 */
-	removeSelection(collapseDirection = "end")
+	removeSelection(withKeyPress = "enter", linkedRecord = false)
 	{
 		var range
 		range = this.getRange()
+
+		let extraKeyPress = false
 
 		var orgRange = range.cloneRange()
 		if (!range) {
@@ -1695,7 +1819,11 @@ export default class SelectionManager
 					startTextOffset: 0,
 					endTextOffset: 0
 				}
-			}
+			},
+			linked: linkedRecord
+		}
+		if (linkedRecord) {
+			action.linked = true
 		}
 		this.undoManager.recordAction(action)
 
@@ -1715,23 +1843,16 @@ export default class SelectionManager
 				console.group("nothing contains")
 				console.log(currentParentNode.textContent)
 
+				extraKeyPress = true
+
 				let originalContent = currentParentNode.innerHTML
 
 				if (this.isAvailableChildNode(currentParentNode)) {
 
-					// record action
-					action.targets.push({
-						previousNode: currentParentNode.previousSibling,
-						removedNode: currentParentNode,
-						nextNode: currentParentNode.nextSibling,
-						parentNode: currentParentNode.parentNode
-					})
-
 					console.log("list is detected")
 					var parentNode = currentParentNode.parentNode
-					currentParentNode.parentNode.removeChild(currentParentNode)
 
-					if (this.isTextEmptyNode(parentNode)) {
+					if (this.isListItem(currentParentNode) && parentNode.querySelectorAll("LI").length === 1) {
 
 						// record action
 						action.targets.push({
@@ -1742,6 +1863,19 @@ export default class SelectionManager
 						})
 
 						parentNode.parentNode.removeChild(parentNode)
+
+					} else {
+
+						// record action
+						action.targets.push({
+							previousNode: currentParentNode.previousSibling,
+							removedNode: currentParentNode,
+							nextNode: currentParentNode.nextSibling,
+							parentNode: currentParentNode.parentNode
+						})
+
+						currentParentNode.parentNode.removeChild(currentParentNode)
+
 					}
 
 				} else {
@@ -1770,6 +1904,8 @@ export default class SelectionManager
 				console.log(currentParentNode.textContent)
 				var metCurrentNode = false
 
+				extraKeyPress = true
+
 				var tempRange = document.createRange()
 				tempRange.setStart(startNode, startOffset)
 				tempRange.setEndAfter(currentParentNode.lastChild)
@@ -1795,7 +1931,9 @@ export default class SelectionManager
 
 				console.groupEnd()
 
-				this.setCursorAt(currentParentNode, -1)
+				if (withKeyPress === "delete") {
+					this.setCursorAt(currentParentNode, -1)
+				}
 
 			} else if (
 				!currentParentNode.contains(startNode) &&
@@ -1805,6 +1943,8 @@ export default class SelectionManager
 				travelNode = endNode
 				console.log("only contains endnode")
 				console.log(currentParentNode.textContent)
+
+				extraKeyPress = true
 
 
 				var tempRange = document.createRange()
@@ -1828,10 +1968,9 @@ export default class SelectionManager
 					modifiedContent: currentParentNode.innerHTML
 				})
 
-				this.setCursorAt(currentParentNode)
-				
-				if (collapseDirection === "start") {
-					this.backspace(document.createEvent("KeyboardEvent"))
+
+				if (withKeyPress === "backspace") {
+					this.setCursorAt(currentParentNode)
 				}
 
 				break
@@ -1861,8 +2000,8 @@ export default class SelectionManager
 					modifiedContent: currentParentNode.innerHTML
 				})
 
-				if (collapseDirection === "end") {
-					this.enter(document.createEvent("KeyboardEvent")) 
+				if (withKeyPress === "enter") {
+					this.enter(document.createEvent("KeyboardEvent"))
 				}
 
 
@@ -1885,67 +2024,76 @@ export default class SelectionManager
 		action.range.nextState.startNode = this.getNodeOfNode(afterRange.startContainer)
 		action.range.nextState.endNode = this.getNodeOfNode(afterRange.endContainer)
 
+		return extraKeyPress
+
 	}
 
 	/**
 	 * Remove node from the editor
 	 * @param {Node} node 
 	 */
-	removeNode(node, cursorAt, recordAction = false)
+	removeNode(node, recordRangeState, linkedRecord = false)
 	{
 
 		let parentNode = node.parentNode
 
-		let cursorTarget
-		let cursorIndex
-
-		if (cursorAt) {
-			cursorTarget = cursorAt
-			cursorIndex = -1
-		} else {
-			cursorTarget = node
-			cursorIndex = 0
-		}
-
-		// record action
-		let action = {
-			type: "remove",
-			targets: [],
-			range: {
-				previousState: {
-					startNode: node,
-					startTextOffset: 0,
-					endNode: node,
-					endTextOffset: 0
-				},
-				nextState: {
-					startNode: node,
-					startTextOffset: 0,
-					endNode: node,
-					endTextOffset: 0
-				}
+		let action
+		if (recordRangeState) {
+			// record action
+			action = {
+				type: "remove",
+				targets: [],
+				range: recordRangeState,
+				linked: linkedRecord
 			}
 		}
-		
-		if (this.isList(parentNode)) {
 
-			if (parentNode.querySelectorAll("LI").length === 0) {
+		if (this.isListItem(node)) {
+
+			if (parentNode.querySelectorAll("LI").length === 1) {
+
+				// record action
+				if (recordRangeState) {
+					action.targets.push({
+						removedNode: parentNode,
+						previousNode: parentNode.previousSibling,
+						nextNode: parentNode.nextSibling,
+						parentNode: parentNode.parentNode
+					})
+					this.undoManager.recordAction(action)
+				}
 
 				parentNode.parentNode.removeChild(parentNode)
+
+			} else {
+
+				// record action
+				if (recordRangeState) {
+					action.targets.push({
+						removedNode: node,
+						previousNode: node.previousSibling,
+						nextNode: node.nextSibling,
+						parentNode: node.parentNode
+					})
+					this.undoManager.recordAction(action)
+				}
+
+				parentNode.removeChild(node)
 
 			}
 
 		} else {
 
 			// record action
-			action.targets.push({
-				removedNode: node,
-				previousNode: node.previousSibling,
-				nextNode: node.nextSibling,
-				parentNode: node.parentNode
-			})
-
-			this.undoManager.recordAction(action)
+			if (recordRangeState) {
+				action.targets.push({
+					removedNode: node,
+					previousNode: node.previousSibling,
+					nextNode: node.nextSibling,
+					parentNode: node.parentNode
+				})
+				this.undoManager.recordAction(action)
+			}
 
 			parentNode.removeChild(node)
 
@@ -2743,6 +2891,7 @@ export default class SelectionManager
 		range.collapse(true)
 		window.getSelection().removeAllRanges()
 		window.getSelection().addRange(range)
+
 	}
 
 }

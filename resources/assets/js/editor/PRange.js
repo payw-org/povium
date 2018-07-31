@@ -79,6 +79,10 @@ export default class PRange {
 
 		}
 
+		// console.group("PRange set start")
+		// console.log(this.startContainer, this.startOffset)
+		// console.groupEnd()
+
 	}
 
 	/**
@@ -150,6 +154,10 @@ export default class PRange {
 			}
 
 		}
+
+		// console.group("PRange set end")
+		// console.log(this.endContainer, this.endOffset)
+		// console.groupEnd()
 	}
 
 	/**

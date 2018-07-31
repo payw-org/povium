@@ -105,7 +105,7 @@
 		width: 2rem;
 		height: 2rem;
 		border-radius: .5rem;
-		transition: background .1s ease;
+		transition: background .1s ease, transform .1s ease;
 		background-position: center;
 		background-size: 1.4rem;
 		background-repeat: no-repeat;
@@ -113,6 +113,10 @@
 		&:hover {
 			// background-color: rgba(0,0,0,.1);
 			background-color: @white-blue;
+		}
+
+		&:active {
+			transform: scale(.9);
 		}
 
 		&.hidden {
