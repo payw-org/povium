@@ -9,7 +9,10 @@
 */
 
 return [
-	'\Povium\Auth' => '\Povium\Base\Factory\ServiceFactory',
-	'\Povium\Mailer' => '\Povium\Base\Factory\ServiceFactory',
-	'\Povium\Base\Routing\Router' => '\Povium\Base\Factory\ServiceFactory'
+	'\Povium\Base\Factory\ServiceFactory' => [
+		'\Povium\Auth',
+		'\Povium\Mailer',
+		'\Povium\Base\Routing\Router',
+		'\Povium\Base\Routing\Redirector'
+	]
 ];

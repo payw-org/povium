@@ -65,7 +65,13 @@ class MasterFactory implements FactoryInterface
 	*/
 	protected function hasFactoryFor($type)
 	{
-		return isset($this->typeMap[$type]);
+		foreach ($this->typeMap as $factory => $types) {
+			if (array_search($type, $types) !== false) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -76,6 +82,10 @@ class MasterFactory implements FactoryInterface
 	*/
 	protected function getFactoryFor($type)
 	{
-		return $this->typeMap[$type];
+		foreach ($this->typeMap as $factory => $types) {
+			if (array_search($type, $types) !== false) {
+				return $factory;
+			}
+		}
 	}
 }
