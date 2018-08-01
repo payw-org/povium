@@ -12,6 +12,7 @@
 $router->get(
 	'/*',
  	function ($err_msg) {
+		http_response_code(403);
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_status/403.php';
 	},
  	'ERR_403'
@@ -21,6 +22,7 @@ $router->get(
 $router->get(
 	'/*',
  	function () {
+		http_response_code(404);
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_status/404.php';
 	},
  	'ERR_404'
@@ -30,6 +32,7 @@ $router->get(
 $router->get(
 	'/*',
  	function () {
+		http_response_code(405);
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_status/405.php';
 	},
  	'ERR_405'
@@ -39,6 +42,7 @@ $router->get(
 $router->get(
 	'/*',
  	function ($err_msg) {
+		http_response_code(410);
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_status/410.php';
 	},
  	'ERR_410'

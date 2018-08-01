@@ -14,6 +14,7 @@ use Povium\Exceptions\RouterException;
 
 class Router
 {
+	/* Route search result */
 	const NOT_FOUND = 0;
 	const METHOD_NOT_ALLOWED = 1;
 	const FOUND = 2;
@@ -283,7 +284,7 @@ class Router
 
 				foreach ($matched_routes as $route) {
 					//	Found matched method : FOUND
-					if ($route->http_method == $http_method) {
+					if ($route->httpMethod == $http_method) {
 						$return['result'] = self::FOUND;
 						$return[0] = $route->handler;
 						$return[1] = $params;
@@ -294,7 +295,7 @@ class Router
 
 				//	Not found matched method : METHOD_NOT_ALLOWED
 				$return['result'] = self::METHOD_NOT_ALLOWED;
-				$allowed_methods = array_column($matched_routes, 'http_method');
+				$allowed_methods = array_column($matched_routes, 'httpMethod');
 				$return[0] = $allowed_methods;
 
 				return $return;

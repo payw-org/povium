@@ -20,11 +20,11 @@ class Route
 	 *
 	 * @var string
 	 */
-	public $http_method;
+	public $httpMethod;
 
 	/**
 	 * URI pattern with regular expressions.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $pattern;
@@ -41,7 +41,7 @@ class Route
 	 */
 	public function __construct($http_method, $pattern, $handler)
 	{
-		$this->http_method = strtoupper($http_method);
+		$this->httpMethod = strtoupper($http_method);
 		$this->pattern = $pattern;
 		$this->handler = $handler;
 	}

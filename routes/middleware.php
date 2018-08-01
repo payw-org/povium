@@ -60,20 +60,10 @@ $router->get(
 /* Email authentication page */
 $router->get(
 	'/c/account/verify',
-	function () use ($auth) {
-		//	If is not logged in, send to login page.
+	function () use ($auth, $redirector) {
+		//	If visitor is not logged in, redirect to login page.
 		if (!$auth->isLoggedIn()) {
-			$querystring = http_build_query(array(
-				'redirect' => BASE_URI . $_SERVER['REQUEST_URI']
-			));
-
-			header(
-				'Location: ' . BASE_URI . '/login' . '?' . $querystring,
- 				true,
- 				301
-			);
-
-			exit();
+			$redirector->redirect('/login', true);
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/emailAuthController.php';

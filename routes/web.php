@@ -19,16 +19,10 @@ $router->get(
 /* Login Page */
 $router->get(
 	'/login',
- 	function () use ($auth) {
+ 	function () use ($auth, $redirector) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			header(
-				'Location: ' . BASE_URI . '/',
- 				true,
- 				301
-			);
-
-			exit();
+			$redirector->redirect('/');
 		}
 
 		//	If referer is register page
@@ -39,15 +33,9 @@ $router->get(
 			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
 			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 			if (isset($prev_query) && !isset($curr_query)) {
-				//	Concatenate referer's query to current url.
+				//	Concatenate referer's query to current uri.
 				//	Then redirect.
-				header(
-					'Location: ' . BASE_URI . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?' . $prev_query,
-					true,
-	 				301
-				);
-
-				exit();
+				$redirector->redirect('/login' . '?' . $prev_query);
 			}
 		}
 
@@ -60,16 +48,10 @@ $router->get(
 /* Regsiter Page */
 $router->get(
 	'/register',
- 	function () use ($auth) {
+ 	function () use ($auth, $redirector) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			header(
-				'Location: ' . BASE_URI . '/',
- 				true,
- 				301
-			);
-
-			exit();
+			$redirector->redirect('/');
 		}
 
 		//	If referer is login page
@@ -80,15 +62,9 @@ $router->get(
 			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
 			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 			if (isset($prev_query) && !isset($curr_query)) {
-				//	Concatenate referer's query to current url.
+				//	Concatenate referer's query to current uri.
 				//	Then redirect.
-				header(
-					'Location: ' . BASE_URI . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . '?' . $prev_query,
-					true,
-	 				301
-				);
-
-				exit();
+				$redirector->redirect('/register' . '?' . $prev_query);
 			}
 		}
 
@@ -101,20 +77,10 @@ $router->get(
 /* Editor test page */
 $router->get(
 	'/editor',
- 	function () use ($auth) {
-		// //	If is not logged in, send to login page.
+ 	function () use ($auth, $redirector) {
+		// //	If is not logged in, redirect to login page.
 		// if (!$auth->isLoggedIn()) {
-		// 	$querystring = http_build_query(array(
-		// 		'redirect' => BASE_URI . $_SERVER['REQUEST_URI']
-		// 	));
-		//
-		// 	header(
-		// 		'Location: ' . BASE_URI . '/register' . '?' . $querystring,
- 		// 		true,
- 		// 		301
-		// 	);
-		//
-		// 	exit();
+		// 	$redirector->redirect('/register', true);
 		// }
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php';
@@ -150,7 +116,7 @@ $router->get(
 		//	있으면 포스트 작성자의 readable id와 포스트 타이틀을 가져옴
 		//	대소문자 무시하고 가져온 readable id와 파라미터 readable_id 값을 비교
 		//	대소문자 무시하고 가져온 title과 파라미터 title값을 비교 (가져온 title은 raw한 형태 -> 특문과 공백이 섞여있음)
-		//	둘중 하나라도 다르면 올바른 uri로 redirect시킨 후 (header), exit() 시킴
+		//	둘중 하나라도 다르면 올바른 uri로 redirect시킴
 		//	둘다 같으면 포스트페이지 require
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/post.php';
 
@@ -162,20 +128,10 @@ $router->get(
 /* Email Setting Page */
 $router->get(
 	'/me/settings/email',
-	function () use ($auth) {
-		//	If is not logged in, send to register page.
+	function () use ($auth, $redirector) {
+		//	If visitor is not logged in, redirect to register page.
 		if (!$auth->isLoggedIn()) {
-			$querystring = http_build_query(array(
-				'redirect' => BASE_URI . $_SERVER['REQUEST_URI']
-			));
-
-			header(
-				'Location: ' . BASE_URI . '/register' . '?' . $querystring,
- 				true,
- 				301
-			);
-
-			exit();
+			$redirector->redirect('/register', true);
 		}
 
 		//	require page

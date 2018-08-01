@@ -8,7 +8,7 @@
 *
 */
 
-global $router, $auth;
+global $router, $redirector, $auth;
 
 //	Load http status messages
 $http_status_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/http_status.php';
@@ -21,13 +21,8 @@ $return = $auth->confirmEmailAuth($token);
 
 switch ($return) {
 	case 0:		//	NO ERROR
-		header(
-			'Location: ' . BASE_URI . '/',		#	홈에서 인증완료됨을 알리는 modal 뜨도록 querystring 붙여서 보내기
-			true,
-			301
-		);
+		$redirector->redirect('/');		#	홈에서 인증완료됨을 알리는 modal이 뜨도록 query params 추가하기
 
-		exit();
 		break;
 	case 1:		//	NONEXISTENT USER ID (410 ERROR)
 		call_user_func(
