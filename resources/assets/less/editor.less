@@ -59,51 +59,39 @@
 	position: absolute;
 	background: #fff;
 	pointer-events: none;
-	border: 1px solid #ccc;
+	// border: 1px solid #ccc;
 	// border: 1px solid @white-blue;
 	border-radius: .72rem;
 	opacity: 0;
-	padding: .2rem;
+	padding: .25rem;
 	display: flex;
 	// display: none;
-	transform: translateY(.5rem);
+	transform: translateY(.2rem);
+	// transform: scale(.2);
 	// will-change: transform; // this attribute will cause clipping bug in chrome
-	transition: transform .2s ease, opacity .2s ease;
+	transition: transform .1s ease, opacity .1s ease;
 	cursor: default;
 	z-index: 7777;
 	font-size: 0;
 	// box-shadow: 0 .5rem 1.3rem rgba(0,0,0,.18);
-	// box-shadow: 0 .01rem .12rem rgba(0,0,0,.18);
+	box-shadow: 0 .5rem 1.7rem rgba(0,0,0,.17);
 
 	&.active {
 		opacity: 1;
 		transform: translateY(0);
+		// transform: scale(1);
 		pointer-events: all;
-		transition: transform .2s ease, opacity .2s ease, left .1s ease;
+		transition: transform .1s ease, opacity .1s ease, left .1s ease;
+		
 	}
-
-	// &::before {
-	// 	content: "";
-	// 	display: inline-block;
-	// 	width: 15px;
-	// 	height: 15px;
-	// 	position: absolute;
-	// 	left: 50%;
-	// 	top: 100%;
-	// 	// border: 2px solid @white-blue;
-	// 	border-radius: 2px;
-	// 	background: @pvm-violet;
-	// 	transform: rotate(45deg) translateX(calc(-50% - 4px));
-	// 	z-index: -1;
-	// }
 
 	button {
 		display: inline-block;
 		color: #fff;
 		font-weight: 400;
 		font-size: 1rem;
-		width: 2rem;
-		height: 2rem;
+		width: 2.2rem;
+		height: 2.2rem;
 		border-radius: .5rem;
 		transition: background .1s ease, transform .1s ease;
 		background-position: center;
@@ -111,7 +99,7 @@
 		background-repeat: no-repeat;
 
 		&:hover {
-			// background-color: rgba(0,0,0,.1);
+			// background-color: rgba(0,0,0,.02);
 			background-color: @white-blue;
 		}
 
@@ -366,7 +354,7 @@
 	min-height: 500px;
 
 	// Font size
-	p, li, blockquote {
+	p, li, ul, ol, blockquote {
 
 		font-size: 1.2rem;
 		margin-bottom: .7em;
@@ -419,7 +407,7 @@
 
 	ol, ul {
 		list-style: none;
-		margin: 2em 0;
+		margin: 2em 0 3em;
 
 		& + p, & + blockquote {
 			margin-top: 1em;
