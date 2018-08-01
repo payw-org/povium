@@ -13,9 +13,24 @@ export default class UndoManager {
 	recordAction(actionData)
 	{
 
-		this.actionStack.length = this.currentStep + 1
-		this.actionStack.push(actionData)
-		this.currentStep = this.actionStack.length - 1
+		if (
+			this.actionStack[this.currentStep] &&
+			("linked" in this.actionStack[this.currentStep]) &&
+			this.actionStack[this.currentStep].linked === true &&
+			("linked" in actionData) &&
+			actionData.linked === true
+		) {
+			let actionArr = []
+			actionArr.push(this.actionStack[this.currentStep])
+			actionArr.push(actionData)
+			this.actionStack[this.currentStep] = actionArr
+		} else {
+			this.actionStack.length = this.currentStep + 1
+			this.actionStack.push(actionData)
+			this.currentStep = this.actionStack.length - 1
+		}
+
+		
 
 		console.group("Actions history stack recorded")
 		console.log(this.actionStack)
@@ -26,7 +41,7 @@ export default class UndoManager {
 	{
 
 		if (this.currentStep < 0) {
-			console.log('no more action records')
+			console.info('no more action records')
 			return
 		} else {
 			console.group("undo")
@@ -37,10 +52,58 @@ export default class UndoManager {
 		let action = this.actionStack[this.currentStep]
 		console.log(action)
 		console.groupEnd()
+		
+		if (action.length) {
+
+			for (let i = action.length - 1; i >= 0; i--) {
+
+				this.undoWithAction(action[i])
+
+			}
+
+		} else {
+
+			this.undoWithAction(action)
+
+		}
+
 		this.currentStep--
 
-		
+	}
 
+	redo()
+	{
+		
+		if (this.currentStep >= this.actionStack.length - 1) {
+			console.info('no more actions to recover')
+			return
+		} else {
+			console.group('redo')
+		}
+
+		this.currentStep++
+		var action = this.actionStack[this.currentStep]
+		console.log(action)
+		console.groupEnd()
+		
+		if (action.length) {
+
+			for (let i = 0; i < action.length; i++) {
+
+				this.redoWithAction(action[i])
+
+			}
+
+		} else {
+
+			this.redoWithAction(action)
+
+		}
+
+	}
+
+	undoWithAction(action)
+	{
 		if (action.type === "align") {
 
 			for (let i = 0; i < action.nodes.length; i++) {
@@ -83,7 +146,7 @@ export default class UndoManager {
 					action.targets[i].previousNode.parentNode.insertBefore(action.targets[i].removedNode, action.targets[i].previousNode.nextSibling)
 
 				} else if (action.targets[i].parentNode) {
-					
+
 					action.targets[i].parentNode.appendChild(action.targets[i].removedNode)
 
 				} else if (action.targets[i].originalContent) {
@@ -122,7 +185,7 @@ export default class UndoManager {
 				while (node = action.targets[i].nextTarget.firstChild) {
 					action.targets[i].previousTarget.appendChild(node)
 				}
-				
+
 				action.targets[i].nextTarget.parentNode.replaceChild(action.targets[i].previousTarget, action.targets[i].nextTarget)
 
 			}
@@ -147,7 +210,7 @@ export default class UndoManager {
 				action.removedNodeNextNode.parentNode.insertBefore(action.removedNode, action.removedNodeNextNode)
 
 			}
-			
+
 			action.removedContentTarget.innerHTML = action.removedContent
 
 			let pRange = new PRange()
@@ -158,33 +221,18 @@ export default class UndoManager {
 			range.setEnd(pRange.endContainer, pRange.endOffset)
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
-			
-		}
-		
 
+		}
 	}
 
-	redo()
+	redoWithAction(action)
 	{
-		
-		if (this.currentStep >= this.actionStack.length - 1) {
-			console.info('no more actions to recover')
-			return
-		} else {
-			console.group('redo')
-		}
-
-		this.currentStep++
-		var action = this.actionStack[this.currentStep]
-		console.log(action)
-		console.groupEnd()
-		
 		if (action.type === "align") {
 
 			for (var i = 0; i < action.nodes.length; i++) {
 
 				action.nodes[i].target.style.textAlign = action.nodes[i].nextState
-				
+
 				let range = document.createRange()
 				let pRange = new PRange()
 
@@ -223,7 +271,7 @@ export default class UndoManager {
 					action.targets[i].previousNode.parentNode.removeChild(action.targets[i].removedNode)
 
 				} else if (action.targets[i].nextNode && action.targets[i].nextNode.parentNode) {
-					
+
 					action.targets[i].nextNode.parentNode.removeChild(action.targets[i].removedNode)
 
 				} else if (action.targets[i].parentNode) {
@@ -285,7 +333,7 @@ export default class UndoManager {
 
 			action.removedNode.parentNode.removeChild(action.removedNode)
 			action.mergedNode.innerHTML = action.mergedContent
-			
+
 			let pRange = new PRange()
 			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
 			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
@@ -296,13 +344,13 @@ export default class UndoManager {
 			window.getSelection().addRange(range)
 
 		}
-
-
 	}
 
 	getLatestAction()
 	{
+
 		return this.actionStack[this.currentStep]
+
 	}
 
 }

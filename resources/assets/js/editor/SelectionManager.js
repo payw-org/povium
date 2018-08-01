@@ -154,9 +154,7 @@ export default class SelectionManager
 			}
 		}
 
-		let isNextStartNodeSet = false
-
-
+		this.undoManager.recordAction(action)
 
 		// Change nodes
 		for (var i = 0; i < chunks.length; i++) {
@@ -190,8 +188,7 @@ export default class SelectionManager
 
 		}
 
-		// record action
-		this.undoManager.recordAction(action)
+		
 
 		
 		var keepRange = document.createRange()
@@ -249,8 +246,7 @@ export default class SelectionManager
 			// }
 
 			if (
-				this.isParagraph(chunks[i]) ||
-				this.isHeading(chunks[i])
+				this.isParagraph(chunks[i])
 			) {
 
 				var itemElm = document.createElement('LI')
@@ -418,9 +414,6 @@ export default class SelectionManager
 
 		}
 
-
-		console.log(startNode, endNode)
-
 		var keepRange = document.createRange()
 		keepRange.setStart(startNode, startOffset)
 		keepRange.setEnd(endNode, endOffset)
@@ -475,6 +468,24 @@ export default class SelectionManager
 		let endOffset = orgRange.endOffset
 		let chunks = this.getAllNodesInSelection()
 
+		// record action
+		let pRange = new PRange()
+		let previousStartNode = this.getNodeOfNode(startNode)
+		let startTextOffset = pRange.getTextOffset(previousStartNode, startNode, startOffset)
+		let previousEndNode = this.getNodeOfNode(endNode)
+		let endTextOffset = pRange.getTextOffset(previousEndNode, endNode, endOffset)
+
+		let action = {
+			type: "change",
+			targets: [],
+			range: {
+				startTextOffset: startTextOffset,
+				endTextOffset: endTextOffset
+			}
+		}
+
+		this.undoManager.recordAction(action)
+
 		var isAllBlockquote = true
 
 		for (var i = 0; i < chunks.length; i++) {
@@ -495,6 +506,12 @@ export default class SelectionManager
 			}
 
 			var changedNode = this.changeNodeName(chunks[i], "blockquote", false, false)
+
+			action.targets.push({
+				previousTarget: chunks[i],
+				nextTarget: changedNode
+			})
+
 			if (chunks[i] === startNode) {
 				startNode = changedNode
 			}
@@ -507,7 +524,14 @@ export default class SelectionManager
 		// Selection is all blockquote
 		if (isAllBlockquote) {
 			for (var i = 0; i < chunks.length; i++) {
+
 				var changedNode = this.changeNodeName(chunks[i], "P", false, false)
+
+				action.targets.push({
+					previousTarget: chunks[i],
+					nextTarget: changedNode
+				})
+
 				if (chunks[i] === startNode) {
 					startNode = changedNode
 				}
@@ -980,11 +1004,19 @@ export default class SelectionManager
 			return
 		}
 
+		let startTextOffset = 0
+		let endTextOffset = 0
+
 		// 0. record action
-		let range = window.getSelection().getRangeAt(0)
-		let pRange = new PRange()
-		let startTextOffset = pRange.getTextOffset(this.getNodeOfNode(range.startContainer), range.startContainer, range.startOffset)
-		let endTextOffset = pRange.getTextOffset(this.getNodeOfNode(range.endContainer), range.endContainer, range.endOffset)
+		if (recordAction) {
+
+			let range = window.getSelection().getRangeAt(0)
+			let pRange = new PRange()
+			startTextOffset = pRange.getTextOffset(this.getNodeOfNode(range.startContainer), range.startContainer, range.startOffset)
+			endTextOffset = pRange.getTextOffset(this.getNodeOfNode(range.endContainer), range.endContainer, range.endOffset)
+
+		}
+		
 
 		// 1. Change node
 		var node
@@ -1822,9 +1854,6 @@ export default class SelectionManager
 			},
 			linked: linkedRecord
 		}
-		if (linkedRecord) {
-			action.linked = true
-		}
 		this.undoManager.recordAction(action)
 
 		while (1) {
@@ -2003,6 +2032,8 @@ export default class SelectionManager
 				if (withKeyPress === "enter") {
 					this.enter(document.createEvent("KeyboardEvent"))
 				}
+
+				action.linked = false
 
 
 				break
