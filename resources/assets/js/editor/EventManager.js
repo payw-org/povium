@@ -417,20 +417,61 @@ export default class EventManager
 	onKeyUp (e) {
 		var currentNode = this.selManager.getNodeInSelection()
 		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
+
 			console.log('removed br')
 			currentNode.removeChild(currentNode.querySelector("br"))
+
 		} else if (currentNode && currentNode.textContent === "" && !currentNode.querySelector("br")) {
+
 			currentNode.appendChild(document.createElement("br"))
+
 		}
 
+		// Image block controlling
 		if (this.selManager.isImageCaption(currentNode)) {
 
 			if (this.selManager.isTextEmptyNode(currentNode)) {
+
 				currentNode.parentNode.classList.remove("caption-enabled")
+
 			} else {
+
 				currentNode.parentNode.classList.add("caption-enabled")
+
 			}
 			
+		}
+
+		if (currentNode && currentNode.textContent.match(/^- /) && this.selManager.isParagraph(currentNode)) {
+
+			// console.log(currentNode.textContent.match(/^- /))
+
+			this.selManager.list("ul")
+
+			let currentNode = this.selManager.getNodeInSelection()
+			currentNode.innerHTML = currentNode.innerHTML.replace(/^- /, "")
+
+			if (this.selManager.isTextEmptyNode(currentNode)) {
+				currentNode.innerHTML = "<br>"
+			}
+
+			this.selManager.setCursorAt(currentNode, 0)
+
+		} else if (currentNode && currentNode.textContent.match(/^1\. /) && this.selManager.isParagraph(currentNode)) {
+
+			// console.log(currentNode.textContent.match(/^- /))
+
+			this.selManager.list("ol")
+
+			let currentNode = this.selManager.getNodeInSelection()
+			currentNode.innerHTML = currentNode.innerHTML.replace(/^1\. /, "")
+
+			if (this.selManager.isTextEmptyNode(currentNode)) {
+				currentNode.innerHTML = "<br>"
+			}
+
+			this.selManager.setCursorAt(currentNode, 0)
+
 		}
 	}
 
