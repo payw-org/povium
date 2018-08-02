@@ -11,14 +11,10 @@ namespace Povium\Base\Routing;
 
 use Povium\Base\Routing\Route;
 use Povium\Exceptions\RouterException;
+use Povium\Exceptions\HttpException;
 
 class Router
 {
-	/* Route search result */
-	const NOT_FOUND = 0;
-	const METHOD_NOT_ALLOWED = 1;
-	const FOUND = 2;
-
 	/**
 	 * Binding the same patterns
 	 * array('$pattern' => Route_array)
@@ -35,19 +31,13 @@ class Router
 	private $namedRoutes = array();
 
 	/**
-	 * @return array
-	 */
-	public function getNamedRoutes()
-	{
-		return $this->namedRoutes;
-	}
-
-	/**
-	 * @param string|string[] $http_method One of a HTTP methods or
+	 * Generate new route and add to Router
+	 *
+	 * @param string|string[] 	$http_method	One of a HTTP methods or
 	 * an array of multiple HTTP Methods (GET, POST, PUT, DELETE)
-	 * @param string $pattern     uri pattern
-	 * @param callback $handler
-	 * @param string|string[] $name Router name. It is optional param.
+	 * @param string 			$pattern		uri pattern
+	 * @param callback 			$handler
+	 * @param string|string[] 	$name 			Router name. It is optional param.
 	 */
 	public function addRoute($http_method, $pattern, $handler, $name = null)
 	{
@@ -128,33 +118,21 @@ class Router
 	 */
 	public function dispatch($http_method, $request_uri)
 	{
-		$routeInfo = $this->findMatchedRoute($http_method, $request_uri);
+		//	Find matched route
+		//	Call handler of the route
+		try {
+			$route_info = $this->findMatchedRoute($http_method, $request_uri);
 
-		/* Execute handler */
-		switch ($routeInfo['result']) {
-			case self::FOUND:
-				$handler = $routeInfo[0];
-				$params = $routeInfo[1];
+			$handler = $route_info[0];
+			$params = $route_info[1];
 
-				$result = call_user_func_array($handler, array_values($params));
+			call_user_func_array($handler, array_values($params));
+		} catch (HttpException $e) {				//	Handle the http error (400 or 500 series)
+			$response_code = $e->getResponseCode();	//	Http response code
+			$err_msg = $e->getMessage();			//	Detailed message
 
-				//	Found matched page.
-				if ($result !== false) {
-					break;
-				}
-				//	no break if $result is false
-			case self::NOT_FOUND:
-				call_user_func($this->namedRoutes['ERR_404']->handler);
-
-				break;
-			case self::METHOD_NOT_ALLOWED:
-				// TODO: Use below code.
-				// $allowed_methods = $routeInfo[0];
-				call_user_func($this->namedRoutes['ERR_405']->handler);
-
-				break;
+			call_user_func($this->namedRoutes[$response_code]->handler, $err_msg);
 		}
-
 	}
 
 	/**
@@ -266,16 +244,14 @@ class Router
 	}
 
 	/**
-	 * @param  string $http_method One of a HTTP methods
-	 * @param  string $request_uri
-	 * @return array Result and else things
+	 * @param string $http_method One of a HTTP methods
+	 * @param string $request_uri
+	 *
+	 * @return array 			Handler and required params of specific route
+	 * @throws HttpException 	In case matched route is not found
 	 */
 	private function findMatchedRoute($http_method, $request_uri)
 	{
-		$return = array(
-			'result' => ''
-		);
-
 		/* Find route that matched URI */
 		foreach ($this->routes as $pattern => $arr) {
 			//	Found matched pattern
@@ -285,7 +261,6 @@ class Router
 				foreach ($matched_routes as $route) {
 					//	Found matched method : FOUND
 					if ($route->httpMethod == $http_method) {
-						$return['result'] = self::FOUND;
 						$return[0] = $route->handler;
 						$return[1] = $params;
 
@@ -293,19 +268,13 @@ class Router
 					}
 				}
 
-				//	Not found matched method : METHOD_NOT_ALLOWED
-				$return['result'] = self::METHOD_NOT_ALLOWED;
-				$allowed_methods = array_column($matched_routes, 'httpMethod');
-				$return[0] = $allowed_methods;
-
-				return $return;
+				//	Not found matched method: METHOD_NOT_ALLOWED
+				throw new HttpException(405);
 			}
 		}
 
-		// Not found matched pattern : NOT_FOUND
-		$return['result'] = self::NOT_FOUND;
-
-		return $return;
+		// Not found matched pattern: NOT_FOUND
+		throw new HttpException(404);
 	}
 
 	/**
@@ -313,6 +282,7 @@ class Router
 	 *
 	 * @param  string $pattern     uri pattern
 	 * @param  string $request_uri
+	 *
 	 * @return mixed array or false
 	 */
 	private function checkMatchedPattern($pattern, $request_uri)

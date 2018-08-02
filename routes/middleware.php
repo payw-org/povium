@@ -11,8 +11,6 @@ $router->post(
 	'/login',
 	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/loginController.php';
-
-		return true;
 	}
 );
 
@@ -21,8 +19,6 @@ $router->post(
 	'/register',
 	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/registerConfirmController.php';
-
-		return true;
 	}
 );
 
@@ -31,8 +27,6 @@ $router->put(
 	'/register',
 	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/registerVerifyController.php';
-
-		return true;
 	}
 );
 
@@ -41,8 +35,6 @@ $router->post(
 	'/logout',
 	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/logoutController.php';
-
-		return true;
 	}
 );
 
@@ -52,8 +44,6 @@ $router->get(
 	'/me/settings/email/new-registration',
 	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/sendEmailForEmailAuthController.php';
-
-		return true;
 	}
 );
 
@@ -67,8 +57,6 @@ $router->get(
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/emailAuthController.php';
-
-		return true;
 	},
 	'email_authentication'
 );

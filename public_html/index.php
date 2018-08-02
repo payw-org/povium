@@ -18,5 +18,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php';
 
 //	If possible, log in automatically.
 $auth->isLoggedIn();
-error_log(http_response_code());
+
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

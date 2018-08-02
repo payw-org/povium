@@ -6,13 +6,13 @@
 * @copyright 2018 DesignAndDevelop
 */
 
+use Povium\Exceptions\HttpException;
+
 /* Home Page */
 $router->get(
 	'/',
  	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php';
-
-		return true;
 	}
 );
 
@@ -40,8 +40,6 @@ $router->get(
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/login.php';
-
-		return true;
 	}
 );
 
@@ -69,8 +67,6 @@ $router->get(
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/register.php';
-
-		return true;
 	}
 );
 
@@ -84,8 +80,6 @@ $router->get(
 		// }
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php';
-
-		return true;
 	}
 );
 
@@ -97,12 +91,10 @@ $router->get(
 
 		//	Nonexistent readable id.
 		if (false === $user_id = $auth->getID($readable_id)) {
-			return false;
+			throw new HttpException(404);
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_home.php';
-
-		return true;
 	},
 	'user_profile'
 );
@@ -119,8 +111,6 @@ $router->get(
 		//	둘중 하나라도 다르면 올바른 uri로 redirect시킴
 		//	둘다 같으면 포스트페이지 require
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/post.php';
-
-		return true;
 	},
  	'post'
 );
@@ -135,7 +125,5 @@ $router->get(
 		}
 
 		//	require page
-
-		return true;
 	}
 );

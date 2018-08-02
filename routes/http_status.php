@@ -15,7 +15,7 @@ $router->get(
 		http_response_code(403);
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_status/403.php';
 	},
- 	'ERR_403'
+ 	'403'
 );
 
 /* 404 Not Found Page */
@@ -25,7 +25,7 @@ $router->get(
 		http_response_code(404);
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_status/404.php';
 	},
- 	'ERR_404'
+ 	'404'
 );
 
 /* 405 Method Not Allowed Page */
@@ -35,7 +35,7 @@ $router->get(
 		http_response_code(405);
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_status/405.php';
 	},
- 	'ERR_405'
+ 	'405'
 );
 
 /* 410 Gone */
@@ -45,5 +45,5 @@ $router->get(
 		http_response_code(410);
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_status/410.php';
 	},
- 	'ERR_410'
+ 	'410'
 );
