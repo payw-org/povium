@@ -86,8 +86,10 @@ export default class EventManager
 			this.onKeyDown(e)
 			this.onSelectionChanged()
 		})
+
 		window.addEventListener('keydown', (e) => {
-			if (e.which === 90 && e.ctrlKey) {
+
+			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
 				if (e.shiftKey) {
 					e.preventDefault()
 					this.ssManager.redo()
@@ -97,12 +99,15 @@ export default class EventManager
 				}
 				
 			}
+
 		})
+
 		this.domManager.editor.addEventListener('keyup', (e) => {
 			this.onKeyUp(e)
 
 			this.onSelectionChanged()
 		})
+
 		this.domManager.editor.addEventListener('keypress', (e) => {
 			this.onKeyPress(e)
 		})
@@ -520,7 +525,7 @@ export default class EventManager
 			keyCode !== 144 && keyCode !== 145 && keyCode !== 112 && keyCode !== 113 && keyCode !== 114 &&
 			keyCode !== 115 && keyCode !== 116 && keyCode !== 117 && keyCode !== 118 && keyCode !== 119 &&
 			keyCode !== 120 && keyCode !== 121 && keyCode !== 122 && keyCode !== 123 && keyCode !== 229 &&
-			 !e.altKey && !e.ctrlKey && !e.shiftKey
+			 !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey
 		) {
 			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
 				this.selManager.removeSelection("backspace")
