@@ -2015,7 +2015,7 @@ export default class SelectionManager
 				let originalContent = currentParentNode.innerHTML;
 
 				orgRange.deleteContents()
-				currentParentNode.normalize()
+				currentParentNode.normalize() // in safari cursor moves to the end
 
 				if (this.isTextEmptyNode(currentParentNode)) {
 					currentParentNode.innerHTML = ""
