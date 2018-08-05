@@ -6,7 +6,9 @@
 * @copyright 2018 DesignAndDevelop
 */
 
-/* Login Ajax */
+/**
+ * Login Ajax
+ */
 $router->post(
 	'/login',
 	function () {
@@ -14,7 +16,9 @@ $router->post(
 	}
 );
 
-/* Register confirm Ajax */
+/**
+ * Register confirm Ajax
+ */
 $router->post(
 	'/register',
 	function () {
@@ -22,7 +26,9 @@ $router->post(
 	}
 );
 
-/* Register verify Ajax */
+/**
+ * Register verify Ajax
+ */
 $router->put(
 	'/register',
 	function () {
@@ -30,7 +36,9 @@ $router->put(
 	}
 );
 
-/* Logout Ajax */
+/**
+ * Logout Ajax
+ */
 $router->post(
 	'/logout',
 	function () {
@@ -38,8 +46,11 @@ $router->post(
 	}
 );
 
-/* Register new email address Ajax */
-#	Get is Test mode. Original is post.
+/**
+ * Register new email address Ajax
+ *
+ * Get is Test mode. Original is post.
+ */
 $router->get(
 	'/me/settings/email/new-registration',
 	function () {
@@ -47,7 +58,11 @@ $router->get(
 	}
 );
 
-/* Email authentication page */
+/**
+ * Email authentication page
+ *
+ * @throws HttpException If email authentication is failed
+ */
 $router->get(
 	'/c/account/verify',
 	function () use ($auth, $redirector) {

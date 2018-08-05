@@ -13,7 +13,6 @@ $redirector = $factory->createInstance('\Povium\Base\Routing\Redirector', $with_
 $auth = $factory->createInstance('\Povium\Auth', $with_db = true);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/http_status.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php';
 
 //	If possible, log in automatically.

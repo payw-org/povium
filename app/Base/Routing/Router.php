@@ -126,121 +126,24 @@ class Router
 			$handler = $route_info[0];
 			$params = $route_info[1];
 
-			call_user_func_array($handler, array_values($params));
+			call_user_func_array(
+				$handler,
+ 				array_values($params)
+			);
 		} catch (HttpException $e) {				//	Handle the http error (400 or 500 series)
 			$response_code = $e->getResponseCode();	//	Http response code
-			$err_msg = $e->getMessage();			//	Detailed message
+			$title = $e->getTitle();				//	Http response title
+			$msg = $e->getMsg();					//	Http response message
+			$details = $e->getDetails();			//	Http response details
 
-			call_user_func($this->namedRoutes[$response_code]->handler, $err_msg);
+			call_user_func(
+				$this->namedRoutes['http_error']->handler,
+ 				$response_code,
+				$title,
+				$msg,
+				$details
+			);
 		}
-	}
-
-	/**
-	 * Reversed routing
-	 * Generate the URI with given argument. Replace regexes with supplied parameters.
-	 *
-	 * @param  string $arg    	route name or pattern
-	 * @param  array  $params	Associative array of parameters to replace placeholders with.
-	 * @return string 			Suitable URI
-	 */
-	public function generateURI($arg, array $params = array())
-	{
-		//	If arg is route name
-		if ($arg[0] != '/') {
-			//	If nonexistent route name, throw exception.
-			if (!isset($this->namedRoutes[$arg])) {
-				throw new RouterException('Nonexistent route: "' . $arg . '"',
-	 			RouterException::EXC_NONEXISTENT_ROUTE_NAME);
-			}
-
-			//	Get route's pattern
-			$pattern = $this->namedRoutes[$arg]->pattern;
-		} else {	//	Arg is pattern.
-			$pattern = $arg;
-		}
-
-		return $this->generateURIWithPattern($pattern, $params);
-	}
-
-	/**
-	 * Reversed routing
-	 * Generate the URI with given pattern. Replace regexes with supplied parameters.
-	 *
-	 * @param  string $pattern
-	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
-	 * @return string 			 Suitable URI
-	 */
-	private function generateURIWithPattern($pattern, array $params = array())
-	{
-		//	Parse pattern by slash and delete blank values
-		$parsed_patterns = explode('/', $pattern);
-		foreach (array_keys($parsed_patterns, '', true) as $key) {
-			unset($parsed_patterns[$key]);
-		}
-
-		//	Generate URI by referring to each parsed pattern
-		$uri = '';
-		foreach ($parsed_patterns as $parsed_pattern) {
-			$uri .= '/';
-			$sub_uri = '';
-
-			//	If pattern include regex part '{}'.
-			if (false !== mb_strpos($parsed_pattern, '{')) {
-				//	Extract prefix, placeholder, and regex from pattern.
-				$extractor = '/([^{}]*)\{([\w]+):([^{}]+)\}/';
-				$match_count = preg_match_all($extractor, $parsed_pattern, $matches);
-				array_shift($matches);
-
-				$prefixes = $matches[0];
-				$placeholders = $matches[1];
-				$regexes = $matches[2];
-
-				//	Generate sub URI by referring to each regex part
-				for ($idx = 0; $idx < $match_count; $idx++) {
-					$param = $params[$placeholders[$idx]];
-
-					//	If param is not exist
-					if (!isset($param)) {
-						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
-						RouterException::EXC_INVALID_REVERSED_ROUTING);
-					}
-
-					//	If the param does not match the regex
-					if (!preg_match('/^' . $regexes[$idx] . '$/', $param)) {
-						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
-						RouterException::EXC_INVALID_REVERSED_ROUTING);
-					}
-
-					//	Special case: Param is user's readable id.
-					//	Do not encode this.
-					if ($prefixes[$idx] == '@') {
-						$sub_uri .= '@' . $param;
-					} else {	//	Encode param.
-						//	Convert all special chars(include whitespace) to '-'.
-						//	After convert, param is suitible form for uri.
-						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
-
-						//	Concatenate prefix and param that encoded to uri form.
-						$sub_uri .= $prefixes[$idx] . $param;
-					}
-				}
-
-				//	Delete '-' of both ends.
-				$sub_uri = ltrim($sub_uri, '-');
-				$sub_uri = rtrim($sub_uri, '-');
-
-				//	Convert consecutive '-' to single thing.
-				$sub_uri = preg_replace("/-{2,}/", '-', $sub_uri);
-
-				$uri .= $sub_uri;
-			} else {	//	Not include regex part. Pattern is fixed string.
-				$uri .= $parsed_pattern;
-			}
-
-		}
-
-		//	Convert to lowercase form.
-		return mb_strtolower($uri);
 	}
 
 	/**
@@ -363,5 +266,113 @@ class Router
 		}
 
 		return $params;
+	}
+
+	/**
+	 * Reversed routing
+	 * Generate the URI with given argument. Replace regexes with supplied parameters.
+	 *
+	 * @param  string $arg    	route name or pattern
+	 * @param  array  $params	Associative array of parameters to replace placeholders with.
+	 * @return string 			Suitable URI
+	 */
+	public function generateURI($arg, array $params = array())
+	{
+		//	If arg is route name
+		if ($arg[0] != '/') {
+			//	If nonexistent route name, throw exception.
+			if (!isset($this->namedRoutes[$arg])) {
+				throw new RouterException('Nonexistent route: "' . $arg . '"',
+				RouterException::EXC_NONEXISTENT_ROUTE_NAME);
+			}
+
+			//	Get route's pattern
+			$pattern = $this->namedRoutes[$arg]->pattern;
+		} else {	//	Arg is pattern.
+			$pattern = $arg;
+		}
+
+		return $this->generateURIWithPattern($pattern, $params);
+	}
+
+	/**
+	 * Reversed routing
+	 * Generate the URI with given pattern. Replace regexes with supplied parameters.
+	 *
+	 * @param  string $pattern
+	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
+	 * @return string 			 Suitable URI
+	 */
+	private function generateURIWithPattern($pattern, array $params = array())
+	{
+		//	Parse pattern by slash and delete blank values
+		$parsed_patterns = explode('/', $pattern);
+		foreach (array_keys($parsed_patterns, '', true) as $key) {
+			unset($parsed_patterns[$key]);
+		}
+
+		//	Generate URI by referring to each parsed pattern
+		$uri = '';
+		foreach ($parsed_patterns as $parsed_pattern) {
+			$uri .= '/';
+			$sub_uri = '';
+
+			//	If pattern include regex part '{}'.
+			if (false !== mb_strpos($parsed_pattern, '{')) {
+				//	Extract prefix, placeholder, and regex from pattern.
+				$extractor = '/([^{}]*)\{([\w]+):([^{}]+)\}/';
+				$match_count = preg_match_all($extractor, $parsed_pattern, $matches);
+				array_shift($matches);
+
+				$prefixes = $matches[0];
+				$placeholders = $matches[1];
+				$regexes = $matches[2];
+
+				//	Generate sub URI by referring to each regex part
+				for ($idx = 0; $idx < $match_count; $idx++) {
+					$param = $params[$placeholders[$idx]];
+
+					//	If param is not exist
+					if (!isset($param)) {
+						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
+						RouterException::EXC_INVALID_REVERSED_ROUTING);
+					}
+
+					//	If the param does not match the regex
+					if (!preg_match('/^' . $regexes[$idx] . '$/', $param)) {
+						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
+						RouterException::EXC_INVALID_REVERSED_ROUTING);
+					}
+
+					//	Special case: Param is user's readable id.
+					//	Do not encode this.
+					if ($prefixes[$idx] == '@') {
+						$sub_uri .= '@' . $param;
+					} else {	//	Encode param.
+						//	Convert all special chars(include whitespace) to '-'.
+						//	After convert, param is suitible form for uri.
+						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
+
+						//	Concatenate prefix and param that encoded to uri form.
+						$sub_uri .= $prefixes[$idx] . $param;
+					}
+				}
+
+				//	Delete '-' of both ends.
+				$sub_uri = ltrim($sub_uri, '-');
+				$sub_uri = rtrim($sub_uri, '-');
+
+				//	Convert consecutive '-' to single thing.
+				$sub_uri = preg_replace("/-{2,}/", '-', $sub_uri);
+
+				$uri .= $sub_uri;
+			} else {	//	Not include regex part. Pattern is fixed string.
+				$uri .= $parsed_pattern;
+			}
+
+		}
+
+		//	Convert to lowercase form.
+		return mb_strtolower($uri);
 	}
 }

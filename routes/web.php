@@ -8,7 +8,9 @@
 
 use Povium\Exceptions\HttpException;
 
-/* Home Page */
+/**
+ * Home Page
+ */
 $router->get(
 	'/',
  	function () {
@@ -16,7 +18,9 @@ $router->get(
 	}
 );
 
-/* Login Page */
+/**
+ * Login Page
+ */
 $router->get(
 	'/login',
  	function () use ($auth, $redirector) {
@@ -43,7 +47,9 @@ $router->get(
 	}
 );
 
-/* Regsiter Page */
+/**
+ * Regsiter Page
+ */
 $router->get(
 	'/register',
  	function () use ($auth, $redirector) {
@@ -70,7 +76,9 @@ $router->get(
 	}
 );
 
-/* Editor test page */
+/**
+ * Editor test page
+ */
 $router->get(
 	'/editor',
  	function () use ($auth, $redirector) {
@@ -83,7 +91,13 @@ $router->get(
 	}
 );
 
-/* User Profile Page */
+/**
+ * User Profile Page
+ *
+ * @param string $readable_id
+ *
+ * @throws HttpException If nonexistent readable id
+ */
 $router->get(
 	'/@{readable_id:.+}',
  	function ($readable_id) use ($auth) {
@@ -99,7 +113,9 @@ $router->get(
 	'user_profile'
 );
 
-/* Post Page */
+/**
+ * Post Page
+ */
 $router->get(
 	'/@{readable_id:.+}/{post_title:.+}-{post_id:\d+}',
  	function ($readable_id, $post_title, $post_id) {
@@ -115,7 +131,9 @@ $router->get(
  	'post'
 );
 
-/* Email Setting Page */
+/**
+ * Email Setting Page
+ */
 $router->get(
 	'/me/settings/email',
 	function () use ($auth, $redirector) {
@@ -126,4 +144,25 @@ $router->get(
 
 		//	require page
 	}
+);
+
+/**
+ * Http Status Page
+ *
+ * User cannot directly access this route.
+ * DO NOT GENERATE URI FOR THIS ROUTE.
+ *
+ * @param	int		$response_code	Http response code
+ * @param	string	$title			Http response title
+ * @param	string	$msg			Http response message
+ * @param	string	$details		Http response details
+ */
+$router->get(
+	'/*',
+	function ($response_code, $title, $msg, $details) {
+		http_response_code($response_code);
+
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_error.php';
+	},
+	'http_error'
 );

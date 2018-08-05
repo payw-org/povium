@@ -13,7 +13,7 @@ use Povium\Exceptions\HttpException;
 global $redirector, $auth;
 
 //	Load http status messages
-$http_status_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/http_status.php';
+$http_response_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php';
 
 //	Fetch query params
 $token = $_GET['token'];
@@ -27,15 +27,15 @@ switch ($return) {
 
 		break;
 	case 1:		//	NONEXISTENT USER ID (410 ERROR)
-		throw new HttpException(410, $http_status_config['410']['nonexistent_user_id']);
+		throw new HttpException(410, $http_response_config['410']['details']['nonexistent_user_id']);
 
 		break;
 	case 2:		//	NOT MATCHED TOKEN (403 ERROR)
-		throw new HttpException(403, $http_status_config['403']['not_matched_token']);
+		throw new HttpException(403, $http_response_config['403']['details']['not_matched_token']);
 
 		break;
 	case 3:		//	REQUEST EXPIRED (410 ERROR)
-		throw new HttpException(410, $http_status_config['410']['request_expired']);
+		throw new HttpException(410, $http_response_config['410']['details']['request_expired']);
 
 		break;
 }
