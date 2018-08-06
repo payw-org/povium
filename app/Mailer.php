@@ -33,36 +33,44 @@ class Mailer
 	}
 
 	/**
+	 * Set basic email preferences
+	 */
+	public function setBasicPreferences()
+	{
+		//	Server settings
+		if ($this->config['use_smtp']) {
+			//	Enable verbose debug output
+			if ($this->config['smtp_debug']) {
+				$this->mail->SMTPDebug = $this->config['smtp_debug'];
+			}
+
+			$this->mail->isSMTP();
+			$this->mail->Host = $this->config['smtp_host'];
+
+			//	Set SMTP account
+			$this->mail->SMTPAuth = $this->config['smtp_auth'];
+			if ($this->config['smtp_auth']) {
+				$this->mail->Username = $this->config['smtp_username'];
+				$this->mail->Password = $this->config['smtp_password'];
+			}
+
+			$this->mail->SMTPSecure = $this->config['smtp_secure'];
+			$this->mail->Port = $this->config['smtp_port'];
+		}
+
+		$this->mail->CharSet = $this->config['mail_charset'];
+	}
+
+	/**
 	 * @param  string $recipient Email address
 	 * @param  string $auth_uri  URI for email authentication
-	 * 
+	 *
 	 * @return boolean           Whether email is sent
 	 */
 	public function sendEmailForEmailAuth($recipient, $auth_uri)
 	{
 		try {
-			//	Server settings
-			if ($this->config['use_smtp']) {
-				//	Enable verbose debug output
-				if ($this->config['smtp_debug']) {
-					$this->mail->SMTPDebug = $this->config['smtp_debug'];
-				}
-
-				$this->mail->isSMTP();
-				$this->mail->Host = $this->config['smtp_host'];
-
-				//	Set SMTP account
-				$this->mail->SMTPAuth = $this->config['smtp_auth'];
-				if ($this->config['smtp_auth']) {
-					$this->mail->Username = $this->config['smtp_username'];
-					$this->mail->Password = $this->config['smtp_password'];
-				}
-
-				$this->mail->SMTPSecure = $this->config['smtp_secure'];
-				$this->mail->Port = $this->config['smtp_port'];
-			}
-
-			$this->mail->CharSet = $this->config['mail_charset'];
+			$this->setBasicPreferences();
 
 			//	Recipients
 			$this->mail->setFrom(
