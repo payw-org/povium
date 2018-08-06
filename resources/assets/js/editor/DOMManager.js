@@ -97,6 +97,16 @@ export default class DOMManager {
 				align: false
 			})
 
+		} else if (
+			selManager.isImageCaption(currentNode)
+		) {
+
+			this.setPopToolMenu({
+				heading: false,
+				align: false,
+				blockquote: false
+			})
+
 		} else {
 
 			this.setPopToolMenu({})

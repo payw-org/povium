@@ -1,7 +1,8 @@
 // ajax.js
-export default class AJAX {
+export default class AJAX
+{
 
-	constructor () {
+	constructor() {
 
 		this.httpRequest = new XMLHttpRequest()
 
