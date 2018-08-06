@@ -35,7 +35,7 @@ class Mailer
 	/**
 	 * Set basic email preferences
 	 */
-	public function setBasicPreferences()
+	private function setBasicPreferences()
 	{
 		//	Server settings
 		if ($this->config['use_smtp']) {
