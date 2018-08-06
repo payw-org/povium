@@ -9,7 +9,7 @@
 
 global $factory, $router, $auth;
 
-$mailer = $factory->createInstance('\Povium\Mailer', $with_db=false);
+$mailer = $factory->createInstance('\Povium\Mailer');
 
 /* Receive input email by ajax */
 // $email = json_decode(file_get_contents('php://input'), true);
