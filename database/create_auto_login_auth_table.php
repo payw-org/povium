@@ -2,8 +2,8 @@
 /**
 * Table for auto login authentication token.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 $sql = "CREATE TABLE auto_login_auth (

@@ -2,9 +2,8 @@
 /**
 * Manipulate sign in, sign up, and sign out.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 namespace Povium;
@@ -34,11 +33,12 @@ class Auth
 
 	/**
 	* Validate account.
-	* Set auto login
+	* And set auto login.
 	*
-	* @param  string $identifier email or readable id
-	* @param  string $password
-	* @param  bool $remember flag for auto login
+	* @param  string 	$identifier Email or Readable id
+	* @param  string 	$password
+	* @param  bool		$remember 	Flag for auto login
+	*
 	* @return array	'err' is an error flag. 'msg' is an error message.
 	*/
 	public function login($identifier, $password, $remember)
@@ -50,9 +50,9 @@ class Auth
 
 
 		$validate_readable_id = $this->validateReadableID($identifier);
-		if ($validate_readable_id['err']) {		//	invalid readable id
+		if ($validate_readable_id['err']) {	//	invalid readable id
 			$validate_email = $this->validateEmail($identifier);
-			if ($validate_email['err']) {		//	invalid email
+			if ($validate_email['err']) {	//	invalid email
 				$return['msg'] = $this->config['msg']['account_incorrect'];
 
 				return $return;
@@ -60,33 +60,33 @@ class Auth
 		}
 
 		$validate_password = $this->validatePassword($password);
-		if ($validate_password['err']) {		//	invalid password
+		if ($validate_password['err']) {	//	invalid password
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
 		$id = $this->getID($identifier);
-		if ($id === false) {					//	unregistered identifier
+		if ($id === false) {				//	unregistered identifier
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
 		$user = $this->getBaseUser($id);
-		if ($user === false) {						//	nonexistent id
+		if ($user === false) {				//	nonexistent id
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
-		if (!$this->passwordVerifyWithRehash($password, $user['password'], $id)) {		//	incorrect password
+		if (!$this->passwordVerifyWithRehash($password, $user['password'], $id)) {	//	incorrect password
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
-		if (!$user['is_active']) {									//	inactive account
+		if (!$user['is_active']) {			//	inactive account
 			$return['msg'] = $this->config['msg']['account_inactive'];
 
 			return $return;
@@ -98,9 +98,9 @@ class Auth
 		$params = array(
 			'last_login_dt' => date('Y-m-d H:i:s', time())
 		);
-		$this->updateUser($id, $params);		//	update last login date
+		$this->updateUser($id, $params);	//	update last login date
 
-		if (!$this->addSessionAndCookie($id, $remember)) {		//	if failed auto login setting
+		if (!$this->addSessionAndCookie($id, $remember)) {	//	if failed auto login setting
 			$return['msg'] = $this->config['msg']['token_insert_to_db_err'];
 		}
 
@@ -108,9 +108,9 @@ class Auth
 	}
 
 	/**
-	* Delete session about authentication
-	* Delete cookie about auto login
-	* Delete table record about auto login
+	* Delete session about authentication.
+	* Delete cookie about auto login.
+	* Delete table record about auto login.
 	*
 	* @return void
 	*/
@@ -118,8 +118,8 @@ class Auth
 	{
 		$this->deleteSession();
 
-		if (isset($_COOKIE['auth_token'])) {			//	if auto login cookie is set
-			$token = $_COOKIE['auth_token'];			//	token = selector:raw validator
+		if (isset($_COOKIE['auth_token'])) {	//	if auto login cookie is set
+			$token = $_COOKIE['auth_token'];	//	token = selector:raw validator
 
 			if ($token_info = $this->getTokenInfo($token)) {
 				$this->deleteTokenInfo($token_info['id']);
@@ -130,13 +130,14 @@ class Auth
 	}
 
 	/**
-	* Validate input
-	* Checks if input is already taken
-	* Add user to db
+	* Validate input.
+	* Checks if input is already taken.
+	* Add user to db.
 	*
 	* @param  string $readable_id
 	* @param  string $name
 	* @param  string $password
+	*
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function register($readable_id, $name, $password)
@@ -186,6 +187,7 @@ class Auth
 	* Validate and Check if input is already taken.
 	*
 	* @param  string $readable_id
+	*
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function verifyReadableID($readable_id)
@@ -218,6 +220,7 @@ class Auth
 	* Validate and Check if input is already taken.
 	*
 	* @param  string $email
+	*
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function verifyEmail($email)
@@ -250,6 +253,7 @@ class Auth
 	* Validate and Check if input is already taken.
 	*
 	* @param  string $name
+	*
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function verifyName($name)
@@ -279,6 +283,7 @@ class Auth
 
 	/**
 	* @param  string $readable_id
+	*
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function validateReadableID($readable_id)
@@ -330,6 +335,7 @@ class Auth
 
 	/**
 	* @param  string $email
+	*
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function validateEmail($email)
@@ -369,6 +375,7 @@ class Auth
 
 	/**
 	* @param  string $name
+	*
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function validateName($name)
@@ -420,6 +427,7 @@ class Auth
 
 	/**
 	* @param  string $password
+	*
 	* @return array 'err' is an error flag. 'msg' is an error message.
 	*/
 	public function validatePassword($password)
@@ -461,6 +469,7 @@ class Auth
 	* Check if the readable id is already taken
 	*
 	* @param  string  $readable_id
+	*
 	* @return boolean
 	*/
 	public function isReadableIDTaken($readable_id)
@@ -479,10 +488,11 @@ class Auth
 	}
 
 	/**
-	* Check if the email is already taken
-	* Compare case-insensitive
+	* Check if the email is already taken.
+	* Compare case-insensitive.
 	*
 	* @param  string  $email
+	*
 	* @return boolean
 	*/
 	public function isEmailTaken($email)
@@ -501,10 +511,11 @@ class Auth
 	}
 
 	/**
-	* Check if the name is already taken
-	* Compare case-insensitive
+	* Check if the name is already taken.
+	* Compare case-insensitive.
 	*
 	* @param  string  $name
+	*
 	* @return boolean
 	*/
 	public function isNameTaken($name)
@@ -524,7 +535,8 @@ class Auth
 
 	/**
 	* @param  string $identifier readable id or email
-	* @return mixed int or false
+	*
+	* @return int|false
 	*/
 	public function getID($identifier)
 	{
@@ -555,7 +567,8 @@ class Auth
 	* Get the user's basic inform
 	*
 	* @param  int $id
-	* @return mixed array or false
+	*
+	* @return array|false
 	*/
 	public function getBaseUser($id)
 	{
@@ -575,9 +588,10 @@ class Auth
 	/**
 	* Get entire inform
 	*
-	* @param  int  $id
-	* @param  boolean $with_pw If it is true, return with password.
-	* @return mixed array or false
+	* @param  int		$id
+	* @param  boolean 	$with_pw If it is true, return with password.
+	*
+	* @return array|false
 	*/
 	public function getUser($id, $with_pw = false)
 	{
@@ -601,12 +615,13 @@ class Auth
 	}
 
 	/**
-	* Insert new user to DB
+	* Insert new user to DB.
 	*
-	* @param string $readable_id
-	* @param string $name
-	* @param string $password
-	* @return bool if adding new user to DB is failed, return false.
+	* @param	string $readable_id
+	* @param 	string $name
+	* @param 	string $password
+	*
+	* @return bool If adding new user to DB is failed, return false.
 	*/
 	public function addUser($readable_id, $name, $password)
 	{
@@ -627,8 +642,9 @@ class Auth
 	/**
 	* Update some column values of user
 	*
-	* @param  int $id
+	* @param  int	$id
 	* @param  array $params assoc array(column name to update => new value, ...)
+	*
 	* @return bool
 	*/
 	public function updateUser($id, $params)
@@ -657,6 +673,7 @@ class Auth
 
 	/**
 	* @param  int $len Length of random hash (real length is $len * 2)
+	*
 	* @return string
 	*/
 	public function generateRandomHash($len)
@@ -681,6 +698,7 @@ class Auth
 
 	/**
 	* @param  string $raw_pw Raw password
+	*
 	* @return string
 	*/
 	private function getPasswordHash($raw_pw)
@@ -691,10 +709,11 @@ class Auth
 	/**
 	* Verify password and rehash if hash options is changed.
 	*
-	* @param  string $raw_pw
-	* @param  string $hash
-	* @param  int $id
-	* @return bool if password match, return true.
+	* @param  string 	$raw_pw
+	* @param  string 	$hash
+	* @param  int		$id
+	*
+	* @return bool If password match, return true.
 	*/
 	private function passwordVerifyWithRehash($raw_pw, $hash, $id)
 	{
@@ -719,8 +738,9 @@ class Auth
 	* Creates a session for a authorized user.
 	* Creates cookie and table record about token for auto login.
 	*
-	* @param int $id
-	* @param bool $remember Flag for auto login
+	* @param int	$id
+	* @param bool	$remember Flag for auto login
+	*
 	* @return bool
 	*/
 	private function addSessionAndCookie($id, $remember)
@@ -787,9 +807,9 @@ class Auth
 	}
 
 	/**
-	* Get current user's info from database
+	* Get current user's info from database.
 	*
-	* @return mixed array or false
+	* @return array|false
 	*/
 	public function getCurrentUser()
 	{
@@ -811,10 +831,10 @@ class Auth
 	}
 
 	/**
-	* Check cookie for auto login
-	* Authenticate token
+	* Check cookie for auto login.
+	* Authenticate token.
 	*
-	* @return mixed int or false (int: when auto login success, false: otherwise)
+	* @return int|false int: when auto login success, false: otherwise
 	*/
 	private function checkCookie()
 	{
@@ -841,9 +861,10 @@ class Auth
 	}
 
 	/**
-	* Encode auto login authentication token
+	* Encode auto login authentication token.
 	*
 	* @param  string $token selector:raw validator
+	*
 	* @return array array('selector' => '', 'validator' => '')
 	*/
 	private function encodeToken($token)
@@ -866,7 +887,8 @@ class Auth
 	* If all matched, return token info.
 	*
 	* @param  string $token
-	* @return mixed array or false
+	*
+	* @return array|false
 	*/
 	private function getTokenInfo($token)
 	{
@@ -917,6 +939,7 @@ class Auth
 	* Delete auto login authentication info from table
 	*
 	* @param  int $token_id
+	*
 	* @return boolean If deletion success, return true.
 	*/
 	private function deleteTokenInfo($token_id)
@@ -935,8 +958,9 @@ class Auth
 	 * Add new request info in database.
 	 * And delete old request info.
 	 *
-	 * @param string $email		Email to authenticate
-	 * @param string $token 	Uuid
+	 * @param string $email	Email to authenticate
+	 * @param string $token Uuid
+	 *
 	 * @return boolean
 	 */
 	public function requestEmailAuth($email, $token)
@@ -973,6 +997,7 @@ class Auth
 	 * Delete the authenticated request.
 	 *
 	 * @param  string $token
+	 * 
 	 * @return int
 	 * 0 : NO ERROR
 	 * 1 : NONEXISTENT USER ID

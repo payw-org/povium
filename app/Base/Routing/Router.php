@@ -65,9 +65,9 @@ class Router
 	 * Add route with GET method
 	 * READ mode
 	 *
-	 * @param string $pattern uri pattern
-	 * @param callback $handler
-	 * @param string $name Router name. It is optional param.
+	 * @param	string		$pattern 	uri pattern
+	 * @param	callback	$handler
+	 * @param	string		$name 		Router name. It is optional param.
 	 */
 	public function get($pattern, $handler, $name = null)
 	{
@@ -78,9 +78,9 @@ class Router
 	* Add route with POST method
 	* CREATE mode
 	*
-	* @param string $pattern uri pattern
-	* @param callback $handler
-	* @param string $name Router name. It is optional param.
+	* @param	string		$pattern 	uri pattern
+	* @param	callback	$handler
+	* @param	string		$name 		Router name. It is optional param.
 	 */
 	public function post($pattern, $handler, $name = null)
 	{
@@ -91,9 +91,9 @@ class Router
 	* Add route with PUT method
 	* UPDATE mode
 	*
-	* @param string $pattern uri pattern
-	* @param callback $handler
-	* @param string $name Router name. It is optional param.
+	* @param	string		$pattern 	uri pattern
+	* @param	callback	$handler
+	* @param	string		$name 		Router name. It is optional param.
 	 */
 	public function put($pattern, $handler, $name = null)
 	{
@@ -104,9 +104,9 @@ class Router
 	* Add route with DELETE method
 	* DELETE mode
 	*
-	* @param string $pattern uri pattern
-	* @param callback $handler
-	* @param string $name Router name. It is optional param.
+	* @param	string		$pattern 	uri pattern
+	* @param	callback	$handler
+	* @param	string		$name 		Router name. It is optional param.
 	 */
 	public function delete($pattern, $handler, $name = null)
 	{
@@ -196,7 +196,7 @@ class Router
 	 * @param  string $pattern     uri pattern
 	 * @param  string $request_uri
 	 *
-	 * @return mixed array or false
+	 * @return array|false
 	 */
 	private function checkMatchedPattern($pattern, $request_uri)
 	{
@@ -285,8 +285,8 @@ class Router
 	 * @param  string $arg    	route name or pattern
 	 * @param  array  $params	Associative array of parameters to replace placeholders with.
 	 *
-	 * @return string 			Suitable URI
-	 * @throws NamedRouteNotFoundException If route name does not exist
+	 * @return string 						Suitable URI
+	 * @throws NamedRouteNotFoundException 	If route name does not exist
 	 */
 	public function generateURI($arg, array $params = array())
 	{
@@ -313,8 +313,8 @@ class Router
 	 * @param  string $pattern
 	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
 	 *
-	 * @return string 			 Suitable URI
-	 * @throws InvalidParameterException If parameter is not valid
+	 * @return string 			 			Suitable URI
+	 * @throws InvalidParameterException 	If parameter is not valid
 	 */
 	private function generateURIWithPattern($pattern, array $params = array())
 	{

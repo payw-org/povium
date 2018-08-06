@@ -3,9 +3,8 @@
 * Load template files and configuration.
 * And renders the view.
 *
-* @author J.Haemin
-* @copyright 2018 DesignAndDevelop
-*
+* @author		J.Haemin
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base;
@@ -147,7 +146,7 @@ class TemplateEngine
 
 	/**
 	 * If there is no config, do nothing.
-	 * 
+	 *
 	 * @param  string $config_name
 	 */
 	public function optional($config_name)

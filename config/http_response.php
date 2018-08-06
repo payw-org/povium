@@ -2,8 +2,8 @@
 /**
 * Config array for Http response
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 return [

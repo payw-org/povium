@@ -1,11 +1,9 @@
 <?php
 /**
-*
 * This Factory is responsible for creating instance of type based on service.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base\Factory;
@@ -17,9 +15,10 @@ class ServiceFactory extends AbstractChildFactory
 	/**
 	* Manufacture materials into arguments
 	*
-	* @param boolean $with_db Is generated with DB connection arguments?
-	* @param mixed materials optional args
-	* @return void
+	* @param	boolean	$with_db	Is generated with DB connection arguments?
+	* @param	mixed				optional args
+	*
+	* @return	void
 	*/
 	protected function prepareArgs()
 	{

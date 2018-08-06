@@ -4,8 +4,8 @@
 * $key : Fully qualified class name
 * $value : Fully qualified factory name
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 return [

@@ -2,9 +2,8 @@
 /**
 * Manage sending mail.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 namespace Povium;
@@ -36,6 +35,7 @@ class Mailer
 	/**
 	 * @param  string $recipient Email address
 	 * @param  string $auth_uri  URI for email authentication
+	 * 
 	 * @return boolean           Whether email is sent
 	 */
 	public function sendEmailForEmailAuth($recipient, $auth_uri)

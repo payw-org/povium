@@ -2,9 +2,8 @@
 /**
 * Receive register inputs and process register.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 global $auth;

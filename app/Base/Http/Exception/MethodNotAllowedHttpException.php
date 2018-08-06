@@ -2,8 +2,8 @@
 /**
  * Http exception for 405 Method Not Allowed.
  *
- * @author H.Chihoon
- * @copyright 2018 DesignAndDevelop
+ * @author		H.Chihoon
+ * @copyright	2018 DesignAndDevelop
  */
 
 namespace Povium\Base\Http\Exception;

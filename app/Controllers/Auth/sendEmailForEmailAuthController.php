@@ -3,9 +3,8 @@
 * Receive email address
 * and send email for user's email address authentication.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 global $factory, $router, $auth;
@@ -22,9 +21,9 @@ $email = '1000jaman@naver.com';
 #	);
 $send_mail_return = $auth->verifyEmail($email);
 
-if ($send_mail_return['err']) {		//	This email is not possible to authenticate
+if ($send_mail_return['err']) {	//	This email is not possible to authenticate
 
-} else {	//	Valid email. Send mail for email authentication.
+} else {						//	Valid email. Send email for email authentication.
 	$token = $auth->uuidV4();	//	Generate authentication token
 
 	if ($auth->requestEmailAuth($email, $token)) {

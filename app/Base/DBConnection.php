@@ -2,9 +2,8 @@
 /**
 * Create a database connection using PDO
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base;
@@ -52,8 +51,8 @@ class DBConnection
 	}
 
 	/**
-	* Generate PDO connection to database
-	*/
+	 * Generate PDO connection to database
+	 */
 	private function generatePDOConnection()
 	{
 		if ($this->conn == null) {

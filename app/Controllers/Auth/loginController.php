@@ -2,9 +2,8 @@
 /**
 * Receive login inputs and process login.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 global $auth;

@@ -2,9 +2,8 @@
 /**
 * Responsible for redirect.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base\Routing;
@@ -20,6 +19,7 @@ class Redirector
 	 * @param  string  $uri
 	 * @param  boolean $returnTo
 	 * @param  string  $returnURI
+	 * 
 	 * @return void
 	 */
 	public function redirect($uri, $returnTo = false, $returnURI = "")

@@ -3,8 +3,8 @@
  * Exception thrown when matched pattern is found but the request method is not found.
  * This exception should trigger an HTTP 405 response.
  *
- * @author H.Chihoon
- * @copyright 2018 DesignAndDevelop
+ * @author		H.Chihoon
+ * @copyright	2018 DesignAndDevelop
  */
 
 namespace Povium\Base\Routing\Exception;

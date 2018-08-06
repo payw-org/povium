@@ -2,9 +2,8 @@
 /**
 * A single route.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base\Routing;
@@ -35,9 +34,9 @@ class Route
 	public $handler;
 
 	/**
-	 * @param string $http_method
-	 * @param string $pattern
-	 * @param callback $handler
+	 * @param	string		$http_method
+	 * @param	string		$pattern
+	 * @param	callback	$handler
 	 */
 	public function __construct($http_method, $pattern, $handler)
 	{

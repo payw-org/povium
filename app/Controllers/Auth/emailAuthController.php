@@ -3,9 +3,8 @@
 * Verify that it is a valid email authentication link.
 * If valid, registers the email and confirms that it is an authenticated user.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 use Povium\Base\Http\Exception\ForbiddenHttpException;

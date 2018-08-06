@@ -2,8 +2,8 @@
 /**
 * Trait for singleton pattern
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 namespace Povium\Lib;
@@ -17,7 +17,7 @@ trait Singleton
 
 	/**
 	* Only one instance is generated.
-	* 
+	*
 	* @return object static instance
 	*/
 	public static function getInstance()
@@ -38,5 +38,4 @@ trait Singleton
 	* This function is private to prevent clonning
 	*/
 	final private function __clone() {}
-
 }
