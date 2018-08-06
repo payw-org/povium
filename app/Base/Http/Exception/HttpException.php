@@ -6,9 +6,9 @@
 * @copyright 2018 DesignAndDevelop
 */
 
-namespace Povium\Exceptions;
+namespace Povium\Base\Http\Exception;
 
-class HttpException extends \Exception
+class HttpException extends \RuntimeException implements HttpExceptionInterface
 {
 	/**
 	 * @var array

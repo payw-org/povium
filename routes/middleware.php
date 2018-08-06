@@ -61,7 +61,7 @@ $router->get(
 /**
  * Email authentication page
  *
- * @throws HttpException If email authentication is failed
+ * @throws ForbiddenHttpException|GoneHttpException If email authentication is failed
  */
 $router->get(
 	'/c/account/verify',

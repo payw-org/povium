@@ -2,22 +2,25 @@
 /**
 * This is a RESTful based router.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base\Routing;
 
-use Povium\Base\Routing\Route;
-use Povium\Exceptions\RouterException;
-use Povium\Exceptions\HttpException;
+use Povium\Base\Routing\Exception\RouteNotFoundException;
+use Povium\Base\Routing\Exception\MethodNotAllowedException;
+use Povium\Base\Routing\Exception\NamedRouteNotFoundException;
+use Povium\Base\Routing\Exception\InvalidParameterException;
+use Povium\Base\Http\Exception\HttpException;
+use Povium\Base\Http\Exception\NotFoundHttpException;
+use Povium\Base\Http\Exception\MethodNotAllowedHttpException;
 
 class Router
 {
 	/**
 	 * Binding the same patterns
-	 * array('$pattern' => Route_array)
+	 * array('$pattern' => Route array)
 	 *
 	 * @var array
 	 */
@@ -121,15 +124,21 @@ class Router
 		//	Find matched route
 		//	Call handler of the route
 		try {
-			$route_info = $this->findMatchedRoute($http_method, $request_uri);
+			try{
+				$route_info = $this->findMatchedRoute($http_method, $request_uri);
 
-			$handler = $route_info[0];
-			$params = $route_info[1];
+				$handler = $route_info[0];
+				$params = $route_info[1];
 
-			call_user_func_array(
-				$handler,
- 				array_values($params)
-			);
+				call_user_func_array(
+					$handler,
+	 				array_values($params)
+				);
+			} catch (RouteNotFoundException $e) {
+				throw new NotFoundHttpException();
+			} catch (MethodNotAllowedException $e) {
+				throw new MethodNotAllowedHttpException();
+			}
 		} catch (HttpException $e) {				//	Handle the http error (400 or 500 series)
 			$response_code = $e->getResponseCode();	//	Http response code
 			$title = $e->getTitle();				//	Http response title
@@ -150,8 +159,8 @@ class Router
 	 * @param string $http_method One of a HTTP methods
 	 * @param string $request_uri
 	 *
-	 * @return array 			Handler and required params of specific route
-	 * @throws HttpException 	In case matched route is not found
+	 * @return array 											Handler and required params of specific route
+	 * @throws RouteNotFoundException|MethodNotAllowedException	If matched route is not found
 	 */
 	private function findMatchedRoute($http_method, $request_uri)
 	{
@@ -172,12 +181,13 @@ class Router
 				}
 
 				//	Not found matched method: METHOD_NOT_ALLOWED
-				throw new HttpException(405);
+				$allowed_methods = array_column($matched_routes, 'httpMethod');
+				throw new MethodNotAllowedException($allowed_methods);
 			}
 		}
 
 		// Not found matched pattern: NOT_FOUND
-		throw new HttpException(404);
+		throw new RouteNotFoundException();
 	}
 
 	/**
@@ -274,7 +284,9 @@ class Router
 	 *
 	 * @param  string $arg    	route name or pattern
 	 * @param  array  $params	Associative array of parameters to replace placeholders with.
+	 *
 	 * @return string 			Suitable URI
+	 * @throws NamedRouteNotFoundException If route name does not exist
 	 */
 	public function generateURI($arg, array $params = array())
 	{
@@ -282,8 +294,7 @@ class Router
 		if ($arg[0] != '/') {
 			//	If nonexistent route name, throw exception.
 			if (!isset($this->namedRoutes[$arg])) {
-				throw new RouterException('Nonexistent route: "' . $arg . '"',
-				RouterException::EXC_NONEXISTENT_ROUTE_NAME);
+				throw new NamedRouteNotFoundException('Nonexistent route name: "' . $arg . '"');
 			}
 
 			//	Get route's pattern
@@ -301,7 +312,9 @@ class Router
 	 *
 	 * @param  string $pattern
 	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
+	 *
 	 * @return string 			 Suitable URI
+	 * @throws InvalidParameterException If parameter is not valid
 	 */
 	private function generateURIWithPattern($pattern, array $params = array())
 	{
@@ -334,14 +347,12 @@ class Router
 
 					//	If param is not exist
 					if (!isset($param)) {
-						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
-						RouterException::EXC_INVALID_REVERSED_ROUTING);
+						throw new InvalidParameterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")');
 					}
 
 					//	If the param does not match the regex
 					if (!preg_match('/^' . $regexes[$idx] . '$/', $param)) {
-						throw new RouterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")',
-						RouterException::EXC_INVALID_REVERSED_ROUTING);
+						throw new InvalidParameterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")');
 					}
 
 					//	Special case: Param is user's readable id.

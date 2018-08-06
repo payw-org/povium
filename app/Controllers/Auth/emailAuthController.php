@@ -8,7 +8,8 @@
 *
 */
 
-use Povium\Exceptions\HttpException;
+use Povium\Base\Http\Exception\ForbiddenHttpException;
+use Povium\Base\Http\Exception\GoneHttpException;
 
 global $redirector, $auth;
 
@@ -27,15 +28,15 @@ switch ($return) {
 
 		break;
 	case 1:		//	NONEXISTENT USER ID (410 ERROR)
-		throw new HttpException(410, $http_response_config['410']['details']['nonexistent_user_id']);
+		throw new GoneHttpException($http_response_config['410']['details']['nonexistent_user_id']);
 
 		break;
 	case 2:		//	NOT MATCHED TOKEN (403 ERROR)
-		throw new HttpException(403, $http_response_config['403']['details']['not_matched_token']);
+		throw new ForbiddenHttpException($http_response_config['403']['details']['not_matched_token']);
 
 		break;
 	case 3:		//	REQUEST EXPIRED (410 ERROR)
-		throw new HttpException(410, $http_response_config['410']['details']['request_expired']);
+		throw new GoneHttpException($http_response_config['410']['details']['request_expired']);
 
 		break;
 }

@@ -20,5 +20,4 @@ interface FactoryInterface
 	* @return object An instance of given type
 	*/
 	public function createInstance($type);
-
 }

@@ -6,7 +6,7 @@
 * @copyright 2018 DesignAndDevelop
 */
 
-use Povium\Exceptions\HttpException;
+use Povium\Base\Http\Exception\NotFoundHttpException;
 
 /**
  * Home Page
@@ -96,7 +96,7 @@ $router->get(
  *
  * @param string $readable_id
  *
- * @throws HttpException If nonexistent readable id
+ * @throws NotFoundHttpException If nonexistent readable id
  */
 $router->get(
 	'/@{readable_id:.+}',
@@ -105,7 +105,7 @@ $router->get(
 
 		//	Nonexistent readable id.
 		if (false === $user_id = $auth->getID($readable_id)) {
-			throw new HttpException(404);
+			throw new NotFoundHttpException();
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_home.php';

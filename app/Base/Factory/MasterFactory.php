@@ -12,8 +12,8 @@
 
 namespace Povium\Base\Factory;
 
-use Povium\Base\Factory\FactoryInterface;
-use Povium\Exceptions\FactoryException;
+use Povium\Base\Factory\Exception\NonexistentTypeException;
+use Povium\Base\Factory\Exception\UnregisteredTypeException;
 
 class MasterFactory implements FactoryInterface
 {
@@ -38,18 +38,18 @@ class MasterFactory implements FactoryInterface
 	* responsible child factory instance.
 	*
 	* @param  mixed type and some materials
+	*
 	* @return object An instance of given type
+	* @throws NonexistentTypeException|UnregisteredTypeException If type is not valid
 	*/
 	public function createInstance($type)
 	{
 		if (!class_exists($type)) {
-			throw new FactoryException('Nonexistent type: "' . $type . '"',
-			FactoryException::EXC_NONEXISTENT_TYPE);
+			throw new NonexistentTypeException('Nonexistent type: "' . $type . '"');
 		}
 
 		if (!$this->hasFactoryFor($type)) {
-			throw new FactoryException('Unregistered type: "' . $type . '"',
-			FactoryException::EXC_UNREGISTERED_TYPE);
+			throw new UnregisteredTypeException('Unregistered type: "' . $type . '"');
 		}
 
 		$factory = $this->getFactoryFor($type);
