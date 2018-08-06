@@ -6,7 +6,7 @@
 * @copyright	2018 DesignAndDevelop
 */
 
-global $auth;
+global $redirector, $auth;
 
 $auth_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php';
 
@@ -32,16 +32,19 @@ $login_return = array_merge(
  	array('redirect' => '')
 );
 
-if ($login_return['err']) {		//	failed to login
+if ($login_return['err']) {		//	Failed to login
 	//	If inactive account,
 	if ($login_return['msg'] == $auth_config['msg']['account_inactive']) {
 		// TODO:	set redirect url to activate user account
 	}
-} else {						//	login success
-	if (isset($query_params['redirect'])) {
+} else {						//	Login success
+	$login_return['redirect'] = '/';
+
+	if (
+		isset($query_params['redirect']) &&
+		$redirector->verifyRedirectURI($query_params['redirect'])
+	) {
 		$login_return['redirect'] = $query_params['redirect'];
-	} else {
-		$login_return['redirect'] = '/';
 	}
 }
 

@@ -16,7 +16,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
 
 $factory = new MasterFactory();
 $router = $factory->createInstance('\Povium\Base\Routing\Router', $with_db = false);
-$redirector = $factory->createInstance('\Povium\Base\Routing\Redirector', $with_db = false);
+$redirector = $factory->createInstance('\Povium\Base\Routing\Redirector', $with_db = false, BASE_URI);
 $auth = $factory->createInstance('\Povium\Auth', $with_db = true);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';

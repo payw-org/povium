@@ -6,7 +6,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-global $auth;
+global $redirector, $auth;
 
 /* Receive register inputs by ajax */
 $register_inputs = json_decode(file_get_contents('php://input'), true);
@@ -35,10 +35,13 @@ if ($register_return['err']) {			//	failed to register
 } else {								//	register success
 	$auth->login($readable_id, $password, false);
 
-	if (isset($query_params['redirect'])) {
-		$register_return['redirect'] = $query_params['redirect'];
-	} else {
-		$register_return['redirect'] = '/';
+	$login_return['redirect'] = '/';
+
+	if (
+		isset($query_params['redirect']) &&
+		$redirector->verifyRedirectURI($query_params['redirect'])
+	) {
+		$login_return['redirect'] = $query_params['redirect'];
 	}
 }
 
