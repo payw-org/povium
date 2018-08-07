@@ -34,7 +34,7 @@ class Router
 	private $namedRoutes = array();
 
 	/**
-	 * Generate new route and add to Router
+	 * Generate new route and register to Router
 	 *
 	 * @param string|string[] 	$http_method	One of a HTTP methods or
 	 * an array of multiple HTTP Methods (GET, POST, PUT, DELETE)
