@@ -82,6 +82,7 @@ class Redirector
 		}
 
 		//	Check URI host
+		$parsed_redirect_uri['host'] = preg_replace('/^www./', '', $parsed_redirect_uri['host']);
 		if ($parsed_redirect_uri['host'] !== $parsed_base_uri['host']) {
 			return false;
 		}
