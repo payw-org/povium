@@ -25,36 +25,36 @@ class Redirector
 
 	/**
 	 * Redirect to given URI.
-	 * If $returnTo is true, add 'redirect' query.
+	 * If $return_to is true, add 'redirect' query.
 	 * For redirect back after login (or register, etc...).
-	 * If you want to back other URI, you can specify it through $returnURI.
+	 * If you want to back other URI, you can specify it through $return_uri.
 	 *
 	 * @param  string  $uri
-	 * @param  boolean $returnTo
-	 * @param  string  $returnURI
+	 * @param  boolean $return_to
+	 * @param  string  $return_uri
 	 *
 	 * @return void
 	 */
-	public function redirect($uri, $returnTo = false, $returnURI = "")
+	public function redirect($uri, $return_to = false, $return_uri = "")
 	{
 		$location = $this->baseURI . $uri;
 		$http_response_code = 302;		//	Default value
 
-		if (!$returnTo) {				//	Simple redirect
+		if (!$return_to) {				//	Simple redirect
 			$http_response_code = 301;
 		} else {						//	Back after
 			$http_response_code = 302;
 
-			if (empty($returnURI)) {	//	Back to current URI
-				$returnURI = $this->baseURI . $_SERVER['REQUEST_URI'];
+			if (empty($return_uri)) {	//	Back to current URI
+				$return_uri = $this->baseURI . $_SERVER['REQUEST_URI'];
 			} else {					//	Back to other URI
-				$returnURI = $this->baseURI . $returnURI;
+				$return_uri = $this->baseURI . $return_uri;
 			}
 
 			//	Add return uri to query.
 			$location .=
 				(parse_url($location, PHP_URL_QUERY) ? '&' : '?') .
- 				http_build_query(array('redirect' => $returnURI));
+ 				http_build_query(array('redirect' => $return_uri));
 		}
 
 		header(
@@ -67,14 +67,14 @@ class Redirector
 	}
 
 	/**
-	 * @param  string $redirectURI
+	 * @param  string $redirect_uri
 	 *
 	 * @return boolean
 	 */
-	public function verifyRedirectURI($redirectURI)
+	public function verifyRedirectURI($redirect_uri)
 	{
 		$parsed_base_uri = parse_url($this->baseURI);
-		$parsed_redirect_uri = parse_url($redirectURI);
+		$parsed_redirect_uri = parse_url($redirect_uri);
 
 		//	Check URI scheme
 		if ($parsed_redirect_uri['scheme'] !== $parsed_base_uri['scheme']) {

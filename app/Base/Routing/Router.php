@@ -116,7 +116,7 @@ class Router
 	/**
 	 * Dispatch a given Request URI to matched routes.
 	 *
-	 * @param  string $http_method One of a HTTP methods
+	 * @param  string $http_method 	One of a HTTP methods
 	 * @param  string $request_uri
 	 */
 	public function dispatch($http_method, $request_uri)
@@ -156,7 +156,7 @@ class Router
 	}
 
 	/**
-	 * @param string $http_method One of a HTTP methods
+	 * @param string $http_method 	One of a HTTP methods
 	 * @param string $request_uri
 	 *
 	 * @return array 											Handler and required params of specific route
