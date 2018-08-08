@@ -478,38 +478,6 @@ export default class EventManager
 			this.selManager.setCursorAt(currentNode, 0)
 
 		}
-
-		if (currentNode && currentNode.textContent.match(/^- /) && this.selManager.isParagraph(currentNode)) {
-
-			// console.log(currentNode.textContent.match(/^- /))
-
-			this.selManager.list("ul")
-
-			let currentNode = this.selManager.getNodeInSelection()
-			currentNode.innerHTML = currentNode.innerHTML.replace(/^- /, "")
-
-			if (this.selManager.isTextEmptyNode(currentNode)) {
-				currentNode.innerHTML = "<br>"
-			}
-
-			this.selManager.setCursorAt(currentNode, 0)
-
-		} else if (currentNode && currentNode.textContent.match(/^1\. /) && this.selManager.isParagraph(currentNode)) {
-
-			// console.log(currentNode.textContent.match(/^- /))
-
-			this.selManager.list("ol")
-
-			let currentNode = this.selManager.getNodeInSelection()
-			currentNode.innerHTML = currentNode.innerHTML.replace(/^1\. /, "")
-
-			if (this.selManager.isTextEmptyNode(currentNode)) {
-				currentNode.innerHTML = "<br>"
-			}
-
-			this.selManager.setCursorAt(currentNode, 0)
-
-		}
 	}
 
 	/**
