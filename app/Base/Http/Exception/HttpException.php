@@ -25,7 +25,7 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
 	/**
 	 * @param int  			$response_code	Http response code
 	 * @param string  		$details		Http response details
-	 * @param int 			$code			Error code
+	 * @param int 			$code			Exception code
 	 * @param \Throwable 	$previous		Previous exception
 	 */
 	public function __construct($response_code, $details = "", $code = 0, $previous = null)

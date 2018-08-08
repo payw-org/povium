@@ -1,6 +1,6 @@
 <?php
 /**
- * Http exception for 410 Not Found.
+ * Http exception for 410 Gone.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -12,7 +12,7 @@ class GoneHttpException extends HttpException
 {
 	/**
 	 * @param string  		$details	Http response details
-	 * @param int 			$code		Error code
+	 * @param int 			$code		Exception code
 	 * @param \Throwable 	$previous	Previous exception
 	 */
 	public function __construct($details = "", $code = 0, $previous = null)

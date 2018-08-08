@@ -16,11 +16,11 @@ class Redirector
 	private $baseURI;
 
 	/**
-	 * @param string $baseURI
+	 * @param string $base_uri
 	 */
-	public function __construct($baseURI)
+	public function __construct($base_uri)
 	{
-		$this->baseURI = $baseURI;
+		$this->baseURI = $base_uri;
 	}
 
 	/**

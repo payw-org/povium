@@ -135,9 +135,17 @@ class Router
 	 				array_values($params)
 				);
 			} catch (RouteNotFoundException $e) {
-				throw new NotFoundHttpException();
+				throw new NotFoundHttpException(
+					$e->getMessage(),
+ 					$e->getCode(),
+ 					$e
+				);
 			} catch (MethodNotAllowedException $e) {
-				throw new MethodNotAllowedHttpException();
+				throw new MethodNotAllowedHttpException(
+					$e->getMessage(),
+ 					$e->getCode(),
+ 					$e
+				);
 			}
 		} catch (HttpException $e) {				//	Handle the http error (400 or 500 series)
 			$response_code = $e->getResponseCode();	//	Http response code

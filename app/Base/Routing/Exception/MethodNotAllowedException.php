@@ -21,7 +21,7 @@ class MethodNotAllowedException extends \UnexpectedValueException implements Rou
 	/**
 	 * @param array 		$allowed_methods	Allowed methods for specific URI
 	 * @param string		$message        	Exception message
-	 * @param int			$code           	Error code
+	 * @param int			$code           	Exception code
 	 * @param \Throwable	$previous       	Previous exception
 	 */
 	public function __construct($allowed_methods, $message = "", $code = 0, $previous = null)

@@ -12,7 +12,7 @@ class ForbiddenHttpException extends HttpException
 {
 	/**
 	 * @param string  		$details	Http response details
-	 * @param int 			$code		Error code
+	 * @param int 			$code		Exception code
 	 * @param \Throwable 	$previous	Previous exception
 	 */
 	public function __construct($details = "", $code = 0, $previous = null)

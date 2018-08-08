@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface for Http error exceptions.
+ * Interface for Http exceptions.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
