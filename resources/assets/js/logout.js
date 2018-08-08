@@ -23,7 +23,7 @@ if (document.querySelector("#globalnav .sign-out")) {
 
 			}
 		})
-		
+
 	})
 
 }

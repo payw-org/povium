@@ -2,9 +2,8 @@
 /**
 * A single route.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base\Routing;
@@ -17,12 +16,14 @@ class Route
 	 * POST : CREATE
 	 * PUT : UPDATE
 	 * DELETE : DELETE
+	 *
 	 * @var string
 	 */
-	public $http_method;
+	public $httpMethod;
 
 	/**
 	 * URI pattern with regular expressions.
+	 *
 	 * @var string
 	 */
 	public $pattern;
@@ -33,13 +34,13 @@ class Route
 	public $handler;
 
 	/**
-	 * @param string $http_method
-	 * @param string $pattern
-	 * @param callback $handler
+	 * @param	string		$http_method
+	 * @param	string		$pattern
+	 * @param	callback	$handler
 	 */
 	public function __construct($http_method, $pattern, $handler)
 	{
-		$this->http_method = strtoupper($http_method);
+		$this->httpMethod = strtoupper($http_method);
 		$this->pattern = $pattern;
 		$this->handler = $handler;
 	}

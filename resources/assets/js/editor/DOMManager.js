@@ -45,7 +45,7 @@ export default class DOMManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param  {String} tagName
 	 * @return {HTMLElement}
 	 */
@@ -72,7 +72,6 @@ export default class DOMManager {
 
 		var range = document.getSelection().getRangeAt(0)
 
-		
 		// Set the available item
 		var selManager = new SelectionManager(this)
 
@@ -151,11 +150,11 @@ export default class DOMManager {
 			document.querySelector("#poptool .align").classList.add("hidden")
 			document.querySelector("#poptool .input").classList.add("hidden")
 		}, 100)
-		
+
 	}
 
 	setPopToolMenu(config) {
-		
+
 		// Link and text style is always available
 
 		if ("heading" in config) {
@@ -191,8 +190,8 @@ export default class DOMManager {
 	}
 
 	/**
-	 * 
-	 * @param {HTMLElement} imageBlock 
+	 *
+	 * @param {HTMLElement} imageBlock
 	 */
 	showImageTool(imageBlock) {
 		this.imageTool.classList.add("active")

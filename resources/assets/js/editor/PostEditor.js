@@ -66,7 +66,7 @@ export default class PostEditor {
 		// 	this.selManager.sel.removeAllRanges()
 		// 	this.selManager.sel.addRange(range)
 		// }
-		
+
 	}
 
 	clearEditor () {
@@ -74,7 +74,7 @@ export default class PostEditor {
 		this.domManager.editor.innerHTML = ""
 
 	}
-	
+
 
 	/**
 	 * Return true if the editor is empty.

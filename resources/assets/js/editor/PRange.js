@@ -9,9 +9,9 @@ export default class PRange {
 	}
 
 	/**
-	 * 
-	 * @param {Node} node 
-	 * @param {Number} textOffset 
+	 *
+	 * @param {Node} node
+	 * @param {Number} textOffset
 	 */
 	setStart(node, textOffset)
 	{
@@ -70,7 +70,7 @@ export default class PRange {
 					}
 
 				}
-				
+
 			}
 
 			if (loopDone) {
@@ -86,9 +86,9 @@ export default class PRange {
 	}
 
 	/**
-	 * 
-	 * @param {Node} node 
-	 * @param {Number} textOffset 
+	 *
+	 * @param {Node} node
+	 * @param {Number} textOffset
 	 */
 	setEnd(node, textOffset)
 	{
@@ -161,10 +161,10 @@ export default class PRange {
 	}
 
 	/**
-	 * 
-	 * @param {Node} node 
-	 * @param {Node} container 
-	 * @param {Number} rangeOffset 
+	 *
+	 * @param {Node} node
+	 * @param {Node} container
+	 * @param {Number} rangeOffset
 	 */
 	getTextOffset(node, container, rangeOffset)
 	{

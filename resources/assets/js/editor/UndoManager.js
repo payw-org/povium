@@ -30,7 +30,7 @@ export default class UndoManager {
 			this.currentStep = this.actionStack.length - 1
 		}
 
-		
+
 
 		console.group("Actions history stack recorded")
 		console.log(this.actionStack)
@@ -46,13 +46,13 @@ export default class UndoManager {
 		} else {
 			console.group("undo")
 		}
-		
+
 		// get action type
 
 		let action = this.actionStack[this.currentStep]
 		console.log(action)
 		console.groupEnd()
-		
+
 		if (action.length) {
 
 			for (let i = action.length - 1; i >= 0; i--) {
@@ -73,7 +73,7 @@ export default class UndoManager {
 
 	redo()
 	{
-		
+
 		if (this.currentStep >= this.actionStack.length - 1) {
 			console.info('no more actions to recover')
 			return
@@ -85,7 +85,7 @@ export default class UndoManager {
 		var action = this.actionStack[this.currentStep]
 		console.log(action)
 		console.groupEnd()
-		
+
 		if (action.length) {
 
 			for (let i = 0; i < action.length; i++) {
@@ -285,7 +285,7 @@ export default class UndoManager {
 
 				}
 
-			} 
+			}
 
 			let pRange = new PRange()
 			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)

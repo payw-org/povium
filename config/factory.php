@@ -4,11 +4,15 @@
 * $key : Fully qualified class name
 * $value : Fully qualified factory name
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 return [
-	'\Povium\Auth' => '\Povium\Base\Factory\ServiceFactory',
-	'\Povium\Base\Routing\Router' => '\Povium\Base\Factory\ServiceFactory',
+	'\Povium\Base\Factory\ServiceFactory' => [
+		'\Povium\Auth',
+		'\Povium\Mailer',
+		'\Povium\Base\Routing\Router',
+		'\Povium\Base\Routing\Redirector'
+	]
 ];

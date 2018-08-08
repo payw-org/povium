@@ -1,30 +1,30 @@
 <?php
 /**
-* config array for authentication
+* Config array for authentication
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 return [
-	'table_users' => 'users',
-	'table_tokens' => 'tokens',
+	'table__users' => 'users',
+	'table__auto_login_auth' => 'autologin_auth',
+	'table__email_auth' => 'email_auth',
 
+	'email_auth_expire' => 60*30,	//	Email authentication expiration time
 
 	'cookie_params' => [
-		'expire' => 60*60*24*30,
+		'expire' => 60*60*24*30,	//	Auto login cookie expiration time
 		'path' => '/',
 		'domain' => '',
 		'secure' => false,
 		'httponly' => false
 	],
 
-
 	'pw_hash_options' => [
 		'cost' => 13,
 		'salt' => md5(openssl_random_pseudo_bytes(16))
 	],
-
 
 	'regex' => [
 		'readable_id_regex_base' => '/^[a-z0-9_]{3,20}$/',
@@ -37,7 +37,6 @@ return [
 
 		'password_regex' => '/^\S*(?=\S{8,50})(?=\S*[a-z])(?=\S*[0-9])\S*$/'
 	],
-
 
 	'len' => [
 		'readable_id_min_length' => 3,
@@ -53,8 +52,6 @@ return [
 		'password_max_length' => 50
 	],
 
-
-	//	message
 	'msg' => [
 		'unknown_warning' => '알 수 없는 오류입니다.',
 		'token_insert_to_db_err' => '자동 로그인 설정 오류',
@@ -88,5 +85,4 @@ return [
 		'password_long' => '비밀번호를 50자 이하로 입력해주세요.',
 		'password_invalid' => '8~50자 영어 소문자, 숫자를 최소 하나씩 사용해주세요.'
 	]
-
 ];

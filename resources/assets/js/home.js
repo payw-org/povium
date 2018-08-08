@@ -67,7 +67,7 @@ class HomeView {
 				this.lockHorizontalScrolling = true
 			}
 
-			
+
 		})
 
 		this.popPostContainer.addEventListener('touchend', (e) => {
@@ -97,7 +97,7 @@ class HomeView {
 
 			this.lockVerticalScrolling = false
 			this.lockHorizontalScrolling = false
-			
+
 		})
 
 
@@ -186,7 +186,7 @@ class HomeView {
 	}
 
 	autoFlick() {
-		
+
 		this.popPostContainer.classList.remove('ease')
 		if (this.isAutoFlicking) {
 			return

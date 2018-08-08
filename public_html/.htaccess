@@ -1,10 +1,29 @@
 <IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
 	Options +FollowSymlinks
-	RewriteEngine on
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-l
-	RewriteCond %{HTTP:X-Requested-With} !=XMLHttpRequest
-	RewriteCond %{HTTP:X-REQUESTED-WITH} !^(XMLHttpRequest)$
-	RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+	# Force non-www
+	RewriteCond %{HTTP_HOST} ^www\.
+	RewriteCond %{HTTPS}s ^on(s)|off
+	RewriteCond http%1://%{HTTP_HOST} ^(https?://)(www\.)?(.+)$
+	RewriteRule ^ %1%3%{REQUEST_URI} [R=301,L]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
 </IfModule>

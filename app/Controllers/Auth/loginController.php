@@ -2,39 +2,49 @@
 /**
 * Receive login inputs and process login.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
-use Povium\Base\Factory\MasterFactory;
+global $redirector, $auth;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
-$factory = new MasterFactory();
+$auth_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php';
 
-$auth = $factory->createInstance('\Povium\Auth', $with_db=true);
-$auth_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
-
-/* receive login inputs by ajax */
+/* Receive login inputs by ajax */
 $login_inputs = json_decode(file_get_contents('php://input'), true);
 $identifier = $login_inputs['identifier'];
 $password = $login_inputs['password'];
 $remember = $login_inputs['remember'];
 
+//	Get querystring of referer
+$querystring = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+if (isset($querystring)) {
+	parse_str($querystring, $query_params);
+}
 
-#	array('err' => bool, 'msg' => 'err msg for display', 'redirect' => 'redirect url');
-$login_return = array_merge($auth->login($identifier, $password, $remember), array('redirect' => ''));
+#	array(
+#		'err' => bool,
+#		'msg' => 'err msg for display',
+#		'redirect' => 'redirect url'
+#	);
+$login_return = array_merge(
+	$auth->login($identifier, $password, $remember),
+ 	array('redirect' => '')
+);
 
-if ($login_return['err']) {		//	failed to login
-	//	if inactive account,
+if ($login_return['err']) {		//	Failed to login
+	//	If inactive account,
 	if ($login_return['msg'] == $auth_config['msg']['account_inactive']) {
 		// TODO:	set redirect url to activate user account
 	}
-} else {						//	login success
-	if (isset($_SESSION['prev_page'])) {
-		$login_return['redirect'] = $_SESSION['prev_page'];
-	} else {
-		$login_return['redirect'] = '/';
+} else {						//	Login success
+	$login_return['redirect'] = '/';
+
+	if (
+		isset($query_params['redirect']) &&
+		$redirector->verifyRedirectURI($query_params['redirect'])
+	) {
+		$login_return['redirect'] = $query_params['redirect'];
 	}
 }
 

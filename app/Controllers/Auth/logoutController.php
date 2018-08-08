@@ -1,21 +1,18 @@
 <?php
 /**
-*
 * Logout processing
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
-use Povium\Base\Factory\MasterFactory;
+global $auth;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
-$factory = new MasterFactory();
-
-$auth = $factory->createInstance('\Povium\Auth', $with_db=true);
-
-$logout_return = array('err' => false, 'msg' => '', 'redirect' => '');
+$logout_return = array(
+	'err' => false,
+	'msg' => '',
+	'redirect' => ''
+);
 
 $auth->logout();
 $logout_return['redirect'] = '/';

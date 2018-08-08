@@ -6,9 +6,9 @@ export default class SelectionManager
 {
 
 	/**
-	 * 
-	 * @param {DOMManager} domManager 
-	 * @param {UndoManager} undoManager 
+	 *
+	 * @param {DOMManager} domManager
+	 * @param {UndoManager} undoManager
 	 */
 	constructor(domManager, undoManager)
 	{
@@ -75,7 +75,7 @@ export default class SelectionManager
 		}
 
 		this.undoManager.recordAction(action)
-		
+
 	}
 
 
@@ -116,8 +116,8 @@ export default class SelectionManager
 	}
 
 	/**
-	 * 
-	 * @param {string} type 
+	 *
+	 * @param {string} type
 	 */
 	heading(type)
 	{
@@ -126,7 +126,7 @@ export default class SelectionManager
 		// 엔터 치고 첫번째 줄과 두번째 빈 줄 셀렉트 하고
 		// heading 적용 시 range 유지 안됨. range가 document 벗어났다고 에러뜸.
 		// -> 빈 태그는 heading 적용하지 않음.
-		
+
 		let orgRange = this.getRange()
 		if (!orgRange) {
 			return
@@ -177,7 +177,7 @@ export default class SelectionManager
 				previousTarget: chunks[i],
 				nextTarget: changedNode
 			})
-			
+
 
 			if (chunks[i] === startNode) {
 				startNode = changedNode
@@ -188,9 +188,9 @@ export default class SelectionManager
 
 		}
 
-		
 
-		
+
+
 		var keepRange = document.createRange()
 		keepRange.setStart(startNode, startOffset)
 		keepRange.setEnd(endNode, endOffset)
@@ -199,7 +199,7 @@ export default class SelectionManager
 	}
 
 	/**
-	 * 
+	 *
 	 * @param {string} type
 	 */
 	list(type)
@@ -260,7 +260,7 @@ export default class SelectionManager
 				if (chunks[i] === startNode) {
 					startNode = itemElm
 				}
-	
+
 				if (chunks[i] === endNode) {
 					endNode = itemElm
 				}
@@ -273,7 +273,6 @@ export default class SelectionManager
 				} else {
 					chunks[i].parentNode.removeChild(chunks[i])
 				}
-				
 
 				unlockList = false
 
@@ -295,7 +294,7 @@ export default class SelectionManager
 					listElm.appendChild(node)
 
 				}
-				
+
 
 				if (!placedListElm) {
 					placedListElmIndex = i
@@ -362,7 +361,7 @@ export default class SelectionManager
 						range.setStartAfter(part1ListElm)
 						part1ListElmInserted = true
 					}
-					
+
 				} else if (part2) {
 
 					var pElm = document.createElement('P')
@@ -376,7 +375,7 @@ export default class SelectionManager
 				} else if (part3) {
 
 					part3ListElm.appendChild(itemNode)
-					
+
 					if (!part3ListElmInserted) {
 						range.insertNode(part3ListElm)
 						range.setStartAfter(part3ListElm)
@@ -388,19 +387,18 @@ export default class SelectionManager
 				if (itemNode === startNode) {
 					startNode = pElm
 				}
-	
+
 				if (itemNode === endNode) {
 					endNode = pElm
 				}
 
-			
+
 
 				if (part3Will) {
 					part1 = false
 					part2 = false
 					part3 = true
 				}
-			
 
 				itemNode = nextNode
 
@@ -410,9 +408,6 @@ export default class SelectionManager
 			if (this.domManager.editor.contains(listElm)) {
 				this.domManager.editor.removeChild(listElm)
 			}
-			
-
-		}
 
 		var keepRange = document.createRange()
 		keepRange.setStart(startNode, startOffset)
@@ -439,7 +434,7 @@ export default class SelectionManager
 		document.getSelection().removeAllRanges()
 
 		this.domManager.hidePopTool()
-		
+
 	}
 
 	unlink(linkNode) {
@@ -572,7 +567,7 @@ export default class SelectionManager
 			if (!this.removeSelection("backspace", linkedAction)) {
 				return;
 			}
-			
+
 			// return
 		}
 
@@ -645,7 +640,7 @@ export default class SelectionManager
 					let changedNode = this.changeNodeName(currentNode, "P")
 					this.setCursorAt(changedNode)
 				}
-				
+
 			}
 
 		} else if (currentNode && this.getSelectionPositionInParagraph() === 1) {
@@ -725,7 +720,7 @@ export default class SelectionManager
 			}
 
 		}
-		
+
 
 	}
 
@@ -847,7 +842,7 @@ export default class SelectionManager
 	 */
 	enter(e)
 	{
-		
+
 
 		// When press return key
 
@@ -932,9 +927,9 @@ export default class SelectionManager
 
 					this.list(currentNode.parentNode.nodeName)
 					return
-					
+
 				}
-				
+
 			}
 
 			var pElm = this.domManager.generateEmptyNode(newNodeName)
@@ -971,8 +966,8 @@ export default class SelectionManager
 	}
 
 	/**
-	 * 
-	 * @param {Range} range 
+	 *
+	 * @param {Range} range
 	 */
 	replaceRange(range)
 	{
@@ -1016,7 +1011,7 @@ export default class SelectionManager
 			endTextOffset = pRange.getTextOffset(this.getNodeOfNode(range.endContainer), range.endContainer, range.endOffset)
 
 		}
-		
+
 
 		// 1. Change node
 		var node
@@ -1025,7 +1020,7 @@ export default class SelectionManager
 		if (keepStyle) {
 			newNode.style.textAlign = targetNode.style.textAlign
 		}
-		
+
 
 		while (node = targetNode.firstChild) {
 			newNode.appendChild(node)
@@ -1034,7 +1029,7 @@ export default class SelectionManager
 		// 3. replace node
 		targetNode.parentNode.replaceChild(newNode, targetNode)
 
-		
+
 
 		if (recordAction) {
 			let action = {
@@ -1108,7 +1103,7 @@ export default class SelectionManager
 					target = target.nextSibling
 				}
 
-				
+
 
 				if (target) {
 
@@ -1118,7 +1113,7 @@ export default class SelectionManager
 					isChanged = true
 				}
 
-				
+
 
 			}
 
@@ -1141,7 +1136,7 @@ export default class SelectionManager
 
 					isChanged = true
 				}
-				
+
 
 			}
 
@@ -1183,13 +1178,13 @@ export default class SelectionManager
 					}
 				}
 
-				
+
 
 			}
 
 			if (this.isTextContainNode(endNode)) {
 
-				
+
 
 				if (endOffset > 0) {
 					travelNode = endNode.lastChild
@@ -1221,7 +1216,7 @@ export default class SelectionManager
 					}
 				}
 
-				
+
 
 			}
 
@@ -1236,13 +1231,13 @@ export default class SelectionManager
 			}
 
 		}
-		
-		
+
+
 	}
 
 	splitElementNode3(linkedRecord = false)
 	{
-		
+
 		let orgRange = this.getRange()
 		let startNode = orgRange.startContainer
 
@@ -1322,7 +1317,7 @@ export default class SelectionManager
 						continue
 
 					}
-					
+
 
 				} else if (orgRange.startOffset > 0) {
 
@@ -1344,7 +1339,7 @@ export default class SelectionManager
 			}
 
 			travelNode = frontNode
-			
+
 
 			var newNode = document.createElement(travelNode.parentNode.nodeName)
 
@@ -1404,9 +1399,9 @@ export default class SelectionManager
 
 	/**
 	 * Merge two nodes into a single node
-	 * @param {Node} first 
-	 * @param {Node} second 
-	 * @param {Boolean} matchTopNode 
+	 * @param {Node} first
+	 * @param {Node} second
+	 * @param {Boolean} matchTopNode
 	 */
 	mergeNodes(first, second, matchTopNode = false, recordRangeState, linkedRecord = false)
 	{
@@ -1451,11 +1446,11 @@ export default class SelectionManager
 					back === second &&
 					matchTopNode
 				) {
-					
+
 				} else {
 					break
 				}
-				
+
 			}
 
 			if (front.nodeType === 3) {
@@ -1553,14 +1548,14 @@ export default class SelectionManager
 		}
 
 		returnNode.startNode = startNode
-		
+
 		// Split start of the range.
 		if (
 			startNode.nodeType === 3 &&
 			startOffset > 0 &&
 			startOffset < startNode.textContent.length
 		) {
-			
+
 			returnNode.startNode = startNode.splitText(startOffset)
 
 		}
@@ -1611,7 +1606,7 @@ export default class SelectionManager
 			startOffset = 0
 		}
 		var endNode = splitResult.endNode
-		
+
 		var deletionDone = false
 		var selectionNode = this.getNodeInSelection()
 		var nextParentNode = this.getNextAvailableNode(selectionNode)
@@ -1622,7 +1617,7 @@ export default class SelectionManager
 
 		range.setStart(range.endContainer, range.endOffset)
 		this.replaceRange(range)
-		
+
 		var currentParentNode = selectionNode
 		var travelNode = startNode
 		var nextNode
@@ -1711,13 +1706,13 @@ export default class SelectionManager
 						nextNode: currentParentNode.nextSibling,
 						parentNode: currentParentNode.parentNode
 					})
-					
+
 					currentParentNode.parentNode.removeChild(currentParentNode)
 
 				}
 
 				console.groupEnd()
-				
+
 			} else if (
 				currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
@@ -1860,7 +1855,7 @@ export default class SelectionManager
 
 	/**
 	 * Remove node from the editor
-	 * @param {Node} node 
+	 * @param {Node} node
 	 */
 	removeNode(node, recordRangeState, linkedRecord = false)
 	{
@@ -1949,7 +1944,7 @@ export default class SelectionManager
 	/**
 	 * If there isn't any of child nodes including "" text nodes, returns true.
 	 * And truly clear the node to real empty.
-	 * @param {HTMLElement} node 
+	 * @param {HTMLElement} node
 	 */
 	isEmptyNode(node)
 	{
@@ -2170,7 +2165,7 @@ export default class SelectionManager
 
 	/**
 	 * Returns true if the node is an available image block.
-	 * @param {HTMLElement} node 
+	 * @param {HTMLElement} node
 	 */
 	isImageBlock(node)
 	{
@@ -2225,7 +2220,7 @@ export default class SelectionManager
 	 * Get the first or last text node inside the HTMLElement
 	 * @param {HTMLElement} node
 	 * @param {String} firstOrLast
-	 * "first" | "last" 
+	 * "first" | "last"
 	 */
 	getTextNodeInElementNode(node, firstOrLast)
 	{
@@ -2262,7 +2257,7 @@ export default class SelectionManager
 		}
 
 		return returnNode
-		
+
 	}
 
 	// getSelectionPosition(customRange = null)
@@ -2365,7 +2360,7 @@ export default class SelectionManager
 
 		parentNode = startNode.parentElement
 		travelNode = startNode
-		
+
 		if (startOffset === 0) {
 			while (1) {
 				if (
@@ -2386,7 +2381,6 @@ export default class SelectionManager
 				}
 			}
 		}
-		
 
 
 		parentNode = endNode.parentElement
@@ -2430,7 +2424,7 @@ export default class SelectionManager
 
 	// Getters
 
-	
+
 	/**
 	 * @return {Range}
 	 */
@@ -2471,7 +2465,7 @@ export default class SelectionManager
 					} else {
 						travelNode = travelNode.nextElementSibling
 					}
-					
+
 				} else {
 					travelNode = travelNode.parentElement
 				}
@@ -2485,7 +2479,7 @@ export default class SelectionManager
 	}
 
 	/**
-	 * 
+	 *
 	 * @param {Node} node
 	 * @return {Node}
 	 */
@@ -2580,8 +2574,8 @@ export default class SelectionManager
 	}
 
 	/**
-	 * 
-	 * @param {Node} node 
+	 *
+	 * @param {Node} node
 	 */
 	getNodeOfNode(node)
 	{
@@ -2602,9 +2596,9 @@ export default class SelectionManager
 	}
 
 	/**
-	 * 
-	 * @param {HTMLElement} node 
-	 * @param {Range} range 
+	 *
+	 * @param {HTMLElement} node
+	 * @param {Range} range
 	 */
 	cloneNodeAndRange(node, range = null)
 	{
@@ -2618,8 +2612,8 @@ export default class SelectionManager
 			rangeClone.setStart(range.startContainer, range.startOffset)
 			rangeClone.setEnd(range.endContainer, range.endOffset)
 		}
-		
-		
+
+
 		let travelNode = node.firstChild
 		let tempNode
 
@@ -2672,7 +2666,7 @@ export default class SelectionManager
 					} else {
 						parentNode = parentNode.parentNode
 					}
-					
+
 				}
 
 			}
@@ -2683,7 +2677,7 @@ export default class SelectionManager
 
 
 
-			
+
 			// tempNode = travelNode.cloneNode(false)
 			// if (travelNode.isSameNode(range.startContainer)) {
 			// 	rangeClone.startContainer = tempNode
@@ -2699,9 +2693,9 @@ export default class SelectionManager
 	}
 
 	/**
-	 * 
-	 * @param {Node} node 
-	 * @param {Number} offset 
+	 *
+	 * @param {Node} node
+	 * @param {Number} offset
 	 */
 	setCursorAt(node, offset = 0)
 	{

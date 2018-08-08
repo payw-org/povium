@@ -1,66 +1,103 @@
 <?php
 /**
-* Set routes of web page
+* Set routes for web page.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
-/* Home Page */
+use Povium\Base\Http\Exception\NotFoundHttpException;
+
+/**
+ * Home Page
+ */
 $router->get(
 	'/',
  	function () {
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php';
-		return true;
 	}
 );
 
-/* Login Page */
+/**
+ * Login Page
+ */
 $router->get(
 	'/login',
- 	function () use ($auth) {
+ 	function () use ($auth, $redirector) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			exit(header('Location: ' . BASE_URI . '/'));
+			$redirector->redirect('/');
+		}
+
+		//	If referer is register page
+		if (
+			isset($_SERVER['HTTP_REFERER']) &&
+ 			'/register' == parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)
+		) {
+			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+			if (isset($prev_query) && !isset($curr_query)) {
+				//	Concatenate referer's query to current uri.
+				//	Then redirect.
+				$redirector->redirect('/login' . '?' . $prev_query);
+			}
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/login.php';
-
-		return true;
 	}
 );
 
-/* Regsiter Page */
+/**
+ * Regsiter Page
+ */
 $router->get(
 	'/register',
- 	function () use ($auth) {
+ 	function () use ($auth, $redirector) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			exit(header('Location: ' . BASE_URI . '/'));
+			$redirector->redirect('/');
+		}
+
+		//	If referer is login page
+		if (
+			isset($_SERVER['HTTP_REFERER']) &&
+ 			'/login' == parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)
+		) {
+			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+			if (isset($prev_query) && !isset($curr_query)) {
+				//	Concatenate referer's query to current uri.
+				//	Then redirect.
+				$redirector->redirect('/register' . '?' . $prev_query);
+			}
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/register.php';
-
-		return true;
 	}
 );
 
-/* Editor test page */
+/**
+ * Editor test page
+ */
 $router->get(
 	'/editor',
- 	function () use ($auth) {
-		//	If not logged in, send to login page.
+ 	function () use ($auth, $redirector) {
+		// //	If is not logged in, redirect to login page.
 		// if (!$auth->isLoggedIn()) {
-		// 	exit(header('Location: ' . BASE_URI . '/login'));
+		// 	$redirector->redirect('/register', true);
 		// }
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php';
-
-		return true;
 	}
 );
 
-/* User Home Page (Not User My Page) */
+/**
+ * User Profile Page
+ *
+ * @param string $readable_id
+ *
+ * @throws NotFoundHttpException If nonexistent readable id
+ */
 $router->get(
 	'/@{readable_id:.+}',
  	function ($readable_id) use ($auth) {
@@ -68,16 +105,17 @@ $router->get(
 
 		//	Nonexistent readable id.
 		if (false === $user_id = $auth->getID($readable_id)) {
-			return false;
+			throw new NotFoundHttpException();
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/user_home.php';
-		return true;
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_home.php';
 	},
-	'user_home'
+	'user_profile'
 );
 
-/* Post Page */
+/**
+ * Post Page
+ */
 $router->get(
 	'/@{readable_id:.+}/{post_title:.+}-{post_id:\d+}',
  	function ($readable_id, $post_title, $post_id) {
@@ -86,33 +124,45 @@ $router->get(
 		//	있으면 포스트 작성자의 readable id와 포스트 타이틀을 가져옴
 		//	대소문자 무시하고 가져온 readable id와 파라미터 readable_id 값을 비교
 		//	대소문자 무시하고 가져온 title과 파라미터 title값을 비교 (가져온 title은 raw한 형태 -> 특문과 공백이 섞여있음)
-		//	둘중 하나라도 다르면 올바른 uri로 redirect시킨 후 (header), exit() 시킴
+		//	둘중 하나라도 다르면 올바른 uri로 redirect시킴
 		//	둘다 같으면 포스트페이지 require
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/post.php';
-		return true;
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/post.php';
 	},
  	'post'
 );
 
-
-//	Special Routes
-//	User cannot access below routes via uri.
-//	DO NOT GENERATE URI FOR BELOW ROUTES
-
-/* 404 Not Found Page */
+/**
+ * Email Setting Page
+ */
 $router->get(
-	'/*',
- 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/404.php';
-	},
- 	'ERR_404'
+	'/me/settings/email',
+	function () use ($auth, $redirector) {
+		//	If visitor is not logged in, redirect to register page.
+		if (!$auth->isLoggedIn()) {
+			$redirector->redirect('/register', true);
+		}
+
+		//	require page
+	}
 );
 
-/* 405 Method Not Allowed Page */
+/**
+ * Http Status Page
+ *
+ * User cannot directly access this route.
+ * DO NOT GENERATE URI FOR THIS ROUTE.
+ *
+ * @param	int		$response_code	Http response code
+ * @param	string	$title			Http response title
+ * @param	string	$msg			Http response message
+ * @param	string	$details		Http response details
+ */
 $router->get(
 	'/*',
- 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../views/405.php';
+	function ($response_code, $title, $msg, $details) {
+		http_response_code($response_code);
+
+		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_error.php';
 	},
- 	'ERR_405'
+	'http_error'
 );

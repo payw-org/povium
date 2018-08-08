@@ -1,19 +1,17 @@
 <?php
 /**
-*
 * The application factory is a facade to all factories.
 * It cannot create any instances itself, but knows which factory is
 * responsible for creating which instance and delegates instantiation.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
-*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base\Factory;
 
-use Povium\Base\Factory\FactoryInterface;
-use Povium\Exceptions\FactoryException;
+use Povium\Base\Factory\Exception\NonexistentTypeException;
+use Povium\Base\Factory\Exception\UnregisteredTypeException;
 
 class MasterFactory implements FactoryInterface
 {
@@ -37,45 +35,58 @@ class MasterFactory implements FactoryInterface
 	* Returns an instance of the requested type by delegating call to
 	* responsible child factory instance.
 	*
-	* @param  mixed type and some materials
-	* @return object An instance of given type
+	* @param	string	$type
+	* @param	mixed
+	*
+	* @return object												An instance of given type
+	* @throws NonexistentTypeException|UnregisteredTypeException	If type is not valid
 	*/
 	public function createInstance($type)
 	{
 		if (!class_exists($type)) {
-			throw new FactoryException('Nonexistent type: "' . $type . '"',
-			FactoryException::EXC_NONEXISTENT_TYPE);
+			throw new NonexistentTypeException('Nonexistent type: "' . $type . '"');
 		}
 
 		if (!$this->hasFactoryFor($type)) {
-			throw new FactoryException('Unregistered type: "' . $type . '"',
-			FactoryException::EXC_UNREGISTERED_TYPE);
+			throw new UnregisteredTypeException('Unregistered type: "' . $type . '"');
 		}
 
 		$factory = $this->getFactoryFor($type);
 
-		return call_user_func_array(array(new $factory (), 'createInstance'), func_get_args());
+		return call_user_func_array(array(new $factory(), 'createInstance'), func_get_args());
 	}
 
 	/**
 	* Check if responsible factory for creating instance is exist
 	*
 	* @param  string  $type
+	*
 	* @return boolean
 	*/
 	protected function hasFactoryFor($type)
 	{
-		return isset($this->typeMap[$type]);
+		foreach ($this->typeMap as $factory => $types) {
+			if (array_search($type, $types) !== false) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
 	* Get responsible factory name for creating instance of given type
 	*
 	* @param  string $type
+	*
 	* @return string factory name
 	*/
 	protected function getFactoryFor($type)
 	{
-		return $this->typeMap[$type];
+		foreach ($this->typeMap as $factory => $types) {
+			if (array_search($type, $types) !== false) {
+				return $factory;
+			}
+		}
 	}
 }

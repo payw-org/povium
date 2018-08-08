@@ -7,9 +7,9 @@ export default class EventManager
 {
 
 	/**
-	 * 
-	 * @param {PostEditor} postEditor 
-	 * @param {DOMManager} domManager 
+	 *
+	 * @param {PostEditor} postEditor
+	 * @param {DOMManager} domManager
 	 * @param {SelectionManager} selManager
 	 * @param {UndoManager} undoManager
 	 */
@@ -45,14 +45,14 @@ export default class EventManager
 				this.domManager.hidePopTool()
 				this.mouseDownStart = true
 			}
-			
+
 		})
 		window.addEventListener('touchstart', (e) => {
 			if (!e.target.closest("#poptool")) {
 				this.domManager.hidePopTool()
 				this.mouseDownStart = true
 			}
-			
+
 		})
 		this.domManager.editor.addEventListener('mouseup', (e) => {
 			this.onSelectionChanged()
@@ -97,7 +97,7 @@ export default class EventManager
 					e.preventDefault()
 					this.ssManager.undo()
 				}
-				
+
 			}
 
 		})
@@ -184,7 +184,7 @@ export default class EventManager
 			setTimeout(() => {
 				document.querySelector("#poptool .pack.input input").focus()
 			}, 0)
-			
+
 		})
 
 		document.querySelector("#pt-blockquote").addEventListener('click', (e) => {
@@ -197,7 +197,7 @@ export default class EventManager
 			elm.addEventListener('click', function() {
 				self.domManager.showPopTool()
 			})
-			
+
 		})
 
 		document.querySelector("#poptool .pack.input input").addEventListener("keydown", function(e) {
@@ -209,7 +209,7 @@ export default class EventManager
 				setTimeout(() => {
 					this.value = ""
 				}, 200)
-				
+
 			}
 		})
 
@@ -262,7 +262,7 @@ export default class EventManager
 				setTimeout(() => {
 					this.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
-				
+
 			} else if (e.target.id === "normal" && e.target.nodeName === "BUTTON") {
 
 				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected")
@@ -377,7 +377,7 @@ export default class EventManager
 							travelNode.removeAttribute(travelNode.attributes[i].name)
 						}
 					}
-					
+
 
 					if (travelNode.firstChild) {
 						travelNode = travelNode.firstChild
@@ -406,7 +406,7 @@ export default class EventManager
 			// pasteArea.innerHTML = ""
 
 		}, 1)
-		
+
 
 	}
 
@@ -417,7 +417,7 @@ export default class EventManager
 
 	/**
 	* Fires when press keyboard inside the editor.
-	* @param {KeyboardEvent} e 
+	* @param {KeyboardEvent} e
 	*/
 	onKeyUp (e) {
 		var currentNode = this.selManager.getNodeInSelection()
@@ -444,7 +444,39 @@ export default class EventManager
 				currentNode.parentNode.classList.add("caption-enabled")
 
 			}
-			
+
+		}
+
+		if (currentNode && currentNode.textContent.match(/^- /) && this.selManager.isParagraph(currentNode)) {
+
+			// console.log(currentNode.textContent.match(/^- /))
+
+			this.selManager.list("ul")
+
+			let currentNode = this.selManager.getNodeInSelection()
+			currentNode.innerHTML = currentNode.innerHTML.replace(/^- /, "")
+
+			if (this.selManager.isTextEmptyNode(currentNode)) {
+				currentNode.innerHTML = "<br>"
+			}
+
+			this.selManager.setCursorAt(currentNode, 0)
+
+		} else if (currentNode && currentNode.textContent.match(/^1\. /) && this.selManager.isParagraph(currentNode)) {
+
+			// console.log(currentNode.textContent.match(/^- /))
+
+			this.selManager.list("ol")
+
+			let currentNode = this.selManager.getNodeInSelection()
+			currentNode.innerHTML = currentNode.innerHTML.replace(/^1\. /, "")
+
+			if (this.selManager.isTextEmptyNode(currentNode)) {
+				currentNode.innerHTML = "<br>"
+			}
+
+			this.selManager.setCursorAt(currentNode, 0)
+
 		}
 
 		if (currentNode && currentNode.textContent.match(/^- /) && this.selManager.isParagraph(currentNode)) {
@@ -481,8 +513,8 @@ export default class EventManager
 	}
 
 	/**
-	 * 
-	 * @param {KeyboardEvent} e 
+	 *
+	 * @param {KeyboardEvent} e
 	 */
 	onKeyDown (e) {
 

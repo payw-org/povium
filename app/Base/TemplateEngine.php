@@ -3,9 +3,8 @@
 * Load template files and configuration.
 * And renders the view.
 *
-* @author J.Haemin
-* @copyright 2018 DesignAndDevelop
-*
+* @author		J.Haemin
+* @copyright	2018 DesignAndDevelop
 */
 
 namespace Povium\Base;
@@ -19,6 +18,7 @@ class TemplateEngine
 
 	/**
 	 * Render templates with config array.
+	 *
 	 * @param  string  $template_dir  Template file written in phtml.
 	 * @param  array   $config        "name" => value
 	 * @return null                   Return nothing
@@ -54,6 +54,7 @@ class TemplateEngine
 
 	/**
 	 * Include string or a file in directory.
+	 *
 	 * @param  string $str Config name
 	 * @return null   Return nothing
 	 */
@@ -120,6 +121,7 @@ class TemplateEngine
 	/**
 	 * This function automatically includes the template without config set to true.
 	 * To avoid including the template, set the config to false.
+	 *
 	 * @param  string  $config_name  Config Name
 	 * @param  string  $dir          Directory
 	 * @return null                  Return Nothing
@@ -144,6 +146,7 @@ class TemplateEngine
 
 	/**
 	 * If there is no config, do nothing.
+	 *
 	 * @param  string $config_name
 	 */
 	public function optional($config_name)

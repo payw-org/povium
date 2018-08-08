@@ -1,8 +1,8 @@
 export default class TextInput {
 
 	/**
-	 * 
-	 * @param {HTMLElement} inputDOM 
+	 *
+	 * @param {HTMLElement} inputDOM
 	 */
 	constructor (inputDOM) {
 		this.target = inputDOM
@@ -12,7 +12,7 @@ export default class TextInput {
 	showMsg (message) {
 
 		if (message === "") {
-			
+
 			this.hideMsg()
 
 			return
@@ -58,5 +58,5 @@ document.querySelectorAll(".input-wrapper").forEach(function(self, index) {
 			this.classList.remove("fixed")
 		}
 	})
-	
+
 })

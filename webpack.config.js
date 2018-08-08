@@ -12,7 +12,7 @@ module.exports = {
 		login: [
 			'./resources/assets/js/login'
 		],
-		
+
 		register: [
 			'./resources/assets/js/register'
 		],

@@ -1,5 +1,4 @@
 <?php
-
 use Povium\Base\TemplateEngine;
 
 $te = new TemplateEngine();

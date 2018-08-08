@@ -2,8 +2,8 @@
 /**
 * Table for user's info.
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 $sql = "CREATE TABLE users (

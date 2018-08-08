@@ -2,8 +2,8 @@
 /**
 * Table for editor type
 *
-* @author H.Chihoon
-* @copyright 2018 DesignAndDevelop
+* @author 		H.Chihoon
+* @copyright 	2018 DesignAndDevelop
 */
 
 $sql = "CREATE TABLE editor_types (
