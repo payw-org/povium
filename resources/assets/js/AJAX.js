@@ -1,14 +1,15 @@
 // ajax.js
-export default class AJAX {
+export default class AJAX
+{
 
-	constructor () {
+	constructor() {
 
-		this.httpRequest = new XMLHttpRequest();
+		this.httpRequest = new XMLHttpRequest()
 
 		if (window.XMLHttpRequest) { // Firefox, Safari, Chrome
-			this.httpRequest = new XMLHttpRequest();
+			this.httpRequest = new XMLHttpRequest()
 		} else if (window.ActiveXObject) { // IE 8 and over
-			this.httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+			this.httpRequest = new ActiveXObject("Microsoft.XMLHTTP")
 		}
 
 	}
@@ -22,51 +23,51 @@ export default class AJAX {
 		send type, url, data, success function, fail function
 		*/
 
-		var type = "post", url = "", data = "", success, fail, done;
+		var type = "post", url = "", data = "", success, fail, done
 
 		if ("type" in config) {
-			type = config["type"];
+			type = config["type"]
 		}
 
-		type = type.toLowerCase();
+		type = type.toLowerCase()
 
 		if ("url" in config) {
-			url = config["url"];
+			url = config["url"]
 		} else {
-			console.error("You didn't provide an url for AJAX call.");
-			return;
+			console.error("You didn't provide an url for AJAX call.")
+			return
 		}
 
 		if ("data" in config) {
-			data = config["data"];
+			data = config["data"]
 		}
 
 		if ("success" in config) {
 
-			success = config["success"];
+			success = config["success"]
 
 			if (typeof success !== "function") {
-				console.error(success, "is not a function.");
-				return;
+				console.error(success, "is not a function.")
+				return
 			}
 		}
 
 		if ("fail" in config) {
 
-			fail = config["fail"];
+			fail = config["fail"]
 
 			if (typeof fail !== "function") {
-				console.error(fail, "is not a function.");
-				return;
+				console.error(fail, "is not a function.")
+				return
 			}
 		}
 
 		if ("done" in config) {
-			done = config["done"];
+			done = config["done"]
 
 			if (typeof done !== "function") {
-				console.error(done, "is not a function.");
-				return;
+				console.error(done, "is not a function.")
+				return
 			}
 		}
 
@@ -75,33 +76,33 @@ export default class AJAX {
 			if (this.readyState === 4) {
 
 				if (done) {
-					done();
+					done()
 				}
 
 				if (this.status === 200) {
-					let response = this.responseText;
+					let response = this.responseText
 					if (success) {
-						success(response);
+						success(response)
 					}
 
 				} else {
 					if (fail) {
-						fail();
+						fail()
 					}
 
 				}
 			}
-		});
+		})
 
-		this.httpRequest.open(type, url, true);
+		this.httpRequest.open(type, url, true)
 		if (type !== "get") {
-			this.httpRequest.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+			this.httpRequest.setRequestHeader('Content-type', 'application/json charset=utf-8')
 		}
 
 		if (type === "get") {
-			this.httpRequest.send();
+			this.httpRequest.send()
 		} else {
-			this.httpRequest.send(data);
+			this.httpRequest.send(data)
 		}
 	}
 

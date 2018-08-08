@@ -1,64 +1,64 @@
-import TextInput from "./TextInput";
-import AJAX from "./AJAX";
+import TextInput from "./TextInput"
+import AJAX from "./AJAX"
 
 class RegInput extends TextInput {
 
 	constructor (inputDOM) {
-		super(inputDOM);
+		super(inputDOM)
 
-		var self = this;
+		var self = this
 
 		this.target.addEventListener('keyup', function () {
 
-			clearTimeout(this.wait);
+			clearTimeout(this.wait)
 
-			var inputData = self.target.value;
+			var inputData = self.target.value
 
 			if (inputData === "") {
-				self.hideMsg();
-				return;
+				self.hideMsg()
+				return
 			}
 
 			this.wait = setTimeout(function () {
-				checkValidation();
-			}, 300);
+				checkValidation()
+			}, 300)
 
-		});
+		})
 
 		this.target.addEventListener('focusout', function () {
-			// console.log('focused out');
-		});
+			// console.log('focused out')
+		})
 	}
 
 }
 
-var readableIDInputDOM = document.querySelector('.input-wrapper.readable-id input');
-var nameInputDOM = document.querySelector('.input-wrapper.name input');
-var passInputDOM = document.querySelector('.input-wrapper.password input');
-var startButton = document.querySelector('button.start');
+var readableIDInputDOM = document.querySelector('.input-wrapper.readable-id input')
+var nameInputDOM = document.querySelector('.input-wrapper.name input')
+var passInputDOM = document.querySelector('.input-wrapper.password input')
+var startButton = document.querySelector('button.start')
 
 if (readableIDInputDOM) {
-	var readableIDInputObj = new RegInput(readableIDInputDOM);
-	var nameInputObj = new RegInput(nameInputDOM);
-	var passInputObj = new RegInput(passInputDOM);
+	var readableIDInputObj = new RegInput(readableIDInputDOM)
+	var nameInputObj = new RegInput(nameInputDOM)
+	var passInputObj = new RegInput(passInputDOM)
 }
 
 
 readableIDInputDOM.addEventListener('keyup', function(e) {
 	if (e.which === 13) {
-		startButton.click();
+		startButton.click()
 	}
-});
+})
 nameInputDOM.addEventListener('keyup', function(e) {
 	if (e.which === 13) {
-		startButton.click();
+		startButton.click()
 	}
-});
+})
 passInputDOM.addEventListener('keyup', function(e) {
 	if (e.which === 13) {
-		startButton.click();
+		startButton.click()
 	}
-});
+})
 
 
 function checkValidation () {
@@ -69,31 +69,31 @@ function checkValidation () {
 		password: passInputDOM.value
 	}
 
-	var ajax = new AJAX();
+	var ajax = new AJAX()
 	ajax.chirp({
 		type: "put",
 		url: "/register",
 		data: JSON.stringify(inputData),
 		success: function(response) {
-			var result = JSON.parse(response);
+			var result = JSON.parse(response)
 
-			// console.log(result);
+			// console.log(result)
 
 			if (result['err']) {
-				readableIDInputObj.showMsg(result['readable_id_msg']);
-				nameInputObj.showMsg(result['name_msg']);
-				passInputObj.showMsg(result['password_msg']);
+				readableIDInputObj.showMsg(result['readable_id_msg'])
+				nameInputObj.showMsg(result['name_msg'])
+				passInputObj.showMsg(result['password_msg'])
 			} else {
-				readableIDInputObj.hideMsg();
-				nameInputObj.hideMsg();
-				passInputObj.hideMsg();
+				readableIDInputObj.hideMsg()
+				nameInputObj.hideMsg()
+				passInputObj.hideMsg()
 			}
 		}
-	});
+	})
 
 }
 
-var startButton = document.querySelector("button.start");
+var startButton = document.querySelector("button.start")
 startButton.addEventListener("click", function() {
 
 	var inputData = {
@@ -102,19 +102,19 @@ startButton.addEventListener("click", function() {
 		password: passInputDOM.value
 	}
 
-	var ajax = new AJAX();
+	var ajax = new AJAX()
 	ajax.chirp({
 		type: "post",
 		url: "/register",
 		data: JSON.stringify(inputData),
 		success: function(response) {
-			var result = JSON.parse(response);
-			console.log(response);
+			var result = JSON.parse(response)
+			console.log(response)
 			if (result['err']) {
-				alert("입력 정보에 문제가 있어요.");
+				alert("입력 정보에 문제가 있어요.")
 			} else {
-				window.location.replace(result['redirect']);
+				window.location.replace(result['redirect'])
 			}
 		}
-	});
-});
+	})
+})

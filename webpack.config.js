@@ -3,10 +3,10 @@ module.exports = {
 	entry: {
 
 		main: [
-		'./resources/assets/js/globalscript',
-		'./resources/assets/js/globalnav',
-		'./resources/assets/js/home',
-		'./resources/assets/js/logout'
+			'./resources/assets/js/globalscript',
+			'./resources/assets/js/globalnav',
+			'./resources/assets/js/home',
+			'./resources/assets/js/logout'
 		],
 
 		login: [
@@ -31,7 +31,7 @@ module.exports = {
 
 		path: __dirname + '/public_html/build/js',
 		filename: '[name].built.js'
-
+		
 	},
 
 	module: {
