@@ -8,7 +8,7 @@
 
 return [
 	'table__users' => 'users',
-	'table__auto_login_auth' => 'auto_login_auth',
+	'table__auto_login_auth' => 'autologin_auth',
 	'table__email_auth' => 'email_auth',
 
 	'email_auth_expire' => 60*30,	//	Email authentication expiration time
