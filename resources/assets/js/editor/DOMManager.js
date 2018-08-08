@@ -72,7 +72,6 @@ export default class DOMManager {
 
 		var range = document.getSelection().getRangeAt(0)
 
-
 		// Set the available item
 		var selManager = new SelectionManager(this)
 

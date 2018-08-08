@@ -274,7 +274,6 @@ export default class SelectionManager
 					chunks[i].parentNode.removeChild(chunks[i])
 				}
 
-
 				unlockList = false
 
 			} else if (this.isList(chunks[i])) {
@@ -401,7 +400,6 @@ export default class SelectionManager
 					part3 = true
 				}
 
-
 				itemNode = nextNode
 
 
@@ -410,9 +408,6 @@ export default class SelectionManager
 			if (this.domManager.editor.contains(listElm)) {
 				this.domManager.editor.removeChild(listElm)
 			}
-
-
-		}
 
 		var keepRange = document.createRange()
 		keepRange.setStart(startNode, startOffset)
@@ -2386,7 +2381,6 @@ export default class SelectionManager
 				}
 			}
 		}
-
 
 
 		parentNode = endNode.parentElement
