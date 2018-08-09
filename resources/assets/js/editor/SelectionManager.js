@@ -149,6 +149,8 @@ export default class SelectionManager
 			type: "change",
 			targets: [],
 			range: {
+				startNode: this.getNodeOfNode(startNode),
+				endNode: this.getNodeOfNode(endNode),
 				startTextOffset: startTextOffset,
 				endTextOffset: endTextOffset
 			}
@@ -477,6 +479,8 @@ export default class SelectionManager
 			type: "change",
 			targets: [],
 			range: {
+				startNode: this.getNodeOfNode(startNode),
+				endNode: this.getNodeOfNode(endNode),
 				startTextOffset: startTextOffset,
 				endTextOffset: endTextOffset
 			}
@@ -1032,7 +1036,7 @@ export default class SelectionManager
 		// 3. replace node
 		targetNode.parentNode.replaceChild(newNode, targetNode)
 
-
+		let currentNode = this.getNodeInSelection()
 
 		if (recordAction) {
 			let action = {
@@ -1044,6 +1048,8 @@ export default class SelectionManager
 					}
 				],
 				range: {
+					startNode: currentNode,
+					endNode: currentNode,
 					startTextOffset: startTextOffset,
 					endTextOffset: endTextOffset
 				}

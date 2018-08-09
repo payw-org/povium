@@ -214,6 +214,90 @@ button::-moz-focus-inner {border:0;}
 			color: #fff;
 		}
 	}
+
+	// Input condition styles
+	& + .condition {
+
+		text-align: left;
+		margin: 0;
+		padding: 0em 1em;
+		border-radius: .5rem;
+		max-height: 0;
+		overflow: hidden;
+		transition: padding .2s ease, margin .2s ease, max-height .2s ease;
+		background-color: white;
+		box-shadow: 0 1rem 3rem rgba(0,0,0,.15);
+
+		li {
+
+			color: #ff2020;
+			line-height: 1.5;
+
+			&::before {
+				content: "";
+				background-image: url('/assets/images/input-icons/x-red.svg');
+				background-repeat: no-repeat;
+				background-size: 100%;
+				background-position: center;
+				display: inline-block;
+				vertical-align: middle;
+				width: 1em;
+				height: 1em;
+				margin-right: .5em;
+				user-select: none;
+				cursor: default;
+				margin-bottom: .1em;
+			}
+
+			&.passed {
+				color: #00ce6a;
+
+				&::before {
+					background-image: url('/assets/images/input-icons/check.svg');
+				}
+			}
+
+		}
+
+	}
+
+	&.focused, &.fixed {
+
+		& + .condition {
+			max-height: 5em;
+			padding: 1em 1em;
+			margin: 1em 0 2em;
+		}
+
+	}
+
+	.view {
+		visibility: hidden;
+		margin: 0;
+		padding: 0;
+		position: absolute;
+		right: .7rem;
+		top: 1.35rem;
+		transform: translateY(-50%);
+		width: 1.5rem;
+		height: 1.5rem;
+		cursor: pointer;
+		background-image: url('/assets/images/input-icons/eye-paled.svg');
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	&.not-empty {
+		.view {
+			visibility: visible;
+		}
+	}
+
+	& input[type="text"] + .view {
+		background-image: url('/assets/images/input-icons/eye.svg');
+	}
+
 }
 
 .input-basic {
