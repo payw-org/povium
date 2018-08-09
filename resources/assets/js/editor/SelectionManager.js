@@ -411,6 +411,10 @@ export default class SelectionManager
 				this.domManager.editor.removeChild(listElm)
 			}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> post
 		}
 
 		var keepRange = document.createRange()
