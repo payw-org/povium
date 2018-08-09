@@ -298,6 +298,12 @@ class Auth
 			return $return;
 		}
 
+		if (!preg_match($this->config['regex']['readable_id_regex_base'], $readable_id)) {
+			$return['msg'] = $this->config['msg']['readable_id_invalid'];
+
+			return $return;
+		}
+
 		if (strlen($readable_id) < (int)$this->config['len']['readable_id_min_length']) {
 			$return['msg'] = $this->config['msg']['readable_id_short'];
 
@@ -306,12 +312,6 @@ class Auth
 
 		if (strlen($readable_id) > (int)$this->config['len']['readable_id_max_length']) {
 			$return['msg'] = $this->config['msg']['readable_id_long'];
-
-			return $return;
-		}
-
-		if (!preg_match($this->config['regex']['readable_id_regex_base'], $readable_id)) {
-			$return['msg'] = $this->config['msg']['readable_id_invalid'];
 
 			return $return;
 		}
@@ -390,6 +390,12 @@ class Auth
 			return $return;
 		}
 
+		if (!preg_match($this->config['regex']['name_regex_base'], $name)) {
+			$return['msg'] = $this->config['msg']['name_invalid'];
+
+			return $return;
+		}
+
 		if (mb_strlen($name) < (int)$this->config['len']['name_min_length']) {
 			$return['msg'] = $this->config['msg']['name_short'];
 
@@ -398,12 +404,6 @@ class Auth
 
 		if (mb_strlen($name) > (int)$this->config['len']['name_max_length']) {
 			$return['msg'] = $this->config['msg']['name_long'];
-
-			return $return;
-		}
-
-		if (!preg_match($this->config['regex']['name_regex_base'], $name)) {
-			$return['msg'] = $this->config['msg']['name_invalid'];
 
 			return $return;
 		}
@@ -442,6 +442,12 @@ class Auth
 			return $return;
 		}
 
+		if (!preg_match($this->config['regex']['password_regex_base'], $password)) {
+			$return['msg'] = $this->config['msg']['password_invalid'];
+
+			return $return;
+		}
+
 		if (strlen($password) < (int)$this->config['len']['password_min_length']) {
 			$return['msg'] = $this->config['msg']['password_short'];
 
@@ -454,8 +460,8 @@ class Auth
 			return $return;
 		}
 
-		if (!preg_match($this->config['regex']['password_regex'], $password)) {
-			$return['msg'] = $this->config['msg']['password_invalid'];
+		if (!preg_match($this->config['regex']['passowrd_regex_required'], $password)) {
+			$return['msg'] = $this->config['msg']['password_required_condition'];
 
 			return $return;
 		}
@@ -754,15 +760,15 @@ class Auth
 			$encodedtoken = $this->encodeToken($token);
 
 			$stmt = $this->conn->prepare(
-				"INSERT INTO {$this->config['table__auto_login_auth']}
-				(selector, validator, user_id, expn_dt)
-				VALUES (:selector, :validator, :user_id, :expn_dt)"
+				"INSERT INTO {$this->config['table__autologin_auth']}
+				(selector, user_id, validator, expn_dt)
+				VALUES (:selector, :user_id, :validator, :expn_dt)"
 			);
 			$expiration_time = time() + $this->config['cookie_params']['expire'];
 			$query_params = [
 				':selector' => $encodedtoken['selector'],
-				':validator' => $encodedtoken['validator'],
 				':user_id' => $id,
+				':validator' => $encodedtoken['validator'],
 				':expn_dt' => date("Y-m-d H:i:s", $expiration_time)
 			];
 
@@ -895,7 +901,7 @@ class Auth
 		$encodedToken = $this->encodeToken($token);
 
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['table__auto_login_auth']}
+			"SELECT * FROM {$this->config['table__autologin_auth']}
  			WHERE selector = :selector"
 		);
 		$stmt->execute([':selector' => $encodedToken['selector']]);
@@ -945,7 +951,7 @@ class Auth
 	private function deleteTokenInfo($token_id)
 	{
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['table__auto_login_auth']}
+			"DELETE FROM {$this->config['table__autologin_auth']}
  			WHERE id = :id"
 		);
 		$stmt->execute([':id' => $token_id]);
@@ -977,14 +983,14 @@ class Auth
 		//	Add new request info
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['table__email_auth']}
-			(token, user_id, input_email, expn_dt)
-			VALUES (:token, :user_id, :input_email, :expn_dt)"
+			(user_id, requested_email, token, expn_dt)
+			VALUES (:user_id, :requested_email, :token, :expn_dt)"
 		);
 
 		$query_params = array(
-			':token' => $token,
 			':user_id' => $user_id,
-			':input_email' => $email,
+			':requested_email' => $email,
+			':token' => $token,
 			':expn_dt' => date("Y-m-d H:i:s", time() + $this->config['email_auth_expire'])
 		);
 
@@ -997,7 +1003,7 @@ class Auth
 	 * Delete the authenticated request.
 	 *
 	 * @param  string $token
-	 * 
+	 *
 	 * @return int
 	 * 0 : NO ERROR
 	 * 1 : NONEXISTENT USER ID
@@ -1037,16 +1043,16 @@ class Auth
 
 		//	All requires are satisfied
 		$params = array(
-			'email' => $email_auth_info['input_email'],
+			'email' => $email_auth_info['requested_email'],
 			'is_verified' => true
 		);
 		$this->updateUser($email_auth_info['user_id'], $params);
 
 		$stmt = $this->conn->prepare(
 			"DELETE FROM {$this->config['table__email_auth']}
-			WHERE input_email = :input_email"
+			WHERE requested_email = :requested_email"
 		);
-		$stmt->execute([':input_email' => $email_auth_info['input_email']]);
+		$stmt->execute([':requested_email' => $email_auth_info['requested_email']]);
 
 		return 0;
 	}
