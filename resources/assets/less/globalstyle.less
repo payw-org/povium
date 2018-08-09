@@ -271,6 +271,33 @@ button::-moz-focus-inner {border:0;}
 
 	}
 
+	.view {
+		visibility: hidden;
+		margin: 0;
+		padding: 0;
+		position: absolute;
+		right: .7rem;
+		top: 1.35rem;
+		transform: translateY(-50%);
+		width: 1.5rem;
+		height: 1.5rem;
+		cursor: pointer;
+		background-image: url('/assets/images/input-icons/eye-paled.svg');
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	&.not-empty {
+		.view {
+			visibility: visible;
+		}
+	}
+
+	& input[type="text"] + .view {
+		background-image: url('/assets/images/input-icons/eye.svg');
+	}
+
 }
 
 .input-basic {

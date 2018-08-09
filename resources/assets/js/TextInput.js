@@ -59,4 +59,23 @@ document.querySelectorAll(".input-wrapper").forEach(function(self, index) {
 		}
 	})
 
+	// self.addEventListener('click', function(e) {
+	// 	console.log(e.target)
+	// 	if (e.target.closest('.input-wrapper'))
+	// })
+
+})
+
+document.querySelectorAll(".input-wrapper input").forEach(function(self, index) {
+
+	self.addEventListener("keyup", function() {
+		
+		if (self.value !== "") {
+			self.closest('.input-wrapper').classList.add("not-empty")
+		} else {
+			self.closest('.input-wrapper').classList.remove("not-empty")
+		}
+
+	})
+
 })
