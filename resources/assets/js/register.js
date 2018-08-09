@@ -118,3 +118,13 @@ startButton.addEventListener("click", function() {
 		}
 	})
 })
+
+document.querySelector('#register-main .view').addEventListener('click', e => { togglePassView(e) })
+
+function togglePassView(e) {
+	if (document.querySelector('input.password').type === "password") {
+		document.querySelector('input.password').type = "text"
+	} else {
+		document.querySelector('input.password').type = "password"
+	}
+}

@@ -191,8 +191,8 @@ export default class UndoManager {
 			}
 
 			let pRange = new PRange()
-			pRange.setStart(action.targets[0].previousTarget, action.range.startTextOffset)
-			pRange.setEnd(action.targets[action.targets.length - 1].previousTarget, action.range.endTextOffset)
+			pRange.setStart(action.range.startNode, action.range.startTextOffset)
+			pRange.setEnd(action.range.endNode, action.range.endTextOffset)
 			let range = document.createRange()
 			range.setStart(pRange.startContainer, pRange.startOffset)
 			range.setEnd(pRange.endContainer, pRange.endOffset)
