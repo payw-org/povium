@@ -298,6 +298,12 @@ class Auth
 			return $return;
 		}
 
+		if (!preg_match($this->config['regex']['readable_id_regex_base'], $readable_id)) {
+			$return['msg'] = $this->config['msg']['readable_id_invalid'];
+
+			return $return;
+		}
+
 		if (strlen($readable_id) < (int)$this->config['len']['readable_id_min_length']) {
 			$return['msg'] = $this->config['msg']['readable_id_short'];
 
@@ -306,12 +312,6 @@ class Auth
 
 		if (strlen($readable_id) > (int)$this->config['len']['readable_id_max_length']) {
 			$return['msg'] = $this->config['msg']['readable_id_long'];
-
-			return $return;
-		}
-
-		if (!preg_match($this->config['regex']['readable_id_regex_base'], $readable_id)) {
-			$return['msg'] = $this->config['msg']['readable_id_invalid'];
 
 			return $return;
 		}
@@ -390,6 +390,12 @@ class Auth
 			return $return;
 		}
 
+		if (!preg_match($this->config['regex']['name_regex_base'], $name)) {
+			$return['msg'] = $this->config['msg']['name_invalid'];
+
+			return $return;
+		}
+
 		if (mb_strlen($name) < (int)$this->config['len']['name_min_length']) {
 			$return['msg'] = $this->config['msg']['name_short'];
 
@@ -398,12 +404,6 @@ class Auth
 
 		if (mb_strlen($name) > (int)$this->config['len']['name_max_length']) {
 			$return['msg'] = $this->config['msg']['name_long'];
-
-			return $return;
-		}
-
-		if (!preg_match($this->config['regex']['name_regex_base'], $name)) {
-			$return['msg'] = $this->config['msg']['name_invalid'];
 
 			return $return;
 		}
@@ -442,6 +442,12 @@ class Auth
 			return $return;
 		}
 
+		if (!preg_match($this->config['regex']['password_regex_base'], $password)) {
+			$return['msg'] = $this->config['msg']['password_invalid'];
+
+			return $return;
+		}
+
 		if (strlen($password) < (int)$this->config['len']['password_min_length']) {
 			$return['msg'] = $this->config['msg']['password_short'];
 
@@ -454,8 +460,8 @@ class Auth
 			return $return;
 		}
 
-		if (!preg_match($this->config['regex']['password_regex'], $password)) {
-			$return['msg'] = $this->config['msg']['password_invalid'];
+		if (!preg_match($this->config['regex']['passowrd_regex_required'], $password)) {
+			$return['msg'] = $this->config['msg']['password_required_condition'];
 
 			return $return;
 		}
