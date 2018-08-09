@@ -27,15 +27,15 @@ return [
 	],
 
 	'regex' => [
-		'readable_id_regex_base' => '/^[a-z0-9_]{3,20}$/',
+		'readable_id_regex_base' => '/^[a-z0-9_]+$/',
 		'readable_id_regex_banned_1' => '/^_|_$/',
 		'readable_id_regex_banned_2' => '/_{2,}/',
 
-		'name_regex_base' => '/^[\xEA-\xED\x80-\xBF\w\s.]{2,30}$/',
+		'name_regex_base' => '/^[\xEA-\xED\x80-\xBF\w\s.]+$/',
 		'name_regex_banned_1' => '/^[\s._]|[\s._]$/',
 		'name_regex_banned_2' => '/\s{2,}|\.{2,}|_{2,}/',
 
-		'password_regex' => '/^\S*(?=\S{8,50})(?=\S*[a-z])(?=\S*[0-9])\S*$/'
+		'password_regex' => '/^\S*(?=\S*[a-z])(?=\S*[0-9])\S*$/'
 	],
 
 	'len' => [
