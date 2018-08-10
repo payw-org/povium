@@ -62,9 +62,9 @@ return [
 		'account_inactive' => '비활성화 계정입니다.',
 		// 'account_invalid' => '없는 계정입니다.',
 
-		'readable_id_istaken' => '이미 사용중인 아이디',
-		'email_istaken' => '이미 사용중인 이메일',
-		'name_istaken' => '이미 사용중인 이름',
+		'readable_id_istaken' => '이미 사용중인 아이디입니다.',
+		'email_istaken' => '이미 사용중인 이메일입니다.',
+		'name_istaken' => '이미 사용중인 이름입니다.',
 
 		'readable_id_short' => '아이디 3자 이상 입력',
 		'readable_id_long' => '아이디 20자 이하로 입력',
