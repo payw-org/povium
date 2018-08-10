@@ -467,6 +467,8 @@ export default class SelectionManager
 		let endOffset = orgRange.endOffset
 		let chunks = this.getAllNodesInSelection()
 
+		let changedNodeCount = 0
+
 		// record action
 		let pRange = new PRange()
 		let previousStartNode = this.getNodeOfNode(startNode)
@@ -478,14 +480,18 @@ export default class SelectionManager
 			type: "change",
 			targets: [],
 			range: {
-				startNode: this.getNodeOfNode(startNode),
-				endNode: this.getNodeOfNode(endNode),
-				startTextOffset: startTextOffset,
-				endTextOffset: endTextOffset
+				previousState: {
+					startNode: this.getNodeOfNode(startNode),
+					endNode: this.getNodeOfNode(endNode),
+					startTextOffset: startTextOffset,
+					endTextOffset: endTextOffset
+				},
+				nextState: {
+					startTextOffset: startTextOffset,
+					endTextOffset: endTextOffset
+				}
 			}
 		}
-
-		this.undoManager.recordAction(action)
 
 		var isAllBlockquote = true
 
@@ -507,6 +513,7 @@ export default class SelectionManager
 			}
 
 			var changedNode = this.changeNodeName(chunks[i], "blockquote", false, false)
+			changedNodeCount++
 
 			action.targets.push({
 				previousTarget: chunks[i],
@@ -520,6 +527,10 @@ export default class SelectionManager
 				endNode = changedNode
 			}
 
+		}
+
+		if (changedNodeCount > 0 || isAllBlockquote) {
+			this.undoManager.recordAction(action)
 		}
 
 		// Selection is all blockquote
@@ -547,6 +558,9 @@ export default class SelectionManager
 		keepRange.setStart(startNode, startOffset)
 		keepRange.setEnd(endNode, endOffset)
 		this.replaceRange(keepRange)
+
+		action.range.nextState.startNode = this.getNodeOfNode(startNode)
+		action.range.nextState.endNode = this.getNodeOfNode(endNode)
 	}
 
 

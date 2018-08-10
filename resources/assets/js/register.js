@@ -143,6 +143,10 @@ startButton.addEventListener("click", function() {
 
 					alert("입력 정보에 문제가 있어요!")
 
+				} else {
+
+					window.location.replace(result['redirect'])
+
 				}
 
 			} catch(e) {

@@ -194,18 +194,23 @@ export default class DOMManager {
 	 * @param {HTMLElement} imageBlock
 	 */
 	showImageTool(imageBlock) {
+
 		this.imageTool.classList.add("active")
+		
 		this.imageTool.style.left =
 		imageBlock.getBoundingClientRect().left +
 		imageBlock.getBoundingClientRect().width / 2 -
 		this.imageTool.getBoundingClientRect().width / 2
 		+ "px"
+
 		this.imageTool.style.top =
 		- this.editor.getBoundingClientRect().top +
 		imageBlock.getBoundingClientRect().top +
 		imageBlock.getBoundingClientRect().height / 2 -
 		this.imageTool.getBoundingClientRect().height / 2
 		+ "px"
+
+		// this.imageTool.style.top = imageBlock.getBoundingClientRect().top - this.editor.getBoundingClientRect().top + "px"
 	}
 
 	hideImageTool() {
