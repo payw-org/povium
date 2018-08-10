@@ -53,7 +53,7 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
 	 */
 	public function getTitle()
 	{
-		return $this->config["$this->responseCode"]['title'];
+		return $this->config[strval($this->responseCode)]['title'];
 	}
 
 	/**
@@ -63,7 +63,7 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
 	 */
 	public function getMsg()
 	{
-		return $this->config["$this->responseCode"]['msg'];
+		return $this->config[strval($this->responseCode)]['msg'];
 	}
 
 	/**
