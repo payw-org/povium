@@ -237,9 +237,9 @@ let passStrengthIndicator = {
 
 				} else if (this.dom.querySelector(".bar-0").classList.contains("active")) {
 
-					this.dom.querySelector(".bar-1").classList.remove("active")
+					this.dom.querySelector(".bar-1").classList.add("active")
 					setTimeout(() => {
-						this.dom.querySelector(".bar-2").classList.remove("active")
+						this.dom.querySelector(".bar-2").classList.add("active")
 					}, 300);
 
 				} else {
