@@ -78,6 +78,57 @@
 		padding-right: 3rem;
 	}
 
+	.strength {
+
+		display: flex;
+		margin-top: .1rem;
+		max-height: 1rem;
+		transition: max-height .2s ease, transform .2s ease;
+
+		&.hidden {
+			transform: scaleY(0);
+			max-height: 0;
+		}
+
+		.bar {
+			flex: 1;
+			height: .2rem;
+			background-color: @dark-white-blue;
+			border-radius: 50px;
+			margin: .3rem;
+			overflow: hidden;
+
+			&::before {
+				content: "";
+				display: block;
+				width: 100%;
+				height: 100%;
+				transform: scaleX(0);
+				transform-origin: left;
+				background-color: black;
+				transition: transform .3s cubic-bezier(.94,.03,.14,.99);
+			}
+
+			&.active::before {
+				transform: scaleX(1);
+			}
+		}
+
+		.bar-0::before {
+			background-color: red;
+		}
+
+		.bar-1::before {
+			background-color: orange;
+		}
+
+		.bar-2::before {
+			background-color: green;
+		}
+
+
+	}
+
 }
 
 
