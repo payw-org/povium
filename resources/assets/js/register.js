@@ -16,6 +16,9 @@ class RegInput extends TextInput {
 
 			if (inputData === "") {
 				self.hideMsg()
+				if (self.target.classList.contains("password")) {
+					passStrengthIndicator.hide()
+				}
 				return
 			}
 
@@ -75,19 +78,37 @@ function checkValidation () {
 		url: "/register",
 		data: JSON.stringify(inputData),
 		success: function(response) {
-			var result = JSON.parse(response)
 
-			// console.log(result)
+			try {
 
-			if (result['err']) {
-				readableIDInputObj.showMsg(result['readable_id_msg'])
-				nameInputObj.showMsg(result['name_msg'])
-				passInputObj.showMsg(result['password_msg'])
-			} else {
-				readableIDInputObj.hideMsg()
-				nameInputObj.hideMsg()
-				passInputObj.hideMsg()
+				var result = JSON.parse(response)
+
+				console.log(result)
+
+				if (result['readable_id_return']['err']) {
+					readableIDInputObj.showMsg(result['readable_id_return']['msg'])
+				} else {
+					readableIDInputObj.hideMsg()
+				}
+
+				if (result['name_return']['err']) {
+					nameInputObj.showMsg(result['name_return']['msg'])
+				} else {
+					nameInputObj.hideMsg()
+				}
+
+				if (result['password_return']['err']) {
+					passInputObj.showMsg(result['password_return']['msg'])
+					passStrengthIndicator.hide()
+				} else {
+					passInputObj.hideMsg()
+					passStrengthIndicator.setStrength(result['password_return']['strength'])
+				}
+				
+			} catch (error) {
+				alert(error + " " + response)
 			}
+
 		}
 	})
 
@@ -104,17 +125,32 @@ startButton.addEventListener("click", function() {
 
 	var ajax = new AJAX()
 	ajax.chirp({
+
 		type: "post",
 		url: "/register",
 		data: JSON.stringify(inputData),
+
 		success: function(response) {
+
 			var result = JSON.parse(response)
 			console.log(response)
-			if (result['err']) {
-				alert("입력 정보에 문제가 있어요.")
-			} else {
-				window.location.replace(result['redirect'])
+			
+			try {
+
+				let result = JSON.parse(response)
+				
+				if (result['err']) {
+
+					alert("입력 정보에 문제가 있어요!")
+
+				}
+
+			} catch(e) {
+
+				alert(e + " " + response)
+
 			}
+
 		}
 	})
 })
@@ -127,4 +163,100 @@ function togglePassView(e) {
 	} else {
 		document.querySelector('input.password').type = "password"
 	}
+}
+
+let passStrengthIndicator = {
+
+	dom: document.querySelector("#register-main .strength"),
+
+	show: function() {
+		this.dom.classList.remove("hidden")
+	},
+
+	hide: function() {
+		this.dom.classList.add("hidden")
+		this.dom.querySelectorAll(".bar").forEach(function(bar) {
+			bar.classList.remove("active")
+		})
+	},
+
+	setStrength: function(level) {
+		let self = this
+		this.show()
+		setTimeout(() => {
+			if (level === 0) {
+
+				if (this.dom.querySelector(".bar-2").classList.contains("active")) {
+
+					this.dom.querySelector(".bar-2").classList.remove("active")
+					setTimeout(() => {
+						this.dom.querySelector(".bar-1").classList.remove("active")
+					}, 300);
+
+				} else if (this.dom.querySelector(".bar-1").classList.contains("active")) {
+
+					this.dom.querySelector(".bar-1").classList.remove("active")
+
+				} else if (this.dom.querySelector(".bar-0").classList.contains("active")) {
+
+				} else {
+
+					this.dom.querySelector(".bar-0").classList.add("active")
+
+				}
+			} else if (level === 1) {
+
+				if (this.dom.querySelector(".bar-2").classList.contains("active")) {
+
+					this.dom.querySelector(".bar-2").classList.remove("active")
+
+				} else if (this.dom.querySelector(".bar-1").classList.contains("active")) {
+
+				} else if (this.dom.querySelector(".bar-0").classList.contains("active")) {
+
+					this.dom.querySelector(".bar-1").classList.add("active")
+
+				} else {
+
+					this.dom.querySelector(".bar-0").classList.add("active")
+					setTimeout(() => {
+						this.dom.querySelector(".bar-1").classList.add("active")
+					}, 300);
+
+				}
+
+			} else if (level === 2) {
+
+				if (this.dom.querySelector(".bar-2").classList.contains("active")) {
+
+					
+
+				} else if (this.dom.querySelector(".bar-1").classList.contains("active")) {
+
+					this.dom.querySelector(".bar-2").classList.add("active")
+
+				} else if (this.dom.querySelector(".bar-0").classList.contains("active")) {
+
+					this.dom.querySelector(".bar-1").classList.remove("active")
+					setTimeout(() => {
+						this.dom.querySelector(".bar-2").classList.remove("active")
+					}, 300);
+
+				} else {
+
+					this.dom.querySelector(".bar-0").classList.add("active")
+					setTimeout(() => {
+						this.dom.querySelector(".bar-1").classList.add("active")
+						setTimeout(() => {
+							this.dom.querySelector(".bar-2").classList.add("active")
+						}, 300);
+					}, 300);
+
+				}
+
+			}
+
+		}, 200);
+	}
+
 }
