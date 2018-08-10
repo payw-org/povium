@@ -478,6 +478,7 @@ export default class EventManager
 			this.selManager.setCursorAt(currentNode, 0)
 
 		}
+		
 	}
 
 	/**

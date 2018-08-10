@@ -172,8 +172,6 @@ button::-moz-focus-inner {border:0;}
 	}
 
 	&.focused, &.fixed {
-		// top: 1.2rem;
-		// padding-bottom: 1.2rem;
 
 		.input-basic {
 			padding: 0 1rem 0 @button-height + 1rem;
@@ -277,8 +275,7 @@ button::-moz-focus-inner {border:0;}
 		padding: 0;
 		position: absolute;
 		right: .7rem;
-		top: 1.35rem;
-		transform: translateY(-50%);
+		top: .6rem;
 		width: 1.5rem;
 		height: 1.5rem;
 		cursor: pointer;
@@ -286,6 +283,7 @@ button::-moz-focus-inner {border:0;}
 		background-size: contain;
 		background-repeat: no-repeat;
 		background-position: center;
+		transition: transform .2s ease;
 	}
 
 	&.not-empty {
@@ -295,7 +293,7 @@ button::-moz-focus-inner {border:0;}
 	}
 
 	& input[type="text"] + .view {
-		background-image: url('/assets/images/input-icons/eye.svg');
+		background-image: url('/assets/images/input-icons/eye-violet.svg');
 	}
 
 }
@@ -324,12 +322,13 @@ button::-moz-focus-inner {border:0;}
 
 	&:focus {
 		cursor: text;
-		background: @dark-white-blue;
+		// background: @dark-white-blue;
 	}
 
 	&.expanded {
 		border-radius: .5rem .5rem 0 0;
 	}
+	
 }
 
 
