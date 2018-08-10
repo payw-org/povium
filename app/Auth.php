@@ -829,7 +829,19 @@ class Auth
 	*/
 	private function checkSession()
 	{
+		//	Check if session is set
 		if (!isset($_SESSION['user_id'])) {
+			return false;
+		}
+
+		//	Check if user id is exist in db
+		$stmt = $this->conn->prepare(
+			"SELECT count(id) FROM {$this->config['table__users']}
+			WHERE id = :id"
+		);
+		$stmt->execute([':id' => $_SESSION['user_id']]);
+
+		if ($stmt->fetchColumn() == 0) {
 			return false;
 		}
 

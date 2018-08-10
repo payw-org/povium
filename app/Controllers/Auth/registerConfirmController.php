@@ -35,13 +35,13 @@ if ($register_return['err']) {			//	failed to register
 } else {								//	register success
 	$auth->login($readable_id, $password, false);
 
-	$login_return['redirect'] = '/';
+	$register_return['redirect'] = '/';
 
 	if (
 		isset($query_params['redirect']) &&
 		$redirector->verifyRedirectURI($query_params['redirect'])
 	) {
-		$login_return['redirect'] = $query_params['redirect'];
+		$register_return['redirect'] = $query_params['redirect'];
 	}
 }
 
