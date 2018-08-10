@@ -86,8 +86,9 @@ export default class AJAX
 					}
 
 				} else {
+					let status = this.status
 					if (fail) {
-						fail()
+						fail(status)
 					}
 
 				}

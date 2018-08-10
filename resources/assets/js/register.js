@@ -109,6 +109,9 @@ function checkValidation () {
 				alert(error + " " + response)
 			}
 
+		},
+		fail: function(error) {
+			console.log(error)
 		}
 	})
 
