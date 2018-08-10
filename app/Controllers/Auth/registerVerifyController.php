@@ -6,6 +6,8 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
+use ZxcvbnPhp\Zxcvbn;
+
 global $auth;
 
 /* Receive register inputs by ajax */
@@ -16,31 +18,53 @@ $password = $register_inputs['password'];
 
 
 $register_return = array(
-	'err' => false,
-	'readable_id_msg' => '',
-	'name_msg' => '',
-	'password_msg' => ''
+	'readable_id_return' => [
+		'err' => false,
+		'msg' => ''
+	],
+
+	'name_return' => [
+		'err' => false,
+		'msg' => ''
+	],
+
+	'password_return' => [
+		'err' => false,
+		'msg' => '',
+		'strength' => 0
+	]
 );
 
 //	Verify readable id
 $verify_readable_id = $auth->verifyReadableID($readable_id);
 if ($verify_readable_id['err']) {
-	$register_return['err'] = true;
-	$register_return['readable_id_msg'] = $verify_readable_id['msg'];
+	$register_return['readable_id_return']['err'] = true;
+	$register_return['readable_id_return']['msg'] = $verify_readable_id['msg'];
 }
 
 //	Verify name
 $verify_name = $auth->verifyName($name);
 if ($verify_name['err']) {
-	$register_return['err'] = true;
-	$register_return['name_msg'] = $verify_name['msg'];
+	$register_return['name_return']['err'] = true;
+	$register_return['name_return']['msg'] = $verify_name['msg'];
 }
 
 //	Verify password
 $validate_password = $auth->validatePassword($password);
 if ($validate_password['err']) {
-	$register_return['err'] = true;
-	$register_return['password_msg'] = $validate_password['msg'];
+	$register_return['password_return']['err'] = true;
+	$register_return['password_return']['msg'] = $validate_password['msg'];
+} else {
+	//	Calculate password strength
+	$zxcvbn = new Zxcvbn();
+	$score = $zxcvbn->passwordStrength($password)['score'];
+	if ($score <= 1) {			//	weak password
+		$register_return['password_return']['strength'] = 0;
+	} else if ($score <= 3) {	//	normal password
+		$register_return['password_return']['strength'] = 1;
+	} else {					//	safe password
+		$register_return['password_return']['strength'] = 2;
+	}
 }
 
 echo json_encode($register_return);
