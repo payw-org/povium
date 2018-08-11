@@ -198,7 +198,7 @@ let passStrengthIndicator = {
 					this.dom.querySelector(".bar-2").classList.remove("active")
 					setTimeout(() => {
 						this.dom.querySelector(".bar-1").classList.remove("active")
-					}, 300);
+					}, 150);
 
 				} else if (this.dom.querySelector(".bar-1").classList.contains("active")) {
 
@@ -228,7 +228,7 @@ let passStrengthIndicator = {
 					this.dom.querySelector(".bar-0").classList.add("active")
 					setTimeout(() => {
 						this.dom.querySelector(".bar-1").classList.add("active")
-					}, 300);
+					}, 150);
 
 				}
 
@@ -247,7 +247,7 @@ let passStrengthIndicator = {
 					this.dom.querySelector(".bar-1").classList.add("active")
 					setTimeout(() => {
 						this.dom.querySelector(".bar-2").classList.add("active")
-					}, 300);
+					}, 150);
 
 				} else {
 
@@ -256,8 +256,8 @@ let passStrengthIndicator = {
 						this.dom.querySelector(".bar-1").classList.add("active")
 						setTimeout(() => {
 							this.dom.querySelector(".bar-2").classList.add("active")
-						}, 300);
-					}, 300);
+						}, 150);
+					}, 150);
 
 				}
 
