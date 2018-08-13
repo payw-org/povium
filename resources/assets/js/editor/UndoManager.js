@@ -222,6 +222,17 @@ export default class UndoManager {
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
+		} else if (action.type === "textChange") {
+
+			action.node.innerHTML = action.node.innerHTML.slice(0, action.nextDiffStart) + action.prevDiffContent + action.node.innerHTML.slice(action.nextDiffEnd + 1, action.node.innerHTML.length)
+
+			let pRange = new PRange()
+			pRange.setStart(action.node, action.prevTextOffset)
+			let range = document.createRange()
+			range.setStart(pRange.startContainer, pRange.startOffset)
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
+
 		}
 	}
 
@@ -339,6 +350,17 @@ export default class UndoManager {
 			let range = document.createRange()
 			range.setStart(pRange.startContainer, pRange.startOffset)
 			range.setEnd(pRange.endContainer, pRange.endOffset)
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
+
+		} else if (action.type === "textChange") {
+
+			action.node.innerHTML = action.node.innerHTML.slice(0, action.prevDiffStart) + action.nextDiffContent + action.node.innerHTML.slice(action.prevDiffEnd + 1, action.node.innerHTML.length)
+
+			let pRange = new PRange()
+			pRange.setStart(action.node, action.nextTextOffset)
+			let range = document.createRange()
+			range.setStart(pRange.startContainer, pRange.startOffset)
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 

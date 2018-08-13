@@ -2,6 +2,8 @@ import DOMManager from "./DOMManager"
 import PostEditor from "./PostEditor"
 import SelectionManager from "./SelectionManager"
 import UndoManager from "./UndoManager"
+import { StringDiff } from "./StringDiff";
+import PRange from "./PRange";
 
 export default class EventManager
 {
@@ -26,9 +28,13 @@ export default class EventManager
 		this.postEditor = postEditor
 		this.domManager = domManager
 		this.selManager = selManager
-		this.ssManager = undoManager
+		this.undoManager = undoManager
 
 		this.linkRange = document.createRange()
+
+		this.methodBasedRecordActive = false
+
+		this.keyUpTimer = null
 
 
 		// Event Listeners
@@ -90,12 +96,15 @@ export default class EventManager
 		window.addEventListener('keydown', (e) => {
 
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
+
+				this.methodBasedRecordActive = true
+
 				if (e.shiftKey) {
 					e.preventDefault()
-					this.ssManager.redo()
+					this.undoManager.redo()
 				} else {
 					e.preventDefault()
-					this.ssManager.undo()
+					this.undoManager.undo()
 				}
 
 			}
@@ -452,7 +461,7 @@ export default class EventManager
 			// console.log(currentNode.textContent.match(/^- /))
 
 			this.selManager.list("ul")
-
+			월
 			let currentNode = this.selManager.getNodeInSelection()
 			currentNode.innerHTML = currentNode.innerHTML.replace(/^- /, "")
 
@@ -478,6 +487,50 @@ export default class EventManager
 			this.selManager.setCursorAt(currentNode, 0)
 
 		}
+
+
+		// Record StringDiff
+
+		if (!this.methodBasedRecordActive) {
+
+			this.methodBasedRecordActive = false
+
+			clearTimeout(this.keyUpTimer)
+
+			if (StringDiff.node) {
+
+				this.keyUpTimer = setTimeout(() => {
+
+					StringDiff.nextContent = StringDiff.node.innerHTML
+
+					console.log(StringDiff)
+
+					let action = {
+						type: "textChange"
+					}
+
+					Object.assign(action, StringDiff.getDiff(StringDiff.prevContent, StringDiff.nextContent))
+
+					let diffObj = StringDiff.getDiff(StringDiff.prevContent, StringDiff.nextContent)
+
+					if (diffObj.prevDiffContent !== "" || diffObj.nextDiffContent !== "") {
+						let pRange = new PRange()
+						let to = pRange.getTextOffset(currentNode, window.getSelection().getRangeAt(0).startContainer, window.getSelection().getRangeAt(0).startOffset)
+						StringDiff.prevTextOffset = to
+						StringDiff.nextContent = StringDiff.node.innerHTML
+						this.undoManager.recordAction(action)
+						StringDiff.reset()
+					}
+
+					console.log(StringDiff)
+
+				}, 500)
+
+			}
+			
+		}
+
+		
 		
 	}
 
@@ -486,6 +539,21 @@ export default class EventManager
 	 * @param {KeyboardEvent} e
 	 */
 	onKeyDown (e) {
+
+		console.log(StringDiff)
+
+		let currentNode = this.selManager.getNodeInSelection()
+		if (window.getSelection().rangeCount > 0 && window.getSelection().getRangeAt(0).collapsed) {
+			StringDiff.node = currentNode
+			if (StringDiff.node) {
+				console.log("stringdiff ")
+				let pRange = new PRange()
+				let to = pRange.getTextOffset(currentNode, window.getSelection().getRangeAt(0).startContainer, window.getSelection().getRangeAt(0).startOffset)
+				StringDiff.prevTextOffset = to
+				StringDiff.prevContent = StringDiff.node.innerHTML
+			}
+		}
+		
 
 		var sel = window.getSelection()
 		if (sel.rangeCount > 0) {
@@ -499,15 +567,27 @@ export default class EventManager
 
 		if (keyCode === 8) {
 
+			console.log(this.selManager.getSelectionPositionInParagraph())
+
+			if (this.selManager.getSelectionPositionInParagraph() === 1) {
+				this.methodBasedRecordActive = true
+			}
+
 			// Backspace
 			this.selManager.backspace(e)
 
 		} else if (keyCode === 46) {
 
+			if (this.selManager.getSelectionPositionInParagraph() === 3) {
+				this.methodBasedRecordActive = true
+			}
+
 			// Delete
 			this.selManager.delete(e)
 
 		} else if (keyCode === 13) {
+
+			this.methodBasedRecordActive = true
 
 			// Enter(Return)
 			this.selManager.enter(e)
@@ -534,14 +614,12 @@ export default class EventManager
 				this.selManager.backspace(document.createEvent("KeyboardEvent"), true)
 			}
 		} else {
-			console.log("keycode else", e.which)
 		}
 
 	}
 
 
 	onSelectionChanged () {
-
 
 		this.selManager.fixSelection()
 

@@ -149,10 +149,16 @@ export default class SelectionManager
 			type: "change",
 			targets: [],
 			range: {
-				startNode: this.getNodeOfNode(startNode),
-				endNode: this.getNodeOfNode(endNode),
-				startTextOffset: startTextOffset,
-				endTextOffset: endTextOffset
+				previousState: {
+					startNode: this.getNodeOfNode(startNode),
+					endNode: this.getNodeOfNode(endNode),
+					startTextOffset: startTextOffset,
+					endTextOffset: endTextOffset
+				},
+				nextState: {
+					startTextOffset: startTextOffset,
+					endTextOffset: endTextOffset
+				}
 			}
 		}
 
@@ -197,6 +203,9 @@ export default class SelectionManager
 		keepRange.setStart(startNode, startOffset)
 		keepRange.setEnd(endNode, endOffset)
 		this.replaceRange(keepRange)
+
+		action.range.nextState.startNode = this.getNodeOfNode(startNode)
+		action.range.nextState.endNode = this.getNodeOfNode(endNode)
 
 	}
 
@@ -795,7 +804,20 @@ export default class SelectionManager
 
 				console.log("empty child node or parent node")
 
-				this.removeNode(currentNode)
+				this.removeNode(currentNode, {
+					previousState: {
+						startNode: currentNode,
+						startTextOffset: 0,
+						endNode: currentNode,
+						endTextOffset: 0
+					},
+					nextState: {
+						startNode: currentNode,
+						startTextOffset: 0,
+						endNode: currentNode,
+						endTextOffset: 0
+					}
+				}, linkedAction)
 
 				this.setCursorAt(nextNode, 0)
 
@@ -1629,7 +1651,7 @@ export default class SelectionManager
 		var range
 		range = this.getRange()
 
-		let extraKeyPress = false
+		let needExtraKeyPress = false
 
 		var orgRange = range.cloneRange()
 		if (!range) {
@@ -1707,10 +1729,12 @@ export default class SelectionManager
 				!currentParentNode.contains(endNode)
 			) {
 
+				if (withKeyPress === "backspace") {
+					needExtraKeyPress = true
+				}
+
 				console.group("nothing contains")
 				console.log(currentParentNode.textContent)
-
-				extraKeyPress = true
 
 				let originalContent = currentParentNode.innerHTML
 
@@ -1766,12 +1790,14 @@ export default class SelectionManager
 				!currentParentNode.contains(endNode)
 			) {
 
+				if (withKeyPress === "backspace") {
+					needExtraKeyPress = true
+				}
+
 				travelNode = startNode
 				console.group("only contains startnode")
 				console.log(currentParentNode.textContent)
 				var metCurrentNode = false
-
-				extraKeyPress = true
 
 				var tempRange = document.createRange()
 				tempRange.setStart(startNode, startOffset)
@@ -1807,12 +1833,13 @@ export default class SelectionManager
 				currentParentNode.contains(endNode)
 			) {
 
+				if (withKeyPress === "backspace") {
+					needExtraKeyPress = true
+				}
+
 				travelNode = endNode
 				console.log("only contains endnode")
 				console.log(currentParentNode.textContent)
-
-				extraKeyPress = true
-
 
 				var tempRange = document.createRange()
 				tempRange.setStartBefore(currentParentNode.firstChild)
@@ -1850,6 +1877,10 @@ export default class SelectionManager
 				// Contains both startnode and endnode
 				console.log("contains both")
 
+				if (withKeyPress === "enter") {
+					needExtraKeyPress = true
+				}
+
 				let originalContent = currentParentNode.innerHTML;
 
 				orgRange.deleteContents()
@@ -1871,12 +1902,14 @@ export default class SelectionManager
 					modifiedContent: currentParentNode.innerHTML
 				})
 
-				if (withKeyPress === "enter") {
-					this.enter(document.createEvent("KeyboardEvent"))
-				}
+				// if (withKeyPress === "enter") {
+				// 	this.enter(document.createEvent("KeyboardEvent"), linkedRecord)
+				// }
 
 				action.linked = false
-
+				if (withKeyPress === "enter") {
+					action.linked = true
+				}
 
 				break
 
@@ -1897,7 +1930,7 @@ export default class SelectionManager
 		action.range.nextState.startNode = this.getNodeOfNode(afterRange.startContainer)
 		action.range.nextState.endNode = this.getNodeOfNode(afterRange.endContainer)
 
-		return extraKeyPress
+		return needExtraKeyPress
 
 	}
 
