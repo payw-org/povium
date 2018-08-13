@@ -35,6 +35,7 @@ export default class EventManager
 		this.methodBasedRecordActive = false
 
 		this.keyUpTimer = null
+		this.keyDownRecordLock = false
 
 
 		// Event Listeners
@@ -519,10 +520,10 @@ export default class EventManager
 						StringDiff.prevTextOffset = to
 						StringDiff.nextContent = StringDiff.node.innerHTML
 						this.undoManager.recordAction(action)
-						StringDiff.reset()
+						StringDiff.node = null
 					}
 
-					console.log(StringDiff)
+					this.keyDownRecordLock = false
 
 				}, 500)
 
@@ -540,20 +541,7 @@ export default class EventManager
 	 */
 	onKeyDown (e) {
 
-		console.log(StringDiff)
-
 		let currentNode = this.selManager.getNodeInSelection()
-		if (window.getSelection().rangeCount > 0 && window.getSelection().getRangeAt(0).collapsed) {
-			StringDiff.node = currentNode
-			if (StringDiff.node) {
-				console.log("stringdiff ")
-				let pRange = new PRange()
-				let to = pRange.getTextOffset(currentNode, window.getSelection().getRangeAt(0).startContainer, window.getSelection().getRangeAt(0).startOffset)
-				StringDiff.prevTextOffset = to
-				StringDiff.prevContent = StringDiff.node.innerHTML
-			}
-		}
-		
 
 		var sel = window.getSelection()
 		if (sel.rangeCount > 0) {
@@ -614,6 +602,24 @@ export default class EventManager
 				this.selManager.backspace(document.createEvent("KeyboardEvent"), true)
 			}
 		} else {
+		}
+
+		// Start recording textChange history
+		if (!this.methodBasedRecordActive && !this.keyDownRecordLock && window.getSelection().rangeCount > 0 && window.getSelection().getRangeAt(0).collapsed) {
+			StringDiff.node = currentNode
+			if (StringDiff.node) {
+				this.keyDownRecordLock = true
+				console.log("stringdiff ")
+				let pRange = new PRange()
+				let to = pRange.getTextOffset(currentNode, window.getSelection().getRangeAt(0).startContainer, window.getSelection().getRangeAt(0).startOffset)
+				StringDiff.prevTextOffset = to
+				StringDiff.prevContent = StringDiff.node.innerHTML
+			}
+		} else {
+			console.group()
+			console.log("methodBasedRecordActive: ", this.methodBasedRecordActive)
+			console.log("keyDownRecordLock: ", this.keyDownRecordLock)
+			console.groupEnd()
 		}
 
 	}
