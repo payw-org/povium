@@ -23,7 +23,7 @@ module.exports = {
 
 	},
 
-	mode: 'none',
+	mode: 'development',
 
 	devtool: 'source-map',
 
