@@ -423,6 +423,18 @@ export default class SelectionManager
 
 	}
 
+	list2(type)
+	{
+		let orgRange = this.getRange()
+		if (!orgRange) { return }
+
+		if (type === undefined) {
+			console.error("List type is undefined.")
+		}
+
+		
+	}
+
 	link(url)
 	{
 		var range = this.getRange()
@@ -567,7 +579,7 @@ export default class SelectionManager
 	/**
 	 * Backspace implementation
 	 */
-	backspace(e)
+	backspace(e, linkedRecord = false)
 	{
 
 		// Get current available node
@@ -575,7 +587,7 @@ export default class SelectionManager
 
 		var range = this.getRange()
 
-		let linkedAction = false
+		let linkedAction = linkedRecord
 
 		if (!range.collapsed) {
 			console.log("pressed backspace but the range is not collapsed")
@@ -1014,6 +1026,8 @@ export default class SelectionManager
 		// if the startContainer or the endContainer are included
 		// in the original node.
 
+		let currentNode = this.getNodeInSelection()
+
 		if (targetNode.nodeType !== 1) {
 			// If the node is not an HTML element do nothing.
 			return
@@ -1049,8 +1063,6 @@ export default class SelectionManager
 		// 3. replace node
 		targetNode.parentNode.replaceChild(newNode, targetNode)
 
-		let currentNode = this.getNodeInSelection()
-
 		if (recordAction) {
 			let action = {
 				type: "change",
@@ -1061,10 +1073,19 @@ export default class SelectionManager
 					}
 				],
 				range: {
-					startNode: currentNode,
-					endNode: currentNode,
-					startTextOffset: startTextOffset,
-					endTextOffset: endTextOffset
+					previousState: {
+						startNode: currentNode,
+						endNode: currentNode,
+						startTextOffset: startTextOffset,
+						endTextOffset: endTextOffset
+
+					},
+					nextState: {
+						startNode: newNode,
+						endNode: newNode,
+						startTextOffset: startTextOffset,
+						endTextOffset: endTextOffset
+					}
 				}
 			}
 			this.undoManager.recordAction(action)
@@ -1529,6 +1550,7 @@ export default class SelectionManager
 
 		//record action
 		let action = {
+			linked: linkedRecord,
 			type: "merge",
 			mergedNode: first,
 			mergedNodeOriginalContent: mergedNodeOriginalContent,
@@ -1540,10 +1562,6 @@ export default class SelectionManager
 			removedContent: removedContent,
 			removedContentTarget: removedContentTarget,
 			range: recordRangeState
-		}
-
-		if (linkedRecord) {
-			action.linked = true
 		}
 
 		this.undoManager.recordAction(action)
@@ -1673,6 +1691,14 @@ export default class SelectionManager
 			if (this.isImageBlock(currentParentNode)) {
 
 				// Remove image block
+
+				// record action
+				action.targets.push({
+					previousNode: currentParentNode.previousSibling,
+					removedNode: currentParentNode,
+					nextNode: currentParentNode.nextSibling,
+					parentNode: currentParentNode.parentNode
+				})
 
 				currentParentNode.parentNode.removeChild(currentParentNode)
 
