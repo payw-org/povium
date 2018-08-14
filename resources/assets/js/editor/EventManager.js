@@ -685,7 +685,16 @@ export default class EventManager
 		this.selManager.fixSelection()
 
 		// update selection manager's currentnode original html
-		this.selManager.currentNodeOrgHTML = this.selManager.getNodeInSelection().innerHTML
+		if (this.selManager.getNodeInSelection()) {
+
+			this.selManager.currentNodeOrgHTML = this.selManager.getNodeInSelection().innerHTML
+
+		} else {
+
+			this.selManager.currentNodeOrgHTML = ""
+			
+		}
+		
 
 		setTimeout(() => {
 			this.domManager.togglePopTool()
