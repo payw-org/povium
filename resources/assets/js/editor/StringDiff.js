@@ -1,6 +1,8 @@
 export let StringDiff = {
 
 	node: null,
+
+	locked: false,
 	
 	prevTextOffset: 0,
 	prevContent: "",

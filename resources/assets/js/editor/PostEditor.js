@@ -25,7 +25,7 @@ export default class PostEditor {
 
 		document.execCommand("defaultParagraphSeparator", false, "p")
 
-		this.initEditor()
+		// this.initEditor()
 
 	}
 

@@ -224,14 +224,11 @@ export default class UndoManager {
 
 		} else if (action.type === "textChange") {
 
-			action.node.innerHTML = action.node.innerHTML.slice(0, action.nextDiffStart) + action.prevDiffContent + action.node.innerHTML.slice(action.nextDiffEnd + 1, action.node.innerHTML.length)
+			// action.targetNode.innerHTML = action.targetNode.innerHTML.slice(0, action.nextDiffStart) + action.prevDiffContent + action.targetNode.innerHTML.slice(action.nextDiffEnd + 1, action.targetNode.innerHTML.length)
 
-			let pRange = new PRange()
-			pRange.setStart(action.node, action.prevTextOffset)
-			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			window.getSelection().removeAllRanges()
-			window.getSelection().addRange(range)
+			action.targetNode.innerHTML = action.prevContent
+
+			this.selManager.setCursorAt(action.targetNode, action.prevTextOffset)
 
 		}
 	}
@@ -355,19 +352,16 @@ export default class UndoManager {
 
 		} else if (action.type === "textChange") {
 
-			action.node.innerHTML = action.node.innerHTML.slice(0, action.prevDiffStart) + action.nextDiffContent + action.node.innerHTML.slice(action.prevDiffEnd + 1, action.node.innerHTML.length)
+			// action.node.innerHTML = action.node.innerHTML.slice(0, action.prevDiffStart) + action.nextDiffContent + action.node.innerHTML.slice(action.prevDiffEnd + 1, action.node.innerHTML.length)
 
-			let pRange = new PRange()
-			pRange.setStart(action.node, action.nextTextOffset)
-			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			window.getSelection().removeAllRanges()
-			window.getSelection().addRange(range)
+			action.targetNode.innerHTML = action.nextContent
+
+			this.selManager.setCursorAt(action.targetNode, action.nextTextOffset)
 
 		}
 	}
 
-	getLatestAction()
+	getTheLatestAction()
 	{
 
 		return this.actionStack[this.currentStep]

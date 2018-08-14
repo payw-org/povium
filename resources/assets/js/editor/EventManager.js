@@ -21,8 +21,6 @@ export default class EventManager
 		// Properties
 		let self = this
 
-		// Event Listeners
-
 		this.mouseDownStart = false
 
 		this.postEditor = postEditor
@@ -32,10 +30,11 @@ export default class EventManager
 
 		this.linkRange = document.createRange()
 
-		this.methodBasedRecordActive = false
+		this.charKeyDownLocked = false
 
-		this.keyUpTimer = null
-		this.keyDownRecordLock = false
+		this.keyDownLocked = false
+
+		this.multipleSpaceLocked = false
 
 
 		// Event Listeners
@@ -91,14 +90,16 @@ export default class EventManager
 
 		this.domManager.editor.addEventListener('keydown', (e) => {
 			this.onKeyDown(e)
-			this.onSelectionChanged()
+			if (e.which >= 37 && e.which <= 40) {
+				this.onSelectionChanged()
+			}
+			
 		})
 
 		window.addEventListener('keydown', (e) => {
 
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
 
-				this.methodBasedRecordActive = true
 
 				if (e.shiftKey) {
 					e.preventDefault()
@@ -113,13 +114,21 @@ export default class EventManager
 		})
 
 		this.domManager.editor.addEventListener('keyup', (e) => {
+
 			this.onKeyUp(e)
 
-			this.onSelectionChanged()
+			// this.onSelectionChanged()
+
 		})
 
 		this.domManager.editor.addEventListener('keypress', (e) => {
+
 			this.onKeyPress(e)
+
+		})
+
+		this.domManager.editor.addEventListener("input", () => {
+			this.onInput()
 		})
 
 
@@ -421,7 +430,163 @@ export default class EventManager
 	}
 
 
-	onKeyPress (e) {
+	onKeyPress (e)
+	{
+	}
+
+	/**
+	*
+	* @param {KeyboardEvent} e
+	*/
+	onKeyDown (e) {
+
+		this.keyDownLocked = true
+
+		let keyCode = e.which
+
+		let currentNode = this.selManager.getNodeInSelection()
+
+		let enableTextChangeRecord = false
+
+		let key = "char"
+		let validCharKey = 
+			((keyCode > 47 && keyCode < 58)  || // number keys
+			keyCode === 32                   || // spacebar & return key(s) (if you want to allow carriage returns)
+			(keyCode > 64 && keyCode < 91)   || // letter keys
+			(keyCode > 95 && keyCode < 112)  || // numpad keys
+			(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+			(keyCode > 218 && keyCode < 223) || // [\]' (in order)
+			keyCode === 229) &&
+			!e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey
+
+
+		var sel = window.getSelection()
+		if (sel.rangeCount > 0) {
+			if (!this.domManager.editor.contains(sel.getRangeAt(0).startContainer)) {
+				// console.warn("The given range is not in the editor. Editor's features will work only inside the editor.")
+				return
+			}
+		}
+
+
+
+		if (keyCode === 8) {
+
+			if (this.selManager.getSelectionPositionInParagraph() !== 1 && !this.selManager.isTextEmptyNode(currentNode)) {
+				enableTextChangeRecord = true
+				key = "backspace"
+			}
+
+			// Backspace
+			this.selManager.backspace(e)
+
+		} else if (keyCode === 46) {
+
+			if (this.selManager.getSelectionPositionInParagraph() !== 3 && !this.selManager.isTextEmptyNode(currentNode)) {
+				enableTextChangeRecord = true
+				key = "delete"
+			}
+
+			// Delete
+			this.selManager.delete(e)
+
+		} else if (keyCode === 13) {
+
+
+			// Enter(Return)
+			this.selManager.enter(e)
+
+		} else if (keyCode === 90 && e.ctrlKey) {
+
+			// e.preventDefault()
+			// this.ssManager.undo()
+
+		}
+
+		if (validCharKey || enableTextChangeRecord) {
+
+			// console.log("valid character keys")
+
+			// press character keys
+			// console.log("character", e.which)
+
+			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
+				this.selManager.removeSelection("backspace", true)
+				this.selManager.backspace(document.createEvent("KeyboardEvent"), true)
+			}
+
+			this.charKeyDownLocked = true
+
+			let lastAction = this.undoManager.getTheLatestAction()
+			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode && keyCode !== 32 && lastAction.key === key && !lastAction.locked) {
+
+			} else if (currentNode) {
+
+				this.undoManager.recordAction({
+					type: "textChange",
+					targetNode: currentNode,
+					prevContent: currentNode.innerHTML,
+					prevTextOffset: this.selManager.getTextOffset(),
+					key: key,
+					locked: false
+				})
+
+			}
+
+		} else {
+		}
+
+	}
+
+	onInput ()
+	{
+
+		// input event only detects printable input
+
+		if (this.keyDownLocked) {
+
+			// Key down is detected
+
+			this.keyDownLocked = false
+
+		} else {
+
+			// Key down is not detected but input is detected
+			// it means the pressed key is Hangul
+			// Keydown is not detected, so implementing keydown event once again from here
+
+			let currentNode = this.selManager.getNodeInSelection()
+
+			this.charKeyDownLocked = false
+			let lastAction = this.undoManager.getTheLatestAction()
+
+			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode && lastAction.key === "char" && !lastAction.locked) {
+
+				lastAction.nextContent = currentNode.innerHTML
+				lastAction.nextTextOffset = this.selManager.getTextOffset()
+
+			} else if (currentNode) {
+
+				this.undoManager.recordAction({
+					type: "textChange",
+					targetNode: currentNode,
+					prevContent: this.selManager.currentNodeOrgHTML,
+					prevTextOffset: this.selManager.getTextOffset(),
+					key: "char",
+					locked: false
+				})
+
+			}
+
+			// if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode) {
+
+			// 	lastAction.nextContent = currentNode.innerHTML
+			// 	lastAction.nextTextOffset = this.selManager.getTextOffset()
+
+			// }
+		}
+
+		
 
 	}
 
@@ -429,7 +594,11 @@ export default class EventManager
 	* Fires when press keyboard inside the editor.
 	* @param {KeyboardEvent} e
 	*/
-	onKeyUp (e) {
+	onKeyUp (e)
+	{
+
+		this.keyDownLocked = false
+
 		var currentNode = this.selManager.getNodeInSelection()
 		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
 
@@ -462,7 +631,7 @@ export default class EventManager
 			// console.log(currentNode.textContent.match(/^- /))
 
 			this.selManager.list("ul")
-			월
+
 			let currentNode = this.selManager.getNodeInSelection()
 			currentNode.innerHTML = currentNode.innerHTML.replace(/^- /, "")
 
@@ -489,145 +658,34 @@ export default class EventManager
 
 		}
 
+		if (this.charKeyDownLocked) {
 
-		// Record StringDiff
+			this.charKeyDownLocked = false
+			let lastAction = this.undoManager.getTheLatestAction()
 
-		if (!this.methodBasedRecordActive) {
+			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode) {
 
-			this.methodBasedRecordActive = false
-
-			clearTimeout(this.keyUpTimer)
-
-			if (StringDiff.node) {
-
-				this.keyUpTimer = setTimeout(() => {
-
-					StringDiff.nextContent = StringDiff.node.innerHTML
-
-					console.log(StringDiff)
-
-					let action = {
-						type: "textChange"
-					}
-
-					Object.assign(action, StringDiff.getDiff(StringDiff.prevContent, StringDiff.nextContent))
-
-					let diffObj = StringDiff.getDiff(StringDiff.prevContent, StringDiff.nextContent)
-
-					if (diffObj.prevDiffContent !== "" || diffObj.nextDiffContent !== "") {
-						let pRange = new PRange()
-						let to = pRange.getTextOffset(currentNode, window.getSelection().getRangeAt(0).startContainer, window.getSelection().getRangeAt(0).startOffset)
-						StringDiff.prevTextOffset = to
-						StringDiff.nextContent = StringDiff.node.innerHTML
-						this.undoManager.recordAction(action)
-						StringDiff.node = null
-					}
-
-					this.keyDownRecordLock = false
-
-				}, 500)
+				lastAction.nextContent = currentNode.innerHTML
+				lastAction.nextTextOffset = this.selManager.getTextOffset()
 
 			}
-			
-		}
-
-		
-		
-	}
-
-	/**
-	 *
-	 * @param {KeyboardEvent} e
-	 */
-	onKeyDown (e) {
-
-		let currentNode = this.selManager.getNodeInSelection()
-
-		var sel = window.getSelection()
-		if (sel.rangeCount > 0) {
-			if (!this.domManager.editor.contains(sel.getRangeAt(0).startContainer)) {
-				// console.warn("The given range is not in the editor. Editor's features will work only inside the editor.")
-				return
-			}
-		}
-
-		var keyCode = e.which
-
-		if (keyCode === 8) {
-
-			console.log(this.selManager.getSelectionPositionInParagraph())
-
-			if (this.selManager.getSelectionPositionInParagraph() === 1) {
-				this.methodBasedRecordActive = true
-			}
-
-			// Backspace
-			this.selManager.backspace(e)
-
-		} else if (keyCode === 46) {
-
-			if (this.selManager.getSelectionPositionInParagraph() === 3) {
-				this.methodBasedRecordActive = true
-			}
-
-			// Delete
-			this.selManager.delete(e)
-
-		} else if (keyCode === 13) {
-
-			this.methodBasedRecordActive = true
-
-			// Enter(Return)
-			this.selManager.enter(e)
-
-		} else if (keyCode === 90 && e.ctrlKey) {
-
-			// e.preventDefault()
-			// this.ssManager.undo()
-
-		} else if ( // functioning keys
-			keyCode !== 8 && keyCode !== 9 && keyCode !== 13 && keyCode !== 16 && keyCode !== 17 &&
-			keyCode !== 18 && keyCode !== 19 && keyCode !== 20 && keyCode !== 27 &&
-			keyCode !== 33 && keyCode !== 34 && keyCode !== 35 && keyCode !== 36 && keyCode !== 37 &&
-			keyCode !== 38 && keyCode !== 39 && keyCode !== 40 && keyCode !== 45 && keyCode !== 46 &&
-			keyCode !== 91 && keyCode !== 219 && keyCode !== 92 && keyCode !== 220 && keyCode !== 93 &&
-			keyCode !== 144 && keyCode !== 145 && keyCode !== 112 && keyCode !== 113 && keyCode !== 114 &&
-			keyCode !== 115 && keyCode !== 116 && keyCode !== 117 && keyCode !== 118 && keyCode !== 119 &&
-			keyCode !== 120 && keyCode !== 121 && keyCode !== 122 && keyCode !== 123 &&
-			 !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey
-		) {
-			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
-				console.log("replace with ")
-				this.selManager.removeSelection("backspace", true)
-				this.selManager.backspace(document.createEvent("KeyboardEvent"), true)
-			}
-		} else {
-		}
-
-		// Start recording textChange history
-		if (!this.methodBasedRecordActive && !this.keyDownRecordLock && window.getSelection().rangeCount > 0 && window.getSelection().getRangeAt(0).collapsed) {
-			StringDiff.node = currentNode
-			if (StringDiff.node) {
-				this.keyDownRecordLock = true
-				console.log("stringdiff ")
-				let pRange = new PRange()
-				let to = pRange.getTextOffset(currentNode, window.getSelection().getRangeAt(0).startContainer, window.getSelection().getRangeAt(0).startOffset)
-				StringDiff.prevTextOffset = to
-				StringDiff.prevContent = StringDiff.node.innerHTML
-			}
-		} else {
-			console.group()
-			console.log("methodBasedRecordActive: ", this.methodBasedRecordActive)
-			console.log("keyDownRecordLock: ", this.keyDownRecordLock)
-			console.groupEnd()
 		}
 
 	}
-
 
 	onSelectionChanged () {
 
+		// console.log("selection changed")
+
+		let lastAction = this.undoManager.getTheLatestAction()
+		if (lastAction && lastAction.type === "textChange") {
+			lastAction.locked = true
+		}
+
 		this.selManager.fixSelection()
+
+		// update selection manager's currentnode original html
+		this.selManager.currentNodeOrgHTML = this.selManager.getNodeInSelection().innerHTML
 
 		setTimeout(() => {
 			this.domManager.togglePopTool()

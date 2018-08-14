@@ -16,11 +16,11 @@ export default class SelectionManager
 		this.domManager = domManager
 		this.undoManager = undoManager
 
+		this.currentNodeOrgHTML = this.getNodeInSelection()
+
 	}
 
 	// Events
-
-
 
 	// Methods
 
@@ -2499,6 +2499,22 @@ export default class SelectionManager
 		} else {
 			return 2
 		}
+	}
+
+
+	/**
+	 * @return {Number} TextOffset inside the paragrph
+	 */
+	getTextOffset()
+	{
+		if (window.getSelection().rangeCount === 0) {
+			return 0
+		}
+
+		let range = window.getSelection().getRangeAt(0)
+
+		let pRange = new PRange()
+		return pRange.getTextOffset(this.getNodeOfNode(range.startContainer), range.startContainer, range.startOffset)
 	}
 
 
