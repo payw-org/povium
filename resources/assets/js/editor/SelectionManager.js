@@ -94,7 +94,8 @@ export default class SelectionManager
 	{
 		// console.log(document.execCommand('bold', false))
 		// this.itmotnTT("strong")
-		this.styleText("strong")
+		// this.styleText("strong")
+		document.execCommand("bold", false)
 	}
 
 	/**
@@ -2662,7 +2663,14 @@ export default class SelectionManager
 				this.isAvailableParentNode(travelNode) ||
 				this.isAvailableChildNode(travelNode)
 			) {
-				return travelNode
+
+				if (!this.isImageBlock(travelNode)) {
+					return travelNode
+				} else {
+					return null
+				}
+
+				
 			} else {
 				travelNode = travelNode.parentNode
 			}
