@@ -230,6 +230,19 @@ export default class UndoManager {
 
 			this.selManager.setCursorAt(action.targetNode, action.prevTextOffset)
 
+		} else if (action.type === "textStyleChange") {
+
+			let pRange = new PRange()
+			pRange.setStart(action.startNode, action.startTextOffset)
+			pRange.setEnd(action.endNode, action.endTextOffset)
+			let range = document.createRange()
+			range.setStart(pRange.startContainer, pRange.startOffset)
+			range.setEnd(pRange.endContainer, pRange.endOffset)
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
+
+			document.execCommand(action.method, false)
+
 		}
 	}
 
@@ -357,6 +370,19 @@ export default class UndoManager {
 			action.targetNode.innerHTML = action.nextContent
 
 			this.selManager.setCursorAt(action.targetNode, action.nextTextOffset)
+
+		} else if (action.type === "textStyleChange") {
+
+			let pRange = new PRange()
+			pRange.setStart(action.startNode, action.startTextOffset)
+			pRange.setEnd(action.endNode, action.endTextOffset)
+			let range = document.createRange()
+			range.setStart(pRange.startContainer, pRange.startOffset)
+			range.setEnd(pRange.endContainer, pRange.endOffset)
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
+
+			document.execCommand(action.method, false)
 
 		}
 	}
