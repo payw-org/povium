@@ -36,6 +36,8 @@ export default class EventManager
 
 		this.multipleSpaceLocked = false
 
+		this.selectedAll = false
+
 
 		// Event Listeners
 		window.addEventListener('click', (e) => {
@@ -89,6 +91,7 @@ export default class EventManager
 		this.isBackspaceKeyPressed = false
 
 		this.domManager.editor.addEventListener('keydown', (e) => {
+
 			this.onKeyDown(e)
 			if (e.which >= 37 && e.which <= 40) {
 				this.onSelectionChanged()
@@ -111,13 +114,20 @@ export default class EventManager
 
 			}
 
+			if (e.which === 65 && e.ctrlKey) {
+				this.selectedAll = true
+			}
+
 		})
 
-		this.domManager.editor.addEventListener('keyup', (e) => {
+		window.addEventListener('keyup', (e) => {
 
 			this.onKeyUp(e)
 
-			// this.onSelectionChanged()
+			if (this.selectedAll) {
+				this.selectedAll = false
+				this.onSelectionChanged()
+			}
 
 		})
 
@@ -444,6 +454,8 @@ export default class EventManager
 
 		let keyCode = e.which
 
+		console.log(keyCode)
+
 		let currentNode = this.selManager.getNodeInSelection()
 
 		let enableTextChangeRecord = false
@@ -456,8 +468,8 @@ export default class EventManager
 			(keyCode > 95 && keyCode < 112)  || // numpad keys
 			(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
 			(keyCode > 218 && keyCode < 223) || // [\]' (in order)
-			keyCode === 229) &&
-			!e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey
+			keyCode === 229)
+			&& !e.ctrlKey
 
 
 		var sel = window.getSelection()
@@ -472,7 +484,7 @@ export default class EventManager
 
 		if (keyCode === 8) {
 
-			if (this.selManager.getSelectionPositionInParagraph() !== 1 && !this.selManager.isTextEmptyNode(currentNode)) {
+			if (this.selManager.getSelectionPositionInParagraph() !== 1 && !this.selManager.isTextEmptyNode(currentNode) && this.selManager.getRange().collapsed) {
 				enableTextChangeRecord = true
 				key = "backspace"
 			}
@@ -482,7 +494,7 @@ export default class EventManager
 
 		} else if (keyCode === 46) {
 
-			if (this.selManager.getSelectionPositionInParagraph() !== 3 && !this.selManager.isTextEmptyNode(currentNode)) {
+			if (this.selManager.getSelectionPositionInParagraph() !== 3 && !this.selManager.isTextEmptyNode(currentNode) && this.selManager.getRange().collapsed) {
 				enableTextChangeRecord = true
 				key = "delete"
 			}
@@ -504,8 +516,6 @@ export default class EventManager
 		}
 
 		if (validCharKey || enableTextChangeRecord) {
-
-			// console.log("valid character keys")
 
 			// press character keys
 			// console.log("character", e.which)
