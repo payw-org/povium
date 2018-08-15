@@ -90,12 +90,10 @@ export default class EventManager
 
 		this.isBackspaceKeyPressed = false
 
-		this.domManager.editor.addEventListener('keydown', (e) => {
+		window.addEventListener('keydown', (e) => {
 
-			this.onKeyDown(e)
-			if (e.which >= 37 && e.which <= 40) {
-				this.onSelectionChanged()
-			}
+			
+			
 			
 		})
 
@@ -112,11 +110,21 @@ export default class EventManager
 					this.undoManager.undo()
 				}
 
+				this.onSelectionChanged()
+
+			} else {
+				this.onKeyDown(e)
+			}
+
+			if (e.which >= 37 && e.which <= 40) {
+				this.onSelectionChanged()
 			}
 
 			if (e.which === 65 && e.ctrlKey) {
 				this.selectedAll = true
 			}
+
+			this.domManager.hidePopTool()
 
 		})
 
@@ -453,24 +461,45 @@ export default class EventManager
 		this.keyDownLocked = true
 
 		let keyCode = e.which
-
-		console.log(keyCode, e.code)
+		let physKeyCode = e.code
 
 		let currentNode = this.selManager.getNodeInSelection()
 
 		let enableTextChangeRecord = false
 
 		let key = "char"
-		let validCharKey = 
-			((keyCode > 47 && keyCode < 58)  || // number keys
-			keyCode === 32                   || // spacebar & return key(s) (if you want to allow carriage returns)
-			(keyCode > 64 && keyCode < 91)   || // letter keys
-			(keyCode > 95 && keyCode < 112)  || // numpad keys
-			(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
-			(keyCode > 218 && keyCode < 223) || // [\]' (in order)
-			keyCode === 229)
-			&& !e.ctrlKey
+		let validCharKey
+		// let validCharKey = 
+		// 	((keyCode > 47 && keyCode < 58)  || // number keys
+		// 	keyCode === 32                   || // spacebar & return key(s) (if you want to allow carriage returns)
+		// 	(keyCode > 64 && keyCode < 91)   || // letter keys
+		// 	(keyCode > 95 && keyCode < 112)  || // numpad keys
+		// 	(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+		// 	(keyCode > 218 && keyCode < 223) || // [\]' (in order)
+		// 	keyCode === 229)
+		// 	&& !e.ctrlKey
 
+		validCharKey =
+			(physKeyCode === "KeyA" || physKeyCode === "KeyB" || physKeyCode === "KeyC" || physKeyCode === "KeyD" ||
+			physKeyCode === "KeyE" || physKeyCode === "KeyF" || physKeyCode === "KeyG" || physKeyCode === "KeyH" ||
+			physKeyCode === "KeyI" || physKeyCode === "KeyJ" || physKeyCode === "KeyK" || physKeyCode === "KeyL" ||
+			physKeyCode === "KeyM" || physKeyCode === "KeyN" || physKeyCode === "KeyO" || physKeyCode === "KeyP" ||
+			physKeyCode === "KeyQ" || physKeyCode === "KeyR" || physKeyCode === "KeyS" || physKeyCode === "KeyT" ||
+			physKeyCode === "KeyU" || physKeyCode === "KeyV" || physKeyCode === "KeyW" || physKeyCode === "KeyX" ||
+			physKeyCode === "KeyY" || physKeyCode === "KeyZ" ||
+			physKeyCode === "Digit0" || physKeyCode === "Digit1" || physKeyCode === "Digit2" || physKeyCode === "Digit3" ||
+			physKeyCode === "Digit4" || physKeyCode === "Digit5" || physKeyCode === "Digit6" || physKeyCode === "Digit7" ||
+			physKeyCode === "Digit8" || physKeyCode === "Digit9" ||
+			physKeyCode === "Numpad0" || physKeyCode === "Numpad1" || physKeyCode === "Numpad2" || physKeyCode === "Numpad3" ||
+			physKeyCode === "Numpad4" || physKeyCode === "Numpad5" || physKeyCode === "Numpad6" || physKeyCode === "Numpad7" ||
+			physKeyCode === "Numpad8" || physKeyCode === "Numpad9" ||
+			physKeyCode === "NumpadDecimal" || physKeyCode === "NumpadDivide" || physKeyCode === "NumpadMultiply" ||
+			physKeyCode === "NumpadSubtract" || physKeyCode === "NumpadAdd" ||
+			physKeyCode === "Backquote" || physKeyCode === "Minus" || physKeyCode === "Equal" || physKeyCode === "Backslash" ||
+			physKeyCode === "BracketLeft" || physKeyCode === "BracketRight" || physKeyCode === "Semicolon" || physKeyCode === "Quote" ||
+			physKeyCode === "Comma" || physKeyCode === "Period" || physKeyCode === "Slash" ||
+			physKeyCode === "Space")
+			&& !e.ctrlKey
 
 		var sel = window.getSelection()
 		if (sel.rangeCount > 0) {
@@ -518,7 +547,7 @@ export default class EventManager
 		if (validCharKey || enableTextChangeRecord) {
 
 			// press character keys
-			// console.log("character", e.which)
+			console.log("character", e.which, e.code)
 
 			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
 				this.selManager.removeSelection("backspace", true)
