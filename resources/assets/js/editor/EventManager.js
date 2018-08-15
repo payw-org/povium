@@ -154,25 +154,7 @@ export default class EventManager
 
 		this.domManager.editor.addEventListener('paste', (e) => { this.onPaste(e) })
 
-		// Toolbar button events
-		this.domManager.paragraph.addEventListener('click', (e) => { this.selManager.heading('P') })
-		this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1') })
-		this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2') })
-		this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3') })
 
-		this.domManager.boldButton.addEventListener('click', (e) => { this.selManager.bold() })
-		this.domManager.italicButton.addEventListener('click', (e) => { this.selManager.italic() })
-		this.domManager.underlineButton.addEventListener('click', (e) => { this.selManager.underline() })
-		this.domManager.strikeButton.addEventListener('click', (e) => { this.selManager.strike() })
-
-		this.domManager.alignLeft.addEventListener('click', (e) => { this.selManager.align('left') })
-		this.domManager.alignCenter.addEventListener('click', (e) => { this.selManager.align('center') })
-		this.domManager.alignRight.addEventListener('click', (e) => { this.selManager.align('right') })
-
-		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL') })
-		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL') })
-		this.domManager.link.addEventListener('click', (e) => { this.selManager.link("naver.com") })
-		this.domManager.blockquote.addEventListener('click', (e) => { this.selManager.blockquote() })
 
 
 		// PopTool
@@ -180,10 +162,10 @@ export default class EventManager
 		document.querySelector("#pt-h1").addEventListener('click', (e) => { this.selManager.heading('H1') })
 		document.querySelector("#pt-h2").addEventListener('click', (e) => { this.selManager.heading('H2') })
 		document.querySelector("#pt-h3").addEventListener('click', (e) => { this.selManager.heading('H3') })
-		document.querySelector("#pt-bold").addEventListener('click', (e) => { this.selManager.bold() })
-		document.querySelector("#pt-italic").addEventListener('click', (e) => { this.selManager.italic() })
-		document.querySelector("#pt-underline").addEventListener('click', (e) => { this.selManager.underline() })
-		document.querySelector("#pt-strike").addEventListener('click', (e) => { this.selManager.strike() })
+		document.querySelector("#pt-bold").addEventListener('click', (e) => { this.selManager.changeTextStyle("bold") })
+		document.querySelector("#pt-italic").addEventListener('click', (e) => { this.selManager.changeTextStyle("italic") })
+		document.querySelector("#pt-underline").addEventListener('click', (e) => { this.selManager.changeTextStyle("underline") })
+		document.querySelector("#pt-strike").addEventListener('click', (e) => { this.selManager.changeTextStyle("strikeThrough") })
 		document.querySelector("#pt-alignleft").addEventListener('click', (e) => { this.selManager.align('left') })
 		document.querySelector("#pt-alignmiddle").addEventListener('click', (e) => { this.selManager.align('center') })
 		document.querySelector("#pt-alignright").addEventListener('click', (e) => { this.selManager.align('right') })
