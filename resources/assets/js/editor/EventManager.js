@@ -146,7 +146,9 @@ export default class EventManager
 		})
 
 		this.domManager.editor.addEventListener("input", (e) => {
+			
 			this.onInput(e)
+
 		})
 
 
@@ -577,6 +579,10 @@ export default class EventManager
 
 	}
 
+	/**
+	 * 
+	 * @param {InputEvent} e 
+	 */
 	onInput (e)
 	{
 
@@ -604,7 +610,7 @@ export default class EventManager
 				lastAction.nextContent = currentNode.innerHTML
 				lastAction.nextTextOffset = this.selManager.getTextOffset()
 
-			} else if (currentNode) {
+			} else if (currentNode && e.isComposing) {
 
 				this.undoManager.recordAction({
 					type: "textChange",
