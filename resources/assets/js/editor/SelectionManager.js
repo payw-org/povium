@@ -1730,12 +1730,11 @@ export default class SelectionManager
 				!currentParentNode.contains(endNode)
 			) {
 
-				if (withKeyPress === "backspace") {
+				if (withKeyPress === "backspace" || withKeyPress === "delete") {
 					needExtraKeyPress = true
 				}
 
 				console.group("nothing contains")
-				console.log(currentParentNode.textContent)
 
 				let originalContent = currentParentNode.innerHTML
 
@@ -1791,7 +1790,7 @@ export default class SelectionManager
 				!currentParentNode.contains(endNode)
 			) {
 
-				if (withKeyPress === "backspace") {
+				if (withKeyPress === "backspace" || withKeyPress === "delete") {
 					needExtraKeyPress = true
 				}
 
@@ -1834,13 +1833,13 @@ export default class SelectionManager
 				currentParentNode.contains(endNode)
 			) {
 
-				if (withKeyPress === "backspace") {
+				console.log("only contains endnode")
+
+				if (withKeyPress === "backspace" || withKeyPress === "delete") {
 					needExtraKeyPress = true
 				}
 
 				travelNode = endNode
-				console.log("only contains endnode")
-				console.log(currentParentNode.textContent)
 
 				var tempRange = document.createRange()
 				tempRange.setStartBefore(currentParentNode.firstChild)
@@ -2649,7 +2648,7 @@ export default class SelectionManager
 
 		var range = this.getRange()
 		if (!range) {
-			return
+			return null
 		}
 		var travelNode = this.getRange().startContainer
 		if (travelNode === null) {
