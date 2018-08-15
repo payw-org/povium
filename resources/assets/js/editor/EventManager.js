@@ -137,8 +137,8 @@ export default class EventManager
 
 		})
 
-		this.domManager.editor.addEventListener("input", () => {
-			this.onInput()
+		this.domManager.editor.addEventListener("input", (e) => {
+			this.onInput(e)
 		})
 
 
@@ -454,7 +454,7 @@ export default class EventManager
 
 		let keyCode = e.which
 
-		console.log(keyCode)
+		console.log(keyCode, e.code)
 
 		let currentNode = this.selManager.getNodeInSelection()
 
@@ -548,7 +548,7 @@ export default class EventManager
 
 	}
 
-	onInput ()
+	onInput (e)
 	{
 
 		// input event only detects printable input
