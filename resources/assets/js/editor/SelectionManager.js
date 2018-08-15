@@ -88,14 +88,18 @@ export default class SelectionManager
 	}
 
 	/**
-	 * Make the selection bold.
+	 * Make the selection style.
 	 */
-	bold()
+	changeTextStyle(method)
 	{
+
 		// console.log(document.execCommand('bold', false))
 		// this.itmotnTT("strong")
 		// this.styleText("strong")
-		document.execCommand("bold", false)
+		document.execCommand(method, false)
+
+		
+
 	}
 
 	/**
@@ -447,14 +451,6 @@ export default class SelectionManager
 
 	link(url)
 	{
-		var range = this.getRange()
-		if (!range) {
-			return
-		}
-
-		// if (range.collapsed) {
-		// 	return
-		// }
 
 		document.execCommand('createLink', false, url)
 		document.getSelection().removeAllRanges()
