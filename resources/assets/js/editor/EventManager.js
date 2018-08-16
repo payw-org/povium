@@ -146,7 +146,7 @@ export default class EventManager
 		})
 
 		this.domManager.editor.addEventListener("input", (e) => {
-			
+
 			this.onInput(e)
 
 		})
@@ -352,6 +352,8 @@ export default class EventManager
 		let pasteArea = document.querySelector("#paste-area")
 		// let pasteArea = document.createElement("div")
 
+		pasteArea.innerHTML = ""
+
 
 		let range = document.createRange()
 		range.setStart(pasteArea, 0)
@@ -449,41 +451,43 @@ export default class EventManager
 
 		let currentNode = this.selManager.getNodeInSelection()
 
+		console.log(currentNode)
+
 		let enableTextChangeRecord = false
 
 		let key = "char"
 		let validCharKey
-		// let validCharKey = 
-		// 	((keyCode > 47 && keyCode < 58)  || // number keys
-		// 	keyCode === 32                   || // spacebar & return key(s) (if you want to allow carriage returns)
-		// 	(keyCode > 64 && keyCode < 91)   || // letter keys
-		// 	(keyCode > 95 && keyCode < 112)  || // numpad keys
-		// 	(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
-		// 	(keyCode > 218 && keyCode < 223) || // [\]' (in order)
-		// 	keyCode === 229)
-		// 	&& !e.ctrlKey
-
-		validCharKey =
-			(physKeyCode === "KeyA" || physKeyCode === "KeyB" || physKeyCode === "KeyC" || physKeyCode === "KeyD" ||
-			physKeyCode === "KeyE" || physKeyCode === "KeyF" || physKeyCode === "KeyG" || physKeyCode === "KeyH" ||
-			physKeyCode === "KeyI" || physKeyCode === "KeyJ" || physKeyCode === "KeyK" || physKeyCode === "KeyL" ||
-			physKeyCode === "KeyM" || physKeyCode === "KeyN" || physKeyCode === "KeyO" || physKeyCode === "KeyP" ||
-			physKeyCode === "KeyQ" || physKeyCode === "KeyR" || physKeyCode === "KeyS" || physKeyCode === "KeyT" ||
-			physKeyCode === "KeyU" || physKeyCode === "KeyV" || physKeyCode === "KeyW" || physKeyCode === "KeyX" ||
-			physKeyCode === "KeyY" || physKeyCode === "KeyZ" ||
-			physKeyCode === "Digit0" || physKeyCode === "Digit1" || physKeyCode === "Digit2" || physKeyCode === "Digit3" ||
-			physKeyCode === "Digit4" || physKeyCode === "Digit5" || physKeyCode === "Digit6" || physKeyCode === "Digit7" ||
-			physKeyCode === "Digit8" || physKeyCode === "Digit9" ||
-			physKeyCode === "Numpad0" || physKeyCode === "Numpad1" || physKeyCode === "Numpad2" || physKeyCode === "Numpad3" ||
-			physKeyCode === "Numpad4" || physKeyCode === "Numpad5" || physKeyCode === "Numpad6" || physKeyCode === "Numpad7" ||
-			physKeyCode === "Numpad8" || physKeyCode === "Numpad9" ||
-			physKeyCode === "NumpadDecimal" || physKeyCode === "NumpadDivide" || physKeyCode === "NumpadMultiply" ||
-			physKeyCode === "NumpadSubtract" || physKeyCode === "NumpadAdd" ||
-			physKeyCode === "Backquote" || physKeyCode === "Minus" || physKeyCode === "Equal" || physKeyCode === "Backslash" ||
-			physKeyCode === "BracketLeft" || physKeyCode === "BracketRight" || physKeyCode === "Semicolon" || physKeyCode === "Quote" ||
-			physKeyCode === "Comma" || physKeyCode === "Period" || physKeyCode === "Slash" ||
-			physKeyCode === "Space")
+		validCharKey = 
+			((keyCode > 47 && keyCode < 58)  || // number keys
+			keyCode === 32                   || // spacebar & return key(s) (if you want to allow carriage returns)
+			(keyCode > 64 && keyCode < 91)   || // letter keys
+			(keyCode > 95 && keyCode < 112)  || // numpad keys
+			(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+			(keyCode > 218 && keyCode < 223) || // [\]' (in order)
+			keyCode === 229)
 			&& !e.ctrlKey
+
+		// validCharKey =
+		// 	(physKeyCode === "KeyA" || physKeyCode === "KeyB" || physKeyCode === "KeyC" || physKeyCode === "KeyD" ||
+		// 	physKeyCode === "KeyE" || physKeyCode === "KeyF" || physKeyCode === "KeyG" || physKeyCode === "KeyH" ||
+		// 	physKeyCode === "KeyI" || physKeyCode === "KeyJ" || physKeyCode === "KeyK" || physKeyCode === "KeyL" ||
+		// 	physKeyCode === "KeyM" || physKeyCode === "KeyN" || physKeyCode === "KeyO" || physKeyCode === "KeyP" ||
+		// 	physKeyCode === "KeyQ" || physKeyCode === "KeyR" || physKeyCode === "KeyS" || physKeyCode === "KeyT" ||
+		// 	physKeyCode === "KeyU" || physKeyCode === "KeyV" || physKeyCode === "KeyW" || physKeyCode === "KeyX" ||
+		// 	physKeyCode === "KeyY" || physKeyCode === "KeyZ" ||
+		// 	physKeyCode === "Digit0" || physKeyCode === "Digit1" || physKeyCode === "Digit2" || physKeyCode === "Digit3" ||
+		// 	physKeyCode === "Digit4" || physKeyCode === "Digit5" || physKeyCode === "Digit6" || physKeyCode === "Digit7" ||
+		// 	physKeyCode === "Digit8" || physKeyCode === "Digit9" ||
+		// 	physKeyCode === "Numpad0" || physKeyCode === "Numpad1" || physKeyCode === "Numpad2" || physKeyCode === "Numpad3" ||
+		// 	physKeyCode === "Numpad4" || physKeyCode === "Numpad5" || physKeyCode === "Numpad6" || physKeyCode === "Numpad7" ||
+		// 	physKeyCode === "Numpad8" || physKeyCode === "Numpad9" ||
+		// 	physKeyCode === "NumpadDecimal" || physKeyCode === "NumpadDivide" || physKeyCode === "NumpadMultiply" ||
+		// 	physKeyCode === "NumpadSubtract" || physKeyCode === "NumpadAdd" ||
+		// 	physKeyCode === "Backquote" || physKeyCode === "Minus" || physKeyCode === "Equal" || physKeyCode === "Backslash" ||
+		// 	physKeyCode === "BracketLeft" || physKeyCode === "BracketRight" || physKeyCode === "Semicolon" || physKeyCode === "Quote" ||
+		// 	physKeyCode === "Comma" || physKeyCode === "Period" || physKeyCode === "Slash" ||
+		// 	physKeyCode === "Space")
+		// 	&& !e.ctrlKey
 
 		var sel = window.getSelection()
 		if (sel.rangeCount > 0) {
@@ -497,7 +501,7 @@ export default class EventManager
 
 		if (keyCode === 8) {
 
-			if (this.selManager.getSelectionPositionInParagraph() !== 1 && !this.selManager.isTextEmptyNode(currentNode) && this.selManager.getRange().collapsed) {
+			if (this.selManager.getSelectionPositionInParagraph() !== 1 && !this.selManager.isTextEmptyNode(currentNode) && this.selManager.getRange() && this.selManager.getRange().collapsed) {
 				enableTextChangeRecord = true
 				key = "backspace"
 			}
@@ -507,7 +511,7 @@ export default class EventManager
 
 		} else if (keyCode === 46) {
 
-			if (this.selManager.getSelectionPositionInParagraph() !== 3 && !this.selManager.isTextEmptyNode(currentNode) && this.selManager.getRange().collapsed) {
+			if (this.selManager.getSelectionPositionInParagraph() !== 3 && !this.selManager.isTextEmptyNode(currentNode) && this.selManager.getRange() && this.selManager.getRange().collapsed) {
 				enableTextChangeRecord = true
 				key = "delete"
 			}
@@ -541,6 +545,7 @@ export default class EventManager
 			this.charKeyDownLocked = true
 
 			let lastAction = this.undoManager.getTheLatestAction()
+
 			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode && keyCode !== 32 && lastAction.key === key && !lastAction.locked) {
 
 			} else if (currentNode) {
@@ -557,6 +562,7 @@ export default class EventManager
 			}
 
 		} else {
+
 		}
 
 	}

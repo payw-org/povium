@@ -8,6 +8,8 @@ export default class DOMManager {
 	 */
 	constructor (editorDOM) {
 
+		this.newNodeID = 1 // Update this to the lasted genrated ID
+
 		this.pHolder = document.createElement('p')
 		this.pHolder.innerHTML = '<br>'
 
@@ -52,6 +54,8 @@ export default class DOMManager {
 	generateEmptyNode(tagName) {
 		var elm = document.createElement(tagName)
 		var br = document.createElement('br')
+		elm.setAttribute("name", this.newNodeID)
+		this.newNodeID++
 		elm.appendChild(br)
 		return elm
 	}

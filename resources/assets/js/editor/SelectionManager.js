@@ -595,7 +595,7 @@ export default class SelectionManager
 
 		let linkedAction = linkedRecord
 
-		if (!range.collapsed) {
+		if (range && !range.collapsed) {
 			console.log("pressed backspace but the range is not collapsed")
 			e.stopPropagation()
 			e.preventDefault()
@@ -607,6 +607,14 @@ export default class SelectionManager
 			}
 
 			// return
+		} else if (this.domManager.editor.querySelector(".image-selected")) {
+
+			// Remove selected image block
+			let image = this.domManager.editor.querySelector(".image-selected")
+			let imageBlock = image.closest(".image")
+			imageBlock.parentNode.removeChild(imageBlock)
+			this.domManager.hideImageTool()
+
 		}
 
 		currentNode = this.getNodeInSelection()
@@ -699,7 +707,12 @@ export default class SelectionManager
 
 				var previousNode = this.getPreviousAvailableNode(currentNode)
 
-				if (this.isTextEmptyNode(previousNode)) {
+				if (this.isContentBasedNode(previousNode)) {
+
+					previousNode.querySelector(".image-wrapper").click()
+
+
+				} else if (this.isTextEmptyNode(previousNode)) {
 
 					this.removeNode(previousNode, {
 						previousState: {
@@ -771,7 +784,7 @@ export default class SelectionManager
 
 		let linkedAction = false
 
-		if (!range.collapsed) {
+		if (range && !range.collapsed) {
 			e.stopPropagation()
 			e.preventDefault()
 
@@ -781,6 +794,14 @@ export default class SelectionManager
 				return;
 			}
 			// return
+		} else if (this.domManager.editor.querySelector(".image-selected")) {
+
+			// Remove selected image block
+			let image = this.domManager.editor.querySelector(".image-selected")
+			let imageBlock = image.closest(".image")
+			imageBlock.parentNode.removeChild(imageBlock)
+			this.domManager.hideImageTool()
+
 		}
 
 		currentNode = this.getNodeInSelection()
@@ -1069,6 +1090,8 @@ export default class SelectionManager
 		// 1. Change node
 		var node
 		var newNode = document.createElement(newNodeName)
+
+		newNode.setAttribute("name", targetNode.getAttribute("name"))
 
 		if (keepStyle) {
 			newNode.style.textAlign = targetNode.style.textAlign
@@ -1659,12 +1682,17 @@ export default class SelectionManager
 
 		var startNode = range.startContainer
 		var startOffset = range.startOffset
+		let endNode = range.endContainer
 
-		if (splitResult.startNode !== startNode) {
+		if (splitResult.startNode && splitResult.startNode !== startNode) {
 			startNode = splitResult.startNode
 			startOffset = 0
 		}
-		var endNode = splitResult.endNode
+
+		if (splitResult.endNode) {
+			endNode = splitResult.endNode
+		}
+		
 
 		var deletionDone = false
 		var selectionNode = this.getNodeInSelection()
@@ -1720,6 +1748,17 @@ export default class SelectionManager
 				})
 
 				currentParentNode.parentNode.removeChild(currentParentNode)
+
+				if (currentParentNode.contains(startNode)) {
+					
+					action.range.previousState.startNode = currentParentNode
+					action.range.previousState.startTextOffset = 0
+
+				} else if (currentParentNode.contains(endNode)) {
+
+					break
+
+				}
 
 			} else if (
 				!currentParentNode.contains(startNode) &&
@@ -2053,6 +2092,11 @@ export default class SelectionManager
 
 	isTextEmptyNode(node)
 	{
+
+		if (!node) {
+			return false
+		}
+
 		if (node.nodeType === 3) {
 			return false
 		}
@@ -2262,6 +2306,14 @@ export default class SelectionManager
 			return true
 		} else {
 			return false
+		}
+	}
+
+	isContentBasedNode(node) {
+		if (!node) {
+			return false
+		} else if (this.isImageBlock(node)) {
+			return true
 		}
 	}
 
@@ -2641,6 +2693,10 @@ export default class SelectionManager
 
 	getNodeInSelection()
 	{
+
+		if (this.domManager.editor.querySelector(".image-selected")) {
+			return this.domManager.editor.querySelector(".image-selected")
+		}
 
 		var range = this.getRange()
 		if (!range) {
