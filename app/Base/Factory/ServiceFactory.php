@@ -30,12 +30,6 @@ class ServiceFactory extends AbstractChildFactory
 				$args[] = DBConnection::getInstance()->getConn();
 
 				break;
-			case '\Povium\Mailer':
-
-				break;
-			case '\Povium\Base\Routing\Router':
-
-				break;
 			case '\Povium\Base\Routing\Redirector':
 				$args[] = BASE_URI;
 
