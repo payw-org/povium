@@ -16,7 +16,7 @@ export default class SelectionManager
 		this.domManager = domManager
 		this.undoManager = undoManager
 
-		this.currentNodeOrgHTML = this.getNodeInSelection()
+		this.currentNodeOrgHTML
 
 	}
 
@@ -610,7 +610,37 @@ export default class SelectionManager
 		} else if (this.domManager.editor.querySelector(".image-selected")) {
 
 			// Remove selected image block
+
 			let image = this.domManager.editor.querySelector(".image-selected")
+
+			this.undoManager.recordAction({
+				type: "remove",
+				targets: [
+					{
+						previousNode: image.previousElementSibling,
+						removedNode: image,
+						nextNode: image.nextElementSibling,
+						parentNode: image.parentElement
+					}
+				],
+				range: {
+					previousState: {
+						startTextOffset: 0,
+						endTextOffset: 0,
+						startNode: image,
+						endNode: image
+					},
+					nextState: {
+						startTextOffset: 0,
+						endTextOffset: 0,
+						startNode: null,
+						endNode: null
+					}
+				},
+				linked: false
+			})
+
+			
 			let imageBlock = image.closest(".image")
 			imageBlock.parentNode.removeChild(imageBlock)
 			this.domManager.hideImageTool()
@@ -797,7 +827,36 @@ export default class SelectionManager
 		} else if (this.domManager.editor.querySelector(".image-selected")) {
 
 			// Remove selected image block
+			
 			let image = this.domManager.editor.querySelector(".image-selected")
+
+			this.undoManager.recordAction({
+				type: "remove",
+				targets: [
+					{
+						previousNode: image.previousElementSibling,
+						removedNode: image,
+						nextNode: image.nextElementSibling,
+						parentNode: image.parentElement
+					}
+				],
+				range: {
+					previousState: {
+						startTextOffset: 0,
+						endTextOffset: 0,
+						startNode: image,
+						endNode: image
+					},
+					nextState: {
+						startTextOffset: 0,
+						endTextOffset: 0,
+						startNode: null,
+						endNode: null
+					}
+				},
+				linked: false
+			})
+
 			let imageBlock = image.closest(".image")
 			imageBlock.parentNode.removeChild(imageBlock)
 			this.domManager.hideImageTool()
@@ -1741,10 +1800,10 @@ export default class SelectionManager
 
 				// record action
 				action.targets.push({
-					previousNode: currentParentNode.previousSibling,
+					previousNode: currentParentNode.previousElementSibling,
 					removedNode: currentParentNode,
-					nextNode: currentParentNode.nextSibling,
-					parentNode: currentParentNode.parentNode
+					nextNode: currentParentNode.nextElementSibling,
+					parentNode: currentParentNode.parentElement
 				})
 
 				currentParentNode.parentNode.removeChild(currentParentNode)

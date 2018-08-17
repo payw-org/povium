@@ -451,8 +451,6 @@ export default class EventManager
 
 		let currentNode = this.selManager.getNodeInSelection()
 
-		console.log(currentNode)
-
 		let enableTextChangeRecord = false
 
 		let key = "char"

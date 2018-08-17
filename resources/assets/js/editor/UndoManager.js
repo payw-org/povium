@@ -161,8 +161,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.previousState.startNode, action.range.previousState.startTextOffset)
 			pRange.setEnd(action.range.previousState.endNode, action.range.previousState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
@@ -194,8 +198,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.previousState.startNode, action.range.previousState.startTextOffset)
 			pRange.setEnd(action.range.previousState.endNode, action.range.previousState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().addRange(range)
 
 		} else if (action.type === "merge") {
@@ -217,8 +225,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.previousState.startNode, action.range.previousState.startTextOffset)
 			pRange.setEnd(action.range.previousState.endNode, action.range.previousState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
@@ -236,8 +248,12 @@ export default class UndoManager {
 			pRange.setStart(action.startNode, action.startTextOffset)
 			pRange.setEnd(action.endNode, action.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
@@ -312,8 +328,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
 			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
@@ -345,8 +365,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
 			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().addRange(range)
 
 		} else if (action.type === "merge") {
@@ -358,8 +382,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
 			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
@@ -377,8 +405,12 @@ export default class UndoManager {
 			pRange.setStart(action.startNode, action.startTextOffset)
 			pRange.setEnd(action.endNode, action.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 

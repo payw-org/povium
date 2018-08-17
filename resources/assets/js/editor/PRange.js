@@ -16,6 +16,11 @@ export default class PRange {
 	setStart(node, textOffset)
 	{
 
+		if (!node) {
+			console.warn("Given node is null")
+			return
+		}
+
 		let travelNode = node.firstChild
 		let length = 0
 		let loopDone = false
@@ -28,6 +33,10 @@ export default class PRange {
 		}
 
 		while (1) {
+
+			if (!travelNode) {
+				break
+			}
 
 			if (travelNode.nodeType === 3) {
 
@@ -92,6 +101,12 @@ export default class PRange {
 	 */
 	setEnd(node, textOffset)
 	{
+
+		if (!node) {
+			console.warn("Given node is null")
+			return
+		}
+
 		let travelNode = node.firstChild
 		let length = 0
 		let loopDone = false
@@ -168,6 +183,11 @@ export default class PRange {
 	 */
 	getTextOffset(node, container, rangeOffset)
 	{
+
+		if (!node) {
+			console.log("The given node is null")
+			return
+		}
 
 		let travelNode = node.firstChild
 		let length = 0
