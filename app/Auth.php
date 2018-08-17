@@ -481,7 +481,7 @@ class Auth
 	public function isReadableIDTaken($readable_id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT COUNT(id) FROM {$this->config['table__users']}
+			"SELECT COUNT(id) FROM {$this->config['user_table']}
  			WHERE readable_id = :readable_id"
 		);
 		$stmt->execute([':readable_id' => $readable_id]);
@@ -504,7 +504,7 @@ class Auth
 	public function isEmailTaken($email)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT COUNT(id) FROM {$this->config['table__users']}
+			"SELECT COUNT(id) FROM {$this->config['user_table']}
  			WHERE LOWER(email) = LOWER(:email)"
 		);
 		$stmt->execute([':email' => $email]);
@@ -527,7 +527,7 @@ class Auth
 	public function isNameTaken($name)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT COUNT(id) FROM {$this->config['table__users']}
+			"SELECT COUNT(id) FROM {$this->config['user_table']}
  			WHERE LOWER(name) = LOWER(:name)"
 		);
 		$stmt->execute([':name' => $name]);
@@ -547,7 +547,7 @@ class Auth
 	public function getID($identifier)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->config['table__users']}
+			"SELECT id FROM {$this->config['user_table']}
  			WHERE readable_id = :readable_id"
 		);
 		$stmt->execute([':readable_id' => $identifier]);
@@ -557,7 +557,7 @@ class Auth
 		}
 
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->config['table__users']}
+			"SELECT id FROM {$this->config['user_table']}
  			WHERE email = :email"
 		);
 		$stmt->execute([':email' => $identifier]);
@@ -579,7 +579,7 @@ class Auth
 	public function getBaseUser($id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id, readable_id, email, password, is_active FROM {$this->config['table__users']}
+			"SELECT id, readable_id, email, password, is_active FROM {$this->config['user_table']}
  			WHERE id = :id"
 		);
 		$stmt->execute([':id' => $id]);
@@ -602,7 +602,7 @@ class Auth
 	public function getUser($id, $with_pw = false)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['table__users']}
+			"SELECT * FROM {$this->config['user_table']}
  			WHERE id = :id"
 		);
 		$stmt->execute([':id' => $id]);
@@ -634,7 +634,7 @@ class Auth
 		$password_hash = $this->getPasswordHash($password);
 
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['table__users']}
+			"INSERT INTO {$this->config['user_table']}
 			(readable_id, name, password)
 			VALUES (?, ?, ?)"
 		);
@@ -667,7 +667,7 @@ class Auth
 		$set_params = implode(', ', $col_list);
 
 		$stmt = $this->conn->prepare(
-			"UPDATE {$this->config['table__users']} SET " . $set_params .
+			"UPDATE {$this->config['user_table']} SET " . $set_params .
 			" WHERE id = ?"
 		);
 		if (!$stmt->execute($val_list)) {
@@ -731,7 +731,7 @@ class Auth
 			$new_hash = getPasswordHash($raw_pw);
 
 			$stmt = $this->conn->prepare(
-				"UPDATE {$this->config['table__users']} SET password = :password
+				"UPDATE {$this->config['user_table']} SET password = :password
  				WHERE id = :id"
 			);
 			$stmt->execute([':password' => $new_hash, ':id' => $id]);
@@ -760,7 +760,7 @@ class Auth
 			$encodedtoken = $this->encodeToken($token);
 
 			$stmt = $this->conn->prepare(
-				"INSERT INTO {$this->config['table__autologin_auth']}
+				"INSERT INTO {$this->config['auth_autologin_table']}
 				(selector, user_id, validator, expn_dt)
 				VALUES (:selector, :user_id, :validator, :expn_dt)"
 			);
@@ -836,7 +836,7 @@ class Auth
 
 		//	Check if user id is exist in db
 		$stmt = $this->conn->prepare(
-			"SELECT count(id) FROM {$this->config['table__users']}
+			"SELECT count(id) FROM {$this->config['user_table']}
 			WHERE id = :id"
 		);
 		$stmt->execute([':id' => $_SESSION['user_id']]);
@@ -913,7 +913,7 @@ class Auth
 		$encodedToken = $this->encodeToken($token);
 
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['table__autologin_auth']}
+			"SELECT * FROM {$this->config['auth_autologin_table']}
  			WHERE selector = :selector"
 		);
 		$stmt->execute([':selector' => $encodedToken['selector']]);
@@ -963,7 +963,7 @@ class Auth
 	private function deleteTokenInfo($token_id)
 	{
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['table__autologin_auth']}
+			"DELETE FROM {$this->config['auth_autologin_table']}
  			WHERE id = :id"
 		);
 		$stmt->execute([':id' => $token_id]);
@@ -987,14 +987,14 @@ class Auth
 
 		//	Delete old request info
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['table__email_auth']}
+			"DELETE FROM {$this->config['auth_email_table']}
 			WHERE user_id = :user_id"
 		);
 		$stmt->execute([':user_id' => $user_id]);
 
 		//	Add new request info
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['table__email_auth']}
+			"INSERT INTO {$this->config['auth_email_table']}
 			(user_id, requested_email, token, expn_dt)
 			VALUES (:user_id, :requested_email, :token, :expn_dt)"
 		);
@@ -1025,7 +1025,7 @@ class Auth
 	public function confirmEmailAuth($token)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['table__email_auth']}
+			"SELECT * FROM {$this->config['auth_email_table']}
 			WHERE user_id = :user_id"
 		);
 		$stmt->execute([':user_id' => $this->getCurrentUser()['id']]);
@@ -1045,7 +1045,7 @@ class Auth
 		//	Request expired
 		if (strtotime($email_auth_info['expn_dt']) < time()) {
 			$stmt = $this->conn->prepare(
-				"DELETE FROM {$this->config['table__email_auth']}
+				"DELETE FROM {$this->config['auth_email_table']}
 				WHERE id = :id"
 			);
 			$stmt->execute([':id' => $email_auth_info['id']]);
@@ -1061,7 +1061,7 @@ class Auth
 		$this->updateUser($email_auth_info['user_id'], $params);
 
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['table__email_auth']}
+			"DELETE FROM {$this->config['auth_email_table']}
 			WHERE requested_email = :requested_email"
 		);
 		$stmt->execute([':requested_email' => $email_auth_info['requested_email']]);

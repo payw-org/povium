@@ -7,9 +7,9 @@
 */
 
 return [
-	'table__users' => 'users',
-	'table__autologin_auth' => 'autologin_auth',
-	'table__email_auth' => 'email_auth',
+	'user_table' => 'user',
+	'auth_autologin_table' => 'auth_autologin',
+	'auth_email_table' => 'auth_email',
 
 	'email_auth_expire' => 60*30,	//	Email authentication expiration time
 
@@ -43,8 +43,8 @@ return [
 		'readable_id_min_length' => 3,
 		'readable_id_max_length' => 20,
 
-		'email_min_length' => 6,
-		'email_max_length' => 50,
+		'email_min_length' => 3,
+		'email_max_length' => 254,
 
 		'name_min_length' => 2,
 		'name_max_length' => 30,
@@ -72,8 +72,8 @@ return [
 		'readable_id_continuous_underscore' => '_ 연속 입력 불가',
 		'readable_id_invalid' => '영문 소문자, 숫자, _ 를 조합해주세요.',
 
-		'email_short' => '이메일 6자 이상 입력',
-		'email_long' => '이메일 50자 이하로 입력',
+		'email_short' => '이메일 3자 이상 입력',
+		'email_long' => '이메일 254자 이하로 입력',
 		'email_invalid' => '유효하지 않은 이메일 형식',
 
 		'name_short' => '이름 2자 이상 입력',
