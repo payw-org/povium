@@ -1,11 +1,15 @@
-import SelectionManager from "./SelectionManager"
 import PRange from "./PRange"
+import PostEditor from "./PostEditor";
 
 export default class UndoManager {
 
-	constructor()
+	/**
+	 * 
+	 * @param {PostEditor} postEditor 
+	 */
+	constructor(postEditor)
 	{
-		this.selManager = new SelectionManager(null, this)
+		this.postEditor = postEditor
 		this.actionStack = []
 		this.currentStep = -1
 	}
@@ -128,7 +132,7 @@ export default class UndoManager {
 
 			if (action.previousSibling) {
 				action.newNode.parentNode.removeChild(action.newNode)
-				this.selManager.setCursorAt(action.previousSibling, -1)
+				this.postEditor.selManager.setCursorAt(action.previousSibling, -1)
 			} else if (action.nextSibling) {
 				action.newNode.parentNode.removeChild(action.newNode)
 			}
@@ -176,7 +180,7 @@ export default class UndoManager {
 
 			action.target.innerHTML = action.previousState.content
 
-			this.selManager.setCursorAt(action.target, action.nextState.length)
+			this.postEditor.selManager.setCursorAt(action.target, action.nextState.length)
 
 		} else if (action.type === "change") {
 
@@ -240,7 +244,7 @@ export default class UndoManager {
 
 			action.targetNode.innerHTML = action.prevContent
 
-			this.selManager.setCursorAt(action.targetNode, action.prevTextOffset)
+			this.postEditor.selManager.setCursorAt(action.targetNode, action.prevTextOffset)
 
 		} else if (action.type === "textStyleChange") {
 
@@ -288,7 +292,7 @@ export default class UndoManager {
 
 			if (action.previousSibling) {
 				action.previousSibling.parentNode.insertBefore(action.newNode, action.previousSibling.nextSibling)
-				this.selManager.setCursorAt(action.newNode, 0)
+				this.postEditor.selManager.setCursorAt(action.newNode, 0)
 			} else if (action.nextSibling) {
 				action.nextSibling.parentNode.insertBefore(action.newNode, action.nextSibling)
 			}
@@ -343,7 +347,7 @@ export default class UndoManager {
 
 			action.target.innerHTML = action.nextState.content
 
-			this.selManager.setCursorAt(action.nextState.newNode, 0)
+			this.postEditor.selManager.setCursorAt(action.nextState.newNode, 0)
 
 		} else if (action.type === "change") {
 
@@ -397,7 +401,7 @@ export default class UndoManager {
 
 			action.targetNode.innerHTML = action.nextContent
 
-			this.selManager.setCursorAt(action.targetNode, action.nextTextOffset)
+			this.postEditor.selManager.setCursorAt(action.targetNode, action.nextTextOffset)
 
 		} else if (action.type === "textStyleChange") {
 

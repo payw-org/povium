@@ -1,12 +1,17 @@
 import SelectionManager from "./SelectionManager"
+import PostEditor from "./PostEditor";
 
 export default class DOMManager {
 
 	/**
 	 * Manages html DOM.
-	 * @param {HTMLElement} editorDOM
+	 * @param {PostEditor} postEditor
 	 */
-	constructor (editorDOM) {
+	constructor (postEditor) {
+
+		this.postEditor = postEditor
+
+		this.editorDOM = postEditor.editorDOM
 
 		this.newNodeID = 1 // Update this to the lasted genrated ID
 
@@ -14,35 +19,35 @@ export default class DOMManager {
 		this.pHolder.innerHTML = '<br>'
 
 		// Editor body
-		this.editor = editorDOM.querySelector('#editor-body')
+		this.editor = this.editorDOM.querySelector('#editor-body')
 
 		// Toolbar
-		this.toolbar = editorDOM.querySelector('#editor-toolbar')
+		this.toolbar = this.editorDOM.querySelector('#editor-toolbar')
 
 		// Toolbar buttons
-		this.paragraph = editorDOM.querySelector('#p')
-		this.heading1 = editorDOM.querySelector('#h1')
-		this.heading2 = editorDOM.querySelector('#h2')
-		this.heading3 = editorDOM.querySelector('#h3')
+		this.paragraph = this.editorDOM.querySelector('#p')
+		this.heading1 = this.editorDOM.querySelector('#h1')
+		this.heading2 = this.editorDOM.querySelector('#h2')
+		this.heading3 = this.editorDOM.querySelector('#h3')
 
-		this.boldButton = editorDOM.querySelector('#bold')
-		this.italicButton = editorDOM.querySelector('#italic')
-		this.underlineButton = editorDOM.querySelector('#underline')
-		this.strikeButton = editorDOM.querySelector('#strike')
+		this.boldButton = this.editorDOM.querySelector('#bold')
+		this.italicButton = this.editorDOM.querySelector('#italic')
+		this.underlineButton = this.editorDOM.querySelector('#underline')
+		this.strikeButton = this.editorDOM.querySelector('#strike')
 
-		this.alignLeft = editorDOM.querySelector('#align-left')
-		this.alignCenter = editorDOM.querySelector('#align-center')
-		this.alignRight = editorDOM.querySelector('#align-right')
+		this.alignLeft = this.editorDOM.querySelector('#align-left')
+		this.alignCenter = this.editorDOM.querySelector('#align-center')
+		this.alignRight = this.editorDOM.querySelector('#align-right')
 
-		this.orderedList = editorDOM.querySelector('#ol')
-		this.unorderedList = editorDOM.querySelector('#ul')
+		this.orderedList = this.editorDOM.querySelector('#ol')
+		this.unorderedList = this.editorDOM.querySelector('#ul')
 
-		this.link = editorDOM.querySelector('#link')
-		this.blockquote = editorDOM.querySelector('#blockquote')
+		this.link = this.editorDOM.querySelector('#link')
+		this.blockquote = this.editorDOM.querySelector('#blockquote')
 
-		this.popTool = editorDOM.querySelector('#poptool')
+		this.popTool = this.editorDOM.querySelector('#poptool')
 
-		this.imageTool = editorDOM.querySelector('#image-preference-view')
+		this.imageTool = this.editorDOM.querySelector('#image-preference-view')
 
 	}
 
@@ -51,12 +56,17 @@ export default class DOMManager {
 	 * @param  {String} tagName
 	 * @return {HTMLElement}
 	 */
-	generateEmptyNode(tagName) {
+	generateEmptyNode(tagName, br = true) {
 		var elm = document.createElement(tagName)
-		var br = document.createElement('br')
+		
 		elm.setAttribute("name", this.newNodeID)
 		this.newNodeID++
-		elm.appendChild(br)
+
+		if (br) {
+			var br = document.createElement('br')
+			elm.appendChild(br)
+		}
+		
 		return elm
 	}
 
@@ -76,13 +86,10 @@ export default class DOMManager {
 
 		var range = document.getSelection().getRangeAt(0)
 
-		// Set the available item
-		var selManager = new SelectionManager(this)
-
-		var currentNode = selManager.getNodeInSelection()
+		var currentNode = this.postEditor.selManager.getNodeInSelection()
 
 		if (
-			selManager.isListItem(currentNode)
+			this.postEditor.selManager.isListItem(currentNode)
 		) {
 
 			this.setPopToolMenu({
@@ -92,7 +99,7 @@ export default class DOMManager {
 			})
 
 		} else if (
-			selManager.isBlockquote(currentNode)
+			this.postEditor.selManager.isBlockquote(currentNode)
 		) {
 
 			this.setPopToolMenu({
@@ -101,7 +108,7 @@ export default class DOMManager {
 			})
 
 		} else if (
-			selManager.isImageCaption(currentNode)
+			this.postEditor.selManager.isImageCaption(currentNode)
 		) {
 
 			this.setPopToolMenu({

@@ -1,22 +1,22 @@
-import DOMManager from "./DOMManager"
-import UndoManager from "./UndoManager"
 import PRange from "./PRange"
+import PostEditor from "./PostEditor";
 
 export default class SelectionManager
 {
 
 	/**
 	 *
-	 * @param {DOMManager} domManager
-	 * @param {UndoManager} undoManager
+	 * @param {PostEditor} postEditor
 	 */
-	constructor(domManager, undoManager)
+	constructor(postEditor)
 	{
 
-		this.domManager = domManager
-		this.undoManager = undoManager
+		this.postEditor = postEditor
 
-		this.currentNodeOrgHTML
+		// this.postEditor.domManager = postEditor.domManager
+		// this.postEditor.undoManager = postEditor.undoManager
+
+		// this.postEditor.eventManager = postEditor.eventManager
 
 	}
 
@@ -74,7 +74,7 @@ export default class SelectionManager
 
 		}
 
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 	}
 
@@ -167,7 +167,7 @@ export default class SelectionManager
 			}
 		}
 
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 		// Change nodes
 		for (var i = 0; i < chunks.length; i++) {
@@ -218,7 +218,7 @@ export default class SelectionManager
 	 *
 	 * @param {string} type
 	 */
-	list(type)
+	list_old(type)
 	{
 
 		// If one or more lists are
@@ -421,8 +421,8 @@ export default class SelectionManager
 
 			}
 
-			if (this.domManager.editor.contains(listElm)) {
-				this.domManager.editor.removeChild(listElm)
+			if (this.postEditor.domManager.editor.contains(listElm)) {
+				this.postEditor.domManager.editor.removeChild(listElm)
 			}
 
 		}
@@ -437,25 +437,35 @@ export default class SelectionManager
 
 	}
 
-	list2(type)
+	list(type)
 	{
 		let orgRange = this.getRange()
 		if (!orgRange) { return }
 
-		if (type === undefined) {
-			console.error("List type is undefined.")
+		if (!type) {
+			console.error("The given list type is invalid")
 		}
 
+		let listDOM = this.postEditor.domManager.generateEmptyNode(type, false)
+		let currentNode = this.getNodeInSelection()
+		let listItemDOM = this.changeNodeName(currentNode, "LI", true, true)
+
+		listItemDOM.parentNode.replaceChild(listDOM, listItemDOM)
+		listDOM.appendChild(listItemDOM)
 		
 	}
 
+	/**
+	 * 
+	 * @param {String} url 
+	 */
 	link(url)
 	{
 
 		document.execCommand('createLink', false, url)
 		document.getSelection().removeAllRanges()
 
-		this.domManager.hidePopTool()
+		this.postEditor.domManager.hidePopTool()
 
 	}
 
@@ -548,7 +558,7 @@ export default class SelectionManager
 		}
 
 		if (changedNodeCount > 0 || isAllBlockquote) {
-			this.undoManager.recordAction(action)
+			this.postEditor.undoManager.recordAction(action)
 		}
 
 		// Selection is all blockquote
@@ -607,13 +617,13 @@ export default class SelectionManager
 			}
 
 			// return
-		} else if (this.domManager.editor.querySelector(".image-selected")) {
+		} else if (this.postEditor.domManager.editor.querySelector(".image-selected")) {
 
 			// Remove selected image block
 
-			let image = this.domManager.editor.querySelector(".image-selected")
+			let image = this.postEditor.domManager.editor.querySelector(".image-selected")
 
-			this.undoManager.recordAction({
+			this.postEditor.undoManager.recordAction({
 				type: "remove",
 				targets: [
 					{
@@ -643,7 +653,7 @@ export default class SelectionManager
 			
 			let imageBlock = image.closest(".image")
 			imageBlock.parentNode.removeChild(imageBlock)
-			this.domManager.hideImageTool()
+			this.postEditor.domManager.hideImageTool()
 
 		}
 
@@ -824,13 +834,13 @@ export default class SelectionManager
 				return;
 			}
 			// return
-		} else if (this.domManager.editor.querySelector(".image-selected")) {
+		} else if (this.postEditor.domManager.editor.querySelector(".image-selected")) {
 
 			// Remove selected image block
 			
-			let image = this.domManager.editor.querySelector(".image-selected")
+			let image = this.postEditor.domManager.editor.querySelector(".image-selected")
 
-			this.undoManager.recordAction({
+			this.postEditor.undoManager.recordAction({
 				type: "remove",
 				targets: [
 					{
@@ -859,7 +869,7 @@ export default class SelectionManager
 
 			let imageBlock = image.closest(".image")
 			imageBlock.parentNode.removeChild(imageBlock)
-			this.domManager.hideImageTool()
+			this.postEditor.domManager.hideImageTool()
 
 		}
 
@@ -979,6 +989,9 @@ export default class SelectionManager
 
 		var currentNode = this.getNodeInSelection()
 		var range = this.getRange()
+		if (!range) {
+			return
+		}
 		let linkedAction = false
 
 		if (!range.collapsed) {
@@ -1026,7 +1039,7 @@ export default class SelectionManager
 		} else if (selPosType === 1) {
 
 			console.info('Press enter: start')
-			var pElm = this.domManager.generateEmptyNode(currentNode.nodeName)
+			var pElm = this.postEditor.domManager.generateEmptyNode(currentNode.nodeName)
 
 			currentNode.parentNode.insertBefore(pElm, currentNode)
 
@@ -1037,7 +1050,7 @@ export default class SelectionManager
 				newNode: pElm,
 				linked: linkedAction
 			}
-			this.undoManager.recordAction(action)
+			this.postEditor.undoManager.recordAction(action)
 
 		} else if (selPosType === 3) {
 
@@ -1063,7 +1076,7 @@ export default class SelectionManager
 
 			}
 
-			var pElm = this.domManager.generateEmptyNode(newNodeName)
+			var pElm = this.postEditor.domManager.generateEmptyNode(newNodeName)
 
 			parentNode.insertBefore(pElm, nextNode)
 
@@ -1074,7 +1087,7 @@ export default class SelectionManager
 				newNode: pElm,
 				linked: linkedAction
 			}
-			this.undoManager.recordAction(action)
+			this.postEditor.undoManager.recordAction(action)
 
 
 
@@ -1148,7 +1161,7 @@ export default class SelectionManager
 
 		// 1. Change node
 		var node
-		var newNode = document.createElement(newNodeName)
+		var newNode = this.postEditor.domManager.generateEmptyNode(newNodeName, false)
 
 		newNode.setAttribute("name", targetNode.getAttribute("name"))
 
@@ -1189,7 +1202,7 @@ export default class SelectionManager
 					}
 				}
 			}
-			this.undoManager.recordAction(action)
+			this.postEditor.undoManager.recordAction(action)
 		}
 
 		return newNode
@@ -1238,7 +1251,7 @@ export default class SelectionManager
 			var isChanged = false
 
 			// if (startNode.id === 'editor-body') {
-			if (startNode === this.domManager.editor) {
+			if (startNode === this.postEditor.domManager.editor) {
 
 				target = startNode.firstElementChild
 
@@ -1263,7 +1276,7 @@ export default class SelectionManager
 
 
 			// if (endNode.id === 'editor-body') {
-			if (endNode === this.domManager.editor) {
+			if (endNode === this.postEditor.domManager.editor) {
 
 
 				target = endNode.firstChild
@@ -1536,7 +1549,7 @@ export default class SelectionManager
 			linked: linkedRecord
 		}
 
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 
 	}
@@ -1665,7 +1678,7 @@ export default class SelectionManager
 			range: recordRangeState
 		}
 
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 	}
 
@@ -1790,7 +1803,7 @@ export default class SelectionManager
 			},
 			linked: linkedRecord
 		}
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 		while (1) {
 
@@ -2060,7 +2073,7 @@ export default class SelectionManager
 						nextNode: parentNode.nextSibling,
 						parentNode: parentNode.parentNode
 					})
-					this.undoManager.recordAction(action)
+					this.postEditor.undoManager.recordAction(action)
 				}
 
 				parentNode.parentNode.removeChild(parentNode)
@@ -2075,7 +2088,7 @@ export default class SelectionManager
 						nextNode: node.nextSibling,
 						parentNode: node.parentNode
 					})
-					this.undoManager.recordAction(action)
+					this.postEditor.undoManager.recordAction(action)
 				}
 
 				parentNode.removeChild(node)
@@ -2092,7 +2105,7 @@ export default class SelectionManager
 					nextNode: node.nextSibling,
 					parentNode: node.parentNode
 				})
-				this.undoManager.recordAction(action)
+				this.postEditor.undoManager.recordAction(action)
 			}
 
 			parentNode.removeChild(node)
@@ -2753,8 +2766,8 @@ export default class SelectionManager
 	getNodeInSelection()
 	{
 
-		if (this.domManager.editor.querySelector(".image-selected")) {
-			return this.domManager.editor.querySelector(".image-selected")
+		if (this.postEditor.domManager.editor.querySelector(".image-selected")) {
+			return this.postEditor.domManager.editor.querySelector(".image-selected")
 		}
 
 		var range = this.getRange()
@@ -2797,7 +2810,7 @@ export default class SelectionManager
 		let tempNode = node
 		let returnNode = null
 		while (1) {
-			if (tempNode.isEqualNode(this.domManager.editor) || tempNode.isEqualNode(document.body) || tempNode === null) {
+			if (tempNode.isEqualNode(this.postEditor.domManager.editor) || tempNode.isEqualNode(document.body) || tempNode === null) {
 				break
 			} else if (this.isAvailableChildNode(tempNode) || this.isAvailableParentNode(tempNode)) {
 				returnNode = tempNode

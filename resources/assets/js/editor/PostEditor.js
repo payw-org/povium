@@ -9,18 +9,21 @@ export default class PostEditor {
 	 * Creates a new PostEditor object.
 	 * @param {HTMLElement} editorDOM
 	 */
-	constructor (editorDOM) {
+	constructor(editorDOM) {
 
 		// Properties
 		let self = this
 
-		this.domManager = new DOMManager(editorDOM)
-		this.undoManager = new UndoManager()
-		this.selManager = new SelectionManager(this.domManager, this.undoManager)
-		this.eventManager = new EventManager(this, this.domManager, this.selManager, this.undoManager)
-		this.selManager.eventManager = this.eventManager
+		this.editorDOM = editorDOM
 
-
+		/**
+		 * @name domManager
+		 * @type {DOMManager}
+		 */
+		this.domManager = new DOMManager(this)
+		this.undoManager = new UndoManager(this)
+		this.selManager = new SelectionManager(this)
+		this.eventManager = new EventManager(this)
 
 
 		document.execCommand("defaultParagraphSeparator", false, "p")
@@ -34,7 +37,7 @@ export default class PostEditor {
 	/**
 	 * Initialize editor.
 	 */
-	initEditor () {
+	initEditor() {
 
 		// Fix flickering when add text style first time
 		// in Chrome browser.
@@ -69,7 +72,7 @@ export default class PostEditor {
 
 	}
 
-	clearEditor () {
+	clearEditor() {
 
 		this.domManager.editor.innerHTML = ""
 
@@ -79,7 +82,7 @@ export default class PostEditor {
 	/**
 	 * Return true if the editor is empty.
 	 */
-	isEmpty () {
+	isEmpty() {
 		let contentInside = this.domManager.editor.textContent
 		let childNodesCount = this.selManager.getAllNodesInSelection().length
 		if (contentInside === "" && childNodesCount < 1) {
