@@ -20,8 +20,9 @@ return [
 		'secure' => false,
 		'httponly' => false
 	],
-
-	'pw_hash_options' => [
+	
+	'password_hash_algo' => PASSWORD_DEFAULT,
+	'password_hash_options' => [
 		'cost' => 13,
 		'salt' => md5(openssl_random_pseudo_bytes(16))
 	],

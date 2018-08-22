@@ -12,7 +12,7 @@
 $router->post(
 	'/login',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/loginController.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/login.php';
 	}
 );
 
@@ -22,7 +22,7 @@ $router->post(
 $router->post(
 	'/register',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/registerConfirmController.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/registerConfirm.php';
 	}
 );
 
@@ -32,7 +32,7 @@ $router->post(
 $router->put(
 	'/register',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/registerVerifyController.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/registerVerify.php';
 	}
 );
 
@@ -42,7 +42,7 @@ $router->put(
 $router->post(
 	'/logout',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/logoutController.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/logout.php';
 	}
 );
 
@@ -54,7 +54,7 @@ $router->post(
 $router->get(
 	'/me/settings/email/new-registration',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/sendEmailForEmailAuthController.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/sendEmailForEmailAuth.php';
 	}
 );
 
@@ -71,7 +71,7 @@ $router->get(
 			$redirector->redirect('/login', true);
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Controllers/Auth/emailAuthController.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/confirmEmailAuth.php';
 	},
 	'email_authentication'
 );

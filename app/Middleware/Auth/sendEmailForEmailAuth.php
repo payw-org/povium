@@ -2,10 +2,13 @@
 /**
 * Receive email address
 * and send email for user's email address authentication.
+* @TODO	Check get email address sensitive or insensitive
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
 */
+
+use Povium\Hasher;
 
 global $factory, $router, $auth;
 
@@ -24,7 +27,7 @@ $send_email_return = $auth->verifyEmail($email);
 if ($send_email_return['err']) {	//	This email is not possible to authenticate
 
 } else {						//	Valid email. Send email for email authentication.
-	$token = $auth->uuidV4();	//	Generate authentication token
+	$token = Hasher::uuidV4();	//	Generate uuid for authentication.
 
 	if ($auth->requestEmailAuth($email, $token)) {
 		$auth_uri =

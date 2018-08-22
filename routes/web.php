@@ -104,7 +104,7 @@ $router->get(
 		$readable_id = strtolower($readable_id);
 
 		//	Nonexistent readable id.
-		if (false === $user_id = $auth->getID($readable_id)) {
+		if (false === $user_id = $auth->getUserIdFromReadableId($readable_id)) {
 			throw new NotFoundHttpException();
 		}
 
