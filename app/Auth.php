@@ -13,14 +13,24 @@ class Auth
 	/**
 	* @var array
 	*/
-	private $config;
+	protected $config;
 
 	/**
 	* Database connection (PDO)
 	*
 	* @var \PDO
 	*/
-	private $conn = null;
+	protected $conn = null;
+
+	/**
+	 * @var bool
+	 */
+	protected $isLoggedIn = false;
+
+	/**
+	 * @var array
+	 */
+	protected $currentUser = null;
 
 	/**
 	* @param \PDO $conn
@@ -29,6 +39,8 @@ class Auth
 	{
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 		$this->conn = $conn;
+
+		$this->isLoggedIn();
 	}
 
 	/**
@@ -168,7 +180,7 @@ class Auth
 	*/
 	public function logout()
 	{
-		$this->deleteSession();
+		$this->deleteCurrentSession();
 
 		if (isset($_COOKIE['auth_token'])) {	//	If auto login cookie is set
 			$token = $_COOKIE['auth_token'];	//	token = selector:raw validator
@@ -556,7 +568,7 @@ class Auth
 	}
 
 	/**
-	 * Get user id from readable id.
+	 * Returns user id from readable id.
 	 *
 	 * @param  string $readable_id
 	 *
@@ -575,7 +587,7 @@ class Auth
 	}
 
 	/**
-	 * Get user id from name.
+	 * Returns user id from name.
 	 *
 	 * @param  string $name
 	 *
@@ -594,7 +606,7 @@ class Auth
 	}
 
 	/**
-	 * Get user id from email.
+	 * Returns user id from email.
 	 *
 	 * @param  string $email
 	 *
@@ -613,7 +625,7 @@ class Auth
 	}
 
 	/**
-	 * Get some fields data of user.
+	 * Return some fields data of user.
 	 *
 	 * @param  int 		$id
 	 * @param  array 	$params		Field names
@@ -635,7 +647,7 @@ class Auth
 	}
 
 	/**
-	* Get all fields data of user.
+	* Return all fields data of user.
 	*
 	* @param  int		$id
 	* @param  boolean 	$with_pw If it is true, return with password.
@@ -723,11 +735,13 @@ class Auth
 	}
 
 	/**
+	* Returns password hash.
+	*
 	* @param  string $raw_pw Raw password
 	*
 	* @return string
 	*/
-	private function getPasswordHash($raw_pw)
+	protected function getPasswordHash($raw_pw)
 	{
 		return password_hash($raw_pw, $this->config['password_hash_algo'], $this->config['password_hash_options']);
 	}
@@ -741,7 +755,7 @@ class Auth
 	*
 	* @return bool If password match, return true.
 	*/
-	private function verifyPasswordAndRehash($raw_pw, $hash, $id)
+	protected function verifyPasswordAndRehash($raw_pw, $hash, $id)
 	{
 		if (!password_verify($raw_pw, $hash)) {
 			return false;
@@ -760,230 +774,674 @@ class Auth
 		return true;
 	}
 
+	// /**
+	// * Creates a session for a authorized user.
+	// * Creates cookie and table record about token for auto login.
+	// *
+	// * @param int	$id
+	// * @param bool	$remember Option for remember me
+	// *
+	// * @return bool
+	// */
+	// private function createSessionAndCookie($id, $remember)
+	// {
+	// 	$_SESSION['user_id'] = $id;
+	//
+	// 	if ($remember) {
+	// 		$hash = Hasher::generateRandomHash(60);
+	// 		$token = substr_replace($hash, ':', 20, 0);			//	selector:validator
+	//
+	// 		$encodedtoken = $this->encodeToken($token);
+	//
+	// 		$stmt = $this->conn->prepare(
+	// 			"INSERT INTO {$this->config['auth_autologin_table']}
+	// 			(selector, user_id, validator, expn_dt)
+	// 			VALUES (:selector, :user_id, :validator, :expn_dt)"
+	// 		);
+	// 		$expiration_time = time() + $this->config['cookie_params']['expire'];
+	// 		$query_params = [
+	// 			':selector' => $encodedtoken['selector'],
+	// 			':user_id' => $id,
+	// 			':validator' => $encodedtoken['validator'],
+	// 			':expn_dt' => date("Y-m-d H:i:s", $expiration_time)
+	// 		];
+	//
+	// 		if (!$stmt->execute($query_params)) {
+	// 			return false;
+	// 		}
+	//
+	// 		setcookie(
+	// 			'auth_token',
+	// 			$token,
+	// 			$expiration_time,
+	// 			$this->config['cookie_params']['path'],
+	// 			$this->config['cookie_params']['domain'],
+	// 			$this->config['cookie_params']['secure'],
+	// 			$this->config['cookie_params']['httponly']
+	// 		);
+	// 	}
+	//
+	// 	return true;
+	// }
+
 	/**
-	* Creates a session for a authorized user.
-	* Creates cookie and table record about token for auto login.
-	*
-	* @param int	$id
-	* @param bool	$remember Option for remember me
-	*
-	* @return bool
-	*/
-	private function createSessionAndCookie($id, $remember)
+	 * Check if user is logged in.
+	 * If cookie is valid, login.
+	 * After verifying that this is a valid cookie, update it.
+	 *
+	 * @return boolean
+	 */
+	public function isLoggedIn()
 	{
-		$_SESSION['user_id'] = $id;
+		if (!$this->isLoggedIn) {
+			if ($this->checkCookie($this->getCurrentCookie())) {
+				$this->updateCookie($this->getCurrentCookie());
 
-		if ($remember) {
-			$hash = Hasher::generateRandomHash(30);
-			$token = substr_replace($hash, ':', 20, 0);			//	selector:validator
+				$this->isLoggedIn = true;
+			} else {
+				$this->deleteCurrentCookie();
 
-			$encodedtoken = $this->encodeToken($token);
+				$this->isLoggedIn = false;
+			}
+		}
 
-			$stmt = $this->conn->prepare(
-				"INSERT INTO {$this->config['auth_autologin_table']}
-				(selector, user_id, validator, expn_dt)
-				VALUES (:selector, :user_id, :validator, :expn_dt)"
-			);
-			$expiration_time = time() + $this->config['cookie_params']['expire'];
-			$query_params = [
-				':selector' => $encodedtoken['selector'],
-				':user_id' => $id,
-				':validator' => $encodedtoken['validator'],
-				':expn_dt' => date("Y-m-d H:i:s", $expiration_time)
-			];
+		return $this->isLoggedIn;
+	}
 
-			if (!$stmt->execute($query_params)) {
+	/**
+	* Return current user data except password.
+	*
+	* @return array|false
+	*/
+	public function getCurrentUser()
+	{
+		if ($this->currentUser === null) {
+			if ($this->isLoggedIn) {
+				$cnonce = $this->getCurrentCookie();
+
+				$stmt = $this->conn->prepare(
+					"SELECT user_id FROM {$this->config['auth_cookie_table']}
+					WHERE selector = ?"
+				);
+				$stmt->execute([$this->decodeCnonce($cnonce)['selector']]);
+
+				if ($stmt->rowCount() == 0) {
+					return false;
+				}
+
+				$current_user_id = $stmt->fetchColumn();
+
+				$current_user = $this->getUser($current_user_id);
+
+				if (!$current_user) {
+					return false;
+				}
+
+				$this->currentUser = $current_user;
+			} else {
 				return false;
 			}
+		}
 
-			setcookie(
-				'auth_token',
-				$token,
-				$expiration_time,
-				$this->config['cookie_params']['path'],
-				$this->config['cookie_params']['domain'],
-				$this->config['cookie_params']['secure'],
-				$this->config['cookie_params']['httponly']
-			);
+		return $this->currentUser;
+	}
+
+	/**
+	 * Create cookie for user who login.
+	 * And add a record in DB to authenticate the cookie.
+	 *
+	 * @param int $user_id
+	 *
+	 * @return bool Whether adding cookie and record is success
+	 */
+	protected function createCookie($user_id)
+	{
+		$cnonce = $this->generateCnonce();
+		$decoded_cnonce = $this->decodeCnonce($cnonce);
+
+		//	Generate nonce using validator part of cnonce.
+		$nonce = $this->generateNonce($decoded_cnonce['validator']);
+
+		$ip = $this->getClientIp();
+
+		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+
+		$expiration_time = time() + $this->config['cookie_params']['expire'];
+
+		//	Add cookie record
+		$stmt = $this->conn->prepare(
+			"INSERT INTO {$this->config['auth_cookie_table']}
+			(selector, user_id, nonce, ip, agent, expn_dt)
+			VALUES (:selector, :user_id, :nonce, :ip, :agent, :expn_dt)"
+		);
+		$query_params = [
+			':selector' => $decoded_cnonce['selector'],
+			':user_id' => $user_id,
+			':nonce' => $nonce,
+			':ip' => $ip,
+			':agent' => $agent,
+			':expn_dt' => date("Y-m-d H:i:s", $expiration_time)
+		];
+		if (!$stmt->execute($query_params)) {
+			return false;
+		}
+
+		//	Create cookie
+		if (!setcookie(
+			$this->config['cookie_params']['name'],
+			$cnonce,
+			$expiration_time,
+			$this->config['cookie_params']['path'],
+			$this->config['cookie_params']['domain'],
+			$this->config['cookie_params']['secure'],
+			$this->config['cookie_params']['httponly']
+		)) {
+			return false;
 		}
 
 		return true;
 	}
 
 	/**
-	* Get some fields data of current user.
-	*
-	* @param  array $params	Field names
-	*
-	* @return array|false
-	*/
-	public function getCurrentUser($params)
+	 * Check if cnonce cookie is valid.
+	 * Method to authenticate user.
+	 *
+	 * @param  string $cookie	Cnonce cookie to validate
+	 *
+	 * @return bool	Whether cookie is valid
+	 */
+	protected function checkCookie($cookie)
 	{
-		return $this->getUser($_SESSION['user_id'], $params);
+		$cnonce = $cookie;
+
+		//	Cnonce cookie is emtpy.
+		if (empty($cnonce)) {
+			return false;
+		}
+
+		//	Invalid legnth
+		if (strlen($cnonce) != $this->config['nonce']['cnonce_length']) {
+			return false;
+		}
+
+		$decoded_cnonce = $this->decodeCnonce($cnonce);
+
+		//	Find cookie record
+		$stmt = $this->conn->prepare(
+			"SELECT nonce, expn_dt FROM {$this->config['auth_cookie_table']}
+			WHERE selector = ?"
+		);
+		$stmt->execute([$decoded_cnonce['selector']]);
+
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		$record = $stmt->fetch();
+
+		//	Generate nonce using validator of current cnonce.
+		$nonce = crypt($decoded_cnonce['validator'], $record['nonce']);
+
+		if (!hash_equals($record['nonce'], $nonce)) {
+			return false;
+		}
+
+		//	Expired cookie record
+		if (strtotime($record['expn_dt']) < time()) {
+			$this->deleteCookieRecord($cnonce);
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
-	* Check if visitor is logged in.
-	* Check if auto login is possible.
-	* If possible, log in automatically.
-	*
-	* @return boolean
-	*/
-	public function isLoggedIn()
+	 * Update cnonce cookie.
+	 * Update cookie record from DB.
+	 * Renew expiration time if needed.
+	 *
+	 * @param  string $cookie 	Cnonce cookie to update
+	 *
+	 * @return bool	Whether update is success
+	 */
+	protected function updateCookie($cookie)
 	{
-		if ($this->checkSession()) {
-			return true;
+		$old_cnonce = $cookie;
+
+		//	Find old cookie record
+		$stmt = $this->conn->prepare(
+			"SELECT id, expn_dt FROM {$this->config['auth_cookie_table']}
+			WHERE selector = ?"
+		);
+		$stmt->execute([$this->decodeCnonce($old_cnonce)['selector']]);
+
+		//	If old cookie record is not found
+		if ($stmt->rowCount() == 0) {
+			return false;
 		}
 
-		if (false !== $id = $this->checkCookie()) {
-			$_SESSION['user_id'] = $id;
+		$record = $stmt->fetch();
+		$cookie_id = $record['id'];
+		$cookie_expiration_time = strtotime($record['expn_dt']);
 
-			return true;
+		//	Generate new cnonce
+		$cnonce = $this->generateCnonce();
+		$decoded_cnonce = $this->decodeCnonce($cnonce);
+
+		//	Generate new nonce
+		$nonce = $this->generateNonce($decoded_cnonce['validator']);
+
+		//	Recheck client ip
+		$ip = $this->getClientIp();
+
+		//	Update cookie record.
+		$stmt = $this->conn->prepare(
+			"UPDATE {$this->config['auth_cookie_table']}
+			SET selector = :selector, nonce = :nonce, ip = :ip
+			WHERE id = :id"
+		);
+		$query_params = [
+			':selector' => $decoded_cnonce['selector'],
+			':nonce' => $nonce,
+			':ip' => $ip,
+			':id' => $cookie_id
+		];
+		if(!$stmt->execute($query_params)) {
+			return false;
+		}
+
+		//	If it is time to renew expiration time
+		if (
+			$cookie_expiration_time - time() <
+			$this->config['cookie_params']['expire'] - $this->config['cookie_params']['renew']
+		) {
+			//	Recheck user agent
+			$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+
+			//	Renew expiration time
+			$cookie_expiration_time = time() + $this->config['cookie_params']['expire'];
+
+			//	Update cookie record
+			$stmt = $this->conn->prepare(
+				"UPDATE {$this->config['auth_cookie_table']}
+				SET agent = :agent, expn_dt = :expn_dt
+				WHERE id = :id"
+			);
+			$query_params = [
+				':agent' => $agent,
+				':expn_dt' => date("Y-m-d H:i:s", $cookie_expiration_time),
+				':id' => $cookie_id
+			];
+			$stmt->execute($query_params);
+		}
+
+		//	Update cnonce cookie.
+		if (!setcookie(
+			$this->config['cookie_params']['name'],
+			$cnonce,
+			$cookie_expiration_time,
+			$this->config['cookie_params']['path'],
+			$this->config['cookie_params']['domain'],
+			$this->config['cookie_params']['secure'],
+			$this->config['cookie_params']['httponly']
+		)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	protected function getCookieUserId($cookie)
+	{
+		$cnonce = $cookie;
+
+		$decoded_cnonce = $this->decodeCnonce($cnonce);
+
+		$stmt = $this->conn->prepare(
+			"SELECT user_id FROM {$this->config['auth_cookie_table']}
+			WHERE selector = ?"
+		);
+		$stmt->execute([$decoded_cnonce['selector']]);
+
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		return $stmt->fetchColumn();
+	}
+
+	/**
+	 * Returns current cnonce cookie.
+	 *
+	 * @return string|false
+	 */
+	protected function getCurrentCookie()
+	{
+		if (isset($_COOKIE[$this->config['cookie_params']['name']])) {
+			return $_COOKIE[$this->config['cookie_params']['name']];
 		}
 
 		return false;
 	}
 
 	/**
-	* Check if user_id session is exist.
-	*
-	* @return boolean
-	*/
-	private function checkSession()
+	 * Delete current cnonce cookie.
+	 *
+	 * @return void
+	 */
+	protected function deleteCurrentCookie()
 	{
-		//	Check if session is set
-		if (!isset($_SESSION['user_id'])) {
-			return false;
-		}
-
-		//	Check if user id is exist in db
-		if (false === $this->getCurrentUser(array('id'))) {
-			return false;
-		}
-
-		return true;
+		unset($_COOKIE[$this->config['cookie_params']['name']]);
+		setcookie($this->config['cookie_params']['name'], null, -1, '/');
 	}
 
 	/**
-	* Check cookie for auto login.
-	* Authenticate token.
-	*
-	* @return int|false int: when auto login success, false: otherwise
-	*/
-	private function checkCookie()
+	 * Delete cookie record from DB.
+	 *
+	 * @param  string $cookie	Cnonce cookie
+	 *
+	 * @return bool	Whether deletion is success
+	 */
+	protected function deleteCookieRecord($cookie)
 	{
-		if (!isset($_COOKIE['auth_token'])) {
-			return false;
-		}
+		$cnonce = $cookie;
 
-		//	If can not find the token info in the db
-		if (!$token_info = $this->getTokenInfo($_COOKIE['auth_token'])) {
-			$this->deleteCookie();
+		$decoded_cnonce = $this->decodeCnonce($cnonce);
 
-			return false;
-		}
+		$stmt = $this->conn->prepare(
+			"DELETE FROM {$this->config['auth_cookie_table']}
+			WHERE selector = ?"
+		);
+		$stmt->execute([$decoded_cnonce['selector']]);
 
-		//	If token has already expired
-		if (strtotime($token_info['expn_dt']) < time()) {
-			$this->deleteCookie();
-			$this->deleteTokenInfo($token_info['id']);
-
-			return false;
-		}
-
-		return $token_info['user_id'];
+		return $stmt->rowCount() == 1;
 	}
 
 	/**
-	* Delete session about authentication.
-	*
-	* @return void
-	*/
-	private function deleteSession()
-	{
-		unset($_SESSION['user_id']);
-		session_destroy();
+	 * Generate client nonce.
+	 *
+	 * @return string
+	 */
+	protected function generateCnonce()
+ 	{
+		//	Generate random key.
+		$random_key = $this->generateRandomHash(16);
+
+		//	Generate 96 length unique hash.
+		$cnonce = hash('sha384', $random_key . microtime());
+
+		return $cnonce;
 	}
 
 	/**
-	* Delete cookie about auto login.
-	*
-	* @return void
-	*/
-	private function deleteCookie()
+	 * Generate server nonce.
+	 *
+	 * @param  string	$validator	Validator part of client nonce
+	 * @param  int		$rounds     Number of algorithm iterations
+	 * @param  string	$salt
+	 *
+	 * @return string
+	 */
+	protected function generateNonce($validator, $rounds = 20000, $salt = "")
 	{
-		setcookie('auth_token', '', time() - 3600);
-		unset($_COOKIE['auth_token']);
+		if (empty($salt)) {
+			//	Generate random salt.
+			$salt = $this->generateRandomHash(16);
+		}
+
+		//	$6$ means sha512
+		$nonce = crypt($validator, sprintf('$6$rounds=%d$%s$', $rounds, $salt));
+
+		return $nonce;
 	}
 
 	/**
-	* Encode auto login authentication token.
-	*
-	* @param  string $token selector:raw validator
-	*
-	* @return array array('selector' => '', 'validator' => '')
-	*/
-	private function encodeToken($token)
+	 * Separate selector part and validator part of cnonce.
+	 *
+	 * @param  string $cnonce	Client nonce
+	 * @return array
+	 */
+	protected function decodeCnonce($cnonce)
 	{
-		$return = array(
-			'selector' => '',
-			'validator' => ''
+		//	Selector part of cnonce.
+		$return['selector'] = substr(
+			$cnonce,
+			0,
+			$this->config['nonce']['cnonce_selector_length']
 		);
 
-		$return['selector'] = strtok($token, ':');
-		$return['validator'] = hash('sha256', strtok(':'));
+		//	Validator part of cnonce.
+		$return['validator'] = substr(
+			$cnonce,
+			$this->config['nonce']['cnonce_selector_length']
+		);
 
 		return $return;
 	}
 
 	/**
-	* Encode raw token to selector and validator.
-	* First, looking for a matched selector.
-	* Then check if validator is matched.
-	* If all matched, return token info.
+	* @param  int $len Length of random hash
 	*
-	* @param  string $token
-	*
-	* @return array|false
+	* @return string
 	*/
-	private function getTokenInfo($token)
+	public function generateRandomHash($len)
 	{
-		$encodedToken = $this->encodeToken($token);
-
-		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['auth_autologin_table']}
- 			WHERE selector = ?"
-		);
-		$stmt->execute([$encodedToken['selector']]);
-
-		if ($stmt->rowCount() == 0) {
-			return false;
-		}
-
-		$token_info = $stmt->fetch();
-
-		if (!hash_equals($token_info['validator'], $encodedToken['validator'])) {
-			return false;
-		}
-
-		return $token_info;
+		return substr(bin2hex(random_bytes($len)), 0, $len);
 	}
 
 	/**
-	* Delete auto login authentication info from table
-	*
-	* @param  int $token_id
-	*
-	* @return boolean If deletion success, return true.
-	*/
-	private function deleteTokenInfo($token_id)
+	 * Generate a version 4 (random) UUID(Universal Unique IDentifier)
+	 * UUID format : 8-4-4-4-12
+	 *
+	 * @return string uuid
+	 */
+	public function generateUuidV4()
 	{
-		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['auth_autologin_table']}
- 			WHERE id = ?"
-		);
-		$stmt->execute([$token_id]);
+		$data = ramdom_bytes(16);
+	    $data[6] = chr(ord($data[6]) & 0x0f | 0x40); 	// set version to 0100
+	    $data[8] = chr(ord($data[8]) & 0x3f | 0x80); 	// set bits 6-7 to 10
 
-		return $stmt->rowCount() == 1;
+	    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 	}
+
+	/**
+	 * Returns client ip.
+	 *
+	 * @return string
+	 */
+	public function getClientIp()
+	{
+		$ip_address = '';
+
+	    if (getenv('HTTP_CLIENT_IP')) {
+	        $ip_address = getenv('HTTP_CLIENT_IP');
+		}
+	    else if(getenv('HTTP_X_FORWARDED_FOR')) {
+	        $ip_address = getenv('HTTP_X_FORWARDED_FOR');
+		}
+	    else if(getenv('HTTP_X_FORWARDED')) {
+	        $ip_address = getenv('HTTP_X_FORWARDED');
+		}
+	    else if(getenv('HTTP_FORWARDED_FOR')) {
+	        $ip_address = getenv('HTTP_FORWARDED_FOR');
+		}
+	    else if(getenv('HTTP_FORWARDED')) {
+	       	$ip_address = getenv('HTTP_FORWARDED');
+		}
+	    else if(getenv('REMOTE_ADDR')) {
+	        $ip_address = getenv('REMOTE_ADDR');
+		}
+	    else {
+	        $ip_address = '';
+		}
+
+	    return $ip_address;
+	}
+
+
+	// /**
+	// * Check if visitor is logged in.
+	// * Check if auto login is possible.
+	// * If possible, log in automatically.
+	// *
+	// * @return boolean
+	// */
+	// public function isLoggedIn()
+	// {
+	// 	if ($this->checkSession()) {
+	// 		return true;
+	// 	}
+	//
+	// 	if (false !== $id = $this->checkCookie()) {
+	// 		$_SESSION['user_id'] = $id;
+	//
+	// 		return true;
+	// 	}
+	//
+	// 	return false;
+	// }
+
+	// /**
+	// * Check if user_id session is exist.
+	// *
+	// * @return boolean
+	// */
+	// private function checkSession()
+	// {
+	// 	//	Check if session is set
+	// 	if (!isset($_SESSION['user_id'])) {
+	// 		return false;
+	// 	}
+	//
+	// 	//	Check if user id is exist in db
+	// 	if (false === $this->getCurrentUser(array('id'))) {
+	// 		return false;
+	// 	}
+	//
+	// 	return true;
+	// }
+
+	// /**
+	// * Check cookie for auto login.
+	// * Authenticate token.
+	// *
+	// * @return int|false int: when auto login success, false: otherwise
+	// */
+	// private function checkCookie()
+	// {
+	// 	if (!isset($_COOKIE['auth_token'])) {
+	// 		return false;
+	// 	}
+	//
+	// 	//	If can not find the token info in the db
+	// 	if (!$token_info = $this->getTokenInfo($_COOKIE['auth_token'])) {
+	// 		$this->deleteCookie();
+	//
+	// 		return false;
+	// 	}
+	//
+	// 	//	If token has already expired
+	// 	if (strtotime($token_info['expn_dt']) < time()) {
+	// 		$this->deleteCookie();
+	// 		$this->deleteTokenInfo($token_info['id']);
+	//
+	// 		return false;
+	// 	}
+	//
+	// 	return $token_info['user_id'];
+	// }
+
+	// /**
+	// * Delete session about authentication.
+	// *
+	// * @return void
+	// */
+	// private function deleteSession()
+	// {
+	// 	unset($_SESSION['user_id']);
+	// 	session_destroy();
+	// }
+
+	// /**
+	// * Delete cookie about auto login.
+	// *
+	// * @return void
+	// */
+	// private function deleteCookie()
+	// {
+	// 	setcookie('auth_token', '', time() - 3600);
+	// 	unset($_COOKIE['auth_token']);
+	// }
+
+	// /**
+	// * Encode auto login authentication token.
+	// *
+	// * @param  string $token selector:raw validator
+	// *
+	// * @return array array('selector' => '', 'validator' => '')
+	// */
+	// private function encodeToken($token)
+	// {
+	// 	$return = array(
+	// 		'selector' => '',
+	// 		'validator' => ''
+	// 	);
+	//
+	// 	$return['selector'] = strtok($token, ':');
+	// 	$return['validator'] = hash('sha256', strtok(':'));
+	//
+	// 	return $return;
+	// }
+
+	// /**
+	// * Encode raw token to selector and validator.
+	// * First, looking for a matched selector.
+	// * Then check if validator is matched.
+	// * If all matched, return token info.
+	// *
+	// * @param  string $token
+	// *
+	// * @return array|false
+	// */
+	// private function getTokenInfo($token)
+	// {
+	// 	$encodedToken = $this->encodeToken($token);
+	//
+	// 	$stmt = $this->conn->prepare(
+	// 		"SELECT * FROM {$this->config['auth_autologin_table']}
+ 	// 		WHERE selector = ?"
+	// 	);
+	// 	$stmt->execute([$encodedToken['selector']]);
+	//
+	// 	if ($stmt->rowCount() == 0) {
+	// 		return false;
+	// 	}
+	//
+	// 	$token_info = $stmt->fetch();
+	//
+	// 	if (!hash_equals($token_info['validator'], $encodedToken['validator'])) {
+	// 		return false;
+	// 	}
+	//
+	// 	return $token_info;
+	// }
+
+	// /**
+	// * Delete auto login authentication info from table
+	// *
+	// * @param  int $token_id
+	// *
+	// * @return boolean If deletion success, return true.
+	// */
+	// private function deleteTokenInfo($token_id)
+	// {
+	// 	$stmt = $this->conn->prepare(
+	// 		"DELETE FROM {$this->config['auth_autologin_table']}
+ 	// 		WHERE id = ?"
+	// 	);
+	// 	$stmt->execute([$token_id]);
+	//
+	// 	return $stmt->rowCount() == 1;
+	// }
 }
