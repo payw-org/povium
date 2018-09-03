@@ -71,7 +71,7 @@ $router->get(
 			$redirector->redirect('/login', true);
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/confirmEmailAuth.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/verifyEmailAuth.php';
 	},
 	'email_authentication'
 );
