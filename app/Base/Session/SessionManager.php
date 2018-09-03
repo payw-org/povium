@@ -40,6 +40,8 @@ class SessionManager
 	{
 		session_set_save_handler(new PdoSessionHandler(), true);
 		ini_set('session.gc_maxlifetime', $this->config['gc_maxlifetime']);
+		ini_set('session.gc_probability', $this->config['gc_probability']);
+		ini_set('session.gc_divisor', $this->config['gc_divisor']);
 
 		session_name($this->config['cookie_params']['name']);
 		session_set_cookie_params(
