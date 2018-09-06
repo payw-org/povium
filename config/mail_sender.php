@@ -1,13 +1,13 @@
 <?php
 /**
-* Config array for mailer
+* Config array for mail sender
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
 */
 
 return [
-	'use_smtp' => false,					//	Set mailer to use SMTP
+	'use_smtp' => false,					//	Set to use SMTP
 	'smtp_debug' => 0,						//	Enable verbose debug output
 	'smtp_host' => 'smtp.gmail.com',		//	Specify main and backup SMTP servers
 	'smtp_auth' => true,					//	Enable SMTP authentication
@@ -18,7 +18,7 @@ return [
 
 	'mail_charset' => 'UTF-8',
 
-	'settings_for_email_auth' => [
+	'activation_mail' => [
 		'from_email' => 'noreply@povium.com',
 		'from_name' => 'Povium',
 

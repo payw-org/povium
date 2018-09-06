@@ -17,7 +17,7 @@ $router->post(
 );
 
 /**
- * Register confirm Ajax
+ * Register Ajax
  */
 $router->post(
 	'/register',
@@ -27,7 +27,7 @@ $router->post(
 );
 
 /**
- * Validate registration inputs Ajax
+ * Validate registration Ajax
  */
 $router->put(
 	'/register',

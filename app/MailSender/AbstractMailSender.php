@@ -6,12 +6,12 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Mailer;
+namespace Povium\MailSender;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-abstract class AbstractMailer
+abstract class AbstractMailSender
 {
 	/**
 	 * @var array
@@ -28,7 +28,7 @@ abstract class AbstractMailer
 	 */
 	public function __construct()
 	{
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mailer.php');
+		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mail_sender.php');
 		$this->mail = new PHPMailer(true);
 	}
 
@@ -87,7 +87,7 @@ abstract class AbstractMailer
 
 			$this->mail->send();
 		} catch (Exception $e) {		//	Mail could not be sent
-			error_log('Mailer Error: ' . $this->mail->ErrorInfo);
+			error_log('MailSender Error: ' . $this->mail->ErrorInfo);
 
 			return false;
 		}

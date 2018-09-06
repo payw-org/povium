@@ -248,14 +248,14 @@ class Auth
 
 		//	Delete old request info
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['email_waiting_auth_table']}
+			"DELETE FROM {$this->config['email_waiting_for_activation_table']}
 			WHERE user_id = ?"
 		);
 		$stmt->execute([$user_id]);
 
 		//	Add new request info
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['email_waiting_auth_table']}
+			"INSERT INTO {$this->config['email_waiting_for_activation_table']}
 			(user_id, requested_email, token, expn_dt)
 			VALUES (:user_id, :requested_email, :token, :expn_dt)"
 		);
@@ -288,7 +288,7 @@ class Auth
 		$user_id = $this->getCurrentUser()['id'];
 
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['email_waiting_auth_table']}
+			"SELECT * FROM {$this->config['email_waiting_for_activation_table']}
 			WHERE user_id = ?"
 		);
 		$stmt->execute([$user_id]);
@@ -308,7 +308,7 @@ class Auth
 		//	Request expired
 		if (strtotime($email_auth_info['expn_dt']) < time()) {
 			$stmt = $this->conn->prepare(
-				"DELETE FROM {$this->config['email_waiting_auth_table']}
+				"DELETE FROM {$this->config['email_waiting_for_activation_table']}
 				WHERE id = ?"
 			);
 			$stmt->execute([$email_auth_info['id']]);
@@ -324,7 +324,7 @@ class Auth
 		$this->updateUser($email_auth_info['user_id'], $params);
 
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['email_waiting_auth_table']}
+			"DELETE FROM {$this->config['email_waiting_for_activation_table']}
 			WHERE requested_email = ?"
 		);
 		$stmt->execute([$email_auth_info['requested_email']]);

@@ -11,7 +11,7 @@
 return [
 	'\Povium\Base\Factory\ServiceFactory' => [
 		'\Povium\Auth',
-		'\Povium\Mailer\UserEmailAddressAuthMailer',
+		'\Povium\MailSender\ActivationMailSender',
 		'\Povium\Base\Routing\Router',
 		'\Povium\Base\Routing\Redirector',
 		'\Povium\Base\Session\SessionManager'

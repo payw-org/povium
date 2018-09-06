@@ -9,7 +9,7 @@
 return [
 	'user_table' => 'user',
 	'connected_user_table' => 'connected_user',
-	'email_waiting_auth_table' => 'email_waiting_auth',
+	'email_waiting_for_activation_table' => 'email_waiting_for_activation',
 
 	'email_auth_expire' => 1800,	//	Email authentication expiration term (30 minutes)
 
