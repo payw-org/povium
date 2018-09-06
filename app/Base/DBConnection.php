@@ -8,14 +8,14 @@
 
 namespace Povium\Base;
 
-use Povium\Lib\Singleton;
+use Povium\Traits\SingletonTrait;
 
 class DBConnection
 {
 	/**
 	* Apply singleton pattern.
 	*/
-	use Singleton;
+	use SingletonTrait;
 
 	/**
 	* Configuration parameters

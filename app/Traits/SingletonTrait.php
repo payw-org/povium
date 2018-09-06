@@ -6,9 +6,9 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Lib;
+namespace Povium\Traits;
 
-trait Singleton
+trait SingletonTrait
 {
 	/**
 	 * @var object
