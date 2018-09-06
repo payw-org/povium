@@ -6,22 +6,22 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium;
+namespace Povium\Mailer;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-class Mailer
+abstract class AbstractMailer
 {
 	/**
 	 * @var array
 	 */
-	private $config;
+	protected $config;
 
 	/**
 	 * @var PHPMailer
 	 */
-	private $mail;
+	protected $mail;
 
 	/**
 	 * Constructor
@@ -62,30 +62,29 @@ class Mailer
 	}
 
 	/**
-	 * @param  string $recipient Email address
-	 * @param  string $auth_uri  URI for email authentication
+	 * Generate email according to purpose.
 	 *
-	 * @return boolean           Whether email is sent
+	 * @param	mixed	Arguments for sending email
+	 *
+	 * @throws Exception
 	 */
-	public function sendEmailForEmailAuth($recipient, $auth_uri)
+	abstract protected function generateEmail();
+
+	/**
+	 * Send email.
+	 *
+	 * @param	mixed	Arguments for sending email
+	 *
+	 * @return	boolean	Whether email is sent
+	 */
+	public function sendEmail()
 	{
+		$this->setBasicPreferences();
+
+		$args = func_get_args();
 		try {
-			$this->setBasicPreferences();
+			call_user_func_array(array($this, 'generateEmail'), $args);
 
-			//	Recipients
-			$this->mail->setFrom(
-				$this->config['settings_for_email_auth']['from_email'],
-				$this->config['settings_for_email_auth']['from_name']
-			);
-			$this->mail->addAddress($recipient);
-
-			//	Content
-			$this->mail->isHTML(true);
-			$this->mail->Subject = $this->config['settings_for_email_auth']['mail_subject'];
-			$this->mail->Body = $this->config['settings_for_email_auth']['mail_body'] . $auth_uri;
-			$this->mail->AltBody = $this->config['settings_for_email_auth']['mail_altbody'];
-
-			//	Finally, send email.
 			$this->mail->send();
 		} catch (Exception $e) {		//	Mail could not be sent
 			error_log('Mailer Error: ' . $this->mail->ErrorInfo);

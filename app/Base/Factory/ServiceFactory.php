@@ -28,12 +28,11 @@ class ServiceFactory extends AbstractChildFactory
 		switch ($this->type) {
 			case '\Povium\Auth':
 				$args[] = DBConnection::getInstance()->getConn();
+				$args[] = $materials[0];
 
 				break;
-			case '\Povium\Mailer':
-
-				break;
-			case '\Povium\Base\Routing\Router':
+			case '\Povium\Base\Session\SessionManager':
+				$args[] = DBConnection::getInstance()->getConn();
 
 				break;
 			case '\Povium\Base\Routing\Redirector':

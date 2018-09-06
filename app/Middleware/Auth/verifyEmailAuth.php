@@ -19,7 +19,7 @@ $http_response_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/http_res
 $token = $_GET['token'];
 
 //	Authenticate email address
-$return = $auth->confirmEmailAuth($token);
+$return = $auth->verifyEmailAuth($token);
 
 switch ($return) {
 	case 0:		//	NO ERROR

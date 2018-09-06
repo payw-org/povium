@@ -71,7 +71,7 @@ class Redirector
 	 *
 	 * @return boolean
 	 */
-	public function verifyRedirectURI($redirect_uri)
+	public function validateRedirectURI($redirect_uri)
 	{
 		$parsed_base_uri = parse_url($this->baseURI);
 		$parsed_redirect_uri = parse_url($redirect_uri);
