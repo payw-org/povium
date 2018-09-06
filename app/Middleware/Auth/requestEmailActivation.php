@@ -1,6 +1,6 @@
 <?php
 /**
-* Send activation email.
+* Request email activation.
 * @TODO	Check get email address case sensitive or insensitive
 *
 * @author 		H.Chihoon
@@ -11,8 +11,8 @@ global $factory, $router, $auth;
 
 $mail_sender = $factory->createInstance('\Povium\MailSender\ActivationMailSender');
 
-/* Receive input email by ajax */
-// $email = json_decode(file_get_contents('php://input'), true);
+//	Receive input email by ajax
+# $email = json_decode(file_get_contents('php://input'), true);
 $email = '1000jaman@naver.com';
 
 #	array(
@@ -23,8 +23,9 @@ $send_email_return = $auth->validateEmail($email, true);
 
 if ($send_email_return['err']) {	//	This email is not possible to authenticate
 
-} else {						//	Valid email. Send email for email authentication.
-	$token = $auth->generateUuidV4();		//	Generate token for authentication.
+} else {						//	Valid email.
+	//	Generate token for authentication.
+	$token = $auth->generateUuidV4();
 
 	if ($auth->requestEmailAuth($email, $token)) {
 		$auth_uri =
@@ -32,6 +33,7 @@ if ($send_email_return['err']) {	//	This email is not possible to authenticate
 			$router->generateURI('email_authentication') .
 			'?' . http_build_query(array('token' => $token));
 
+		//	Send activation email.
 		$mail_sender->sendEmail($email, $auth_uri);
 	}
 }
