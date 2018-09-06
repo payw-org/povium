@@ -8,23 +8,44 @@
 
 return [
 	'user_table' => 'user',
-	'auth_autologin_table' => 'auth_autologin',
-	'auth_email_table' => 'auth_email',
+	'connected_user_table' => 'connected_user',
+	'email_waiting_auth_table' => 'email_waiting_auth',
 
-	'email_auth_expire' => 60*30,	//	Email authentication expiration time
+	'email_auth_expire' => 1800,	//	Email authentication expiration term (30 minutes)
 
-	'cookie_params' => [
-		'expire' => 60*60*24*30,	//	Auto login cookie expiration time
-		'path' => '/',
-		'domain' => '',
-		'secure' => false,
-		'httponly' => false
+	'cookie' => [
+		'access_key' => [
+			'name' => 'uak',
+			'expire' => 259200,		//	Login status expiration period (3 days)
+			'path' => '/',
+			'domain' => '',
+			'secure' => false,
+			'httponly' => true,
+
+			'renew' => 172800		//	Expiration time renewal interval (2 days)
+		]
 	],
-	
+
 	'password_hash_algo' => PASSWORD_DEFAULT,
 	'password_hash_options' => [
-		'cost' => 13,
-		'salt' => md5(openssl_random_pseudo_bytes(16))
+		'cost' => 13
+	],
+
+	'len' => [
+		'readable_id_min_length' => 3,
+		'readable_id_max_length' => 20,
+
+		'email_min_length' => 3,
+		'email_max_length' => 254,
+
+		'name_min_length' => 2,
+		'name_max_length' => 30,
+
+		'password_min_length' => 8,
+		'password_max_length' => 50,
+
+		'cnonce_length' => 97,				//	96(hash) + 1(hyphen)
+		'cnonce_selector_length' => 40
 	],
 
 	'regex' => [
@@ -40,32 +61,18 @@ return [
 		'passowrd_regex_required' => '/^\S*(?=\S*[a-zA-Z])(?=\S*[0-9])\S*$/',
 	],
 
-	'len' => [
-		'readable_id_min_length' => 3,
-		'readable_id_max_length' => 20,
-
-		'email_min_length' => 3,
-		'email_max_length' => 254,
-
-		'name_min_length' => 2,
-		'name_max_length' => 30,
-
-		'password_min_length' => 8,
-		'password_max_length' => 50
-	],
-
 	'msg' => [
-		'unknown_warning' => '알 수 없는 오류',
-		'token_insert_to_db_err' => '자동 로그인 설정 오류',
-		'user_insert_to_db_err' => '신규유저 등록 오류',
+		'issuing_access_key_err' => '액세스 키 발급 과정에서 에러가 발생했습니다.',
+		'registration_err' => '회원가입 과정에서 에러가 발생했습니다.',
 
 		'account_incorrect' => '계정을 다시 확인하세요.',
+		'account_is_deleted' => '삭제된 계정입니다.',
 		'account_inactive' => '비활성화 계정입니다.',
 		// 'account_invalid' => '없는 계정입니다.',
 
-		'readable_id_istaken' => '이미 사용중인 아이디입니다.',
-		'email_istaken' => '이미 사용중인 이메일입니다.',
-		'name_istaken' => '이미 사용중인 이름입니다.',
+		'readable_id_is_taken' => '이미 사용중인 아이디입니다.',
+		'email_is_taken' => '이미 사용중인 이메일입니다.',
+		'name_is_taken' => '이미 사용중인 이름입니다.',
 
 		'readable_id_short' => '아이디 3자 이상 입력',
 		'readable_id_long' => '아이디 20자 이하로 입력',

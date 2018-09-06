@@ -8,8 +8,6 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-use Povium\Hasher;
-
 global $factory, $router, $auth;
 
 $mailer = $factory->createInstance('\Povium\Mailer\UserEmailAddressAuthMailer');
@@ -18,22 +16,23 @@ $mailer = $factory->createInstance('\Povium\Mailer\UserEmailAddressAuthMailer');
 // $email = json_decode(file_get_contents('php://input'), true);
 $email = '1000jaman@naver.com';
 
-#	$send_email_return = array(
+#	array(
 #		'err' => bool,
-#		'msg' => 'err msg for display'
+#		'msg' => err msg for display,
 #	);
-$send_email_return = $auth->verifyEmail($email);
+$send_email_return = $auth->validateEmail($email, true);
 
 if ($send_email_return['err']) {	//	This email is not possible to authenticate
 
 } else {						//	Valid email. Send email for email authentication.
-	$token = Hasher::uuidV4();	//	Generate uuid for authentication.
+	$token = $auth->generateUuidV4();		//	Generate token for authentication.
 
 	if ($auth->requestEmailAuth($email, $token)) {
 		$auth_uri =
 			BASE_URI .
 			$router->generateURI('email_authentication') .
 			'?' . http_build_query(array('token' => $token));
+
 		$mailer->sendEmail($email, $auth_uri);
 	}
 }

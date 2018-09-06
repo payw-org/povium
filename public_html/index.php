@@ -22,7 +22,7 @@ $session_manager->checkAndSetSessionId();
 session_start();
 
 //	Initialize authentication system
-$auth = $factory->createInstance('\Povium\Auth');
+$auth = $factory->createInstance('\Povium\Auth', $session_manager);
 
 //	Initialize routing system
 $router = $factory->createInstance('\Povium\Base\Routing\Router');

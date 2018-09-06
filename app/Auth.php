@@ -1,12 +1,22 @@
 <?php
 /**
-* Manipulate sign in, sign up, and sign out.
+* Authenticate user and issue access key.
+*
+* - Main function -
+* Login
+* Register
+* Logout
+* Request Email Authentication
+* Verify Email Authentication
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
 */
 
 namespace Povium;
+
+use Povium\Base\Session\SessionManager;
+use ZxcvbnPhp\Zxcvbn;
 
 class Auth
 {
@@ -23,11 +33,22 @@ class Auth
 	protected $conn = null;
 
 	/**
+	 * Session manager
+	 *
+	 * @var SessionManager
+	 */
+	protected $sessionManager = null;
+
+	/**
+	 * Whether user is logged in
+	 *
 	 * @var bool
 	 */
 	protected $isLoggedIn = false;
 
 	/**
+	 * Data of the currently logged in user
+	 *
 	 * @var array
 	 */
 	protected $currentUser = null;
@@ -35,35 +56,41 @@ class Auth
 	/**
 	* @param \PDO $conn
 	*/
-	public function __construct(\PDO $conn)
+	public function __construct(\PDO $conn, SessionManager $session_manager)
 	{
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
 		$this->conn = $conn;
+		$this->sessionManager = $session_manager;
 
 		$this->isLoggedIn();
 	}
 
 	/**
 	* Validate account.
-	* And set auto login.
+	* Then issue access key.
 	*
 	* @param  string 	$identifier Readable id or Email
 	* @param  string 	$password
-	* @param  bool		$remember 	Flag for auto login
 	*
 	* @return array	'err' is an error flag. 'msg' is an error message.
 	*/
-	public function login($identifier, $password, $remember)
+	public function login($identifier, $password)
 	{
 		$return = array(
 			'err' => true,
 			'msg' => ''
 		);
 
+		/* Validate account */
+
 		$validate_readable_id = $this->validateReadableId($identifier);
-		if ($validate_readable_id['err']) {	//	Invalid readable id
+
+		//	Invalid readable id
+		if ($validate_readable_id['err']) {
 			$validate_email = $this->validateEmail($identifier);
-			if ($validate_email['err']) {	//	Invalid email
+
+			//	Invalid email
+			if ($validate_email['err']) {
 				$return['msg'] = $this->config['msg']['account_incorrect'];
 
 				return $return;
@@ -71,35 +98,57 @@ class Auth
 		}
 
 		$validate_password = $this->validatePassword($password);
-		if ($validate_password['err']) {	//	Invalid password
+
+		//	Invalid password
+		if ($validate_password['err']) {
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
-		if (false === $id = $this->getUserIdFromReadableId($identifier)) {	//	Unregistered readable id
-			if (false === $id = $this->getUserIdFromEmail($identifier)) {	//	Unregistered email
+		//	Unregistered readable id
+		if (false === $user_id = $this->getUserIdFromReadableId($identifier)) {
+
+			//	Unregistered email
+			if (false === $user_id = $this->getUserIdFromEmail($identifier)) {
 				$return['msg'] = $this->config['msg']['account_incorrect'];
 
 				return $return;
 			}
 		}
 
-		$user = $this->getUser($id, array('password', 'is_active'));
-		if ($user === false) {				//	Nonexistent id
+		//	Fetch user data
+		$user = $this->getUser($user_id, true);
+
+		//	Password does not match
+		if (!$this->verifyPasswordAndRehash($password, $user['password'], $user_id)) {
 			$return['msg'] = $this->config['msg']['account_incorrect'];
 
 			return $return;
 		}
 
-		if (!$this->verifyPasswordAndRehash($password, $user['password'], $id)) {	//	Incorrect password
-			$return['msg'] = $this->config['msg']['account_incorrect'];
+		//	Deleted account
+		if ($user['is_deleted']) {
+			$return['msg'] = $this->config['msg']['account_is_deleted'];
 
 			return $return;
 		}
 
-		if (!$user['is_active']) {			//	Inactive account
+		//	Inactive account
+		if (!$user['is_active']) {
 			$return['msg'] = $this->config['msg']['account_inactive'];
+
+			return $return;
+		}
+
+		/* Login processing */
+
+		//	Regenerate session id
+		$this->sessionManager->regenerateSessionId(true, true);
+
+		//	Error occurred issuing access key
+		if (!$this->addAccessKey($user_id)) {
+			$return['msg'] = $this->config['msg']['issuing_access_key_err'];
 
 			return $return;
 		}
@@ -107,22 +156,18 @@ class Auth
 		//	Login success
 		$return['err'] = false;
 
+		//	Update last login date
 		$params = array(
-			'last_login_dt' => date('Y-m-d H:i:s', time())
+			'last_login_dt' => date('Y-m-d H:i:s')
 		);
-		$this->updateUser($id, $params);	//	Update last login date
-
-		if (!$this->createSessionAndCookie($id, $remember)) {	//	If failed auto login setting
-			$return['msg'] = $this->config['msg']['token_insert_to_db_err'];
-		}
+		$this->updateUser($user_id, $params);
 
 		return $return;
 	}
 
 	/**
-	* Validate input.
-	* Checks if input is already taken.
-	* Add user to db.
+	* Validate inputs to registration.
+	* Then add user to db.
 	*
 	* @param  string $readable_id
 	* @param  string $name
@@ -159,8 +204,8 @@ class Auth
 			return $return;
 		}
 
-		if (!$this->createUser($readable_id, $name, $password)) {
-			$return['msg'] = $this->config['msg']['user_insert_to_db_err'];
+		if (!$this->addUser($readable_id, $name, $password)) {
+			$return['msg'] = $this->config['msg']['registration_err'];
 
 			return $return;
 		}
@@ -172,25 +217,19 @@ class Auth
 	}
 
 	/**
-	* Delete session about authentication.
-	* Delete cookie about auto login.
-	* Delete table record about auto login.
+	* Logout the current user.
+	* Destroy the current access key.
 	*
-	* @return void
+	* @return null
 	*/
 	public function logout()
 	{
-		$this->deleteCurrentSession();
+		$this->isLoggedIn = false;
+		$this->currentUser = null;
 
-		if (isset($_COOKIE['auth_token'])) {	//	If auto login cookie is set
-			$token = $_COOKIE['auth_token'];	//	token = selector:raw validator
-
-			if ($token_info = $this->getTokenInfo($token)) {
-				$this->deleteTokenInfo($token_info['id']);
-			}
-
-			$this->deleteCookie();
-		}
+		$this->deleteCurrentAccessKey();
+		$this->deleteCurrentAccessKeyRecord();
+		$this->sessionManager->regenerateSessionId(false, true);
 	}
 
 	/**
@@ -201,22 +240,22 @@ class Auth
 	 * @param string $email	Email to authenticate
 	 * @param string $token Uuid
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function requestEmailAuth($email, $token)
 	{
-		$user_id = $this->getCurrentUser(array('id'));
+		$user_id = $this->getCurrentUser()['id'];
 
 		//	Delete old request info
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['auth_email_table']}
+			"DELETE FROM {$this->config['email_waiting_auth_table']}
 			WHERE user_id = ?"
 		);
 		$stmt->execute([$user_id]);
 
 		//	Add new request info
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['auth_email_table']}
+			"INSERT INTO {$this->config['email_waiting_auth_table']}
 			(user_id, requested_email, token, expn_dt)
 			VALUES (:user_id, :requested_email, :token, :expn_dt)"
 		);
@@ -232,7 +271,7 @@ class Auth
 	}
 
 	/**
-	 * Confirm that the email authentication request is valid.
+	 * Verify that the email authentication request is valid.
 	 * And update user info.
 	 * Delete the authenticated request.
 	 *
@@ -244,13 +283,13 @@ class Auth
 	 * 2 : NOT MATCHED TOKEN
 	 * 3 : REQUEST EXPIRED
 	 */
-	public function confirmEmailAuth($token)
+	public function verifyEmailAuth($token)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['auth_email_table']}
+			"SELECT * FROM {$this->config['email_waiting_auth_table']}
 			WHERE user_id = ?"
 		);
-		$stmt->execute([$this->getCurrentUser(array('id'))]);
+		$stmt->execute([$this->getCurrentUser()['id']]);
 
 		//	Nonexistent user id
 		if ($stmt->rowCount() == 0) {
@@ -267,7 +306,7 @@ class Auth
 		//	Request expired
 		if (strtotime($email_auth_info['expn_dt']) < time()) {
 			$stmt = $this->conn->prepare(
-				"DELETE FROM {$this->config['auth_email_table']}
+				"DELETE FROM {$this->config['email_waiting_auth_table']}
 				WHERE id = ?"
 			);
 			$stmt->execute([$email_auth_info['id']]);
@@ -283,7 +322,7 @@ class Auth
 		$this->updateUser($email_auth_info['user_id'], $params);
 
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['auth_email_table']}
+			"DELETE FROM {$this->config['email_waiting_auth_table']}
 			WHERE requested_email = ?"
 		);
 		$stmt->execute([$email_auth_info['requested_email']]);
@@ -305,7 +344,6 @@ class Auth
 			'err' => true,
 			'msg' => ''
 		);
-
 
 		if (empty($readable_id)) {
 			return $return;
@@ -343,7 +381,7 @@ class Auth
 
 		if ($duplicate_check) {
 			if ($this->isReadableIdTaken($readable_id)) {
-				$return['msg'] = $this->config['msg']['readable_id_istaken'];
+				$return['msg'] = $this->config['msg']['readable_id_is_taken'];
 
 				return $return;
 			}
@@ -369,7 +407,6 @@ class Auth
 			'msg' => ''
 		);
 
-
 		if (empty($email)) {
 			return $return;
 		}
@@ -394,7 +431,7 @@ class Auth
 
 		if ($duplicate_check) {
 			if ($this->isEmailTaken($email)) {
-				$return['msg'] = $this->config['msg']['email_istaken'];
+				$return['msg'] = $this->config['msg']['email_is_taken'];
 
 				return $return;
 			}
@@ -419,7 +456,6 @@ class Auth
 			'err' => true,
 			'msg' => ''
 		);
-
 
 		if (empty($name)) {
 			return $return;
@@ -457,7 +493,7 @@ class Auth
 
 		if ($duplicate_check) {
 			if ($this->isNameTaken($name)) {
-				$return['msg'] = $this->config['msg']['name_istaken'];
+				$return['msg'] = $this->config['msg']['name_is_taken'];
 
 				return $return;
 			}
@@ -482,7 +518,6 @@ class Auth
 			'err' => true,
 			'msg' => ''
 		);
-
 
 		if (empty($password)) {
 			return $return;
@@ -534,23 +569,6 @@ class Auth
 	}
 
 	/**
-	* Check if the email is already taken.
-	* Compare case-insensitive.
-	*
-	* @param  string  $email
-	*
-	* @return boolean
-	*/
-	public function isEmailTaken($email)
-	{
-		if (false === $this->getUserIdFromEmail($email)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	* Check if the name is already taken.
 	* Compare case-insensitive.
 	*
@@ -561,6 +579,23 @@ class Auth
 	public function isNameTaken($name)
 	{
 		if (false === $this->getUserIdFromName($name)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	* Check if the email is already taken.
+	* Compare case-insensitive.
+	*
+	* @param  string  $email
+	*
+	* @return boolean
+	*/
+	public function isEmailTaken($email)
+	{
+		if (false === $this->getUserIdFromEmail($email)) {
 			return false;
 		}
 
@@ -583,6 +618,10 @@ class Auth
 
 		$stmt->execute([$readable_id]);
 
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
 		return $stmt->fetchColumn();
 	}
 
@@ -601,6 +640,10 @@ class Auth
 		);
 
 		$stmt->execute([$name]);
+
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
 
 		return $stmt->fetchColumn();
 	}
@@ -621,46 +664,28 @@ class Auth
 
 		$stmt->execute([$email]);
 
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
 		return $stmt->fetchColumn();
 	}
 
 	/**
-	 * Return some fields data of user.
-	 *
-	 * @param  int 		$id
-	 * @param  array 	$params		Field names
-	 *
-	 * @return array|false
-	 */
-	public function getUser($id, $params)
-	{
-		$select_params = implode(', ', $params);
-
-		$stmt = $this->conn->prepare(
-			"SELECT " . $select_params . " FROM {$this->config['user_table']}
-			WHERE id = ?"
-		);
-
-		$stmt->execute([$id]);
-
-		return $stmt->fetch();
-	}
-
-	/**
-	* Return all fields data of user.
+	* Return user data.
 	*
-	* @param  int		$id
-	* @param  boolean 	$with_pw If it is true, return with password.
+	* @param  int		$user_id
+	* @param  boolean 	$with_password	If it is true, return with password.
 	*
 	* @return array|false
 	*/
-	public function getUserAll($id, $with_pw = false)
+	public function getUser($user_id, $with_password = false)
 	{
 		$stmt = $this->conn->prepare(
 			"SELECT * FROM {$this->config['user_table']}
 			WHERE id = ?"
 		);
-		$stmt->execute([$id]);
+		$stmt->execute([$user_id]);
 
 		if ($stmt->rowCount() == 0) {
 			return false;
@@ -668,7 +693,7 @@ class Auth
 
 		$user = $stmt->fetch();
 
-		if (!$with_pw) {
+		if (!$with_password) {
 			unset($user['password']);
 		}
 
@@ -676,26 +701,29 @@ class Auth
 	}
 
 	/**
-	* Create new user to DB.
+	* Add new user to DB.
 	*
 	* @param	string $readable_id
 	* @param 	string $name
 	* @param 	string $password
 	*
-	* @return bool If creating new user to DB is failed, return false.
+	* @return bool If adding new user to DB is failed, return false.
 	*/
-	public function createUser($readable_id, $name, $password)
+	public function addUser($readable_id, $name, $password)
 	{
 		$password_hash = $this->getPasswordHash($password);
 
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['user_table']}
 			(readable_id, name, password)
-			VALUES (?, ?, ?)"
+			VALUES (:readable_id, :name, :password)"
 		);
-
-		//	Creating new user is failed
-		if (!$stmt->execute([$readable_id, $name, $password_hash])) {
+		$query_params = [
+			':readable_id' => $readable_id,
+			':name' => $name,
+			':password' => $password_hash
+		];
+		if (!$stmt->execute($query_params)) {
 			return false;
 		}
 
@@ -705,12 +733,12 @@ class Auth
 	/**
 	* Update some fields data of user
 	*
-	* @param  int	$id
-	* @param  array $params assoc array(column name to update => new value, ...)
+	* @param  int	$user_id
+	* @param  array $params assoc array (column name to update => new value, ...)
 	*
 	* @return bool
 	*/
-	public function updateUser($id, $params)
+	public function updateUser($user_id, $params)
 	{
 		$col_list = array();
 		$val_list = array();
@@ -719,7 +747,7 @@ class Auth
 			array_push($col_list, $col . ' = ?');
 			array_push($val_list, $val);
 		}
-		array_push($val_list, $id);
+		array_push($val_list, $user_id);
 
 		$set_params = implode(', ', $col_list);
 
@@ -735,497 +763,79 @@ class Auth
 	}
 
 	/**
+	 * Measure password strength.
+	 *
+	 * @param  string $password
+	 *
+	 * @return int	Password strength (0 ~ 2)
+	 */
+	public function getPasswordStrength($password)
+	{
+		$zxcvbn = new Zxcvbn();
+
+		$score = $zxcvbn->passwordStrength($password)['score'];
+
+		if ($score <= 1) {			//	weak password
+			$strength = 0;
+		} else if ($score <= 3) {	//	normal password
+			$strength = 1;
+		} else {					//	safe password
+			$strength = 2;
+		}
+
+		return $strength;
+	}
+
+	/**
 	* Returns password hash.
 	*
-	* @param  string $raw_pw Raw password
+	* @param  string $password	Raw password
 	*
 	* @return string
 	*/
-	protected function getPasswordHash($raw_pw)
+	protected function getPasswordHash($password)
 	{
-		return password_hash($raw_pw, $this->config['password_hash_algo'], $this->config['password_hash_options']);
+		return password_hash($password, $this->config['password_hash_algo'], $this->config['password_hash_options']);
 	}
 
 	/**
-	* Verify password and rehash if hash options is changed.
+	* Verify input password and rehash if hash options is changed.
 	*
-	* @param  string 	$raw_pw
-	* @param  string 	$hash
-	* @param  int		$id
+	* @param  string 	$input_password
+	* @param  string 	$password_hash
+	* @param  int		$user_id
 	*
-	* @return bool If password match, return true.
+	* @return bool	If password match, return true.
 	*/
-	protected function verifyPasswordAndRehash($raw_pw, $hash, $id)
+	protected function verifyPasswordAndRehash($input_password, $password_hash, $user_id)
 	{
-		if (!password_verify($raw_pw, $hash)) {
+		if (!password_verify($input_password, $password_hash)) {
 			return false;
 		}
 
-		if (password_needs_rehash($hash, $this->config['password_hash_algo'], $this->config['password_hash_options'])) {
-			$new_hash = getPasswordHash($raw_pw);
+		if (password_needs_rehash(
+			$password_hash,
+ 			$this->config['password_hash_algo'],
+ 			$this->config['password_hash_options']
+		)) {
+			$new_password_hash = $this->getPasswordHash($input_password);
 
 			$stmt = $this->conn->prepare(
-				"UPDATE {$this->config['user_table']} SET password = :password
- 				WHERE id = :id"
+				"UPDATE {$this->config['user_table']} SET password = ?
+				WHERE id = ?"
 			);
-			$stmt->execute([':password' => $new_hash, ':id' => $id]);
-		}
-
-		return true;
-	}
-
-	// /**
-	// * Creates a session for a authorized user.
-	// * Creates cookie and table record about token for auto login.
-	// *
-	// * @param int	$id
-	// * @param bool	$remember Option for remember me
-	// *
-	// * @return bool
-	// */
-	// private function createSessionAndCookie($id, $remember)
-	// {
-	// 	$_SESSION['user_id'] = $id;
-	//
-	// 	if ($remember) {
-	// 		$hash = Hasher::generateRandomHash(60);
-	// 		$token = substr_replace($hash, ':', 20, 0);			//	selector:validator
-	//
-	// 		$encodedtoken = $this->encodeToken($token);
-	//
-	// 		$stmt = $this->conn->prepare(
-	// 			"INSERT INTO {$this->config['auth_autologin_table']}
-	// 			(selector, user_id, validator, expn_dt)
-	// 			VALUES (:selector, :user_id, :validator, :expn_dt)"
-	// 		);
-	// 		$expiration_time = time() + $this->config['cookie_params']['expire'];
-	// 		$query_params = [
-	// 			':selector' => $encodedtoken['selector'],
-	// 			':user_id' => $id,
-	// 			':validator' => $encodedtoken['validator'],
-	// 			':expn_dt' => date("Y-m-d H:i:s", $expiration_time)
-	// 		];
-	//
-	// 		if (!$stmt->execute($query_params)) {
-	// 			return false;
-	// 		}
-	//
-	// 		setcookie(
-	// 			'auth_token',
-	// 			$token,
-	// 			$expiration_time,
-	// 			$this->config['cookie_params']['path'],
-	// 			$this->config['cookie_params']['domain'],
-	// 			$this->config['cookie_params']['secure'],
-	// 			$this->config['cookie_params']['httponly']
-	// 		);
-	// 	}
-	//
-	// 	return true;
-	// }
-
-	/**
-	 * Check if user is logged in.
-	 * If cookie is valid, login.
-	 * After verifying that this is a valid cookie, update it.
-	 *
-	 * @return boolean
-	 */
-	public function isLoggedIn()
-	{
-		if (!$this->isLoggedIn) {
-			if ($this->checkCookie($this->getCurrentCookie())) {
-				$this->updateCookie($this->getCurrentCookie());
-
-				$this->isLoggedIn = true;
-			} else {
-				$this->deleteCurrentCookie();
-
-				$this->isLoggedIn = false;
-			}
-		}
-
-		return $this->isLoggedIn;
-	}
-
-	/**
-	* Return current user data except password.
-	*
-	* @return array|false
-	*/
-	public function getCurrentUser()
-	{
-		if ($this->currentUser === null) {
-			if ($this->isLoggedIn) {
-				$cnonce = $this->getCurrentCookie();
-
-				$stmt = $this->conn->prepare(
-					"SELECT user_id FROM {$this->config['auth_cookie_table']}
-					WHERE selector = ?"
-				);
-				$stmt->execute([$this->decodeCnonce($cnonce)['selector']]);
-
-				if ($stmt->rowCount() == 0) {
-					return false;
-				}
-
-				$current_user_id = $stmt->fetchColumn();
-
-				$current_user = $this->getUser($current_user_id);
-
-				if (!$current_user) {
-					return false;
-				}
-
-				$this->currentUser = $current_user;
-			} else {
-				return false;
-			}
-		}
-
-		return $this->currentUser;
-	}
-
-	/**
-	 * Create cookie for user who login.
-	 * And add a record in DB to authenticate the cookie.
-	 *
-	 * @param int $user_id
-	 *
-	 * @return bool Whether adding cookie and record is success
-	 */
-	protected function createCookie($user_id)
-	{
-		$cnonce = $this->generateCnonce();
-		$decoded_cnonce = $this->decodeCnonce($cnonce);
-
-		//	Generate nonce using validator part of cnonce.
-		$nonce = $this->generateNonce($decoded_cnonce['validator']);
-
-		$ip = $this->getClientIp();
-
-		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
-
-		$expiration_time = time() + $this->config['cookie_params']['expire'];
-
-		//	Add cookie record
-		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['auth_cookie_table']}
-			(selector, user_id, nonce, ip, agent, expn_dt)
-			VALUES (:selector, :user_id, :nonce, :ip, :agent, :expn_dt)"
-		);
-		$query_params = [
-			':selector' => $decoded_cnonce['selector'],
-			':user_id' => $user_id,
-			':nonce' => $nonce,
-			':ip' => $ip,
-			':agent' => $agent,
-			':expn_dt' => date("Y-m-d H:i:s", $expiration_time)
-		];
-		if (!$stmt->execute($query_params)) {
-			return false;
-		}
-
-		//	Create cookie
-		if (!setcookie(
-			$this->config['cookie_params']['name'],
-			$cnonce,
-			$expiration_time,
-			$this->config['cookie_params']['path'],
-			$this->config['cookie_params']['domain'],
-			$this->config['cookie_params']['secure'],
-			$this->config['cookie_params']['httponly']
-		)) {
-			return false;
+			$stmt->execute([$new_password_hash, $user_id]);
 		}
 
 		return true;
 	}
 
 	/**
-	 * Check if cnonce cookie is valid.
-	 * Method to authenticate user.
-	 *
-	 * @param  string $cookie	Cnonce cookie to validate
-	 *
-	 * @return bool	Whether cookie is valid
-	 */
-	protected function checkCookie($cookie)
-	{
-		$cnonce = $cookie;
-
-		//	Cnonce cookie is emtpy.
-		if (empty($cnonce)) {
-			return false;
-		}
-
-		//	Invalid legnth
-		if (strlen($cnonce) != $this->config['nonce']['cnonce_length']) {
-			return false;
-		}
-
-		$decoded_cnonce = $this->decodeCnonce($cnonce);
-
-		//	Find cookie record
-		$stmt = $this->conn->prepare(
-			"SELECT nonce, expn_dt FROM {$this->config['auth_cookie_table']}
-			WHERE selector = ?"
-		);
-		$stmt->execute([$decoded_cnonce['selector']]);
-
-		if ($stmt->rowCount() == 0) {
-			return false;
-		}
-
-		$record = $stmt->fetch();
-
-		//	Generate nonce using validator of current cnonce.
-		$nonce = crypt($decoded_cnonce['validator'], $record['nonce']);
-
-		if (!hash_equals($record['nonce'], $nonce)) {
-			return false;
-		}
-
-		//	Expired cookie record
-		if (strtotime($record['expn_dt']) < time()) {
-			$this->deleteCookieRecord($cnonce);
-
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Update cnonce cookie.
-	 * Update cookie record from DB.
-	 * Renew expiration time if needed.
-	 *
-	 * @param  string $cookie 	Cnonce cookie to update
-	 *
-	 * @return bool	Whether update is success
-	 */
-	protected function updateCookie($cookie)
-	{
-		$old_cnonce = $cookie;
-
-		//	Find old cookie record
-		$stmt = $this->conn->prepare(
-			"SELECT id, expn_dt FROM {$this->config['auth_cookie_table']}
-			WHERE selector = ?"
-		);
-		$stmt->execute([$this->decodeCnonce($old_cnonce)['selector']]);
-
-		//	If old cookie record is not found
-		if ($stmt->rowCount() == 0) {
-			return false;
-		}
-
-		$record = $stmt->fetch();
-		$cookie_id = $record['id'];
-		$cookie_expiration_time = strtotime($record['expn_dt']);
-
-		//	Generate new cnonce
-		$cnonce = $this->generateCnonce();
-		$decoded_cnonce = $this->decodeCnonce($cnonce);
-
-		//	Generate new nonce
-		$nonce = $this->generateNonce($decoded_cnonce['validator']);
-
-		//	Recheck client ip
-		$ip = $this->getClientIp();
-
-		//	Update cookie record.
-		$stmt = $this->conn->prepare(
-			"UPDATE {$this->config['auth_cookie_table']}
-			SET selector = :selector, nonce = :nonce, ip = :ip
-			WHERE id = :id"
-		);
-		$query_params = [
-			':selector' => $decoded_cnonce['selector'],
-			':nonce' => $nonce,
-			':ip' => $ip,
-			':id' => $cookie_id
-		];
-		if(!$stmt->execute($query_params)) {
-			return false;
-		}
-
-		//	If it is time to renew expiration time
-		if (
-			$cookie_expiration_time - time() <
-			$this->config['cookie_params']['expire'] - $this->config['cookie_params']['renew']
-		) {
-			//	Recheck user agent
-			$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
-
-			//	Renew expiration time
-			$cookie_expiration_time = time() + $this->config['cookie_params']['expire'];
-
-			//	Update cookie record
-			$stmt = $this->conn->prepare(
-				"UPDATE {$this->config['auth_cookie_table']}
-				SET agent = :agent, expn_dt = :expn_dt
-				WHERE id = :id"
-			);
-			$query_params = [
-				':agent' => $agent,
-				':expn_dt' => date("Y-m-d H:i:s", $cookie_expiration_time),
-				':id' => $cookie_id
-			];
-			$stmt->execute($query_params);
-		}
-
-		//	Update cnonce cookie.
-		if (!setcookie(
-			$this->config['cookie_params']['name'],
-			$cnonce,
-			$cookie_expiration_time,
-			$this->config['cookie_params']['path'],
-			$this->config['cookie_params']['domain'],
-			$this->config['cookie_params']['secure'],
-			$this->config['cookie_params']['httponly']
-		)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	protected function getCookieUserId($cookie)
-	{
-		$cnonce = $cookie;
-
-		$decoded_cnonce = $this->decodeCnonce($cnonce);
-
-		$stmt = $this->conn->prepare(
-			"SELECT user_id FROM {$this->config['auth_cookie_table']}
-			WHERE selector = ?"
-		);
-		$stmt->execute([$decoded_cnonce['selector']]);
-
-		if ($stmt->rowCount() == 0) {
-			return false;
-		}
-
-		return $stmt->fetchColumn();
-	}
-
-	/**
-	 * Returns current cnonce cookie.
-	 *
-	 * @return string|false
-	 */
-	protected function getCurrentCookie()
-	{
-		if (isset($_COOKIE[$this->config['cookie_params']['name']])) {
-			return $_COOKIE[$this->config['cookie_params']['name']];
-		}
-
-		return false;
-	}
-
-	/**
-	 * Delete current cnonce cookie.
-	 *
-	 * @return void
-	 */
-	protected function deleteCurrentCookie()
-	{
-		unset($_COOKIE[$this->config['cookie_params']['name']]);
-		setcookie($this->config['cookie_params']['name'], null, -1, '/');
-	}
-
-	/**
-	 * Delete cookie record from DB.
-	 *
-	 * @param  string $cookie	Cnonce cookie
-	 *
-	 * @return bool	Whether deletion is success
-	 */
-	protected function deleteCookieRecord($cookie)
-	{
-		$cnonce = $cookie;
-
-		$decoded_cnonce = $this->decodeCnonce($cnonce);
-
-		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['auth_cookie_table']}
-			WHERE selector = ?"
-		);
-		$stmt->execute([$decoded_cnonce['selector']]);
-
-		return $stmt->rowCount() == 1;
-	}
-
-	/**
-	 * Generate client nonce.
-	 *
-	 * @return string
-	 */
-	protected function generateCnonce()
- 	{
-		//	Generate random key.
-		$random_key = $this->generateRandomHash(16);
-
-		//	Generate 96 length unique hash.
-		$cnonce = hash('sha384', $random_key . microtime());
-
-		return $cnonce;
-	}
-
-	/**
-	 * Generate server nonce.
-	 *
-	 * @param  string	$validator	Validator part of client nonce
-	 * @param  int		$rounds     Number of algorithm iterations
-	 * @param  string	$salt
-	 *
-	 * @return string
-	 */
-	protected function generateNonce($validator, $rounds = 20000, $salt = "")
-	{
-		if (empty($salt)) {
-			//	Generate random salt.
-			$salt = $this->generateRandomHash(16);
-		}
-
-		//	$6$ means sha512
-		$nonce = crypt($validator, sprintf('$6$rounds=%d$%s$', $rounds, $salt));
-
-		return $nonce;
-	}
-
-	/**
-	 * Separate selector part and validator part of cnonce.
-	 *
-	 * @param  string $cnonce	Client nonce
-	 * @return array
-	 */
-	protected function decodeCnonce($cnonce)
-	{
-		//	Selector part of cnonce.
-		$return['selector'] = substr(
-			$cnonce,
-			0,
-			$this->config['nonce']['cnonce_selector_length']
-		);
-
-		//	Validator part of cnonce.
-		$return['validator'] = substr(
-			$cnonce,
-			$this->config['nonce']['cnonce_selector_length']
-		);
-
-		return $return;
-	}
-
-	/**
-	* @param  int $len Length of random hash
+	* @param  int $len Length of random string
 	*
 	* @return string
 	*/
-	public function generateRandomHash($len)
+	public function generateRandomString($len)
 	{
 		return substr(bin2hex(random_bytes($len)), 0, $len);
 	}
@@ -1238,15 +848,367 @@ class Auth
 	 */
 	public function generateUuidV4()
 	{
-		$data = ramdom_bytes(16);
-	    $data[6] = chr(ord($data[6]) & 0x0f | 0x40); 	// set version to 0100
-	    $data[8] = chr(ord($data[8]) & 0x3f | 0x80); 	// set bits 6-7 to 10
+		$data = random_bytes(16);
+		$data[6] = chr(ord($data[6]) & 0x0f | 0x40); 	// set version to 0100
+		$data[8] = chr(ord($data[8]) & 0x3f | 0x80); 	// set bits 6-7 to 10
 
-	    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+		return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 	}
 
 	/**
-	 * Returns client ip.
+	 * Check if user is logged in.
+	 * If access key is valid, return true.
+	 * After verifying that this is a valid access key, update it.
+	 *
+	 * @return bool		Whether user is logged in
+	 */
+	public function isLoggedIn()
+	{
+		if (!$this->isLoggedIn) {
+			if ($this->checkCurrentAccessKey()) {
+				$this->updateCurrentAccessKey();
+
+				$this->isLoggedIn = true;
+			} else {
+				$this->isLoggedIn = false;
+			}
+		}
+
+		return $this->isLoggedIn;
+	}
+
+	/**
+	* Returns the data of the currently logged in user except the password.
+	*
+	* @return array|false
+	*/
+	public function getCurrentUser()
+	{
+		if ($this->currentUser === null) {
+			if ($this->isLoggedIn) {
+				$current_user_id = $this->getCurrentUserId();
+
+				//	Not logged in user
+				if ($current_user_id === false) {
+					return false;
+				}
+
+				$this->currentUser = $this->getUser($current_user_id);
+			} else {
+				return false;
+			}
+		}
+
+		return $this->currentUser;
+	}
+
+	/**
+	 * Get current logged in user id.
+	 *
+	 * @return int|false	User id
+	 */
+	protected function getCurrentUserId()
+	{
+		$session_id = session_id();
+
+		$stmt = $this->conn->prepare(
+			"SELECT user_id FROM {$this->config['connected_user_table']}
+			WHERE session_id = ?"
+		);
+		$stmt->execute([$session_id]);
+
+		//	Not logged in user
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		return $stmt->fetchColumn();
+	}
+
+	/**
+	 * Add new access inform.
+	 * Add access key cookie for user who logged in. (Store to client side)
+	 * Add table record to authenticate access key.	(Store to server side)
+	 *
+	 * @param int $user_id		User who logged in
+	 *
+	 * @return bool Whether cookie and record are successfully added
+	 */
+	protected function addAccessKey($user_id)
+	{
+		//	Generate new key and hash
+		$access_key = $this->generateAccessKey();
+		$access_hash = $this->generateAccessHash($access_key);
+
+		$session_id = session_id();
+		$ip = $this->getClientIp();
+		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+
+		$expiration_time = time() + $this->config['cookie']['access_key']['expire'];
+
+		/* Add access key record */
+
+		$stmt = $this->conn->prepare(
+			"INSERT INTO {$this->config['connected_user_table']}
+			(session_id, hash, user_id, ip, expn_dt, agent)
+			VALUES (:session_id, :hash, :user_id, :ip, :expn_dt, :agent)"
+		);
+		$query_params = [
+			':session_id' => $session_id,
+			':hash' => $access_hash,
+			':user_id' => $user_id,
+			':ip' => $ip,
+			':expn_dt' => date("Y-m-d H:i:s", $expiration_time),
+			':agent' => $agent
+		];
+		if (!$stmt->execute($query_params)) {
+			return false;
+		}
+
+		/* Add access key cookie */
+
+		//	Failed to add cookie
+		if (!setcookie(
+			$this->config['cookie']['access_key']['name'],
+			$access_key,
+			$expiration_time,
+			$this->config['cookie']['access_key']['path'],
+			$this->config['cookie']['access_key']['domain'],
+			$this->config['cookie']['access_key']['secure'],
+			$this->config['cookie']['access_key']['httponly']
+		)) {
+			return false;
+		}
+
+		$_COOKIE[$this->config['cookie']['access_key']['name']] = $access_key;
+
+		return true;
+	}
+
+	/**
+	 * Check if access key is valid.
+	 * Authenticate the client(cookie) via the server(table record).
+	 *
+	 * @return bool		Whether access key is valid
+	 */
+	protected function checkCurrentAccessKey()
+	{
+		//	Access key is not exist
+		if (!isset($_COOKIE[$this->config['cookie']['access_key']['name']])) {
+			return false;
+		}
+
+		$access_key = $_COOKIE[$this->config['cookie']['access_key']['name']];
+		$access_hash = $this->generateAccessHash($access_key);
+
+		$session_id = session_id();
+		$ip = $this->getClientIp();
+		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+
+		$stmt = $this->conn->prepare(
+			"SELECT hash, ip, expn_dt, agent FROM {$this->config['connected_user_table']}
+			WHERE session_id = ?"
+		);
+		$stmt->execute([$session_id]);
+
+		//	Not logged in user
+		if ($stmt->rowCount() == 0) {
+			$this->deleteCurrentAccessKey();
+			$this->sessionManager->regenerateSessionId(false, true);
+
+			return false;
+		}
+
+		$record = $stmt->fetch();
+
+		//	Not matched hash
+		if (!hash_equals($record['hash'], $access_hash)) {
+			$this->deleteCurrentAccessKey();
+			$this->sessionManager->regenerateSessionId(false);
+
+			return false;
+		}
+
+		//	Login expired
+		if (strtotime($record['expn_dt']) < time()) {
+			$this->deleteCurrentAccessKey();
+			$this->deleteCurrentAccessKeyRecord();
+			$this->sessionManager->regenerateSessionId(false, true);
+
+			return false;
+		}
+
+		//	User ip is changed (Maybe bad user)
+		if ($ip !== $record['ip']) {
+			// @TODO
+		}
+
+		//	User agent is changed (Maybe bad user)
+		if ($agent !== $record['agent']) {
+			// @TODO
+		}
+
+		return true;
+	}
+
+	/**
+	 * Update current access key cookie.
+	 * Update current access key record from db.
+	 * Renew access key expiration time if needed.
+	 *
+	 * @return bool	Whether update is success
+	 */
+	protected function updateCurrentAccessKey()
+	{
+		$session_id = session_id();
+		$ip = $this->getClientIp();
+		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+
+		/* Fetch access key record */
+
+		$stmt = $this->conn->prepare(
+			"SELECT id, ip, expn_dt, agent FROM {$this->config['connected_user_table']}
+			WHERE session_id = ?"
+		);
+		$stmt->execute([$session_id]);
+
+		//	Not logged in user
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		$record = $stmt->fetch();
+
+		/* Check params to update */
+
+		$params_to_update = array();
+
+		//	User ip is changed
+		if ($ip !== $record['ip']) {
+			$params_to_update['ip'] = $ip;
+		}
+
+		//	User agent is changed
+		if ($agent !== $record['agent']) {
+			$params_to_update['agent'] = $agent;
+		}
+
+		//	Time to renew access key expiration time
+		if (
+			strtotime($record['expn_dt']) - time() <
+ 			$this->config['cookie']['access_key']['expire'] - $this->config['cookie']['access_key']['renew']
+		) {
+			$new_expiration_time = time() + $this->config['cookie']['access_key']['expire'];
+			$params_to_update['expn_dt'] = date("Y-m-d H:i:s", $new_expiration_time);
+		}
+
+		/* Update access key record */
+
+		//	Nothing to update
+		if (empty($params_to_update)) {
+			return true;
+		}
+
+		$col_list = array();
+		$val_list = array();
+
+		foreach ($params_to_update as $col => $val) {
+			array_push($col_list, $col . ' = ?');
+			array_push($val_list, $val);
+		}
+		array_push($val_list, $record['id']);
+
+		$set_params = implode(', ', $col_list);
+
+		$stmt = $this->conn->prepare(
+			"UPDATE {$this->config['connected_user_table']} SET " . $set_params .
+			" WHERE id = ?"
+		);
+		$stmt->execute($val_list);
+
+		/* Update access key cookie */
+
+		//	No need to update cookie
+		if (!isset($new_expiration_time)) {
+			return true;
+		}
+
+		$access_key = $_COOKIE[$this->config['cookie']['access_key']['name']];
+
+		//	Failed to update cookie
+		if (!setcookie(
+			$this->config['cookie']['access_key']['name'],
+			$access_key,
+			$new_expiration_time,
+			$this->config['cookie']['access_key']['path'],
+			$this->config['cookie']['access_key']['domain'],
+			$this->config['cookie']['access_key']['secure'],
+			$this->config['cookie']['access_key']['httponly']
+		)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Delete current access key cookie.
+	 *
+	 * @return null
+	 */
+	protected function deleteCurrentAccessKey()
+	{
+		setcookie($this->config['cookie']['access_key']['name'], null, -1, '/');
+		unset($_COOKIE[$this->config['cookie']['access_key']['name']]);
+	}
+
+	/**
+	 * Delete current access key record from db.
+	 *
+	 * @return bool		Whether deletion is success
+	 */
+	protected function deleteCurrentAccessKeyRecord()
+	{
+		$session_id = session_id();
+
+		$stmt = $this->conn->prepare(
+			"DELETE FROM {$this->config['connected_user_table']}
+			WHERE session_id = ?"
+		);
+		$stmt->execute([$session_id]);
+
+		return $stmt->rowCount() == 1;
+	}
+
+	/**
+	 * Generate new access key.
+	 *
+	 * @return string
+	 */
+	public function generateAccessKey()
+	{
+		$random_string = $this->generateRandomString(12);
+		$key = hash('ripemd160', $random_string . microtime());
+
+		return $key;
+	}
+
+	/**
+	 * Generate access hash using access key.
+	 *
+	 * @param  string $key	Access key
+	 *
+	 * @return string
+	 */
+	public function generateAccessHash($key)
+	{
+		$hash = hash('sha384', $key);
+
+		return $hash;
+	}
+
+	/**
+	 * Get client ip.
 	 *
 	 * @return string
 	 */
@@ -1257,19 +1219,19 @@ class Auth
 	    if (getenv('HTTP_CLIENT_IP')) {
 	        $ip_address = getenv('HTTP_CLIENT_IP');
 		}
-	    else if(getenv('HTTP_X_FORWARDED_FOR')) {
+	    else if (getenv('HTTP_X_FORWARDED_FOR')) {
 	        $ip_address = getenv('HTTP_X_FORWARDED_FOR');
 		}
-	    else if(getenv('HTTP_X_FORWARDED')) {
+	    else if (getenv('HTTP_X_FORWARDED')) {
 	        $ip_address = getenv('HTTP_X_FORWARDED');
 		}
-	    else if(getenv('HTTP_FORWARDED_FOR')) {
+	    else if (getenv('HTTP_FORWARDED_FOR')) {
 	        $ip_address = getenv('HTTP_FORWARDED_FOR');
 		}
-	    else if(getenv('HTTP_FORWARDED')) {
+	    else if (getenv('HTTP_FORWARDED')) {
 	       	$ip_address = getenv('HTTP_FORWARDED');
 		}
-	    else if(getenv('REMOTE_ADDR')) {
+	    else if (getenv('REMOTE_ADDR')) {
 	        $ip_address = getenv('REMOTE_ADDR');
 		}
 	    else {
@@ -1278,170 +1240,4 @@ class Auth
 
 	    return $ip_address;
 	}
-
-
-	// /**
-	// * Check if visitor is logged in.
-	// * Check if auto login is possible.
-	// * If possible, log in automatically.
-	// *
-	// * @return boolean
-	// */
-	// public function isLoggedIn()
-	// {
-	// 	if ($this->checkSession()) {
-	// 		return true;
-	// 	}
-	//
-	// 	if (false !== $id = $this->checkCookie()) {
-	// 		$_SESSION['user_id'] = $id;
-	//
-	// 		return true;
-	// 	}
-	//
-	// 	return false;
-	// }
-
-	// /**
-	// * Check if user_id session is exist.
-	// *
-	// * @return boolean
-	// */
-	// private function checkSession()
-	// {
-	// 	//	Check if session is set
-	// 	if (!isset($_SESSION['user_id'])) {
-	// 		return false;
-	// 	}
-	//
-	// 	//	Check if user id is exist in db
-	// 	if (false === $this->getCurrentUser(array('id'))) {
-	// 		return false;
-	// 	}
-	//
-	// 	return true;
-	// }
-
-	// /**
-	// * Check cookie for auto login.
-	// * Authenticate token.
-	// *
-	// * @return int|false int: when auto login success, false: otherwise
-	// */
-	// private function checkCookie()
-	// {
-	// 	if (!isset($_COOKIE['auth_token'])) {
-	// 		return false;
-	// 	}
-	//
-	// 	//	If can not find the token info in the db
-	// 	if (!$token_info = $this->getTokenInfo($_COOKIE['auth_token'])) {
-	// 		$this->deleteCookie();
-	//
-	// 		return false;
-	// 	}
-	//
-	// 	//	If token has already expired
-	// 	if (strtotime($token_info['expn_dt']) < time()) {
-	// 		$this->deleteCookie();
-	// 		$this->deleteTokenInfo($token_info['id']);
-	//
-	// 		return false;
-	// 	}
-	//
-	// 	return $token_info['user_id'];
-	// }
-
-	// /**
-	// * Delete session about authentication.
-	// *
-	// * @return void
-	// */
-	// private function deleteSession()
-	// {
-	// 	unset($_SESSION['user_id']);
-	// 	session_destroy();
-	// }
-
-	// /**
-	// * Delete cookie about auto login.
-	// *
-	// * @return void
-	// */
-	// private function deleteCookie()
-	// {
-	// 	setcookie('auth_token', '', time() - 3600);
-	// 	unset($_COOKIE['auth_token']);
-	// }
-
-	// /**
-	// * Encode auto login authentication token.
-	// *
-	// * @param  string $token selector:raw validator
-	// *
-	// * @return array array('selector' => '', 'validator' => '')
-	// */
-	// private function encodeToken($token)
-	// {
-	// 	$return = array(
-	// 		'selector' => '',
-	// 		'validator' => ''
-	// 	);
-	//
-	// 	$return['selector'] = strtok($token, ':');
-	// 	$return['validator'] = hash('sha256', strtok(':'));
-	//
-	// 	return $return;
-	// }
-
-	// /**
-	// * Encode raw token to selector and validator.
-	// * First, looking for a matched selector.
-	// * Then check if validator is matched.
-	// * If all matched, return token info.
-	// *
-	// * @param  string $token
-	// *
-	// * @return array|false
-	// */
-	// private function getTokenInfo($token)
-	// {
-	// 	$encodedToken = $this->encodeToken($token);
-	//
-	// 	$stmt = $this->conn->prepare(
-	// 		"SELECT * FROM {$this->config['auth_autologin_table']}
- 	// 		WHERE selector = ?"
-	// 	);
-	// 	$stmt->execute([$encodedToken['selector']]);
-	//
-	// 	if ($stmt->rowCount() == 0) {
-	// 		return false;
-	// 	}
-	//
-	// 	$token_info = $stmt->fetch();
-	//
-	// 	if (!hash_equals($token_info['validator'], $encodedToken['validator'])) {
-	// 		return false;
-	// 	}
-	//
-	// 	return $token_info;
-	// }
-
-	// /**
-	// * Delete auto login authentication info from table
-	// *
-	// * @param  int $token_id
-	// *
-	// * @return boolean If deletion success, return true.
-	// */
-	// private function deleteTokenInfo($token_id)
-	// {
-	// 	$stmt = $this->conn->prepare(
-	// 		"DELETE FROM {$this->config['auth_autologin_table']}
- 	// 		WHERE id = ?"
-	// 	);
-	// 	$stmt->execute([$token_id]);
-	//
-	// 	return $stmt->rowCount() == 1;
-	// }
 }

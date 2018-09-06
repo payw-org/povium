@@ -8,13 +8,13 @@
 
 global $auth;
 
-$logout_return = array(
-	'err' => false,
-	'msg' => '',
-	'redirect' => ''
-);
-
 $auth->logout();
+
+#	array(
+#		'err' => Whether an error occured,
+#		'redirect' => redirect url
+#	);
+$logout_return['err'] = false;
 $logout_return['redirect'] = '/';
 
 echo json_encode($logout_return);

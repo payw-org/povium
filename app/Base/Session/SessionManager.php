@@ -39,6 +39,7 @@ class SessionManager
 	public function setSessionConfig()
 	{
 		session_set_save_handler(new PdoSessionHandler(), true);
+
 		ini_set('session.gc_maxlifetime', $this->config['gc_maxlifetime']);
 		ini_set('session.gc_probability', $this->config['gc_probability']);
 		ini_set('session.gc_divisor', $this->config['gc_divisor']);
@@ -63,7 +64,7 @@ class SessionManager
 		$current_session_id = $this->getCurrentSessionId();
 
 		if (!$this->checkSessionId($current_session_id)) {
-			$new_session_id = $this->createSessionId($this->config['session_id_length']);
+			$new_session_id = $this->createSessionId();
 			session_id($new_session_id);
 		}
 	}
@@ -71,47 +72,39 @@ class SessionManager
 	/**
 	 * Customized 'session_regenerate_id'.
 	 * Update the current session id with a newly created one.
-	 * And keep the current session data.
 	 *
+	 * @param  boolean $keep_session_data	If false, initialize session data.
 	 * @param  boolean $delete_old_session	If true, delete current session immediately.
 	 *
 	 * @return null
 	 */
-	public function regenerateSessionId($delete_old_session = false)
+	public function regenerateSessionId($keep_session_data = true, $delete_old_session = false)
 	{
+		//	Store current session data
 		$session_data = $_SESSION;
 
 		if ($delete_old_session) {
 			session_destroy();
 		}
-
 		session_write_close();
 
-		$new_session_id = $this->createSessionId($this->config['session_id_length']);
-		session_id($new_session_id);
+		//	Create new session id
+		$new_session_id = $this->createSessionId();
 
+		//	Set session id to new one, and start it
+		session_id($new_session_id);
 		session_start();
 
-		$_SESSION = $session_data;
-	}
+		//	Close new session
+		session_write_close();
 
-	/**
-	 * Create session id.
-	 * Session id characters in the range a-z A-Z 0-9 -(minus) _(underscore).
-	 *
-	 * @param int $len
-	 *
-	 * @return string
-	 */
-	public function createSessionId($len)
-	{
-		$byte_length = intval(3 * ceil($len / 4.0));
+		//	And restart to allow other scripts to use it immediately
+		session_id($new_session_id);
+		session_start();
 
-		$session_id = substr(base64_encode(random_bytes($byte_length)), 0, $len);
-
-		$session_id = strtr($session_id, '+/', '-_');
-
-		return $session_id;
+		if ($keep_session_data) {
+			$_SESSION = $session_data;
+		}
 	}
 
 	/**
@@ -140,12 +133,12 @@ class SessionManager
 
 		$session_record = $stmt->fetch();
 
-		//	Expired session. (creation date is too old)
+		//	Expired session. (Creation date is too old)
 		if (strtotime($session_record['creation_dt']) + $this->config['cookie_params']['lifetime'] < time()) {
 			return false;
 		}
 
-		//	Expired session. (touched date is too old)
+		//	Expired session. (Touched date is too old)
 		if (strtotime($session_record['touched_dt']) + $this->config['gc_maxlifetime'] < time()) {
 			return false;
 		}
@@ -165,5 +158,24 @@ class SessionManager
 		}
 
 		return false;
+	}
+
+	/**
+	 * Create session id.
+	 * Session id characters in the range a-z A-Z 0-9 -(minus) _(underscore).
+	 *
+	 * @return string
+	 */
+	public function createSessionId()
+	{
+		$len = $this->config['session_id_length'];
+
+		$byte_length = intval(3 * ceil($len / 4.0));
+
+		$session_id = substr(base64_encode(random_bytes($byte_length)), 0, $len);
+
+		$session_id = strtr($session_id, '+/', '-_');
+
+		return $session_id;
 	}
 }

@@ -20,26 +20,23 @@ if (isset($querystring)) {
 	parse_str($querystring, $query_params);
 }
 
-#	$register_return = array(
+#	array(
 #		'err' => bool,
-#		'msg' => 'err msg for display',
-#		'redirect' => 'redirect url'
+#		'msg' => err msg for display,
+#		'redirect' => redirect url (optional param)
 #	);
-$register_return = array_merge(
-	$auth->register($readable_id, $name, $password),
- 	array('redirect' => '')
-);
+$register_return = $auth->register($readable_id, $name, $password);
 
-if ($register_return['err']) {			//	failed to register
+if ($register_return['err']) {			//	Register fail
 
-} else {								//	register success
-	$auth->login($readable_id, $password, false);
+} else {								//	Register success
+	$auth->login($readable_id, $password);
 
 	$register_return['redirect'] = '/';
 
 	if (
 		isset($query_params['redirect']) &&
-		$redirector->verifyRedirectURI($query_params['redirect'])
+		$redirector->validateRedirectURI($query_params['redirect'])
 	) {
 		$register_return['redirect'] = $query_params['redirect'];
 	}

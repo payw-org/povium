@@ -36,6 +36,7 @@ $router->get(
 		) {
 			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
 			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+
 			if (isset($prev_query) && !isset($curr_query)) {
 				//	Concatenate referer's query to current uri.
 				//	Then redirect.
