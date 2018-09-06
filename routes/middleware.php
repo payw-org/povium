@@ -27,12 +27,12 @@ $router->post(
 );
 
 /**
- * Validate registration Ajax
+ * Validate register inputs Ajax
  */
 $router->put(
 	'/register',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/validateRegistration.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/validateRegisterInputs.php';
 	}
 );
 
@@ -47,19 +47,19 @@ $router->post(
 );
 
 /**
- * Register new email address Ajax
+ * Request email activation Ajax
  *
  * Get is Test mode. Original is post.
  */
 $router->get(
-	'/me/settings/email/new-registration',
+	'/me/settings/email/new-activation',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/sendActivationEmail.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/requestEmailActivation.php';
 	}
 );
 
 /**
- * Email authentication page
+ * Activate email address
  *
  * @throws ForbiddenHttpException|GoneHttpException		If email authentication is failed
  */
