@@ -1,6 +1,6 @@
 <?php
 /**
-* Receive register inputs and verify them.
+* Receive register inputs and validate them.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop

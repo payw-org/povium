@@ -285,11 +285,13 @@ class Auth
 	 */
 	public function verifyEmailAuth($token)
 	{
+		$user_id = $this->getCurrentUser()['id'];
+
 		$stmt = $this->conn->prepare(
 			"SELECT * FROM {$this->config['email_waiting_auth_table']}
 			WHERE user_id = ?"
 		);
-		$stmt->execute([$this->getCurrentUser()['id']]);
+		$stmt->execute([$user_id]);
 
 		//	Nonexistent user id
 		if ($stmt->rowCount() == 0) {

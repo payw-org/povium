@@ -22,17 +22,17 @@ $router->post(
 $router->post(
 	'/register',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/registerConfirm.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/register.php';
 	}
 );
 
 /**
- * Register verify Ajax
+ * Validate registration inputs Ajax
  */
 $router->put(
 	'/register',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/registerVerify.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/validateRegistration.php';
 	}
 );
 
@@ -54,7 +54,7 @@ $router->post(
 $router->get(
 	'/me/settings/email/new-registration',
 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/sendEmailForEmailAuth.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/sendActivationEmail.php';
 	}
 );
 
@@ -71,7 +71,7 @@ $router->get(
 			$redirector->redirect('/login', true);
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/verifyEmailAuth.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/activateEmailAddress.php';
 	},
 	'email_authentication'
 );

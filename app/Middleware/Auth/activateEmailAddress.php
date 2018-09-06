@@ -1,7 +1,7 @@
 <?php
 /**
-* Verify that it is a valid email authentication link.
-* If valid, registers the email and confirms that it is an authenticated user.
+* Verify that it is a valid email activation link.
+* If valid, activate the email address.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop
@@ -18,7 +18,7 @@ $http_response_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/http_res
 //	Fetch query params
 $token = $_GET['token'];
 
-//	Authenticate email address
+//	Activate email
 $return = $auth->verifyEmailAuth($token);
 
 switch ($return) {

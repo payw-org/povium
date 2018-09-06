@@ -1,7 +1,6 @@
 <?php
 /**
-* Receive email address
-* and send email for user's email address authentication.
+* Send activation email.
 * @TODO	Check get email address sensitive or insensitive
 *
 * @author 		H.Chihoon
