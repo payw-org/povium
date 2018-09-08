@@ -9,24 +9,20 @@ window.addEventListener('scroll', function() {
 
 	let offset = historyElm.getBoundingClientRect().top - 60
 
+	if (offset <= 0) {
+		offset = 0
+	}
+
 	let scrollTop = document.documentElement.scrollTop
 
 	let historyElmDistance = scrollTop + historyElm.getBoundingClientRect().top - 60
 
-	let afterTransform = (historyElmDistance - offset) / 2
-	let afterOpacity = (offset - 60) / (historyElmDistance - 60)
+	let afterTransform = (historyElmDistance - offset) / 1.8
+	let afterOpacity = (offset) / (historyElmDistance)
 
-	if (afterOpacity >= 0) {
-		profileInfo.style.transform = 'translateY(' + afterTransform + 'px)'
-		profileInfo.style.opacity = afterOpacity
-		profileInfo.style.filter = 'blur(' + afterTransform / 6 + 'px)'
-	} else {
-		afterTransform = (historyElmDistance - 60) / 2
-		afterOpacity = 0
-		profileInfo.style.filter = 'blur(' + afterTransform / 6 + 'px)'
-		profileInfo.style.transform = 'translateY(' + afterTransform + 'px)'
-		profileInfo.style.opacity = afterOpacity
-	}
+	profileInfo.style.transform = 'translateY(' + afterTransform + 'px) scale(' + (offset + 720) / (historyElmDistance + 720) + ')'
+	profileInfo.style.opacity = afterOpacity
+	profileInfo.style.filter = 'blur(' + afterTransform / 6 + 'px)'
 
 	
 
