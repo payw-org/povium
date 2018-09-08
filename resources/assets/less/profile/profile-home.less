@@ -1,0 +1,84 @@
+#profile-main {
+
+	text-align: center;
+
+	#info {
+
+		margin-top: 2rem;
+		will-change: transform;
+		z-index: -1;
+
+		.profile-image {
+			width: 5rem;
+			height: 5rem;
+			margin: auto;
+		}
+
+		.name {
+			font-weight: 700;
+			font-size: 2rem;
+			margin-top: 1rem;
+		}
+
+		.manifesto {
+			font-weight: 400;
+			font-size: 1rem;
+			margin-top: .5rem;
+		}
+
+	}
+
+	#history {
+
+		display: flex;
+		width: calc(100% - 3rem);
+		max-width: 50rem;
+		margin: auto;
+		margin-top: 2rem;
+		transform: translate3d(0,0,0);
+
+		.menu {
+			flex: 1;
+			max-width: 7rem;
+
+			.menu-item {
+				padding: .8rem 0;
+				font-size: 1rem;
+				background-color: transparent;
+				color: inherit;
+				border-radius: 10px;
+				margin-bottom: .5rem;
+				cursor: pointer;
+				transition: background-color .2s ease;
+				user-select: none;
+
+				&:last-child {
+					margin: 0;
+				}
+
+				&:hover {
+					background-color: @white-blue;
+				}
+
+				&:active {
+					background-color: @dark-white-blue;
+				}
+
+				&.selected {
+					background-color: @pvm-violet;
+					color: #fff;
+				}
+			}
+		}
+
+		.board {
+			flex: 1;
+			background-color: @white-blue;
+			margin-left: 1rem;
+			border-radius: 10px;
+		}
+
+	}
+
+
+}
