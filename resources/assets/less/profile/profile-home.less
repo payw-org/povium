@@ -6,12 +6,12 @@
 
 		margin-top: 2rem;
 		will-change: transform;
-		z-index: -1;
 
 		.profile-image {
 			width: 5rem;
 			height: 5rem;
 			margin: auto;
+			user-select: none;
 		}
 
 		.name {
@@ -36,17 +36,19 @@
 		margin: auto;
 		margin-top: 2rem;
 		transform: translate3d(0,0,0);
+		z-index: 1;
 
 		.menu {
+
 			flex: 1;
-			max-width: 7rem;
+			max-width: 6.5rem;
 
 			.menu-item {
-				padding: .8rem 0;
+				padding: .7rem 0;
 				font-size: 1rem;
 				background-color: transparent;
 				color: inherit;
-				border-radius: 10px;
+				border-radius: .5rem;
 				margin-bottom: .5rem;
 				cursor: pointer;
 				transition: background-color .2s ease;
@@ -75,7 +77,36 @@
 			flex: 1;
 			background-color: @white-blue;
 			margin-left: 1rem;
-			border-radius: 10px;
+			border-radius: .5rem;
+
+			.board-container {
+
+				display: block;
+				text-align: left;
+				padding: 1rem;
+
+				&:not(.selected) {
+					display: none;
+				}
+
+				.board-title {
+					font-size: 2rem;
+				}
+
+				.board-item {
+					padding: 1rem;
+					background-color: #fff;
+					margin-top: 1rem;
+					border-radius: .5rem;
+
+					.post-title {
+						font-size: 1.5rem;
+					}
+
+				}
+
+			}
+
 		}
 
 	}
