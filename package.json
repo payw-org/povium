@@ -26,7 +26,8 @@
     "sass:watch": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ -w --source-map true",
     "less:build": "node_modules/.bin/lessc resources/assets/less/povium.style.less public_html/build/css/povium.style.css --source-map",
     "init": "npm run webpack:build && npm run less:build && npm run autoprefix",
-    "frontend:watch": "node_modules/.bin/npm-run-all --parallel webpack:watch css:watch",
+	"frontend:watch": "node_modules/.bin/npm-run-all --parallel webpack:watch css:watch",
+	"frontend:build": "node_modules/.bin/npm-run-all --parallel webpack:build css:build",
     "notify": "node notification.js hello world",
     "css:watch": "node_modules/.bin/nodemon -e less -x \"npm run less:build && npm run autoprefix\""
   },
