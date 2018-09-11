@@ -8,13 +8,16 @@
 
 namespace Povium\MailSender;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class ActivationMailSender extends AbstractMailSender
 {
 	/**
-	 * Generate email to activate user email address.
+	 * Generate activation email for new email address.
 	 *
-	 * @param  string $recipient Email address
-	 * @param  string $auth_uri  URI for authentication
+	 * @param  string $recipient		Email address
+	 * @param  string $activation_link
 	 *
 	 * @throws Exception
 	 */
@@ -23,7 +26,7 @@ class ActivationMailSender extends AbstractMailSender
 		//	Get required arguments
 		$args = func_get_args();
 		$recipient = $args[0];
-		$auth_uri = $args[1];
+		$activation_link = $args[1];
 
 		//	Set sender
 		$this->mail->setFrom(
@@ -37,7 +40,7 @@ class ActivationMailSender extends AbstractMailSender
 		//	Set content
 		$this->mail->isHTML(true);
 		$this->mail->Subject = $this->config['activation_mail']['mail_subject'];
-		$this->mail->Body = $this->config['activation_mail']['mail_body'] . $auth_uri;
+		$this->mail->Body = $this->config['activation_mail']['mail_body'] . $activation_link;
 		$this->mail->AltBody = $this->config['activation_mail']['mail_altbody'];
 	}
 }

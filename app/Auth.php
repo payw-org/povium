@@ -72,7 +72,7 @@ class Auth
 	* @param  string 	$identifier Readable id or Email
 	* @param  string 	$password
 	*
-	* @return array	'err' is an error flag. 'msg' is an error message.
+	* @return array		Error flag and message
 	*/
 	public function login($identifier, $password)
 	{
@@ -173,7 +173,7 @@ class Auth
 	* @param  string $name
 	* @param  string $password
 	*
-	* @return array 'err' is an error flag. 'msg' is an error message.
+	* @return array Error flag and message
 	*/
 	public function register($readable_id, $name, $password)
 	{
@@ -233,58 +233,92 @@ class Auth
 	}
 
 	/**
-	 * Request email authentication.
-	 * Add new request info in database.
-	 * And delete old request info.
+	 * Add new email address that waiting for activation.
+	 * User cannot add multiple new email address at once.
 	 *
-	 * @param string $email	Email to authenticate
-	 * @param string $token Uuid
+	 * @param string $email		New email address
+	 * @param string $token		Authentication token
 	 *
-	 * @return bool
+	 * @return array 	Error flag and message
 	 */
-	public function requestEmailAuth($email, $token)
+	public function addNewEmailAddress($email, $token)
 	{
+		$return = array(
+			'err' => true,
+			'msg' => ''
+		);
+
+		//	Not logged in
+		if (empty($this->getCurrentUser())) {
+			$return['msg'] = $this->config['msg']['not_logged_in'];
+
+			return $return;
+		}
+
 		$user_id = $this->getCurrentUser()['id'];
 
-		//	Delete old request info
+		$validate_email = $this->validateEmail($email, true);
+		if ($validate_email['err']) {
+			$return['msg'] = $validate_email['msg'];
+
+			return $return;
+		}
+
+		//	Delete old record of same user
 		$stmt = $this->conn->prepare(
 			"DELETE FROM {$this->config['email_waiting_for_activation_table']}
 			WHERE user_id = ?"
 		);
 		$stmt->execute([$user_id]);
 
-		//	Add new request info
+		//	Add new record
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['email_waiting_for_activation_table']}
-			(user_id, requested_email, token, expn_dt)
-			VALUES (:user_id, :requested_email, :token, :expn_dt)"
+			(user_id, token, email, expn_dt)
+			VALUES (:user_id, :token, :email, :expn_dt)"
 		);
-
 		$query_params = array(
 			':user_id' => $user_id,
-			':requested_email' => $email,
 			':token' => $token,
-			':expn_dt' => date("Y-m-d H:i:s", time() + $this->config['email_auth_expire'])
+			':email' => $email,
+			':expn_dt' => date('Y-m-d H:i:s', time() + $this->config['email_activation_expire'])
 		);
+		if (!$stmt->execute($query_params)) {
+			$return['msg'] = $this->config['msg']['activation_email_err'];
 
-		return $stmt->execute($query_params);
+			return $return;
+		}
+
+		//	Successfully added
+		$return['err'] = false;
+
+		return $return;
 	}
 
 	/**
-	 * Verify that the email authentication request is valid.
-	 * And update user info.
-	 * Delete the authenticated request.
+	 * Validate email activation request.
+	 * Activate email address.
 	 *
 	 * @param  string $token
 	 *
-	 * @return int
-	 * 0 : NO ERROR
-	 * 1 : NONEXISTENT USER ID
-	 * 2 : NOT MATCHED TOKEN
-	 * 3 : REQUEST EXPIRED
+	 * @return array 	Error flag and code
 	 */
-	public function verifyEmailAuth($token)
+	public function activateEmailAddress($token)
 	{
+		$return = array(
+			'err' => true,
+			'code' => ''
+		);
+
+		/* Validate email activation request */
+
+		//	Not logged in
+		if (empty($this->getCurrentUser())) {
+			$return['code'] = $this->config['err']['code']['not_logged_in'];
+
+			return $return;
+		}
+
 		$user_id = $this->getCurrentUser()['id'];
 
 		$stmt = $this->conn->prepare(
@@ -293,43 +327,51 @@ class Auth
 		);
 		$stmt->execute([$user_id]);
 
-		//	Nonexistent user id
+		//	User not found
 		if ($stmt->rowCount() == 0) {
-			return 1;
+			$return['code'] = $this->config['err']['code']['user_not_found'];
+
+			return $return;
 		}
 
-		$email_auth_info = $stmt->fetch();
+		$record = $stmt->fetch();
 
-		//	Not matched token
-		if (!hash_equals($email_auth_info['token'], $token)) {
-			return 2;
+		//	Token not match
+		if (!hash_equals($record['token'], $token)) {
+			$return['code'] = $this->config['err']['code']['token_not_match'];
+
+			return $return;
 		}
 
 		//	Request expired
-		if (strtotime($email_auth_info['expn_dt']) < time()) {
+		if (strtotime($record['expn_dt']) < time()) {
 			$stmt = $this->conn->prepare(
 				"DELETE FROM {$this->config['email_waiting_for_activation_table']}
 				WHERE id = ?"
 			);
-			$stmt->execute([$email_auth_info['id']]);
+			$stmt->execute([$record['id']]);
 
-			return 3 ;
+			$return['code'] = $this->config['err']['code']['request_expired'];
+
+			return $return;
 		}
 
-		//	All requires are satisfied
+		/* Activate email address */
 		$params = array(
 			'is_verified' => true,
-			'email' => $email_auth_info['requested_email']
+			'email' => $record['email']
 		);
-		$this->updateUser($email_auth_info['user_id'], $params);
+		$this->updateUser($record['user_id'], $params);
 
 		$stmt = $this->conn->prepare(
 			"DELETE FROM {$this->config['email_waiting_for_activation_table']}
-			WHERE requested_email = ?"
+			WHERE email = ?"
 		);
-		$stmt->execute([$email_auth_info['requested_email']]);
+		$stmt->execute([$record['email']]);
 
-		return 0;
+		$return['err'] = false;
+
+		return $return;
 	}
 
 	/**
@@ -338,7 +380,7 @@ class Auth
 	*
 	* @param  string $readable_id
 	*
-	* @return array 'err' is an error flag. 'msg' is an error message.
+	* @return array 	Error flag and message
 	*/
 	public function validateReadableId($readable_id, $duplicate_check = false)
 	{
@@ -348,6 +390,8 @@ class Auth
 		);
 
 		if (empty($readable_id)) {
+			$return['msg'] = $this->config['msg']['readable_id_empty'];
+
 			return $return;
 		}
 
@@ -400,7 +444,7 @@ class Auth
 	*
 	* @param  string $email
 	*
-	* @return array 'err' is an error flag. 'msg' is an error message.
+	* @return array 	Error flag and message
 	*/
 	public function validateEmail($email, $duplicate_check = false)
 	{
@@ -410,6 +454,8 @@ class Auth
 		);
 
 		if (empty($email)) {
+			$return['msg'] = $this->config['msg']['email_empty'];
+
 			return $return;
 		}
 
@@ -450,7 +496,7 @@ class Auth
 	*
 	* @param  string $name
 	*
-	* @return array 'err' is an error flag. 'msg' is an error message.
+	* @return array 	Error flag and message
 	*/
 	public function validateName($name, $duplicate_check = false)
 	{
@@ -460,6 +506,8 @@ class Auth
 		);
 
 		if (empty($name)) {
+			$return['msg'] = $this->config['msg']['name_empty'];
+
 			return $return;
 		}
 
@@ -512,7 +560,7 @@ class Auth
 	*
 	* @param  string $password
 	*
-	* @return array 'err' is an error flag. 'msg' is an error message.
+	* @return array 	Error flag and message
 	*/
 	public function validatePassword($password)
 	{
@@ -522,6 +570,8 @@ class Auth
 		);
 
 		if (empty($password)) {
+			$return['msg'] = $this->config['msg']['password_empty'];
+
 			return $return;
 		}
 

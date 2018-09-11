@@ -26,10 +26,10 @@ abstract class AbstractMailSender
 	/**
 	 * Constructor
 	 */
-	public function __construct()
+	public function __construct(PHPMailer $mail)
 	{
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mail_sender.php');
-		$this->mail = new PHPMailer(true);
+		$this->mail = $mail;
 	}
 
 	/**

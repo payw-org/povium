@@ -6,12 +6,19 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
+use Povium\Base\Http\Exception\HttpException;
+
 /**
  * Login Ajax
  */
 $router->post(
 	'/login',
-	function () {
+	function () use ($auth, $redirector) {
+		//	If already logged in, send to home page.
+		if ($auth->isLoggedIn()) {
+			$redirector->redirect('/');
+		}
+
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/login.php';
 	}
 );
@@ -21,7 +28,12 @@ $router->post(
  */
 $router->post(
 	'/register',
-	function () {
+	function () use ($auth, $redirector) {
+		//	If already logged in, send to home page.
+		if ($auth->isLoggedIn()) {
+			$redirector->redirect('/');
+		}
+
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/register.php';
 	}
 );
@@ -31,7 +43,12 @@ $router->post(
  */
 $router->put(
 	'/register',
-	function () {
+	function () use ($auth, $redirector) {
+		//	If already logged in, send to home page.
+		if ($auth->isLoggedIn()) {
+			$redirector->redirect('/');
+		}
+
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/validateRegisterInputs.php';
 	}
 );
@@ -41,7 +58,12 @@ $router->put(
  */
 $router->post(
 	'/logout',
-	function () {
+	function () use ($auth, $redirector) {
+		//	If not logged in, redirect to register page.
+		if (!$auth->isLoggedIn()) {
+			$redirector->redirect('/register');
+		}
+
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/logout.php';
 	}
 );
@@ -52,26 +74,31 @@ $router->post(
  * Get is Test mode. Original is post.
  */
 $router->get(
-	'/me/settings/email/new-activation',
-	function () {
+	'/me/settings/email/new-request',
+	function () use ($auth, $redirector) {
+		//	If not logged in, redirect to register page.
+		if (!$auth->isLoggedIn()) {
+			$redirector->redirect('/register');
+		}
+
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/requestEmailActivation.php';
 	}
 );
 
 /**
- * Activate email address
+ * Email activation Link
  *
- * @throws ForbiddenHttpException|GoneHttpException		If email authentication is failed
+ * @throws HttpException		If email activation is failed
  */
 $router->get(
-	'/c/account/verify',
+	'/c/email/activation',
 	function () use ($auth, $redirector) {
-		//	If visitor is not logged in, redirect to login page.
+		//	If not logged in, redirect to login page.
 		if (!$auth->isLoggedIn()) {
 			$redirector->redirect('/login', true);
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/activateEmailAddress.php';
 	},
-	'email_authentication'
+	'email_activation'
 );

@@ -26,7 +26,7 @@ $auth = $factory->createInstance('\Povium\Auth', $session_manager);
 
 //	Initialize routing system
 $router = $factory->createInstance('\Povium\Base\Routing\Router');
-$redirector = $factory->createInstance('\Povium\Base\Routing\Redirector');
+$redirector = $factory->createInstance('\Povium\Base\Routing\Redirector', BASE_URI);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php';

@@ -83,11 +83,6 @@ $router->get(
 $router->get(
 	'/editor',
  	function () use ($auth, $redirector) {
-		// //	If is not logged in, redirect to login page.
-		// if (!$auth->isLoggedIn()) {
-		// 	$redirector->redirect('/register', true);
-		// }
-
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php';
 	}
 );
@@ -133,12 +128,12 @@ $router->get(
 );
 
 /**
- * Email Setting Page
+ * Email Setting Page(Tab)
  */
 $router->get(
 	'/me/settings/email',
 	function () use ($auth, $redirector) {
-		//	If visitor is not logged in, redirect to register page.
+		//	If not logged in, redirect to register page.
 		if (!$auth->isLoggedIn()) {
 			$redirector->redirect('/register', true);
 		}

@@ -79,8 +79,8 @@ class PdoSessionHandler implements \SessionHandlerInterface
     {
 		$stmt = $this->conn->prepare(
 			"SELECT data FROM {$this->config['session_table']}
-			WHERE id = :id AND
- 			(UNIX_TIMESTAMP(creation_dt) + :lifetime) > :currtime"
+			WHERE id = :id
+ 			AND (UNIX_TIMESTAMP(creation_dt) + :lifetime) > :currtime"
 		);
 		$query_params = array(
 			':id' => $id,
@@ -108,9 +108,11 @@ class PdoSessionHandler implements \SessionHandlerInterface
     public function write($id, $data)
     {
 		$stmt = $this->conn->prepare(
-			"INSERT INTO session (id, data, creation_dt, touched_dt)
+			"INSERT INTO {$this->config['session_table']}
+			(id, data, creation_dt, touched_dt)
 			VALUES (:id, :data, :creation_dt, :touched_dt)
-			ON DUPLICATE KEY UPDATE data = :updated_data, touched_dt = :updated_touched_dt"
+			ON DUPLICATE KEY
+ 			UPDATE data = :updated_data, touched_dt = :updated_touched_dt"
 		);
 		$query_params = array(
 			':id' => $id,
@@ -137,7 +139,7 @@ class PdoSessionHandler implements \SessionHandlerInterface
     public function destroy($id)
     {
 		$stmt = $this->conn->prepare(
-			"DELETE FROM session
+			"DELETE FROM {$this->config['session_table']}
 			WHERE id = ?"
 		);
 		$stmt->execute([$id]);
@@ -156,7 +158,7 @@ class PdoSessionHandler implements \SessionHandlerInterface
     public function gc($maxlifetime)
     {
 		$stmt = $this->conn->prepare(
-			"DELETE FROM session
+			"DELETE FROM {$this->config['session_table']}
 			WHERE (UNIX_TIMESTAMP(touched_dt) + :maxlifetime) < :currtime"
 		);
 		$query_params = array(
