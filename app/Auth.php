@@ -224,9 +224,7 @@ class Auth
 	*/
 	public function logout()
 	{
-		$this->isLoggedIn = false;
-		$this->currentUser = null;
-
+		$this->initializeAuthStatus();
 		$this->deleteCurrentAccessKey();
 		$this->deleteCurrentAccessKeyRecord();
 		$this->sessionManager->regenerateSessionId(false, true);
@@ -908,6 +906,17 @@ class Auth
 	}
 
 	/**
+	 * Initialize authentication status of the current client.
+	 *
+	 * @return null
+	 */
+	public function initializeAuthStatus()
+	{
+		$this->isLoggedIn = false;
+		$this->currentUser = null;
+	}
+
+	/**
 	 * Check if user is logged in.
 	 * If access key is valid, return true.
 	 * After verifying that this is a valid access key, update it.
@@ -994,7 +1003,7 @@ class Auth
 
 		$session_id = session_id();
 		$ip = $this->getClientIp();
-		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+		$agent = $this->getClientAgent();
 
 		$expiration_time = time() + $this->config['cookie']['access_key']['expire'];
 
@@ -1055,7 +1064,7 @@ class Auth
 
 		$session_id = session_id();
 		$ip = $this->getClientIp();
-		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+		$agent = $this->getClientAgent();
 
 		$stmt = $this->conn->prepare(
 			"SELECT hash, ip, expn_dt, agent FROM {$this->config['connected_user_table']}
@@ -1114,7 +1123,7 @@ class Auth
 	{
 		$session_id = session_id();
 		$ip = $this->getClientIp();
-		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+		$agent = $this->getClientAgent();
 
 		/* Fetch access key record */
 
@@ -1291,5 +1300,17 @@ class Auth
 		}
 
 	    return $ip_address;
+	}
+
+	/**
+	 * Get client agent.
+	 *
+	 * @return string
+	 */
+	public function getClientAgent()
+	{
+		$agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : "";
+
+		return $agent;
 	}
 }
