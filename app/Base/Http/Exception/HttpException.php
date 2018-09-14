@@ -37,9 +37,7 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
 	}
 
 	/**
-	 * Gets the http response code
-	 *
-	 * @return int
+	 * {@inheritdoc}
 	 */
 	public function getResponseCode()
 	{
@@ -47,9 +45,7 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
 	}
 
 	/**
-	 * Gets the http response title
-	 *
-	 * @return string
+	 * {@inheritdoc}
 	 */
 	public function getTitle()
 	{
@@ -57,9 +53,7 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
 	}
 
 	/**
-	 * Gets the http response message
-	 *
-	 * @return string
+	 * {@inheritdoc}
 	 */
 	public function getMsg()
 	{
@@ -67,9 +61,7 @@ class HttpException extends \RuntimeException implements HttpExceptionInterface
 	}
 
 	/**
-	 * Gets the http response details
-	 *
-	 * @return string
+	 * {@inheritdoc}
 	 */
 	public function getDetails()
 	{

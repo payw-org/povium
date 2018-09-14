@@ -16,7 +16,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
 $factory = new MasterFactory();
 
 //	Initialize session
-$session_manager = $factory->createInstance('\Povium\Base\Session\SessionManager');
+$session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
 $session_manager->setSessionConfig();
 $session_manager->checkAndSetSessionId();
 session_start();

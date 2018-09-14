@@ -25,12 +25,7 @@ abstract class AbstractChildFactory implements FactoryInterface
 	protected $args;
 
 	/**
-	* Returns an instance of given type.
-	*
-	* @param	string	$type
-	* @param	mixed
-	*
-	* @return object An instance of given type
+	* {@inheritdoc}
 	*/
 	public function createInstance($type)
 	{
@@ -57,7 +52,7 @@ abstract class AbstractChildFactory implements FactoryInterface
 	*/
 	protected function create()
 	{
-		//	if '...' operator (require upper version of PHP 5.6.0)
+		//	If '...' operator (require upper version of PHP 5.6.0)
 		//	is not working, use below code.
 		#	$reflect  = new ReflectionClass($this->type);
 		#	$instance = $reflect->newInstanceArgs($this->args);

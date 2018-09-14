@@ -1,13 +1,7 @@
 <?php
 /**
-* Authenticate user and issue access key.
-*
-* - Main function -
-* Login
-* Register
-* Logout
-* Request Email Authentication
-* Verify Email Authentication
+* Authenticate connected user.
+* Isuue access key and manage it.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
@@ -15,7 +9,7 @@
 
 namespace Povium;
 
-use Povium\Base\Session\SessionManager;
+use Povium\Base\Http\Session\SessionManager;
 use ZxcvbnPhp\Zxcvbn;
 
 class Auth
@@ -33,8 +27,6 @@ class Auth
 	protected $conn = null;
 
 	/**
-	 * Session manager
-	 *
 	 * @var SessionManager
 	 */
 	protected $sessionManager = null;
@@ -591,7 +583,7 @@ class Auth
 			return $return;
 		}
 
-		if (!preg_match($this->config['regex']['passowrd_regex_required'], $password)) {
+		if (!preg_match($this->config['regex']['password_regex_required'], $password)) {
 			$return['msg'] = $this->config['msg']['password_required_condition'];
 
 			return $return;

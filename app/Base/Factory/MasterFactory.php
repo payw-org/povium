@@ -39,7 +39,9 @@ class MasterFactory implements FactoryInterface
 	* @param	mixed
 	*
 	* @return object												An instance of given type
-	* @throws NonexistentTypeException|UnregisteredTypeException	If type is not valid
+	*
+	* @throws NonexistentTypeException		If the type is not exist
+	* @throws UnregisteredTypeException		If the type is not registered
 	*/
 	public function createInstance($type)
 	{

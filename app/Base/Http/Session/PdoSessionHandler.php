@@ -7,7 +7,7 @@
 * @copyright	2018 DesignAndDevelop
 */
 
-namespace Povium\Base\Session;
+namespace Povium\Base\Http\Session;
 
 use Povium\Base\DBConnection;
 

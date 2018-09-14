@@ -42,10 +42,7 @@ return [
 		'name_max_length' => 30,
 
 		'password_min_length' => 8,
-		'password_max_length' => 50,
-
-		'cnonce_length' => 97,				//	96(hash) + 1(hyphen)
-		'cnonce_selector_length' => 40
+		'password_max_length' => 50
 	],
 
 	'regex' => [
@@ -58,7 +55,7 @@ return [
 		'name_regex_banned_2' => '/\s{2,}|\.{2,}|_{2,}/',
 
 		'password_regex_base' => '/^[\w`~!@#$%\^&\*\(\)\-\+\=\{\[\]\}\|\\\;:\'\",.<>\/?]+$/',
-		'passowrd_regex_required' => '/^\S*(?=\S*[a-zA-Z])(?=\S*[0-9])\S*$/',
+		'password_regex_required' => '/^\S*(?=\S*[a-zA-Z])(?=\S*[0-9])\S*$/',
 	],
 
 	'msg' => [

@@ -15,7 +15,7 @@ interface FactoryInterface
 	* Returns an instance of given types.
 	*
 	* @param	string $type
-	* @param	mixed
+	* @param	mixed			Materials
 	*
 	* @return object An instance of given type
 	*/
