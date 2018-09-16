@@ -421,8 +421,8 @@ export default class SelectionManager
 
 			}
 
-			if (this.postEditor.domManager.editor.contains(listElm)) {
-				this.postEditor.domManager.editor.removeChild(listElm)
+			if (this.postEditor.domManager.editorBody.contains(listElm)) {
+				this.postEditor.domManager.editorBody.removeChild(listElm)
 			}
 
 		}
@@ -617,11 +617,11 @@ export default class SelectionManager
 			}
 
 			// return
-		} else if (this.postEditor.domManager.editor.querySelector(".image-selected")) {
+		} else if (this.postEditor.domManager.editorBody.querySelector(".image-selected")) {
 
 			// Remove selected image block
 
-			let image = this.postEditor.domManager.editor.querySelector(".image-selected")
+			let image = this.postEditor.domManager.editorBody.querySelector(".image-selected")
 
 			this.postEditor.undoManager.recordAction({
 				type: "remove",
@@ -834,11 +834,11 @@ export default class SelectionManager
 				return;
 			}
 			// return
-		} else if (this.postEditor.domManager.editor.querySelector(".image-selected")) {
+		} else if (this.postEditor.domManager.editorBody.querySelector(".image-selected")) {
 
 			// Remove selected image block
 			
-			let image = this.postEditor.domManager.editor.querySelector(".image-selected")
+			let image = this.postEditor.domManager.editorBody.querySelector(".image-selected")
 
 			this.postEditor.undoManager.recordAction({
 				type: "remove",
@@ -1251,7 +1251,7 @@ export default class SelectionManager
 			var isChanged = false
 
 			// if (startNode.id === 'editor-body') {
-			if (startNode === this.postEditor.domManager.editor) {
+			if (startNode === this.postEditor.domManager.editorBody) {
 
 				target = startNode.firstElementChild
 
@@ -1276,7 +1276,7 @@ export default class SelectionManager
 
 
 			// if (endNode.id === 'editor-body') {
-			if (endNode === this.postEditor.domManager.editor) {
+			if (endNode === this.postEditor.domManager.editorBody) {
 
 
 				target = endNode.firstChild
@@ -1383,7 +1383,7 @@ export default class SelectionManager
 				// this.replaceRange(newRange)
 				// console.log(range)
 				console.log("fixed selection")
-				window.getSelection().removeRange(range)
+				window.getSelection().removeAllRanges()
 				window.getSelection().addRange(newRange)
 			}
 
@@ -2364,7 +2364,13 @@ export default class SelectionManager
 	{
 		if (!node) {
 			return false
-		} else if (node.nodeName === 'FIGURE' && node.classList && node.classList.contains('image')) {
+		} else if (
+			node.nodeName === 'FIGURE' &&
+			node.classList &&
+			node.classList.contains('image') &&
+			node.querySelector('img') &&
+			node.querySelector('figcaption')
+		) {
 			return true
 		} else {
 			return false
@@ -2410,6 +2416,14 @@ export default class SelectionManager
 			this.isListItem(node) ||
 			this.isImageCaption(node)
 		) {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	isAvailableNode(node) {
+		if (this.isAvailableChildNode(node) || this.isAvailableParentNode(node)) {
 			return true
 		} else {
 			return false
@@ -2766,8 +2780,8 @@ export default class SelectionManager
 	getNodeInSelection()
 	{
 
-		if (this.postEditor.domManager.editor.querySelector(".image-selected")) {
-			return this.postEditor.domManager.editor.querySelector(".image-selected")
+		if (this.postEditor.domManager.editorBody.querySelector(".image-selected")) {
+			return this.postEditor.domManager.editorBody.querySelector(".image-selected")
 		}
 
 		var range = this.getRange()
@@ -2810,7 +2824,7 @@ export default class SelectionManager
 		let tempNode = node
 		let returnNode = null
 		while (1) {
-			if (tempNode.isEqualNode(this.postEditor.domManager.editor) || tempNode.isEqualNode(document.body) || tempNode === null) {
+			if (tempNode.isEqualNode(this.postEditor.domManager.editorBody) || tempNode.isEqualNode(document.body) || tempNode === null) {
 				break
 			} else if (this.isAvailableChildNode(tempNode) || this.isAvailableParentNode(tempNode)) {
 				returnNode = tempNode

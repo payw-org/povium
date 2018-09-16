@@ -44,18 +44,18 @@ export default class PostEditor {
 		var emptyNode = document.createElement('p')
 		emptyNode.innerHTML = 'a'
 		emptyNode.style.opacity = '0'
-		this.domManager.editor.appendChild(emptyNode)
+		this.domManager.editorBody.appendChild(emptyNode)
 		var range = document.createRange()
 		range.setStart(emptyNode.firstChild, 0)
 		range.setEnd(emptyNode.firstChild, 1)
 		this.selManager.replaceRange(range)
 		document.execCommand('bold', false)
-		this.domManager.editor.removeChild(emptyNode)
+		this.domManager.editorBody.removeChild(emptyNode)
 		document.getSelection().removeAllRanges()
 
-		this.domManager.editor.normalize()
+		this.domManager.editorBody.normalize()
 
-		this.domManager.editor.innerHTML = this.domManager.editor.innerHTML.replace(/\r?\n|\r/g, "")
+		this.domManager.editorBody.innerHTML = this.domManager.editorBody.innerHTML.replace(/\r?\n|\r/g, "")
 
 		// if (this.isEmpty()) {
 		// 	this.domManager.editor.innerHTML = ""
@@ -74,7 +74,7 @@ export default class PostEditor {
 
 	clearEditor() {
 
-		this.domManager.editor.innerHTML = ""
+		this.domManager.editorBody.innerHTML = ""
 
 	}
 
@@ -83,7 +83,7 @@ export default class PostEditor {
 	 * Return true if the editor is empty.
 	 */
 	isEmpty() {
-		let contentInside = this.domManager.editor.textContent
+		let contentInside = this.domManager.editorBody.textContent
 		let childNodesCount = this.selManager.getAllNodesInSelection().length
 		if (contentInside === "" && childNodesCount < 1) {
 			return true

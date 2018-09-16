@@ -19,7 +19,7 @@ export default class DOMManager {
 		this.pHolder.innerHTML = '<br>'
 
 		// Editor body
-		this.editor = this.editorDOM.querySelector('#editor-body')
+		this.editorBody = this.editorDOM.querySelector('#editor-body')
 
 		// Toolbar
 		this.toolbar = this.editorDOM.querySelector('#editor-toolbar')
@@ -68,6 +68,27 @@ export default class DOMManager {
 		}
 		
 		return elm
+	}
+
+	/**
+	 * Generate image figure element
+	 * @param {HTMLElement} image 
+	 */
+	generateImageBlock(image) {
+		let figure = document.createElement("FIGURE")
+		figure.className = "image"
+		figure.contentEditable = false
+		let imageWrapper = document.createElement("DIV")
+		imageWrapper.className = "image-wrapper"
+
+		imageWrapper.appendChild(image)
+
+		let imageCaption = document.createElement("FIGCAPTION")
+		imageCaption.contentEditable = true
+
+		figure.appendChild(imageWrapper)
+		figure.appendChild(imageCaption)
+
 	}
 
 	togglePopTool() {
@@ -215,7 +236,7 @@ export default class DOMManager {
 		+ "px"
 
 		this.imageTool.style.top =
-		- this.editor.getBoundingClientRect().top +
+		- this.editorBody.getBoundingClientRect().top +
 		imageBlock.getBoundingClientRect().top +
 		imageBlock.getBoundingClientRect().height / 2 -
 		this.imageTool.getBoundingClientRect().height / 2
