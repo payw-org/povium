@@ -6,7 +6,8 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-use Povium\Base\Http\Exception\HttpException;
+use Povium\Base\Http\Exception\ForbiddenHttpException;
+use Povium\Base\Http\Exception\GoneHttpException;
 
 /**
  * Login Ajax
@@ -88,7 +89,8 @@ $router->get(
 /**
  * Email activation Link
  *
- * @throws HttpException		If email activation is failed
+ * @throws ForbiddenHttpException		If invalid activation request
+ * @throws GoneHttpException			If activation request has expired
  */
 $router->get(
 	'/c/email/activation',

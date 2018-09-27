@@ -9,9 +9,7 @@
 
 namespace Povium\Base\Http\Session;
 
-use Povium\Base\DBConnection;
-
-class PdoSessionHandler implements \SessionHandlerInterface
+class PDOSessionHandler implements \SessionHandlerInterface
 {
 	/**
 	 * @var array
@@ -19,23 +17,24 @@ class PdoSessionHandler implements \SessionHandlerInterface
 	protected $config;
 
 	/**
-	* PDO connection
+	* Database connection (PDO)
 	*
 	* @var \PDO
 	*/
-	protected $conn = null;
+	protected $conn;
 
 	/**
-	 * Constructor
+	 * @param array $config
+	 * @param \PDO  $conn
 	 */
-	public function __construct()
+	public function __construct(array $config, \PDO $conn)
 	{
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
+		$this->config = $config;
+		$this->conn = $conn;
 	}
 
 	/**
 	 * Initialize session.
-	 * Connect to database.
 	 *
 	 * @param  string	$savePath
 	 * @param  string	$sessionName
@@ -44,27 +43,16 @@ class PdoSessionHandler implements \SessionHandlerInterface
 	 */
 	public function open($savePath, $sessionName)
     {
-		$conn = DBConnection::getInstance()->getConn();
-
-		if ($conn === null) {
-			return false;
-		}
-
-		$this->conn = $conn;
-
 		return true;
     }
 
 	/**
 	 * Close the session.
-	 * Disconnect to database.
 	 *
 	 * @return bool
 	 */
     public function close()
     {
-        $this->conn = null;
-
         return true;
     }
 

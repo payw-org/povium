@@ -8,7 +8,6 @@
 
 namespace Povium\MailSender;
 
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 class ActivationMailSender extends AbstractMailSender

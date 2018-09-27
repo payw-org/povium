@@ -24,11 +24,12 @@ abstract class AbstractMailSender
 	protected $mail;
 
 	/**
-	 * Constructor
+	 * @param array     $config
+	 * @param PHPMailer $mail
 	 */
-	public function __construct(PHPMailer $mail)
+	public function __construct(array $config, PHPMailer $mail)
 	{
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mail_sender.php');
+		$this->config = $config;
 		$this->mail = $mail;
 	}
 

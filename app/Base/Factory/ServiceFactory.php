@@ -10,15 +10,12 @@ namespace Povium\Base\Factory;
 
 use Povium\Base\DBConnection;
 use PHPMailer\PHPMailer\PHPMailer;
+use ZxcvbnPhp\Zxcvbn;
 
 class ServiceFactory extends AbstractChildFactory
 {
 	/**
-	* Manufacture materials into arguments
-	*
-	* @param mixed optional
-	*
-	* @return void
+	* {@inheritdoc}
 	*/
 	protected function prepareArgs()
 	{
@@ -26,33 +23,100 @@ class ServiceFactory extends AbstractChildFactory
 
 		//	Prepare arguments for each type
 		$args = array();
+
+		$master_factory = new MasterFactory();
 		switch ($this->type) {
-			//	Auth constructor params
-			//	(\PDO) : Not given
-			//	(SessionManager) : Given
-			case '\Povium\Auth':
+			case '\Povium\Base\Http\Session\PDOSessionHandler':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 				$args[] = DBConnection::getInstance()->getConn();
-				$args[] = $materials[0];
 
 				break;
+			case '\Povium\Base\Http\Session\SessionManager':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
+				$args[] = DBConnection::getInstance()->getConn();
+				$args[] = $master_factory->createInstance('\Povium\Base\Http\Session\PDOSessionHandler');
 
-			//	ActivationMailSender constructor params
-			//	(PHPMailer) : Not given
+				break;
+			case '\Povium\Base\Http\Client':
+				break;
+			case '\Povium\Base\Routing\Validator\RedirectURIValidator':
+				break;
+			case '\Povium\Base\Routing\Redirector':
+				break;
+			case '\Povium\Base\Routing\Router':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
+
+				break;
 			case '\Povium\MailSender\ActivationMailSender':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mail_sender.php');
 				$args[] = new PHPMailer(true);
 
 				break;
-
-			//	SessionManager constructor params
-			//	(\PDO) : Not given
-			case '\Povium\Base\Session\SessionManager':
+			case '\Povium\Generator\RandomStringGenerator':
+				break;
+			case '\Povium\Security\User\UserProvider':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/user_provider.php');
 				$args[] = DBConnection::getInstance()->getConn();
+				$args[] = $master_factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
 
 				break;
+			case '\Povium\Security\Encoder\PasswordEncoder':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/password_encoder.php');
 
-			//	Redirector constructor params
-			//	(string) : Given
-			case '\Povium\Base\Routing\Redirector':
+				break;
+			case '\Povium\Security\Validator\UserInfo\ReadableIDValidator':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/readable_id_validator.php');
+				$args[] = $master_factory->createInstance('\Povium\Security\User\UserProvider');
+
+				break;
+			case '\Povium\Security\Validator\UserInfo\EmailValidator':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_validator.php');
+				$args[] = $master_factory->createInstance('\Povium\Security\User\UserProvider');
+
+				break;
+			case '\Povium\Security\Validator\UserInfo\NameValidator':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/name_validator.php');
+				$args[] = $master_factory->createInstance('\Povium\Security\User\UserProvider');
+
+				break;
+			case '\Povium\Security\Validator\UserInfo\PasswordValidator':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/password_validator.php');
+				$args[] = new Zxcvbn();
+
+				break;
+			case '\Povium\Security\Auth\Auth':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php');
+				$args[] = DBConnection::getInstance()->getConn();
+				$args[] = $master_factory->createInstance('\Povium\Generator\RandomStringGenerator');
+				$args[] = $master_factory->createInstance('\Povium\Base\Http\Client');
+				$args[] = $master_factory->createInstance('\Povium\Security\User\UserProvider');
+				$args[] = $materials[0];
+
+				break;
+			case '\Povium\Security\Auth\Controller\LoginController':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_controller.php');
+				$args[] = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
+				$args[] = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
+				$args[] = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+				$args[] = $materials[0];
+
+				break;
+			case '\Povium\Security\Auth\Controller\LogoutController':
+				$args[] = $materials[0];
+
+				break;
+			case '\Povium\Security\Auth\Controller\RegisterController':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/register_controller.php');
+				$args[] = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
+				$args[] = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\NameValidator');
+				$args[] = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+				$args[] = $materials[0];
+
+				break;
+			case '\Povium\Security\Auth\Controller\EmailActivationController':
+				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_controller.php');
+				$args[] = DBConnection::getInstance()->getConn();
+				$args[] = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
 				$args[] = $materials[0];
 
 				break;

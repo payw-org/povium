@@ -8,63 +8,39 @@
 
 namespace Povium\Base\Http\Exception;
 
-class HttpException extends \RuntimeException implements HttpExceptionInterface
+abstract class HttpException extends \RuntimeException implements ExceptionInterface
 {
-	/**
-	 * @var array
-	 */
-	private $config;
-
 	/**
 	 * Http response code in 400 series or 500 series
 	 *
 	 * @var int
 	 */
-	private $responseCode;
+	protected $responseCode;
 
 	/**
-	 * @param int  			$response_code	Http response code
-	 * @param string  		$details		Http response details
-	 * @param int 			$code			Exception code
-	 * @param \Throwable 	$previous		Previous exception
+	 * @param int     		$response_code 	Http response code
+	 * @param string  		$message		Http response details
+	 * @param integer 		$code
+	 * @param \Throwable  	$previous
 	 */
-	public function __construct($response_code, $details = "", $code = 0, $previous = null)
- 	{
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
+	public function __construct(
+		int $response_code,
+ 		string $message = "",
+ 		int $code = 0,
+		\Throwable $previous = null
+	) {
 		$this->responseCode = $response_code;
 
-		parent::__construct($details, $code, $previous);
+		parent::__construct($message, $code, $previous);
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * Gets the http response code
+	 *
+	 * @return int
 	 */
 	public function getResponseCode()
 	{
 		return $this->responseCode;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getTitle()
-	{
-		return $this->config[strval($this->responseCode)]['title'];
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getMsg()
-	{
-		return $this->config[strval($this->responseCode)]['msg'];
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getDetails()
-	{
-		return $this->getMessage();
 	}
 }

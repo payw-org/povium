@@ -52,10 +52,6 @@ abstract class AbstractChildFactory implements FactoryInterface
 	*/
 	protected function create()
 	{
-		//	If '...' operator (require upper version of PHP 5.6.0)
-		//	is not working, use below code.
-		#	$reflect  = new ReflectionClass($this->type);
-		#	$instance = $reflect->newInstanceArgs($this->args);
 		$instance = new $this->type(...$this->args);
 
 		return $instance;

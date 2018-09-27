@@ -20,15 +20,23 @@ class SessionManager
 	*
 	* @var \PDO
 	*/
-	protected $conn = null;
+	protected $conn;
 
 	/**
-	* @param \PDO $conn
-	*/
-	public function __construct($conn)
+	 * @var PDOSessionHandler
+	 */
+	protected $sessionHandler;
+
+	/**
+	 * @param array 			$config
+	 * @param \PDO				$conn
+	 * @param PDOSessionHandler $session_handler
+	 */
+	public function __construct(array $config, \PDO $conn, PDOSessionHandler $session_handler)
 	{
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
+		$this->config = $config;
 		$this->conn = $conn;
+		$this->sessionHandler = $session_handler;
 	}
 
 	/**
@@ -38,7 +46,7 @@ class SessionManager
 	 */
 	public function setSessionConfig()
 	{
-		session_set_save_handler(new PdoSessionHandler(), true);
+		session_set_save_handler($this->sessionHandler, true);
 
 		ini_set('session.gc_maxlifetime', $this->config['gc_maxlifetime']);
 		ini_set('session.gc_probability', $this->config['gc_probability']);
@@ -59,12 +67,12 @@ class SessionManager
 	 *
 	 * @return null
 	 */
-	public function checkAndSetSessionId()
+	public function checkAndSetSessionID()
 	{
-		$current_session_id = $this->getCurrentSessionId();
+		$current_session_id = $this->getCurrentSessionID();
 
-		if (!$this->checkSessionId($current_session_id)) {
-			$new_session_id = $this->createSessionId();
+		if (!$this->checkSessionID($current_session_id)) {
+			$new_session_id = $this->createSessionID();
 			session_id($new_session_id);
 		}
 	}
@@ -78,7 +86,7 @@ class SessionManager
 	 *
 	 * @return null
 	 */
-	public function regenerateSessionId($keep_session_data = true, $delete_old_session = false)
+	public function regenerateSessionID($keep_session_data = true, $delete_old_session = false)
 	{
 		//	Store current session data
 		$session_data = $_SESSION;
@@ -89,7 +97,7 @@ class SessionManager
 		session_write_close();
 
 		//	Create new session id
-		$new_session_id = $this->createSessionId();
+		$new_session_id = $this->createSessionID();
 
 		//	Set session id to new one, and start it
 		session_id($new_session_id);
@@ -114,7 +122,7 @@ class SessionManager
 	 *
 	 * @return bool Whether session id is valid.
 	 */
-	public function checkSessionId($session_id)
+	public function checkSessionID($session_id)
 	{
 		if (empty($session_id)) {
 			return false;
@@ -151,7 +159,7 @@ class SessionManager
 	 *
 	 * @return	string|false
 	 */
-	public function getCurrentSessionId()
+	public function getCurrentSessionID()
 	{
 		if (isset($_COOKIE[$this->config['cookie_params']['name']])) {
 			return $_COOKIE[$this->config['cookie_params']['name']];
@@ -166,7 +174,7 @@ class SessionManager
 	 *
 	 * @return string
 	 */
-	public function createSessionId()
+	public function createSessionID()
 	{
 		$len = $this->config['session_id_length'];
 

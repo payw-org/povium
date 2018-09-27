@@ -31,7 +31,7 @@ class DBConnection
 	*
 	* @var \PDO
 	*/
-	private $conn = null;
+	private $conn;
 
 	/**
 	* Opens the database connection using PDO
@@ -39,6 +39,7 @@ class DBConnection
 	private function __construct()
 	{
 		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/connection.php');
+
 		$this->generatePDOConnection();
 	}
 
@@ -55,7 +56,7 @@ class DBConnection
 	 */
 	private function generatePDOConnection()
 	{
-		if ($this->conn == null) {
+		if ($this->conn === null) {
 			$dsn =
 				"" . $this->config['driver'] .
 				":host=" . $this->config['host'] .
@@ -69,7 +70,7 @@ class DBConnection
  					$this->config['opt']
 				);
 			} catch (\PDOException $e) {
-				echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
+				error_log("ERROR: " . $e->getMessage() . " on line " . __LINE__);
 			}
 		}
 	}
@@ -83,43 +84,4 @@ class DBConnection
 	{
 		return $this->conn;
 	}
-
-	/* Deprecated */
-	// /**
-	// * Runs a INSERT, DELETE, UPDATE query using prepared statements
-	// *
-	// * @param  string $sql query string
-	// * @return int      num of affected records
-	// */
-	// public function runQuery($sql)
-	// {
-	// 	try {
-	// 		$stmt = $this->conn->prepare($sql);
-	// 		$stmt->execute();
-	//
-	// 		$count = $stmt->rowCount();
-	// 	} catch (\PDOException $e) {
-	// 		echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
-	// 	}
-	//
-	// 	return $count;
-	// }
-	//
-	// /**
-	// * Runs a SELECT query using prepared statements
-	// *
-	// * @param  string $sql query string
-	// * @return PDOStatement you can fetch records using it
-	// */
-	// public function getQuery($sql)
-	// {
-	// 	try {
-	// 		$stmt = $this->conn->prepare($sql);
-	// 		$stmt->execute();
-	// 	} catch (\PDOException $e) {
-	// 		echo "ERROR: " . $e->getMessage() . " on line " . __LINE__;
-	// 	}
-	//
-	// 	return $stmt;
-	// }
 }

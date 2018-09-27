@@ -1,7 +1,6 @@
 <?php
 /**
 * Request email activation.
-* @TODO	Check get email address case sensitive or insensitive
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
@@ -9,21 +8,21 @@
 
 global $factory, $router, $auth;
 
-$mail_sender = $factory->createInstance('\Povium\MailSender\ActivationMailSender');
-$auth_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php';
-
 //	Receive email address by ajax
 # $email = json_decode(file_get_contents('php://input'), true)['email'];
 $email = '1000jaman@naver.com';
 
+$email_activation_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailActivationController', $auth);
+$mail_sender = $factory->createInstance('\Povium\MailSender\ActivationMailSender');
+
 //	Generate authentication token
-$token = $auth->generateUuidV4();
+$token = $auth->getRandomStringGenerator()->generateUUIDV4();
 
 #	array(
 #		'err' => bool,
 #		'msg' => err msg for display,
 #	);
-$return = $auth->addNewEmailAddress($email, $token);
+$return = $email_activation_controller->addNewEmailAddress($email, $token);
 
 if ($return['err']) {	//	Failed to add new email address
 
@@ -37,7 +36,7 @@ if ($return['err']) {	//	Failed to add new email address
 	//	Failed to send activation email
 	if (!$mail_sender->sendEmail($email, $activation_link)) {
 		$return['err'] = true;
-		$return['msg'] = $auth_config['msg']['activation_email_err'];
+		$return['msg'] = $email_activation_controller->getConfig()['msg']['activation_email_err'];
 	}
 }
 

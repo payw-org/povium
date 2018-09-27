@@ -100,7 +100,7 @@ $router->get(
 		$readable_id = strtolower($readable_id);
 
 		//	Nonexistent readable id.
-		if (false === $user_id = $auth->getUserIdFromReadableId($readable_id)) {
+		if (false === $user_id = $auth->getUserProvider()->getUserIDFromReadableID($readable_id)) {
 			throw new NotFoundHttpException();
 		}
 
@@ -149,13 +149,13 @@ $router->get(
  * DO NOT GENERATE URI FOR THIS ROUTE.
  *
  * @param	int		$response_code	Http response code
- * @param	string	$title			Http response title
- * @param	string	$msg			Http response message
+ * @param	string	$title 			Http response title
+ * @param	string	$heading		Http response heading
  * @param	string	$details		Http response details
  */
 $router->get(
 	'/*',
-	function ($response_code, $title, $msg, $details) {
+	function ($response_code, $title, $heading, $details) {
 		http_response_code($response_code);
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_error.php';

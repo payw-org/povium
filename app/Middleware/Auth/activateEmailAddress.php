@@ -7,14 +7,10 @@
 * @copyright	2018 DesignAndDevelop
 */
 
-use Povium\Base\Http\Exception\UnauthorizedHttpException;
 use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
 
-global $redirector, $auth;
-
-$auth_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/auth.php';
-$http_response_config = require $_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php';
+global $factory, $auth, $redirector;
 
 //	Fetch query params
 if (!isset($_GET['token'])) {
@@ -23,30 +19,28 @@ if (!isset($_GET['token'])) {
 
 $token = $_GET['token'];
 
+$email_activation_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailActivationController', $auth);
+$http_response_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
+
 #	array(
 #		'err' => bool,
 #		'code' => err code,
 #	);
-$return = $auth->activateEmailAddress($token);
+$return = $email_activation_controller->activateEmailAddress($token);
 
 if ($return['err']) {	//	Failed to activate email address
 	switch ($return['code']) {
-		case $auth_config['err']['code']['not_logged_in']:
-			throw new UnauthorizedHttpException();
-
+		case $email_activation_controller->getConfig()['code']['not_logged_in']:
 			break;
-
-		case $auth_config['err']['code']['user_not_found']:
+		case $email_activation_controller->getConfig()['code']['user_not_found']:
 			throw new GoneHttpException($http_response_config['410']['details']['user_not_found']);
 
 			break;
-
-		case $auth_config['err']['code']['token_not_match']:
+		case $email_activation_controller->getConfig()['code']['token_not_match']:
 			throw new ForbiddenHttpException($http_response_config['403']['details']['token_not_match']);
 
 			break;
-
-		case $auth_config['err']['code']['request_expired']:
+		case $email_activation_controller->getConfig()['code']['request_expired']:
 			throw new GoneHttpException($http_response_config['410']['details']['request_expired']);
 
 			break;

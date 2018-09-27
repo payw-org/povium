@@ -1,14 +1,16 @@
 <?php
 /**
-* Logout processing
+* Process logout.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop
 */
 
-global $auth;
+global $factory, $auth;
 
-$auth->logout();
+$logout_controller = $factory->createInstance('\Povium\Security\Auth\Controller\LogoutController', $auth);
+
+$logout_controller->logout();
 
 #	array(
 #		'err' => Whether an error occured,

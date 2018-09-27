@@ -9,7 +9,7 @@
 
 namespace Povium\Base\Routing\Exception;
 
-class MethodNotAllowedException extends \UnexpectedValueException implements RouterExceptionInterface
+class MethodNotAllowedException extends \UnexpectedValueException implements ExceptionInterface
 {
 	/**
 	 * Allowed methods for specific URI

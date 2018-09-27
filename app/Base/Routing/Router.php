@@ -19,6 +19,11 @@ use Povium\Base\Http\Exception\MethodNotAllowedHttpException;
 class Router
 {
 	/**
+	 * @var array
+	 */
+	private $httpResponseConfig;
+
+	/**
 	 * Binding the same patterns
 	 * array('$pattern' => Route array)
 	 *
@@ -32,6 +37,11 @@ class Router
 	 * @var array
 	 */
 	private $namedRoutes = array();
+
+	public function __construct(array $http_response_config)
+	{
+		$this->httpResponseConfig = $http_response_config;
+	}
 
 	/**
 	 * Generate new route and register to Router
@@ -149,15 +159,15 @@ class Router
 			}
 		} catch (HttpException $e) {				//	Handle the http error (400 or 500 series)
 			$response_code = $e->getResponseCode();	//	Http response code
-			$title = $e->getTitle();				//	Http response title
-			$msg = $e->getMsg();					//	Http response message
-			$details = $e->getDetails();			//	Http response details
+			$details = $e->getMessage();			//	Http response details
+			$title = $this->httpResponseConfig[$response_code]['title'];		//	Http response title
+			$heading = $this->httpResponseConfig[$response_code]['heading'];	//	Http response heading
 
 			call_user_func(
 				$this->namedRoutes['http_error']->handler,
  				$response_code,
 				$title,
-				$msg,
+				$heading,
 				$details
 			);
 		}
@@ -167,8 +177,10 @@ class Router
 	 * @param string $http_method 	One of a HTTP methods
 	 * @param string $request_uri
 	 *
-	 * @return array 											Handler and required params of specific route
-	 * @throws RouteNotFoundException|MethodNotAllowedException	If matched route is not found
+	 * @return array 	Handler and required params of specific route
+	 *
+	 * @throws RouteNotFoundException		If matched pattern is not found
+	 * @throws MethodNotAllowedException	If matched method is not found
 	 */
 	private function findMatchedRoute($http_method, $request_uri)
 	{
@@ -294,6 +306,7 @@ class Router
 	 * @param  array  $params	Associative array of parameters to replace placeholders with.
 	 *
 	 * @return string 						Suitable URI
+	 *
 	 * @throws NamedRouteNotFoundException 	If route name does not exist
 	 */
 	public function generateURI($arg, array $params = array())
@@ -322,6 +335,7 @@ class Router
 	 * @param  array  $params	 Associative array of parameters to replace placeholders with.
 	 *
 	 * @return string 			 			Suitable URI
+	 *
 	 * @throws InvalidParameterException 	If parameter is not valid
 	 */
 	private function generateURIWithPattern($pattern, array $params = array())

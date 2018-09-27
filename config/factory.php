@@ -10,10 +10,24 @@
 
 return [
 	'\Povium\Base\Factory\ServiceFactory' => [
-		'\Povium\Auth',
-		'\Povium\MailSender\ActivationMailSender',
-		'\Povium\Base\Routing\Router',
+		'\Povium\Base\Http\Session\PDOSessionHandler',
+		'\Povium\Base\Http\Session\SessionManager',
+		'\Povium\Base\Http\Client',
+		'\Povium\Base\Routing\Validator\RedirectURIValidator',
 		'\Povium\Base\Routing\Redirector',
-		'\Povium\Base\Session\SessionManager'
+		'\Povium\Base\Routing\Router',
+		'\Povium\MailSender\ActivationMailSender',
+		'\Povium\Generator\RandomStringGenerator',
+		'\Povium\Security\User\UserProvider',
+		'\Povium\Security\Encoder\PasswordEncoder',
+		'\Povium\Security\Validator\UserInfo\ReadableIDValidator',
+		'\Povium\Security\Validator\UserInfo\EmailValidator',
+		'\Povium\Security\Validator\UserInfo\NameValidator',
+		'\Povium\Security\Validator\UserInfo\PasswordValidator',
+		'\Povium\Security\Auth\Auth',
+		'\Povium\Security\Auth\Controller\LoginController',
+		'\Povium\Security\Auth\Controller\LogoutController',
+		'\Povium\Security\Auth\Controller\RegisterController',
+		'\Povium\Security\Auth\Controller\EmailActivationController'
 	]
 ];

@@ -38,7 +38,7 @@ class MasterFactory implements FactoryInterface
 	* @param	string	$type
 	* @param	mixed
 	*
-	* @return object												An instance of given type
+	* @return object	An instance of given type
 	*
 	* @throws NonexistentTypeException		If the type is not exist
 	* @throws UnregisteredTypeException		If the type is not registered

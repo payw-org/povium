@@ -6,7 +6,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-global $redirector, $auth;
+global $factory, $auth;
 
 //	Receive register inputs by ajax
 $register_inputs = json_decode(file_get_contents('php://input'), true);
@@ -20,23 +20,27 @@ if (isset($querystring)) {
 	parse_str($querystring, $query_params);
 }
 
+$login_controller = $factory->createInstance('\Povium\Security\Auth\Controller\LoginController', $auth);
+$register_controller = $factory->createInstance('\Povium\Security\Auth\Controller\RegisterController', $auth);
+$redirect_uri_validator = $factory->createInstance('\Povium\Base\Routing\Validator\RedirectURIValidator');
+
 #	array(
 #		'err' => bool,
 #		'msg' => err msg for display,
 #		'redirect' => redirect url (optional param)
 #	);
-$register_return = $auth->register($readable_id, $name, $password);
+$register_return = $register_controller->register($readable_id, $name, $password);
 
 if ($register_return['err']) {			//	Register fail
 
 } else {								//	Register success
-	$auth->login($readable_id, $password);
+	$login_controller->login($readable_id, $password);
 
 	$register_return['redirect'] = '/';
 
 	if (
 		isset($query_params['redirect']) &&
-		$redirector->validateRedirectURI($query_params['redirect'])
+		$redirect_uri_validator->validate($query_params['redirect'])
 	) {
 		$register_return['redirect'] = $query_params['redirect'];
 	}

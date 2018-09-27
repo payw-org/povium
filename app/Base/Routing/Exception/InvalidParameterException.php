@@ -8,6 +8,6 @@
 
 namespace Povium\Base\Routing\Exception;
 
-class InvalidParameterException extends \InvalidArgumentException implements RouterExceptionInterface
+class InvalidParameterException extends \InvalidArgumentException implements ExceptionInterface
 {
 }
