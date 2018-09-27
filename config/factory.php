@@ -28,6 +28,7 @@ return [
 		'\Povium\Security\Auth\Controller\LoginController',
 		'\Povium\Security\Auth\Controller\LogoutController',
 		'\Povium\Security\Auth\Controller\RegisterController',
-		'\Povium\Security\Auth\Controller\EmailActivationController'
+		'\Povium\Security\Auth\Controller\EmailActivationController',
+		'\Povium\Base\TemplateEngine'
 	]
 ];

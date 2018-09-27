@@ -24,11 +24,11 @@ session_start();
 //	Initialize authentication system
 $auth = $factory->createInstance('\Povium\Security\Auth\Auth', $session_manager);
 
-//	Initialize routing system
 $router = $factory->createInstance('\Povium\Base\Routing\Router');
 $redirector = $factory->createInstance('\Povium\Base\Routing\Redirector');
+$template_engine = $factory->createInstance('\Povium\Base\TemplateEngine');
 
-//	Set routes for web
+//	Set routes
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php';
 

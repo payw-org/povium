@@ -13,8 +13,9 @@ use Povium\Base\Http\Exception\NotFoundHttpException;
  */
 $router->get(
 	'/',
- 	function () {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php';
+ 	function () use ($template_engine) {
+		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php');
+		$template_engine->render($settings['template_dir'], $settings['config']);
 	}
 );
 
@@ -23,7 +24,7 @@ $router->get(
  */
 $router->get(
 	'/login',
- 	function () use ($auth, $redirector) {
+ 	function () use ($auth, $redirector, $template_engine) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
 			$redirector->redirect('/');
@@ -44,7 +45,8 @@ $router->get(
 			}
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/login.php';
+		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/login.php');
+		$template_engine->render($settings['template_dir'], $settings['config']);
 	}
 );
 
@@ -53,7 +55,7 @@ $router->get(
  */
 $router->get(
 	'/register',
- 	function () use ($auth, $redirector) {
+ 	function () use ($auth, $redirector, $template_engine) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
 			$redirector->redirect('/');
@@ -73,7 +75,8 @@ $router->get(
 			}
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/auth/register.php';
+		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/register.php');
+		$template_engine->render($settings['template_dir'], $settings['config']);
 	}
 );
 
@@ -82,8 +85,9 @@ $router->get(
  */
 $router->get(
 	'/editor',
- 	function () use ($auth, $redirector) {
-		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php';
+ 	function () use ($template_engine) {
+		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php');
+		$template_engine->render($settings['template_dir'], $settings['config']);
 	}
 );
 
@@ -96,7 +100,7 @@ $router->get(
  */
 $router->get(
 	'/@{readable_id:.+}',
- 	function ($readable_id) use ($auth) {
+ 	function ($readable_id) use ($auth, $template_engine) {
 		$readable_id = strtolower($readable_id);
 
 		//	Nonexistent readable id.
@@ -114,7 +118,7 @@ $router->get(
  */
 $router->get(
 	'/@{readable_id:.+}/{post_title:.+}-{post_id:\d+}',
- 	function ($readable_id, $post_title, $post_id) {
+ 	function ($readable_id, $post_title, $post_id) use ($template_engine) {
 		//	post_id에 해당하는 포스트가 있는지 체크
 		//	없으면 return false
 		//	있으면 포스트 작성자의 readable id와 포스트 타이틀을 가져옴
@@ -132,13 +136,13 @@ $router->get(
  */
 $router->get(
 	'/me/settings/email',
-	function () use ($auth, $redirector) {
+	function () use ($auth, $redirector, $template_engine) {
 		//	If not logged in, redirect to register page.
 		if (!$auth->isLoggedIn()) {
 			$redirector->redirect('/register', true);
 		}
 
-		//	require page
+		//	Render page
 	}
 );
 
@@ -155,10 +159,11 @@ $router->get(
  */
 $router->get(
 	'/*',
-	function ($response_code, $title, $heading, $details) {
+	function ($response_code, $title, $heading, $details) use ($template_engine) {
 		http_response_code($response_code);
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_error.php';
+		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_error.php');
+		$template_engine->render($settings['template_dir'], $settings['config']);
 	},
 	'http_error'
 );

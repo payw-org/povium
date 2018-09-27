@@ -120,6 +120,8 @@ class ServiceFactory extends AbstractChildFactory
 				$args[] = $materials[0];
 
 				break;
+			case '\Povium\Base\TemplateEngine':
+				break;
 		}
 
 		$this->args = $args;
