@@ -29,8 +29,7 @@ if ($return['err']) {	//	Failed to add new email address
 } else {				//	Successfully added new email address
 	//	Generate email activation link
 	$activation_link =
-		BASE_URI .
-		$router->generate('email_activation') .
+		$router->generate('email_activation', array(), $router::URL) .
 		'?' . http_build_query(array('token' => $token));
 
 	//	Failed to send activation email

@@ -7,12 +7,12 @@
 */
 
 return [
-	'use_smtp' => true,					//	Set to use SMTP
+	'use_smtp' => false,					//	Set to use SMTP
 	'smtp_debug' => 0,						//	Enable verbose debug output
 	'smtp_host' => 'smtp.gmail.com',		//	Specify main and backup SMTP servers
 	'smtp_auth' => true,					//	Enable SMTP authentication
 	'smtp_username' => 'pro1000j@gmail.com',//	SMTP username
-	'smtp_password' => 'D4dc5A1352!',		//	SMTP password
+	'smtp_password' => '',		//	SMTP password
 	'smtp_secure' => 'tls',					//	Enable TLS encryption, `ssl` also accepted
 	'smtp_port' => 587,						//	TCP port to connect to
 
