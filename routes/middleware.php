@@ -12,12 +12,12 @@ use Povium\Base\Http\Exception\GoneHttpException;
 /**
  * Login Ajax
  */
-$router->post(
+$collection->post(
 	'/login',
-	function () use ($auth, $redirector) {
+	function () use ($auth, $router) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			$redirector->redirect('/');
+			$router->redirect('/');
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/login.php';
@@ -27,12 +27,12 @@ $router->post(
 /**
  * Register Ajax
  */
-$router->post(
+$collection->post(
 	'/register',
-	function () use ($auth, $redirector) {
+	function () use ($auth, $router) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			$redirector->redirect('/');
+			$router->redirect('/');
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/register.php';
@@ -42,12 +42,12 @@ $router->post(
 /**
  * Validate register inputs Ajax
  */
-$router->put(
+$collection->put(
 	'/register',
-	function () use ($auth, $redirector) {
+	function () use ($auth, $router) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			$redirector->redirect('/');
+			$router->redirect('/');
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/validateRegisterInputs.php';
@@ -57,12 +57,12 @@ $router->put(
 /**
  * Logout Ajax
  */
-$router->post(
+$collection->post(
 	'/logout',
-	function () use ($auth, $redirector) {
+	function () use ($auth, $router) {
 		//	If not logged in, redirect to register page.
 		if (!$auth->isLoggedIn()) {
-			$redirector->redirect('/register');
+			$router->redirect('/register');
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/logout.php';
@@ -74,12 +74,12 @@ $router->post(
  *
  * Get is Test mode. Original is post.
  */
-$router->get(
+$collection->get(
 	'/me/settings/email/new-request',
-	function () use ($auth, $redirector) {
+	function () use ($auth, $router) {
 		//	If not logged in, redirect to register page.
 		if (!$auth->isLoggedIn()) {
-			$redirector->redirect('/register');
+			$router->redirect('/register');
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/requestEmailActivation.php';
@@ -92,12 +92,12 @@ $router->get(
  * @throws ForbiddenHttpException		If invalid activation request
  * @throws GoneHttpException			If activation request has expired
  */
-$router->get(
+$collection->get(
 	'/c/email/activation',
-	function () use ($auth, $redirector) {
+	function () use ($auth, $router) {
 		//	If not logged in, redirect to login page.
 		if (!$auth->isLoggedIn()) {
-			$redirector->redirect('/login', true);
+			$router->redirect('/login', true);
 		}
 
 		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/activateEmailAddress.php';

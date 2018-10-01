@@ -11,7 +11,7 @@ use Povium\Base\Http\Exception\NotFoundHttpException;
 /**
  * Home Page
  */
-$router->get(
+$collection->get(
 	'/',
  	function () use ($template_engine) {
 		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php');
@@ -22,12 +22,12 @@ $router->get(
 /**
  * Login Page
  */
-$router->get(
+$collection->get(
 	'/login',
- 	function () use ($auth, $redirector, $template_engine) {
+ 	function () use ($auth, $router, $template_engine) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			$redirector->redirect('/');
+			$router->redirect('/');
 		}
 
 		//	If referer is register page
@@ -41,7 +41,7 @@ $router->get(
 			if (isset($prev_query) && !isset($curr_query)) {
 				//	Concatenate referer's query to current uri.
 				//	Then redirect.
-				$redirector->redirect('/login' . '?' . $prev_query);
+				$router->redirect('/login' . '?' . $prev_query);
 			}
 		}
 
@@ -53,12 +53,12 @@ $router->get(
 /**
  * Regsiter Page
  */
-$router->get(
+$collection->get(
 	'/register',
- 	function () use ($auth, $redirector, $template_engine) {
+ 	function () use ($auth, $router, $template_engine) {
 		//	If already logged in, send to home page.
 		if ($auth->isLoggedIn()) {
-			$redirector->redirect('/');
+			$router->redirect('/');
 		}
 
 		//	If referer is login page
@@ -71,7 +71,7 @@ $router->get(
 			if (isset($prev_query) && !isset($curr_query)) {
 				//	Concatenate referer's query to current uri.
 				//	Then redirect.
-				$redirector->redirect('/register' . '?' . $prev_query);
+				$router->redirect('/register' . '?' . $prev_query);
 			}
 		}
 
@@ -83,7 +83,7 @@ $router->get(
 /**
  * Editor test page
  */
-$router->get(
+$collection->get(
 	'/editor',
  	function () use ($template_engine) {
 		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php');
@@ -98,7 +98,7 @@ $router->get(
  *
  * @throws NotFoundHttpException If nonexistent readable id
  */
-$router->get(
+$collection->get(
 	'/@{readable_id:.+}',
  	function ($readable_id) use ($auth, $template_engine) {
 		$readable_id = strtolower($readable_id);
@@ -116,7 +116,7 @@ $router->get(
 /**
  * Post Page
  */
-$router->get(
+$collection->get(
 	'/@{readable_id:.+}/{post_title:.+}-{post_id:\d+}',
  	function ($readable_id, $post_title, $post_id) use ($template_engine) {
 		//	post_id에 해당하는 포스트가 있는지 체크
@@ -134,12 +134,12 @@ $router->get(
 /**
  * Email Setting Page(Tab)
  */
-$router->get(
+$collection->get(
 	'/me/settings/email',
-	function () use ($auth, $redirector, $template_engine) {
+	function () use ($auth, $router, $template_engine) {
 		//	If not logged in, redirect to register page.
 		if (!$auth->isLoggedIn()) {
-			$redirector->redirect('/register', true);
+			$router->redirect('/register', true);
 		}
 
 		//	Render page
@@ -157,7 +157,7 @@ $router->get(
  * @param	string	$heading		Http response heading
  * @param	string	$details		Http response details
  */
-$router->get(
+$collection->get(
 	'/*',
 	function ($response_code, $title, $heading, $details) use ($template_engine) {
 		http_response_code($response_code);

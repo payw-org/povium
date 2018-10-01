@@ -6,21 +6,12 @@
 * @copyright	2018 DesignAndDevelop
 */
 
-namespace Povium\Base\Routing;
+namespace Povium\Base\Routing\Redirector;
 
-class Redirector
+class Redirector implements RedirectorInterface
 {
 	/**
-	 * Redirect to given URI.
-	 * If $return_to is true, add 'redirect' query.
-	 * For redirect back after login (or register, etc...).
-	 * If you want to back other URI, you can specify it through $return_uri.
-	 *
-	 * @param  string  $uri
-	 * @param  boolean $return_to
-	 * @param  string  $return_uri
-	 *
-	 * @return void
+	 * {@inheritdoc}
 	 */
 	public function redirect($uri, $return_to = false, $return_uri = "")
 	{

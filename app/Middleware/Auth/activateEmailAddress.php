@@ -10,7 +10,7 @@
 use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
 
-global $factory, $auth, $redirector;
+global $factory, $auth, $router;
 
 //	Fetch query params
 if (!isset($_GET['token'])) {
@@ -20,7 +20,7 @@ if (!isset($_GET['token'])) {
 $token = $_GET['token'];
 
 $email_activation_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailActivationController', $auth);
-$http_response_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
+$http_response_config = $router->getHttpResponseConfig();
 
 #	array(
 #		'err' => bool,
@@ -46,5 +46,5 @@ if ($return['err']) {	//	Failed to activate email address
 			break;
 	}
 } else {				//	Successfully activated email address
-	$redirector->redirect('/');		#	홈에서 인증완료됨을 알리는 modal이 뜨도록 query params 추가하기
+	$router->redirect('/');		#	홈에서 인증완료됨을 알리는 modal이 뜨도록 query params 추가하기
 }

@@ -24,13 +24,17 @@ session_start();
 //	Initialize authentication system
 $auth = $factory->createInstance('\Povium\Security\Auth\Auth', $session_manager);
 
-$router = $factory->createInstance('\Povium\Base\Routing\Router');
-$redirector = $factory->createInstance('\Povium\Base\Routing\Redirector');
 $template_engine = $factory->createInstance('\Povium\Base\TemplateEngine');
 
-//	Set routes
+$router = $factory->createInstance('\Povium\Base\Routing\Router');
+
+//	Create routes and add to collection.
+$collection = $factory->createInstance('\Povium\Base\Routing\RouteCollection');
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php';
 
-//	Process the request
+//	Set collection
+$router->setRouteCollection($collection);
+
+//	Dispatch a request
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

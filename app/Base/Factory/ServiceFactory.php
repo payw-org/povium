@@ -39,13 +39,22 @@ class ServiceFactory extends AbstractChildFactory
 				break;
 			case '\Povium\Base\Http\Client':
 				break;
-			case '\Povium\Base\Routing\Validator\RedirectURIValidator':
-				break;
-			case '\Povium\Base\Routing\Redirector':
-				break;
 			case '\Povium\Base\Routing\Router':
 				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
+				$args[] = $master_factory->createInstance('\Povium\Base\Routing\Matcher\RequestMatcher');
+				$args[] = $master_factory->createInstance('\Povium\Base\Routing\Generator\URIGenerator');
+				$args[] = $master_factory->createInstance('\Povium\Base\Routing\Redirector\Redirector');
 
+				break;
+			case '\Povium\Base\Routing\RouteCollection':
+				break;
+			case '\Povium\Base\Routing\Matcher\RequestMatcher':
+				break;
+			case '\Povium\Base\Routing\Generator\URIGenerator':
+				break;
+			case '\Povium\Base\Routing\Redirector\Redirector':
+				break;
+			case '\Povium\Base\Routing\Validator\RedirectURIValidator':
 				break;
 			case '\Povium\MailSender\ActivationMailSender':
 				$args[] = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mail_sender.php');

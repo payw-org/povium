@@ -19,6 +19,11 @@ class RedirectURIValidator implements ValidatorInterface
 	 */
 	public function validate($redirect_uri)
 	{
+		//	Check if value is a valid URL form
+		if (!filter_var($redirect_uri, FILTER_VALIDATE_URL)) {
+			return false;
+		}
+
 		$parsed_base_uri = parse_url(BASE_URI);
 		$parsed_redirect_uri = parse_url($redirect_uri);
 
