@@ -123,10 +123,7 @@ class Router implements RouterInterface
 				$handler = $matched_route_info['handler'];
 				$params = $matched_route_info['params'];
 
-				call_user_func_array(
-					$handler,
-	 				array_values($params)
-				);
+				$handler(...array_values($params));
 			} catch (RouteNotFoundException $e) {
 				throw new NotFoundHttpException(
 					$e->getMessage(),
@@ -141,18 +138,14 @@ class Router implements RouterInterface
 				);
 			}
 		} catch (HttpException $e) {				//	Handle the http error
+			$handler = $this->routeCollection->getRouteFromName('http_error')->getHandler();
+
 			$response_code = $e->getResponseCode();	//	Http response code
 			$details = $e->getMessage();			//	Http response details
 			$title = $this->httpResponseConfig[$response_code]['title'];		//	Http response title
 			$heading = $this->httpResponseConfig[$response_code]['heading'];	//	Http response heading
 
-			call_user_func(
-				$this->routeCollection->getRouteFromName('http_error')->getHandler(),
- 				$response_code,
-				$title,
-				$heading,
-				$details
-			);
+			$handler($response_code, $title, $heading, $details);
 		}
 	}
 }

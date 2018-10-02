@@ -31,7 +31,7 @@ abstract class AbstractChildFactory implements FactoryInterface
 	{
 		$this->type = $type;
 		$materials = array_slice(func_get_args(), 1);
-		call_user_func_array(array($this, 'prepareArgs'), $materials);
+		$this->prepareArgs(...$materials);
 
 		return $this->create();
 	}

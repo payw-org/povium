@@ -83,8 +83,9 @@ abstract class AbstractMailSender
 		$this->setBasicPreferences();
 
 		$args = func_get_args();
+
 		try {
-			call_user_func_array(array($this, 'generateEmail'), $args);
+			$this->generateEmail(...$args);
 
 			$this->mail->send();
 		} catch (Exception $e) {		//	Mail could not be sent
