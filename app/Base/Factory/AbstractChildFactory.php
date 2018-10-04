@@ -1,6 +1,7 @@
 <?php
 /**
-* This Factory is responsible for creating instance of given type.
+* Abstract form for factory which is responsible for creating instance
+* of given type.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop
@@ -11,7 +12,7 @@ namespace Povium\Base\Factory;
 abstract class AbstractChildFactory implements FactoryInterface
 {
 	/**
-	* Given type of instance
+	* Fully qualified type name
 	*
 	* @var string
 	*/
@@ -22,7 +23,7 @@ abstract class AbstractChildFactory implements FactoryInterface
 	*
 	* @var array
 	*/
-	protected $args;
+	protected $args = array();
 
 	/**
 	* {@inheritdoc}
@@ -37,7 +38,7 @@ abstract class AbstractChildFactory implements FactoryInterface
 	}
 
 	/**
-	* Manufacture materials into arguments
+	* Prepare arguments
 	*
 	* @param	mixed	materials
 	*

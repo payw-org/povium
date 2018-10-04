@@ -7,7 +7,7 @@
 * @copyright	2018 DesignAndDevelop
 */
 
-namespace Povium\Base;
+namespace Povium\Base\Templating;
 
 class TemplateEngine
 {
@@ -126,7 +126,7 @@ class TemplateEngine
 	 *
 	 * @param  string  $config_name  Config Name
 	 * @param  string  $dir          Directory
-	 * 
+	 *
 	 * @return null                  Return Nothing
 	 */
 	public function basis($config_name, $dir, $config = [])

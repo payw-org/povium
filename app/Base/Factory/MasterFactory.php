@@ -24,8 +24,8 @@ class MasterFactory implements FactoryInterface
 	protected $typeMap;
 
 	/**
-	* Initialize type map
-	*/
+	 * Set type map.
+	 */
 	public function __construct()
 	{
 		$this->typeMap = require($_SERVER['DOCUMENT_ROOT'] . '/../config/factory.php');
@@ -35,8 +35,8 @@ class MasterFactory implements FactoryInterface
 	* Returns an instance of the requested type by delegating call to
 	* responsible child factory instance.
 	*
-	* @param	string	$type
-	* @param	mixed
+	* @param	string	$type	Fully qualified type name
+	* @param	mixed			Materials
 	*
 	* @return object	An instance of given type
 	*
@@ -53,9 +53,10 @@ class MasterFactory implements FactoryInterface
 			throw new UnregisteredTypeException('Unregistered type: "' . $type . '"');
 		}
 
-		$factory = $this->getFactoryFor($type);
+		$factory_name = $this->getFactoryFor($type);
+		$factory = new $factory_name();
 
-		return (new $factory())->createInstance(...func_get_args());
+		return $factory->createInstance(...func_get_args());
 	}
 
 	/**
@@ -67,13 +68,11 @@ class MasterFactory implements FactoryInterface
 	*/
 	protected function hasFactoryFor($type)
 	{
-		foreach ($this->typeMap as $factory => $types) {
-			if (array_search($type, $types) !== false) {
-				return true;
-			}
+		if (!isset($this->typeMap[$type])) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	/**
@@ -81,14 +80,10 @@ class MasterFactory implements FactoryInterface
 	*
 	* @param  string $type
 	*
-	* @return string factory name
+	* @return string 	Factory name
 	*/
 	protected function getFactoryFor($type)
 	{
-		foreach ($this->typeMap as $factory => $types) {
-			if (array_search($type, $types) !== false) {
-				return $factory;
-			}
-		}
+		return $this->typeMap[$type];
 	}
 }

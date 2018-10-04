@@ -24,7 +24,7 @@ session_start();
 //	Initialize authentication system
 $auth = $factory->createInstance('\Povium\Security\Auth\Auth', $session_manager);
 
-$template_engine = $factory->createInstance('\Povium\Base\TemplateEngine');
+$template_engine = $factory->createInstance('\Povium\Base\Templating\TemplateEngine');
 
 $router = $factory->createInstance('\Povium\Base\Routing\Router');
 
