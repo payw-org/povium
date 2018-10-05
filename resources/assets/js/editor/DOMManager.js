@@ -52,13 +52,38 @@ export default class DOMManager {
 	}
 
 	/**
+	 * Insert a node before the referenced node.
+	 * @param {Node} newChild
+	 * @param {Node} refChild
+	 * @param {Boolean} setCursor
+	 * @param {Boolean} isLinked
+	 */
+	insertBefore(newChild, refChild, setCursor, isLinked)
+	{
+		
+	}
+
+	/**
+	 * Insert a node after the referenced node.
+	 * @param {Node} newChild
+	 * @param {Node} refChild
+	 * @param {Boolean} setCursor
+	 * @param {Boolean} isLinked
+	 */
+	insertAfter(newChild, refChild, setCursor, isLinked)
+	{
+
+	}
+
+	/**
 	 *
 	 * @param  {String} tagName
 	 * @return {HTMLElement}
 	 */
 	generateEmptyNode(tagName, br = true) {
 		var elm = document.createElement(tagName)
-		
+
+		// Give an id for the new node
 		elm.setAttribute("name", this.newNodeID)
 		this.newNodeID++
 
@@ -66,13 +91,13 @@ export default class DOMManager {
 			var br = document.createElement('br')
 			elm.appendChild(br)
 		}
-		
+
 		return elm
 	}
 
 	/**
 	 * Generate image figure element
-	 * @param {HTMLElement} image 
+	 * @param {HTMLElement} image
 	 */
 	generateImageBlock(image) {
 		let figure = document.createElement("FIGURE")
@@ -228,7 +253,7 @@ export default class DOMManager {
 	showImageTool(imageBlock) {
 
 		this.imageTool.classList.add("active")
-		
+
 		this.imageTool.style.left =
 		imageBlock.getBoundingClientRect().left +
 		imageBlock.getBoundingClientRect().width / 2 -

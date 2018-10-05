@@ -1,27 +1,33 @@
-import PostEditor from "./PostEditor"
+import PVMEditSession from "./PVMEditSession"
+import PopTool from "./PopTool"
+import PVMEditor from "./PVMEditor"
 
-export default class EventManager
-{
+export default class EventManager {
 
 	/**
 	 *
-	 * @param {PostEditor} postEditor
+	 * @param {PVMEditSession} editSession
 	 */
-	constructor(postEditor)
-	{
+	constructor(editSession) {
 
+		this.session = editSession
+		this.sel = editSession.selection
+		this.undoMan = editSession.undoManager
+		this.nodeMan = editSession.pvmNodeManager
+		this.editor = this.session.editor
+
+	}
+
+	attachEvents()
+	{
 		// Properties
 		let self = this
 
 		this.mouseDownStart = false
 
-		this.postEditor = postEditor
-
 		this.linkRange = document.createRange()
 
 		this.charKeyDownLocked = false
-
-		this.keyDownLocked = false
 
 		this.multipleSpaceLocked = false
 
@@ -39,28 +45,29 @@ export default class EventManager
 		})
 		window.addEventListener('mousedown', (e) => {
 			if (!e.target.closest("#poptool")) {
-				this.postEditor.domManager.hidePopTool()
+				this.pt.hidePopTool()
 				this.mouseDownStart = true
 			}
 
 		})
 		window.addEventListener('touchstart', (e) => {
 			if (!e.target.closest("#poptool")) {
-				this.postEditor.domManager.hidePopTool()
+				this.pt.hidePopTool()
 				this.mouseDownStart = true
 			}
 
 		})
-		this.postEditor.domManager.editorBody.addEventListener('mouseup', (e) => {
+
+		this.session.editorBody.addEventListener('mouseup', (e) => {
 			this.onSelectionChanged()
 		})
-		this.postEditor.domManager.editorBody.addEventListener('touchend', (e) => {
+		this.session.editorBody.addEventListener('touchend', (e) => {
 			this.onSelectionChanged()
 		})
-		this.postEditor.domManager.editorBody.addEventListener('dragstart', (e) => {
+		this.session.editorBody.addEventListener('dragstart', (e) => {
 			e.preventDefault()
 		})
-		this.postEditor.domManager.editorBody.addEventListener('drop', (e) => {
+		this.session.editorBody.addEventListener('drop', (e) => {
 			e.preventDefault()
 		})
 		window.addEventListener('mouseup', (e) => {
@@ -79,27 +86,29 @@ export default class EventManager
 
 		this.isBackspaceKeyPressed = false
 
-		window.addEventListener('keydown', (e) => {
+		this.session.editorBody.addEventListener('keydown', (e) => {
+
+			// this.onSelectionChanged()
 
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
 
 
 				if (e.shiftKey) {
 					e.preventDefault()
-					this.postEditor.undoManager.redo()
+					this.undoMan.redo()
 				} else {
 					e.preventDefault()
-					this.postEditor.undoManager.undo()
+					this.undoMan.undo()
 				}
 
-				this.onSelectionChanged()
+				// this.onSelectionChanged()
 
 			} else {
 				this.onKeyDown(e)
 			}
 
 			if (e.which >= 37 && e.which <= 40) {
-				this.onSelectionChanged()
+				// this.onSelectionChanged()
 			}
 
 			if (e.which === 65 && e.ctrlKey) {
@@ -107,16 +116,17 @@ export default class EventManager
 			}
 
 			if (!e.target.closest("#poptool")) {
-				this.postEditor.domManager.hidePopTool()
+				this.pt.hidePopTool()
 			}
 
 
 
 		})
 
-		window.addEventListener('keyup', (e) => {
+		this.session.editorBody.addEventListener('keyup', (e) => {
 
 			this.onKeyUp(e)
+			this.onSelectionChanged()
 
 			if (this.selectedAll) {
 				this.selectedAll = false
@@ -125,110 +135,59 @@ export default class EventManager
 
 		})
 
-		this.postEditor.domManager.editorBody.addEventListener('keypress', (e) => {
+		this.session.editorBody.addEventListener('keypress', (e) => {
 
 			this.onKeyPress(e)
 
 		})
 
-		this.postEditor.domManager.editorBody.addEventListener("input", (e) => {
 
-			this.onInput(e)
-
-		})
-
-
-		this.postEditor.domManager.editorBody.addEventListener('paste', (e) => { this.onPaste(e) })
+		this.session.editorBody.addEventListener('paste', (e) => { this.onPaste(e) })
 
 
 
 
 		// PopTool
-		// document.querySelector("#pt-p").addEventListener('click', (e) => { this.postEditor.selManager.heading('P') })
-		document.querySelector("#pt-h1").addEventListener('click', (e) => { this.postEditor.selManager.heading('H1') })
-		document.querySelector("#pt-h2").addEventListener('click', (e) => { this.postEditor.selManager.heading('H2') })
-		document.querySelector("#pt-h3").addEventListener('click', (e) => { this.postEditor.selManager.heading('H3') })
-		document.querySelector("#pt-bold").addEventListener('click', (e) => { this.postEditor.selManager.changeTextStyle("bold") })
-		document.querySelector("#pt-italic").addEventListener('click', (e) => { this.postEditor.selManager.changeTextStyle("italic") })
-		document.querySelector("#pt-underline").addEventListener('click', (e) => { this.postEditor.selManager.changeTextStyle("underline") })
-		document.querySelector("#pt-strike").addEventListener('click', (e) => { this.postEditor.selManager.changeTextStyle("strikeThrough") })
-		document.querySelector("#pt-alignleft").addEventListener('click', (e) => { this.postEditor.selManager.align('left') })
-		document.querySelector("#pt-alignmiddle").addEventListener('click', (e) => { this.postEditor.selManager.align('center') })
-		document.querySelector("#pt-alignright").addEventListener('click', (e) => { this.postEditor.selManager.align('right') })
 
-		document.querySelector("#pt-title-pack").addEventListener('click', (e) => {
-
-			document.querySelector("#poptool .top-categories").classList.add("hidden")
-			document.querySelector("#poptool .title-style").classList.remove("hidden")
-			this.postEditor.domManager.showPopTool()
-
-		})
-
-		document.querySelector("#pt-textstyle-pack").addEventListener('click', (e) => {
-
-			document.querySelector("#poptool .top-categories").classList.add("hidden")
-			document.querySelector("#poptool .text-style").classList.remove("hidden")
-			this.postEditor.domManager.showPopTool()
-
-		})
-
-		document.querySelector("#pt-align-pack").addEventListener('click', (e) => {
-
-			document.querySelector("#poptool .top-categories").classList.add("hidden")
-			document.querySelector("#poptool .align").classList.remove("hidden")
-			this.postEditor.domManager.showPopTool()
-
-		})
-
-		document.querySelector("#pt-link").addEventListener('click', (e) => {
-
-			document.querySelector("#poptool .top-categories").classList.add("hidden")
-			document.querySelector("#poptool .input").classList.remove("hidden")
-			this.postEditor.domManager.showPopTool()
-
-			this.linkRange = this.postEditor.selManager.getRange()
-
-			setTimeout(() => {
-				document.querySelector("#poptool .pack.input input").focus()
-			}, 0)
-
-		})
-
-		document.querySelector("#pt-blockquote").addEventListener('click', (e) => {
-
-			this.postEditor.selManager.blockquote()
-
-		})
-
-		document.querySelectorAll("#poptool .pack button").forEach(function(elm) {
-			elm.addEventListener('click', function() {
-				self.postEditor.domManager.showPopTool()
-			})
-
-		})
-
-		document.querySelector("#poptool .pack.input input").addEventListener("keydown", function(e) {
-			if (e.which === 13) {
-				e.preventDefault()
-				self.postEditor.domManager.hidePopTool()
-				self.postEditor.selManager.replaceRange(self.linkRange)
-				self.postEditor.selManager.link(this.value)
-				setTimeout(() => {
-					this.value = ""
-				}, 200)
-
+		this.session.editorBody.addEventListener('mousedown', (e) => {
+			if (!this.pt.dom.contains(e.target)) {
+				this.pt.hidePopTool()
 			}
 		})
 
+		this.session.editorBody.addEventListener('mouseup', (e) => {
+			setTimeout(() => {
+				this.pt.togglePopTool()
+			}, 0);
+
+		})
+
+		this.session.editorBody.addEventListener('keydown', (e) => {
+			let keyCode = e.which
+			if (keyCode === 37 || keyCode === 38 || keyCode === 39 || keyCode === 40) {
+				this.pt.togglePopTool()
+			}
+		})
+
+		this.pt.dom.querySelectorAll("button").forEach((elm) => {
+			elm.addEventListener("click", () => {
+				let currentRange = this.sel.getCurrentRange()
+				if (!currentRange.start.nodeID && !currentRange.end.nodeID) {
+					this.pt.hidePopTool()
+				}
+			})
+		})
+
+
 
 		// Disable link by click
-		this.postEditor.domManager.editorBody.addEventListener('mousedown', function(e) {
+		this.session.editorBody.addEventListener('mousedown', function (e) {
 			if (e.target.closest("a")) {
 				self.postEditor.selManager.unlink(e.target.closest("a"))
 				self.postEditor.domManager.hidePopTool()
 			}
 		})
-		this.postEditor.domManager.editorBody.addEventListener('touchstart', function(e) {
+		this.session.editorBody.addEventListener('touchstart', function (e) {
 			console.log(e.target)
 			console.log(e.target.closest("a"))
 			if (e.target.closest("a")) {
@@ -245,17 +204,17 @@ export default class EventManager
 				console.log("image clicked")
 				e.preventDefault()
 
-				var selectedFigure = this.postEditor.domManager.editorBody.querySelector("figure.image-selected")
+				var selectedFigure = this.session.editorBody.querySelector("figure.image-selected")
 				if (selectedFigure) {
 					selectedFigure.classList.remove("image-selected")
 				}
 
-				var figure = e.target.parentNode
+				var figure = e.target.parentElement
 				figure.classList.remove("caption-selected")
 				figure.classList.add("image-selected")
-				this.postEditor.domManager.showImageTool(e.target)
+				this.pt.showImageTool(e.target)
 
-				if (this.postEditor.selManager.isTextEmptyNode(figure.querySelector("FIGCAPTION"))) {
+				if (figure.querySelector("FIGCAPTION").textContent.length === 0) {
 					figure.querySelector("FIGCAPTION").innerHTML = "이미지 주석"
 				}
 
@@ -263,27 +222,27 @@ export default class EventManager
 
 			} else if (e.target.id === "full" && e.target.nodeName === "BUTTON") {
 
-				var selectedFigure = this.postEditor.domManager.editorBody.querySelector("figure.image-selected")
+				var selectedFigure = this.session.editorBody.querySelector("figure.image-selected")
 				selectedFigure.classList.add("full")
-				this.postEditor.domManager.hideImageTool()
+				this.pt.hideImageTool()
 				setTimeout(() => {
-					this.postEditor.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+					this.pt.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 
 			} else if (e.target.id === "normal" && e.target.nodeName === "BUTTON") {
 
-				var selectedFigure = this.postEditor.domManager.editorBody.querySelector("figure.image-selected")
+				var selectedFigure = this.session.editorBody.querySelector("figure.image-selected")
 				selectedFigure.classList.remove("full")
-				this.postEditor.domManager.hideImageTool()
+				this.pt.hideImageTool()
 				setTimeout(() => {
-					this.postEditor.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+					this.pt.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 
 			} else if (e.target.nodeName === "FIGCAPTION") {
 
 				e.target.parentNode.classList.add("caption-selected")
 				e.target.parentNode.classList.remove("image-selected")
-				this.postEditor.domManager.hideImageTool()
+				this.pt.hideImageTool()
 				if (!e.target.parentNode.classList.contains("caption-enabled")) {
 					e.target.innerHTML = "<br>"
 				}
@@ -294,13 +253,13 @@ export default class EventManager
 
 			} else {
 
-				var selectedFigure = this.postEditor.domManager.editorBody.querySelector("figure.image-selected, figure.caption-selected")
+				var selectedFigure = this.session.editorBody.querySelector("figure.image-selected, figure.caption-selected")
 				if (selectedFigure) {
 					selectedFigure.classList.remove("image-selected")
 					selectedFigure.classList.remove("caption-selected")
 				}
 
-				this.postEditor.domManager.hideImageTool()
+				this.pt.hideImageTool()
 
 			}
 		})
@@ -320,6 +279,26 @@ export default class EventManager
 		// }
 	}
 
+	// Setters
+
+	/**
+	 * 
+	 * @param {PopTool} pt 
+	 */
+	setPopTool(pt)
+	{
+		this.pt = pt
+	}
+
+	/**
+	 * 
+	 * @param {PVMEditor} pvmEditor 
+	 */
+	setEditor(pvmEditor)
+	{
+		this.editor = pvmEditor
+	}
+
 	// Events
 
 
@@ -328,14 +307,14 @@ export default class EventManager
 	*
 	* @param {KeyboardEvent} e
 	*/
-	onPaste (e) {
+	onPaste(e) {
 
 		let originalRange = this.postEditor.selManager.getRange()
 		if (!originalRange) {
 			return
 		}
 
-		let pasteArea = this.postEditor.domManager.editorDOM.querySelector("#paste-area")
+		let pasteArea = this.session.editorDOM.querySelector("#paste-area")
 		// let pasteArea = document.createElement("div")
 
 		pasteArea.innerHTML = ""
@@ -407,7 +386,7 @@ export default class EventManager
 
 						} else {
 
-							this.postEditor.domManager.editorBody.insertBefore(clonedTravelNode, lastPastedNode.nextSibling)
+							this.session.editorBody.insertBefore(clonedTravelNode, lastPastedNode.nextSibling)
 							lastPastedNode = clonedTravelNode
 
 							let range = document.createRange()
@@ -436,9 +415,9 @@ export default class EventManager
 
 						} else {
 
-							let p = this.postEditor.domManager.generateEmptyNode("P")
+							let p = this.session.generateEmptyNode("P")
 							p.innerHTML = travelNode.textContent
-							this.postEditor.domManager.editorBody.insertBefore(p, lastPastedNode.nextSibling)
+							this.session.editorBody.insertBefore(p, lastPastedNode.nextSibling)
 
 							let range = document.createRange()
 							range.setStartAfter(p)
@@ -452,7 +431,7 @@ export default class EventManager
 
 
 					if (travelNode.attributes) {
-						for (var i = travelNode.attributes.length - 1; i >= 0; i--){
+						for (var i = travelNode.attributes.length - 1; i >= 0; i--) {
 							if (
 								travelNode.nodeName === "IMG" && travelNode.attributes[i].name === "src"
 							) {
@@ -495,35 +474,37 @@ export default class EventManager
 	}
 
 
-	onKeyPress (e)
-	{
+	onKeyPress(e) {
+		// console.log("keypress")
 	}
 
 	/**
 	*
 	* @param {KeyboardEvent} e
 	*/
-	onKeyDown (e) {
-
-		this.keyDownLocked = true
+	onKeyDown(e)
+	{
 
 		let keyCode = e.which
 		let physKeyCode = e.code
+		// console.log(keyCode, physKeyCode)
 
-		let currentNode = this.postEditor.selManager.getNodeInSelection()
+		let currentRange = this.sel.getCurrentRange()
+		let currentNode = this.sel.getCurrentTextNode()
+		if (!currentNode) return
 
 		let enableTextChangeRecord = false
 
 		let key = "char"
 		let validCharKey
 		validCharKey =
-			((keyCode > 47 && keyCode < 58)  || // number keys
-			keyCode === 32                   || // spacebar & return key(s) (if you want to allow carriage returns)
-			(keyCode > 64 && keyCode < 91)   || // letter keys
-			(keyCode > 95 && keyCode < 112)  || // numpad keys
-			(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
-			(keyCode > 218 && keyCode < 223) || // [\]' (in order)
-			keyCode === 229)
+			((keyCode > 47 && keyCode < 58) || // number keys
+				keyCode === 32 || // spacebar & return key(s) (if you want to allow carriage returns)
+				(keyCode > 64 && keyCode < 91) || // letter keys
+				(keyCode > 95 && keyCode < 112) || // numpad keys
+				(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+				(keyCode > 218 && keyCode < 223) || // [\]' (in order)
+				keyCode === 229)
 			&& !e.ctrlKey && !e.metaKey
 
 		// validCharKey =
@@ -550,38 +531,46 @@ export default class EventManager
 
 		var sel = window.getSelection()
 		if (sel.rangeCount > 0) {
-			if (!this.postEditor.domManager.editorBody.contains(sel.getRangeAt(0).startContainer)) {
+			if (!this.session.editorBody.contains(sel.getRangeAt(0).startContainer)) {
 				// console.warn("The given range is not in the editor. Editor's features will work only inside the editor.")
 				return
 			}
 		}
 
-
-
 		if (keyCode === 8) {
 
-			if (this.postEditor.selManager.getSelectionPositionInParagraph() !== 1 && !this.postEditor.selManager.isTextEmptyNode(currentNode) && this.postEditor.selManager.getRange() && this.postEditor.selManager.getRange().collapsed) {
+			if (
+				currentRange &&
+				currentRange.isCollapsed() &&
+				(currentRange.start.state !== 1 || currentRange.start.state !== 4)
+			) {
 				enableTextChangeRecord = true
 				key = "backspace"
 			}
 
 			// Backspace
-			this.postEditor.selManager.backspace(e)
+			// this.postEditor.selManager.backspace(e)
 
 		} else if (keyCode === 46) {
 
-			if (this.postEditor.selManager.getSelectionPositionInParagraph() !== 3 && !this.postEditor.selManager.isTextEmptyNode(currentNode) && this.postEditor.selManager.getRange() && this.postEditor.selManager.getRange().collapsed) {
+			if (
+				currentRange &&
+				currentRange.isCollapsed() &&
+				(currentRange.start.state !== 3 || currentRange.start.state !== 4)
+			) {
 				enableTextChangeRecord = true
 				key = "delete"
 			}
 
 			// Delete
-			this.postEditor.selManager.delete(e)
+			// this.postEditor.selManager.delete(e)
+			// this.session.editor.onPressEnter(e)
 
 		} else if (keyCode === 13) {
 
 			// Enter(Return)
-			this.postEditor.selManager.enter(e)
+			e.preventDefault()
+			this.editor.onPressEnter(e)
 
 		} else if (keyCode === 90 && e.ctrlKey) {
 
@@ -592,9 +581,6 @@ export default class EventManager
 
 		if (validCharKey || enableTextChangeRecord) {
 
-			// press character keys
-			console.log("character", e.which, e.code)
-
 			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
 				this.postEditor.selManager.removeSelection("backspace", true)
 				this.postEditor.selManager.backspace(document.createEvent("KeyboardEvent"), true)
@@ -602,19 +588,28 @@ export default class EventManager
 
 			this.charKeyDownLocked = true
 
-			let lastAction = this.postEditor.undoManager.getTheLatestAction()
-
-			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode && keyCode !== 32 && lastAction.key === key && !lastAction.locked) {
+			let lastAction = this.undoMan.getLastestAction()
+			
+			if (
+				lastAction &&
+				lastAction.type === "textChange" &&
+				lastAction.affectedNode.isEqualTo(currentNode) &&
+				(keyCode !== 32 && physKeyCode !== "Space") &&
+				lastAction.key === key &&
+				!lastAction.locked
+			) {
 
 			} else if (currentNode) {
 
-				this.postEditor.undoManager.recordAction({
+				this.undoMan.record({
 					type: "textChange",
-					targetNode: currentNode,
-					prevContent: currentNode.innerHTML,
-					prevTextOffset: this.postEditor.selManager.getTextOffset(),
+					affectedNode: currentNode,
 					key: key,
-					locked: false
+					locked: false,
+					before: {
+						innerHTML: this.sel.currentState.innerHTML,
+						range: currentRange
+					}
 				})
 
 			}
@@ -625,59 +620,16 @@ export default class EventManager
 
 	}
 
-	/**
-	 *
-	 * @param {InputEvent} e
-	 */
-	onInput (e)
+	onPressEnter(e)
 	{
 
-		// input event only detects printable input
+	}
 
-		if (this.keyDownLocked) {
-
-			// Key down is detected
-
-			this.keyDownLocked = false
-
-		} else {
-
-			// Key down is not detected but input is detected
-			// it means the pressed key is Hangul
-			// Keydown is not detected, so implementing keydown event once again from here
-
-			let currentNode = this.postEditor.selManager.getNodeInSelection()
-
-			this.charKeyDownLocked = false
-			let lastAction = this.postEditor.undoManager.getTheLatestAction()
-
-			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode && lastAction.key === "char" && !lastAction.locked) {
-
-				lastAction.nextContent = currentNode.innerHTML
-				lastAction.nextTextOffset = this.postEditor.selManager.getTextOffset()
-
-			} else if (currentNode && e.isComposing) {
-
-				this.postEditor.undoManager.recordAction({
-					type: "textChange",
-					targetNode: currentNode,
-					prevContent: this.postEditor.selManager.currentNodeOrgHTML,
-					prevTextOffset: this.postEditor.selManager.getTextOffset(),
-					key: "char",
-					locked: false
-				})
-
-			}
-
-			// if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode) {
-
-			// 	lastAction.nextContent = currentNode.innerHTML
-			// 	lastAction.nextTextOffset = this.postEditor.selManager.getTextOffset()
-
-			// }
-		}
-
-
+	/**
+	 * 
+	 * @param {InputEvent} e 
+	 */
+	onInput(e) {
 
 	}
 
@@ -685,33 +637,40 @@ export default class EventManager
 	* Fires when press keyboard inside the editor.
 	* @param {KeyboardEvent} e
 	*/
-	onKeyUp (e)
-	{
+	onKeyUp(e) {
 
-		this.keyDownLocked = false
+		this.keyCode = e.which
+		this.physKeyCode = e.code
 
-		var currentNode = this.postEditor.selManager.getNodeInSelection()
-		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
+		let currentRange = this.sel.getCurrentRange()
+
+		if (!currentRange) return
+		let currentNode = this.sel.getCurrentTextNode()
+		if (!currentNode) {
+			return
+		}
+		let br = currentNode.textDom.querySelector("br")
+		if (currentNode && currentNode.textContent !== "" && br) {
 
 			console.log('removed br')
-			currentNode.removeChild(currentNode.querySelector("br"))
+			currentNode.textDom.removeChild(br)
 
-		} else if (currentNode && currentNode.textContent === "" && !currentNode.querySelector("br")) {
+		} else if (currentNode && currentNode.textContent === "" && !br) {
 
-			currentNode.appendChild(document.createElement("br"))
+			currentNode.textDom.appendChild(document.createElement("br"))
 
 		}
 
 		// Image block controlling
-		if (this.postEditor.selManager.isImageCaption(currentNode)) {
+		if (currentNode.type === "FIGURE") {
 
-			if (this.postEditor.selManager.isTextEmptyNode(currentNode)) {
+			if (currentNode.textContent === "") {
 
-				currentNode.parentNode.classList.remove("caption-enabled")
+				currentNode.dom.classList.remove("caption-enabled")
 
 			} else {
 
-				currentNode.parentNode.classList.add("caption-enabled")
+				currentNode.dom.classList.add("caption-enabled")
 
 			}
 
@@ -757,55 +716,67 @@ export default class EventManager
 
 		}
 
-		if (this.charKeyDownLocked) {
+		console.log(currentNode.textDom.innerHTML)
 
-			this.charKeyDownLocked = false
-			let lastAction = this.postEditor.undoManager.getTheLatestAction()
+		this.charKeyDownLocked = false
+		let lastAction = this.undoMan.getLastestAction()
 
-			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode) {
+		if (
+			lastAction &&
+			lastAction.type === "textChange" &&
+			lastAction.affectedNode.isEqualTo(currentNode)
+		) {
 
-				lastAction.nextContent = currentNode.innerHTML
-				lastAction.nextTextOffset = this.postEditor.selManager.getTextOffset()
+			lastAction.setAfter({
+				innerHTML: currentNode.textDom.innerHTML,
+				range: currentRange
+			})
 
 			}
-		}
 
 	}
 
-	onSelectionChanged () {
+	onSelectionChanged() {
 
-		// console.log("selection changed")
-
-		let lastAction = this.postEditor.undoManager.getTheLatestAction()
-		if (lastAction && lastAction.type === "textChange") {
-			lastAction.locked = true
+		let currentNode = this.sel.getCurrentTextNode()
+		if (currentNode) {
+			this.sel.currentState.nodeID = currentNode.nodeID
+			this.sel.currentState.innerHTML = currentNode.textDom.innerHTML
 		}
 
-		this.postEditor.selManager.fixSelection()
-
-		// update selection manager's currentnode original html
-		if (this.postEditor.selManager.getNodeInSelection()) {
-
-			this.postEditor.selManager.currentNodeOrgHTML = this.postEditor.selManager.getNodeInSelection().innerHTML
-
-		} else {
-
-			this.postEditor.selManager.currentNodeOrgHTML = ""
-
-		}
+		// console.log(this.sel.currentState.innerHTML)
 
 
-		setTimeout(() => {
-			this.postEditor.domManager.togglePopTool()
-		}, 0)
+		// let lastAction = this.postEditor.undoManager.getTheLatestAction()
+		// if (lastAction && lastAction.type === "textChange") {
+		// 	lastAction.locked = true
+		// }
+
+		// this.postEditor.selManager.fixSelection()
+
+		// // update selection manager's currentnode original html
+		// if (this.postEditor.selManager.getNodeInSelection()) {
+
+		// 	this.postEditor.selManager.currentNodeOrgHTML = this.postEditor.selManager.getNodeInSelection().innerHTML
+
+		// } else {
+
+		// 	this.postEditor.selManager.currentNodeOrgHTML = ""
+
+		// }
+
+
+		// setTimeout(() => {
+		// 	this.session.togglePopTool()
+		// }, 0)
 
 
 
-		// Detect lists and merge them
-		let currentNode = this.postEditor.selManager.getNodeInSelection()
-		if (this.postEditor.selManager.isListItem(currentNode)) {
-			console.log("list")
-		}
+		// // Detect lists and merge them
+		// let currentNode = this.postEditor.selManager.getNodeInSelection()
+		// if (this.postEditor.selManager.isListItem(currentNode)) {
+		// 	console.log("list")
+		// }
 
 	}
 

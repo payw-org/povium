@@ -8,7 +8,7 @@ $te->render('/resources/templates/base.phtml', [
 
 	'main' => '/resources/templates/editor-main.phtml',
 
-	'script' => '<script src="/build/js/editor.built.js"></script>',
+	'script' => '<script src="/build/js/editor.new.built.js"></script>',
 
 	'render_globalnav' => false,
 	'globalnav_script' => false,

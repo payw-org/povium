@@ -1841,7 +1841,7 @@ export default class SelectionManager
 					needExtraKeyPress = true
 				}
 
-				console.group("nothing contains")
+				// console.group("nothing contains")
 
 				let originalContent = currentParentNode.innerHTML
 
@@ -1902,7 +1902,7 @@ export default class SelectionManager
 				}
 
 				travelNode = startNode
-				console.group("only contains startnode")
+				// console.group("only contains startnode")
 				console.log(currentParentNode.textContent)
 				var metCurrentNode = false
 
@@ -1940,7 +1940,7 @@ export default class SelectionManager
 				currentParentNode.contains(endNode)
 			) {
 
-				console.log("only contains endnode")
+				// console.log("only contains endnode")
 
 				if (withKeyPress === "backspace" || withKeyPress === "delete") {
 					needExtraKeyPress = true
@@ -1982,7 +1982,7 @@ export default class SelectionManager
 			) {
 
 				// Contains both startnode and endnode
-				console.log("contains both")
+				// console.log("contains both")
 
 				if (withKeyPress === "enter") {
 					needExtraKeyPress = true

@@ -16,6 +16,10 @@ module.exports = {
 
 		editor: [
 			'./resources/assets/js/editor/main'
+		],
+
+		"editor.new": [
+			'./resources/assets/js/PVMEditor/main'
 		]
 
 	},
