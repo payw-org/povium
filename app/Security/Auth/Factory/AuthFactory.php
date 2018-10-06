@@ -29,7 +29,7 @@ class AuthFactory extends AbstractChildFactory
 		$conn = DBConnection::getInstance()->getConn();
 		$random_string_generator = $master_factory->createInstance('\Povium\Generator\RandomStringGenerator');
 		$client = $master_factory->createInstance('\Povium\Base\Http\Client');
-		$user_provider = $master_factory->createInstance('\Povium\Security\User\UserProvider');
+		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
 		$session_manager = $materials[0];
 
 		$this->args = array(
@@ -37,7 +37,7 @@ class AuthFactory extends AbstractChildFactory
 			$conn,
 			$random_string_generator,
 			$client,
-			$user_provider,
+			$user_manager,
 			$session_manager
 		);
 	}

@@ -10,7 +10,7 @@ namespace Povium\Security\Validator\UserInfo;
 
 use Povium\Validator\ValidatorInterface;
 use Povium\Validator\DuplicateCheckerInterface;
-use Povium\Security\User\UserProvider;
+use Povium\Security\User\UserManager;
 
 abstract class UserInfoDuplicateValidator implements ValidatorInterface, DuplicateCheckerInterface
 {
@@ -20,18 +20,18 @@ abstract class UserInfoDuplicateValidator implements ValidatorInterface, Duplica
 	protected $config;
 
 	/**
-	 * @var UserProvider
+	 * @var UserManager
 	 */
-	protected $userProvider;
+	protected $userManager;
 
 	/**
 	 * @param array 		$config
-	 * @param UserProvider	$user_provider
+	 * @param UserManager	$user_manager
 	 */
-	public function __construct(array $config, UserProvider $user_provider)
+	public function __construct(array $config, UserManager $user_manager)
 	{
 		$this->config = $config;
-		$this->userProvider = $user_provider;
+		$this->userManager = $user_manager;
 	}
 
 	/**

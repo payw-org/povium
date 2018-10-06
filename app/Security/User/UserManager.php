@@ -11,7 +11,7 @@ namespace Povium\Security\User;
 
 use Povium\Security\Encoder\PasswordEncoder;
 
-class UserProvider
+class UserManager
 {
 	/**
 	 * @var array

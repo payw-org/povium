@@ -110,12 +110,12 @@ class LoginController
 			return $return;
 		}
 
-		$user_provider = $this->auth->getUserProvider();
+		$user_manager = $this->auth->getUserManager();
 
 		//	Unregistered readable id
-		if (false === $user_id = $user_provider->getUserIDFromReadableID($identifier)) {
+		if (false === $user_id = $user_manager->getUserIDFromReadableID($identifier)) {
 			//	Unregistered email
-			if (false === $user_id = $user_provider->getUserIDFromEmail($identifier)) {
+			if (false === $user_id = $user_manager->getUserIDFromEmail($identifier)) {
 				$return['msg'] = $this->config['msg']['account_incorrect'];
 
 				return $return;
@@ -123,10 +123,10 @@ class LoginController
 		}
 
 		//	Fetch user data
-		$user = $user_provider->getUser($user_id, true);
+		$user = $user_manager->getUser($user_id, true);
 
 		//	Verify password
-		$password_encoder = $user_provider->getPasswordEncoder();
+		$password_encoder = $user_manager->getPasswordEncoder();
 		$verify_password = $password_encoder->verifyAndReEncode($password, $user['password']);
 
 		//	Password does not match
@@ -141,7 +141,7 @@ class LoginController
 			$params = array(
 				'password' => $verify_password['new_encoded']
 			);
-			$user_provider->updateUser($user_id, $params);
+			$user_manager->updateUser($user_id, $params);
 		}
 
 		//	Deleted account
@@ -179,7 +179,7 @@ class LoginController
 		$params = array(
 			'last_login_dt' => date('Y-m-d H:i:s')
 		);
-		$user_provider->updateUser($user_id, $params);
+		$user_manager->updateUser($user_id, $params);
 
 		return $return;
 	}

@@ -34,7 +34,7 @@ return [
 
 	'\Povium\Security\Encoder\PasswordEncoder' => '\Povium\Security\Encoder\Factory\PasswordEncoderFactory',
 
-	'\Povium\Security\User\UserProvider' => '\Povium\Security\User\Factory\UserProviderFactory',
+	'\Povium\Security\User\UserManager' => '\Povium\Security\User\Factory\UserManagerFactory',
 
 	'\Povium\Security\Validator\UserInfo\ReadableIDValidator' => '\Povium\Security\Validator\Factory\ReadableIDValidatorFactory',
 	'\Povium\Security\Validator\UserInfo\EmailValidator' => '\Povium\Security\Validator\Factory\EmailValidatorFactory',

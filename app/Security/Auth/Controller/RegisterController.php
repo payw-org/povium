@@ -132,10 +132,10 @@ class RegisterController
 			return $return;
 		}
 
-		$user_provider = $this->auth->getUserProvider();
+		$user_manager = $this->auth->getUserManager();
 
 		//	If failed to add user to database
-		if (!$user_provider->addUser($readable_id, $name, $password)) {
+		if (!$user_manager->addUser($readable_id, $name, $password)) {
 			$return['msg'] = $this->config['msg']['registration_err'];
 
 			return $return;

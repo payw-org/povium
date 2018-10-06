@@ -11,7 +11,7 @@ namespace Povium\Security\Auth;
 
 use Povium\Base\Http\Session\SessionManager;
 use Povium\Base\Http\Client;
-use Povium\Security\User\UserProvider;
+use Povium\Security\User\UserManager;
 use Povium\Generator\RandomStringGenerator;
 
 class Auth
@@ -39,9 +39,9 @@ class Auth
 	protected $client;
 
 	/**
-	 * @var UserProvider
+	 * @var UserManager
 	 */
-	protected $userProvider;
+	protected $userManager;
 
 	/**
 	 * @var SessionManager
@@ -67,7 +67,7 @@ class Auth
 	 * @param \PDO         	 		$conn
 	 * @param RandomStringGenerator	$random_string_generator
 	 * @param Client				$client
-	 * @param UserProvider			$user_provider
+	 * @param UserManager			$user_manager
 	 * @param SessionManager 		$session_manager
 	 */
 	public function __construct(
@@ -75,14 +75,14 @@ class Auth
  		\PDO $conn,
 		RandomStringGenerator $random_string_generator,
 		Client $client,
-		UserProvider $user_provider,
+		UserManager $user_manager,
 		SessionManager $session_manager
 	) {
 		$this->config = $config;
 		$this->conn = $conn;
 		$this->randomStringGenerator = $random_string_generator;
 		$this->client = $client;
-		$this->userProvider = $user_provider;
+		$this->userManager = $user_manager;
 		$this->sessionManager = $session_manager;
 
 		$this->isLoggedIn();
@@ -105,11 +105,11 @@ class Auth
 	}
 
 	/**
-	 * @return UserProvider
+	 * @return UserManager
 	 */
-	public function getUserProvider()
+	public function getUserManager()
 	{
-		return $this->userProvider;
+		return $this->userManager;
 	}
 
 	/**
@@ -169,7 +169,7 @@ class Auth
 					return false;
 				}
 
-				$this->currentUser = $this->userProvider->getUser($current_user_id);
+				$this->currentUser = $this->userManager->getUser($current_user_id);
 			} else {
 				return false;
 			}

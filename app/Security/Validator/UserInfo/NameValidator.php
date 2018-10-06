@@ -74,7 +74,7 @@ class NameValidator extends UserInfoDuplicateValidator
 	 */
 	public function isAlreadyTaken($name)
 	{
-		if (false === $this->userProvider->getUserIDFromName($name)) {
+		if (false === $this->userManager->getUserIDFromName($name)) {
 			return false;
 		}
 

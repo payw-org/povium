@@ -74,7 +74,7 @@ class ReadableIDValidator extends UserInfoDuplicateValidator
 	 */
 	public function isAlreadyTaken($readable_id)
 	{
-		if (false === $this->userProvider->getUserIDFromReadableID($readable_id)) {
+		if (false === $this->userManager->getUserIDFromReadableID($readable_id)) {
 			return false;
 		}
 

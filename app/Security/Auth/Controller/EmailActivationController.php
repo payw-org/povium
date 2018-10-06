@@ -190,7 +190,7 @@ class EmailActivationController
 			'is_verified' => true,
 			'email' => $record['email']
 		);
-		$this->auth->getUserProvider()->updateUser($record['user_id'], $params);
+		$this->auth->getUserManager()->updateUser($record['user_id'], $params);
 
 		$stmt = $this->conn->prepare(
 			"DELETE FROM {$this->config['email_waiting_for_activation_table']}

@@ -21,11 +21,11 @@ class NameValidatorFactory extends AbstractChildFactory
 		$master_factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/name_validator.php');
-		$user_provider = $master_factory->createInstance('\Povium\Security\User\UserProvider');
+		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
 
 		$this->args = array(
 			$config,
-			$user_provider
+			$user_manager
 		);
 	}
 }

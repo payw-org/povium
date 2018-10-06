@@ -62,7 +62,7 @@ class EmailValidator extends UserInfoDuplicateValidator
 	 */
 	public function isAlreadyTaken($email)
 	{
-		if (false === $this->userProvider->getUserIDFromEmail($email)) {
+		if (false === $this->userManager->getUserIDFromEmail($email)) {
 			return false;
 		}
 

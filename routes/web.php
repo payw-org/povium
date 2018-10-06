@@ -104,7 +104,7 @@ $collection->get(
 		$readable_id = strtolower($readable_id);
 
 		//	Nonexistent readable id.
-		if (false === $user_id = $auth->getUserProvider()->getUserIDFromReadableID($readable_id)) {
+		if (false === $user_id = $auth->getUserManager()->getUserIDFromReadableID($readable_id)) {
 			throw new NotFoundHttpException();
 		}
 

@@ -1,6 +1,6 @@
 <?php
 /**
-* This factory is responsible for creating "UserProvider" instance.
+* This factory is responsible for creating "UserManager" instance.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop
@@ -12,7 +12,7 @@ use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
 use Povium\Base\DBConnection;
 
-class UserProviderFactory extends AbstractChildFactory
+class UserManagerFactory extends AbstractChildFactory
 {
 	/**
 	 * {@inheritdoc}
@@ -21,7 +21,7 @@ class UserProviderFactory extends AbstractChildFactory
 	{
 		$master_factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/user_provider.php');
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/user_manager.php');
 		$conn = DBConnection::getInstance()->getConn();
 		$password_encoder = $master_factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
 
