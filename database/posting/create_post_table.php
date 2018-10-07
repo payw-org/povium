@@ -9,7 +9,7 @@
 $sql = "CREATE TABLE post (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	user_id INT(11) UNSIGNED NOT NULL,
-	title JSON NOT NULL,
+	title VARCHAR(256) NOT NULL,
 	contents JSON NOT NULL,
 	is_premium BOOLEAN NOT NULL,
 	is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
@@ -19,7 +19,7 @@ $sql = "CREATE TABLE post (
 	last_modified_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	series_id INT(11) UNSIGNED,
 	thumbnail VARCHAR(512),
-	subtitle JSON,
+	subtitle VARCHAR(512),
 	CONSTRAINT FK__user__post FOREIGN KEY (user_id)
 	REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT FK__series__post FOREIGN KEY (series_id)
