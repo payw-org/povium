@@ -78,13 +78,13 @@ class EmailActivationController
 		);
 
 		//	Not logged in
-		if (empty($this->auth->getCurrentUser())) {
+		if (false === $this->auth->getCurrentUser()) {
 			$return['msg'] = $this->config['msg']['not_logged_in'];
 
 			return $return;
 		}
 
-		$user_id = $this->auth->getCurrentUser()['id'];
+		$user_id = $this->auth->getCurrentUser()->getID();
 
 		$validate_email = $this->emailValidator->validate($email, true);
 		if ($validate_email['err']) {
@@ -142,13 +142,13 @@ class EmailActivationController
 		/* Validate email activation request */
 
 		//	Not logged in
-		if (empty($this->auth->getCurrentUser())) {
+		if (false === $this->auth->getCurrentUser()) {
 			$return['code'] = $this->config['code']['not_logged_in'];
 
 			return $return;
 		}
 
-		$user_id = $this->auth->getCurrentUser()['id'];
+		$user_id = $this->auth->getCurrentUser()->getID();
 
 		$stmt = $this->conn->prepare(
 			"SELECT * FROM {$this->config['email_waiting_for_activation_table']}

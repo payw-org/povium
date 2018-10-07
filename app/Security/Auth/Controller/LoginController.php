@@ -123,11 +123,11 @@ class LoginController
 		}
 
 		//	Fetch user data
-		$user = $user_manager->getUser($user_id, true);
+		$user = $user_manager->getUser($user_id);
 
 		//	Verify password
 		$password_encoder = $user_manager->getPasswordEncoder();
-		$verify_password = $password_encoder->verifyAndReEncode($password, $user['password']);
+		$verify_password = $password_encoder->verifyAndReEncode($password, $user->getPassword());
 
 		//	Password does not match
 		if (!$verify_password['is_verified']) {
@@ -145,14 +145,14 @@ class LoginController
 		}
 
 		//	Deleted account
-		if ($user['is_deleted']) {
+		if ($user->isDeleted()) {
 			$return['msg'] = $this->config['msg']['account_is_deleted'];
 
 			return $return;
 		}
 
 		//	Inactive account
-		if (!$user['is_active']) {
+		if (!$user->isActive()) {
 			$return['msg'] = $this->config['msg']['account_inactive'];
 
 			return $return;

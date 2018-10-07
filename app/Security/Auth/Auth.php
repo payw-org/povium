@@ -12,6 +12,7 @@ namespace Povium\Security\Auth;
 use Povium\Base\Http\Session\SessionManager;
 use Povium\Base\Http\Client;
 use Povium\Security\User\UserManager;
+use Povium\Security\User\User;
 use Povium\Generator\RandomStringGenerator;
 
 class Auth
@@ -56,9 +57,9 @@ class Auth
 	protected $isLoggedIn = false;
 
 	/**
-	 * Currently logged in user's info
+	 * Currently logged in user
 	 *
-	 * @var array 	Associative array
+	 * @var User|null
 	 */
 	protected $currentUser = null;
 
@@ -154,9 +155,9 @@ class Auth
 	}
 
 	/**
-	* Returns the data of the currently logged in user except the password.
+	* Returns the data of the currently logged in user.
 	*
-	* @return array|false
+	* @return User|false
 	*/
 	public function getCurrentUser()
 	{

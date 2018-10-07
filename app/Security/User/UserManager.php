@@ -117,14 +117,13 @@ class UserManager
 	}
 
 	/**
-	* Return user data.
+	* Returns an user.
 	*
-	* @param  int		$user_id
-	* @param  boolean 	$with_password	Return with password?
+	* @param  int	$user_id
 	*
-	* @return array|false
+	* @return User|false
 	*/
-	public function getUser($user_id, $with_password = false)
+	public function getUser($user_id)
 	{
 		$stmt = $this->conn->prepare(
 			"SELECT * FROM {$this->config['user_table']}
@@ -136,11 +135,9 @@ class UserManager
 			return false;
 		}
 
-		$user = $stmt->fetch();
+		$record = $stmt->fetch();
 
-		if (!$with_password) {
-			unset($user['password']);
-		}
+		$user = new User(...array_values($record));
 
 		return $user;
 	}
