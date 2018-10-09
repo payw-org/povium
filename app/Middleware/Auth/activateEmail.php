@@ -20,28 +20,28 @@ if (!isset($_GET['token'])) {
 $token = $_GET['token'];
 
 $email_activation_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailActivationController', $auth);
-$http_response_config = $router->getHttpResponseConfig();
 
 #	array(
 #		'err' => bool,
 #		'code' => err code,
+#		'msg' => err message
 #	);
-$return = $email_activation_controller->activateEmailAddress($token);
+$return = $email_activation_controller->activateEmail($token);
 
 if ($return['err']) {	//	Failed to activate email address
 	switch ($return['code']) {
-		case $email_activation_controller->getConfig()['code']['not_logged_in']:
+		case $email_activation_controller->getConfig()['err']['not_logged_in']['code']:
 			break;
-		case $email_activation_controller->getConfig()['code']['user_not_found']:
-			throw new GoneHttpException($http_response_config['410']['details']['user_not_found']);
+		case $email_activation_controller->getConfig()['err']['user_not_found']['code']:
+			throw new GoneHttpException($return['msg']);
 
 			break;
-		case $email_activation_controller->getConfig()['code']['token_not_match']:
-			throw new ForbiddenHttpException($http_response_config['403']['details']['token_not_match']);
+		case $email_activation_controller->getConfig()['err']['token_not_match']['code']:
+			throw new ForbiddenHttpException($return['msg']);
 
 			break;
-		case $email_activation_controller->getConfig()['code']['request_expired']:
-			throw new GoneHttpException($http_response_config['410']['details']['request_expired']);
+		case $email_activation_controller->getConfig()['err']['request_expired']['code']:
+			throw new GoneHttpException($return['msg']);
 
 			break;
 	}

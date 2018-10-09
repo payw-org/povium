@@ -100,7 +100,7 @@ $collection->get(
 			$router->redirect('/login', true);
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/activateEmailAddress.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/activateEmail.php';
 	},
 	'email_activation'
 );

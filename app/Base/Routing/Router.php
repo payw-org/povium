@@ -64,14 +64,6 @@ class Router implements RouterInterface
 	}
 
 	/**
-	 * @return array
-	 */
-	public function getHttpResponseConfig()
-	{
-		return $this->httpResponseConfig;
-	}
-
-	/**
 	 * @param RouteCollection $collection
 	 */
 	public function setRouteCollection(RouteCollection $collection)

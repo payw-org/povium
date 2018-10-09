@@ -1,6 +1,6 @@
 <?php
 /**
-* Config array for email activation controller
+* Config array for EmailActivationController.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
@@ -9,17 +9,25 @@
 return [
 	'email_waiting_for_activation_table' => 'email_waiting_for_activation',
 
-	'email_activation_expire' => 1800,	//	Email activation expiration term (30 minutes)
+	'err' => [
+		'not_logged_in' => [
+			'code' => 0x0400,
+			'msg' => '로그인이 필요한 서비스입니다.'
+		],
 
-	'msg' => [
-		'not_logged_in' => '로그인 후 이용해주세요.',
-		'activation_email_err' => '인증 이메일을 보내는 과정에서 에러가 발생했습니다.'
-	],
+		'user_not_found' => [
+			'code' => 0x0401,
+			'msg' => '인증 코드가 만료되었습니다. 인증을 다시 요청해주세요.'
+		],
 
-	'code' => [
-		'not_logged_in' => 0x0400,
-		'user_not_found' => 0x0401,
-		'token_not_match' => 0x0402,
-		'request_expired' => 0x0403
+		'token_not_match' => [
+			'code' => 0x0402,
+			'msg' => '인증 실패. 토큰이 일치하지 않습니다.'
+		],
+
+		'request_expired' => [
+			'code' => 0x0403,
+			'msg' => '인증 코드가 만료되었습니다. 인증을 다시 요청해주세요.'
+		]
 	]
 ];

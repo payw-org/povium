@@ -71,18 +71,18 @@ class User
 	private $bio;
 
 	/**
-	 * @param int    $id
-	 * @param string $readable_id
-	 * @param string $name
-	 * @param string $password
-	 * @param bool   $is_verified
-	 * @param bool   $is_active
-	 * @param bool   $is_deleted
-	 * @param string $registration_dt
-	 * @param string $last_login_dt
-	 * @param string $profile_image
-	 * @param string|null $email
-	 * @param string|null $bio
+	 * @param int    		$id
+	 * @param string 		$readable_id
+	 * @param string 		$name
+	 * @param string 		$password
+	 * @param bool   		$is_verified
+	 * @param bool   		$is_active
+	 * @param bool   		$is_deleted
+	 * @param string 		$registration_dt
+	 * @param string 		$last_login_dt
+	 * @param string 		$profile_image
+	 * @param string|null 	$email
+	 * @param string|null 	$bio
 	 */
 	public function __construct(
 		int $id,

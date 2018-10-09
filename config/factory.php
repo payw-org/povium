@@ -30,6 +30,7 @@ return [
 	'\Povium\Security\Auth\Controller\LoginController' => '\Povium\Security\Auth\Factory\LoginControllerFactory',
 	'\Povium\Security\Auth\Controller\LogoutController' => '\Povium\Security\Auth\Factory\LogoutControllerFactory',
 	'\Povium\Security\Auth\Controller\RegisterController' => '\Povium\Security\Auth\Factory\RegisterControllerFactory',
+	'\Povium\Security\Auth\Controller\EmailAddController' => '\Povium\Security\Auth\Factory\EmailAddControllerFactory',
 	'\Povium\Security\Auth\Controller\EmailActivationController' => '\Povium\Security\Auth\Factory\EmailActivationControllerFactory',
 
 	'\Povium\Security\Encoder\PasswordEncoder' => '\Povium\Security\Encoder\Factory\PasswordEncoderFactory',

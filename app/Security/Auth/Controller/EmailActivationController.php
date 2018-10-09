@@ -8,7 +8,6 @@
 
 namespace Povium\Security\Auth\Controller;
 
-use Povium\Security\Validator\UserInfo\EmailValidator;
 use Povium\Security\Auth\Auth;
 
 class EmailActivationController
@@ -26,11 +25,6 @@ class EmailActivationController
 	protected $conn;
 
 	/**
-	 * @var EmailValidator
-	 */
-	protected $emailValidator;
-
-	/**
 	 * @var Auth
 	 */
 	protected $auth;
@@ -38,18 +32,15 @@ class EmailActivationController
 	/**
 	 * @param array          $config
 	 * @param \PDO           $conn
-	 * @param EmailValidator $email_validator
 	 * @param Auth           $auth
 	 */
 	public function __construct(
 		array $config,
 		\PDO $conn,
- 		EmailValidator $email_validator,
 		Auth $auth
 	) {
 		$this->config = $config;
 		$this->conn = $conn;
-		$this->emailValidator = $email_validator;
 		$this->auth = $auth;
 	}
 
@@ -62,88 +53,27 @@ class EmailActivationController
 	}
 
 	/**
-	 * Add new email address that waiting for activation.
-	 * User cannot add multiple new email address at once.
-	 *
-	 * @param string $email		New email address
-	 * @param string $token		Authentication token
-	 *
-	 * @return array 	Error flag and message
-	 */
-	public function addNewEmailAddress($email, $token)
-	{
-		$return = array(
-			'err' => true,
-			'msg' => ''
-		);
-
-		//	Not logged in
-		if (false === $this->auth->getCurrentUser()) {
-			$return['msg'] = $this->config['msg']['not_logged_in'];
-
-			return $return;
-		}
-
-		$user_id = $this->auth->getCurrentUser()->getID();
-
-		$validate_email = $this->emailValidator->validate($email, true);
-		if ($validate_email['err']) {
-			$return['msg'] = $validate_email['msg'];
-
-			return $return;
-		}
-
-		//	Delete old record of same user
-		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['email_waiting_for_activation_table']}
-			WHERE user_id = ?"
-		);
-		$stmt->execute([$user_id]);
-
-		//	Add new record
-		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['email_waiting_for_activation_table']}
-			(user_id, token, email, expn_dt)
-			VALUES (:user_id, :token, :email, :expn_dt)"
-		);
-		$query_params = array(
-			':user_id' => $user_id,
-			':token' => $token,
-			':email' => $email,
-			':expn_dt' => date('Y-m-d H:i:s', time() + $this->config['email_activation_expire'])
-		);
-		if (!$stmt->execute($query_params)) {
-			$return['msg'] = $this->config['msg']['activation_email_err'];
-
-			return $return;
-		}
-
-		//	Successfully added
-		$return['err'] = false;
-
-		return $return;
-	}
-
-	/**
 	 * Validate email activation request.
 	 * Activate email address.
 	 *
 	 * @param  string $token
 	 *
-	 * @return array 	Error flag and code
+	 * @return array 	Error flag, code and message
 	 */
-	public function activateEmailAddress($token)
+	public function activateEmail($token)
 	{
 		$return = array(
 			'err' => true,
-			'code' => ''
+			'code' => 0,
+			'msg' => ''
 		);
 
 		/* Validate email activation request */
 
 		//	Not logged in
 		if (false === $this->auth->getCurrentUser()) {
-			$return['code'] = $this->config['code']['not_logged_in'];
+			$return['code'] = $this->config['err']['not_logged_in']['code'];
+			$return['msg'] = $this->config['err']['not_logged_in']['msg'];
 
 			return $return;
 		}
@@ -158,7 +88,8 @@ class EmailActivationController
 
 		//	User not found
 		if ($stmt->rowCount() == 0) {
-			$return['code'] = $this->config['code']['user_not_found'];
+			$return['code'] = $this->config['err']['user_not_found']['code'];
+			$return['msg'] = $this->config['err']['user_not_found']['msg'];
 
 			return $return;
 		}
@@ -167,7 +98,8 @@ class EmailActivationController
 
 		//	Token not match
 		if (!hash_equals($record['token'], $token)) {
-			$return['code'] = $this->config['code']['token_not_match'];
+			$return['code'] = $this->config['err']['token_not_match']['code'];
+			$return['msg'] = $this->config['err']['token_not_match']['msg'];
 
 			return $return;
 		}
@@ -180,7 +112,8 @@ class EmailActivationController
 			);
 			$stmt->execute([$record['id']]);
 
-			$return['code'] = $this->config['code']['request_expired'];
+			$return['code'] = $this->config['err']['request_expired']['code'];
+			$return['msg'] = $this->config['err']['request_expired']['msg'];
 
 			return $return;
 		}

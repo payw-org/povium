@@ -1,7 +1,7 @@
 <?php
 /**
 * Manage all user info.
-* Communicate with database User table.
+* Communicate with user table in database.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop
@@ -117,7 +117,7 @@ class UserManager
 	}
 
 	/**
-	* Returns an user.
+	* Returns an user instance.
 	*
 	* @param  int	$user_id
 	*
@@ -143,13 +143,13 @@ class UserManager
 	}
 
 	/**
-	* Add new user.
+	* Add new user record.
 	*
 	* @param string 	$readable_id
 	* @param string 	$name
 	* @param string 	$password
 	*
-	* @return bool
+	* @return bool		Whether successfully added
 	*/
 	public function addUser($readable_id, $name, $password)
 	{
@@ -173,12 +173,12 @@ class UserManager
 	}
 
 	/**
-	* Update some fields data of user
+	* Update some fields data of user record.
 	*
 	* @param  int	$user_id
 	* @param  array $params Associative array (column name to update => new value)
 	*
-	* @return bool
+	* @return bool		Whether successfully updated
 	*/
 	public function updateUser($user_id, $params)
 	{

@@ -12,7 +12,7 @@ global $factory, $router, $auth;
 # $email = json_decode(file_get_contents('php://input'), true)['email'];
 $email = '1000jaman@naver.com';
 
-$email_activation_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailActivationController', $auth);
+$email_add_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailAddController', $auth);
 $mail_sender = $factory->createInstance('\Povium\MailSender\ActivationMailSender');
 
 //	Generate authentication token
@@ -22,7 +22,7 @@ $token = $auth->getRandomStringGenerator()->generateUUIDV4();
 #		'err' => bool,
 #		'msg' => err msg for display,
 #	);
-$return = $email_activation_controller->addNewEmailAddress($email, $token);
+$return = $email_add_controller->addEmail($email, $token);
 
 if ($return['err']) {	//	Failed to add new email address
 
@@ -35,7 +35,7 @@ if ($return['err']) {	//	Failed to add new email address
 	//	Failed to send activation email
 	if (!$mail_sender->sendEmail($email, $activation_link)) {
 		$return['err'] = true;
-		$return['msg'] = $email_activation_controller->getConfig()['msg']['activation_email_err'];
+		$return['msg'] = $email_add_controller->getConfig()['msg']['activation_email_err'];
 	}
 }
 

@@ -87,13 +87,13 @@ class RegisterController
 
 	/**
 	* Validate inputs for registration.
-	* Then add user to database.
+	* Then register user.
 	*
 	* @param  string	$readable_id
 	* @param  string	$name
 	* @param  string	$password
 	*
-	* @return array Error flag and message
+	* @return array 	Error flag and message
 	*/
 	public function register($readable_id, $name, $password)
 	{
