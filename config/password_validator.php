@@ -1,6 +1,6 @@
 <?php
 /**
-* Config array for password validator
+* Config array for PasswordValidator.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop

@@ -141,7 +141,7 @@ class RegisterController
 			return $return;
 		}
 
-		//	register success
+		//	Register success
 		$return['err'] = false;
 
 		return $return;
