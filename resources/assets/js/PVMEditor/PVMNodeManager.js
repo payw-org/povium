@@ -49,12 +49,25 @@ export default class PVMNodeManager {
 
 	getFirstChild()
 	{
-		return this.createNode(this.editorBody.firstElementChild)
+		return this.createNode(this.session.editorBody.firstElementChild)
 	}
 
 	getLastChild()
 	{
-		return this.createNode(this.editorBody.lastElementChild)
+		let lastElementChild = this.session.editorBody.lastElementChild
+		if (!lastElementChild) {
+			return null
+		} else {
+			if (
+				lastElementChild.nodeName === 'UL' ||
+				lastElementChild.nodeName === 'OL'
+			) {
+				let items = lastElementChild.querySelectorAll('li')
+				return this.createNode(items[items.length - 1])
+			} else {
+				return this.createNode(this.session.editorBody.lastElementChild)
+			}
+		}
 	}
 
 	/**
@@ -120,33 +133,39 @@ export default class PVMNodeManager {
 		if (!recordData) {
 			console.warn("Node was removed without record.")
 			return
+		} else {
+			this.undoMan.record({
+				type: "remove",
+				affectedNode: targetNode,
+				nextNode: nextNode,
+				before: {
+					range: recordData.beforeRange
+				},
+				after: {
+					range: recordData.afterRange
+				}
+			})
 		}
-
-		this.undoMan.record({
-			type: "remove",
-			affectedNode: targetNode,
-			nextNode: nextNode,
-			before: {
-				range: recordData.beforeRange
-			},
-			after: {
-				range: recordData.afterRange
-			}
-		})
 		
 	}
 
 	/**
 	* Appends the given node into the editor.
 	* @param {PVMNode} node 
+	* @param {object} recordData { beforeRange, afterRange, nextNode }
 	*/
-	appendChild(node)
+	appendChild(node, recordData)
 	{
 
-		let lastChild = this.session.getLastChild()
+		let lastChild = this.getLastChild()
+
+		console.log('lastChild: ', lastChild)
 		if (lastChild) {
-			this.insertChildAfter(node, lastChild.nodeID)
+
+			this.insertChildAfter(node, lastChild.nodeID, recordData)
+
 		} else {
+
 			if (node.type === "LI") {
 				let list = document.createElement(node.parentType)
 				list.appendChild(node.dom)
@@ -154,6 +173,21 @@ export default class PVMNodeManager {
 			} else {
 				this.session.editorBody.appendChild(node.dom)
 			}
+
+			if (recordData) {
+				this.undoMan.record({
+					type: 'insert',
+					affectedNode: node,
+					nextNode: nextNode,
+					before: {
+						range: recordData.beforeRange
+					},
+					after: {
+						range: recordData.afterRange
+					}
+				})
+			}
+
 		}
 
 	}
@@ -162,8 +196,9 @@ export default class PVMNodeManager {
 	* Appends a pvmnode before the given node.
 	* @param {PVMNode} insertingNode
 	* @param {number} refNodeID 
+	* @param {object} recordData { beforeRange, afterRange, nextNode }
 	*/
-	insertChildBefore(insertingNode, refNodeID)
+	insertChildBefore(insertingNode, refNodeID, recordData)
 	{
 		let target = this.getChildByID(refNodeID)
 		if (!target) {
@@ -211,14 +246,30 @@ export default class PVMNodeManager {
 				target.dom.parentElement.insertBefore(insertingNode.dom, target.dom)
 			}
 		}
+
+		if (recordData) {
+			this.undoMan.record({
+				type: 'insert',
+				affectedNode: insertingNode,
+				nextNode: recordData.nextNode,
+				before: {
+					range: recordData.beforeRange
+				},
+				after: {
+					range: recordData.afterRange
+				}
+			})
+		}
+
 	}
 
 	/**
 	* Appends a pvmnode after the given node.
 	* @param {PVMNode} insertingNode
 	* @param {number} refNodeID
+	* @param {object} recordData { beforeRange, afterRange, nextNode }
 	*/
-	insertChildAfter(insertingNode, refNodeID)
+	insertChildAfter(insertingNode, refNodeID, recordData)
 	{
 		let target = this.getChildByID(refNodeID)
 		if (!target) {
@@ -266,6 +317,23 @@ export default class PVMNodeManager {
 			}
 
 		}
+
+		if (recordData) {
+			this.undoMan.record({
+				type: 'insert',
+				affectedNode: insertingNode,
+				nextNode: recordData.nextNode,
+				before: {
+					range: recordData.beforeRange
+				},
+				after: {
+					range: recordData.afterRange
+				}
+			})
+		} else {
+			console.info(``)
+		}
+
 	}
 
 	/**
@@ -635,5 +703,7 @@ export default class PVMNodeManager {
 		return returnNode
 
 	}
+
+	transform
 
 }

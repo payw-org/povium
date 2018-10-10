@@ -17,6 +17,10 @@ export default class UndoAction {
 		 */
 		this.affectedNode = null
 		/**
+		 * @type {PVMNode}
+		 */
+		this.nextNode = null
+		/**
 		 * @type {Object}
 		 */
 		this.before = null
@@ -35,12 +39,13 @@ export default class UndoAction {
 
 	setAction(config)
 	{
-		if ("type" in config) this.type = config.type
-		if ("isLinked" in config) this.isLinked = config.isLinked
-		if ("affectedNode" in config) this.affectedNode = config.affectedNode
-		if ("before" in config) this.before = config.before
-		if ("after" in config) this.after = config.after
-		if ("key" in config) this.key = config.key
+		if ('type' in config) this.type = config.type
+		if ('isLinked' in config) this.isLinked = config.isLinked
+		if ('affectedNode' in config) this.affectedNode = config.affectedNode
+		if ('nextNode' in config) this.nextNode = config.nextNode
+		if ('before' in config) this.before = config.before
+		if ('after' in config) this.after = config.after
+		if ('key' in config) this.key = config.key
 	}
 
 	setBefore(before)

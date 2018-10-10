@@ -1,9 +1,7 @@
 import PVMSelection from "./PVMSelection"
-import PVMNode from "./PVMNode"
 import UndoManager from "./UndoManager"
-import PVMNodeManager from "./PVMNodeManager";
-import EventManager from "./EventManager";
-import PVMEditor from "./PVMEditor";
+import PVMNodeManager from "./PVMNodeManager"
+import EventManager from "./EventManager"
 
 export default class PVMEditSession {
 
@@ -28,7 +26,6 @@ export default class PVMEditSession {
 
 		this.lastNodeID = 100
 
-		
 	}
 
 	// Methods

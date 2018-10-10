@@ -72,7 +72,7 @@ export default class PVMNode {
 		}
 
 		this.textContent = this.textDom.textContent
-		// this.innerHTML = this.textDom.innerHTML
+		this.innerHTML = this.textDom.innerHTML
 
 		// this.previousSibling = this.getPreviousSibling()
 		// this.nextSibling = this.getNextSibling()

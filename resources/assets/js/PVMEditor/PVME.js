@@ -12,6 +12,7 @@ export default class PVME {
 		document.execCommand("defaultParagraphSeparator", false, "p")
 		this.session = new PVMEditSession(container)
 		this.editor = new PVMEditor(this.session)
+		this.session.eventManager.setEditor(this.editor)
 		let browser = require('detect-browser').detect()
 		console.log(browser.name, browser.version)
 		if (browser.name.toLowerCase() === 'firefox') {

@@ -72,54 +72,48 @@ export default class PVMEditor {
 		let currentRange = this.sel.getCurrentRange()
 		let isRangeCollapsed = currentRange.isCollapsed()
 
-		console.log(currentRange)
-
 		if (isRangeCollapsed) {
 
-			let currentNode = this.nodeMan.getChildByID(currentRange.start.nodeID)
+			let currentNode = this.sel.getCurrentTextNode()
+			let nextNode = currentNode.getNextSibling()
 
 			if (currentRange.start.state === 3 || currentRange.start.state === 4) {
-
-				console.log("3 or 4")
 				
-				let newNode
-				let newRange
+				let newNode, newRange
 
 				if (currentNode.type === "LI") {
 					if (currentRange.start.state === 4) {
 						currentNode.transformTo("P")
-						this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
-					} else {
-						newNode = this.nodeMan.createEmptyNode("LI")
-						this.nodeMan.insertChildAfter(newNode, currentNode.nodeID)
-						newRange = this.sel.createRange(newNode, 0, newNode, 0)
-						this.sel.setRange(newRange)
 						this.undoMan.record({
-							type: "insert",
-							affectedNode: newNode,
+							type: 'transform',
+							affectedNode: currentNode,
 							before: {
 								range: currentRange
 							},
 							after: {
-								range: newRange
+								range: currentRange
 							}
 						})
+						this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
+					} else {
+						newNode = this.nodeMan.createEmptyNode("LI")
+						newRange = this.sel.createRange(newNode, 0, newNode, 0)
+						this.nodeMan.insertChildAfter(newNode, currentNode.nodeID, {
+							beforeRange: currentRange,
+							afterRange: newRange,
+							nextNode: nextNode
+						})
+						this.sel.setRange(newRange)
 					}
 				} else {
 					newNode = this.nodeMan.createEmptyNode("P")
-					this.nodeMan.insertChildAfter(newNode, currentNode.nodeID)
 					newRange = this.sel.createRange(newNode, 0, newNode, 0)
-					this.sel.setRange(newRange)
-					this.undoMan.record({
-						type: "insert",
-						affectedNode: newNode,
-						before: {
-							range: currentRange
-						},
-						after: {
-							range: newRange
-						}
+					this.nodeMan.insertChildAfter(newNode, currentNode.nodeID, {
+						beforeRange: currentRange,
+						afterRange: newRange,
+						nextNode: nextNode
 					})
+					this.sel.setRange(newRange)
 				}
 
 			} else if (currentRange.start.state === 1) {
@@ -140,42 +134,66 @@ export default class PVMEditor {
 	 */
 	onPressBakcspace(e)
 	{
+
 		let currentRange = this.sel.getCurrentRange()
-		let currentNode = this.nodeMan.getChildByID(currentRange.start.nodeID)
+		let currentNode = this.sel.getCurrentTextNode()
 		let previousNode = currentNode.getPreviousSibling()
+
 		if (currentRange.isCollapsed()) {
 			if (currentNode.type === "FIGURE" && (currentRange.start.state === 1 || currentRange.start.state === 4)) {
 				e.preventDefault()
 				return
 			}
 			if (currentRange.start.state === 1) {
+
 				e.preventDefault()
+
 				if (currentNode.type === "LI") {
+
 					currentNode.transformTo("P")
 					this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
+
 				} else if (previousNode.type === "FIGURE") {
-					this.nodeMan.removeChild(previousNode.nodeID)
+
+					this.nodeMan.removeChild(previousNode.nodeIDm, {
+						beforeRange: currentRange,
+						afterRange: currentRange
+					})
+
 				} else {
+
 					if (previousNode.textContent.length === 0) {
+
 						this.nodeMan.removeChild(previousNode.nodeID)
+
 					} else {
+
 						this.nodeMan.mergeNodes(currentNode.getPreviousSibling(), currentNode)
+
 					}
 				}
 				
 			} else if (currentRange.start.state === 4) {
+
 				e.preventDefault()
-				if (!previousNode || currentNode.type === "LI") {
+
+				if (!previousNode || currentNode.type === 'LI') {
+
 					// No previousNode. It should be the first line.
 					currentNode.transformTo("P")
 					this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
+
 				} else {
+
+					console.log('removed node')
+
 					let nextRange = this.sel.createRange(previousNode, previousNode.textContent.length, previousNode, previousNode.textContent.length)
 					this.sel.setRange(nextRange)
 					this.nodeMan.removeChild(currentNode.nodeID, {
 						beforeRange: currentRange,
 						afterRange: nextRange
 					})
+
 				}
 			}
 		} else {

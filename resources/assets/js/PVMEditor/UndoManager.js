@@ -57,6 +57,7 @@ export default class UndoManager {
 		console.log(newAction)
 		console.groupEnd()
 
+		this.actionStack.length = this.currentStep + 1
 		this.actionStack.push(newAction)
 		this.currentStep = this.actionStack.length - 1
 		
@@ -77,25 +78,78 @@ export default class UndoManager {
 			console.group("undo")
 		}
 
+		let action = this.actionStack[this.currentStep--]
+		this.undoWithAction(action)
+
+		console.log(action)
+		console.groupEnd()
+
 
 	}
 
 	redo()
 	{
+		if (this.currentStep >= this.actionStack.length - 1) {
+			console.info('No more actions to recover')
+			return
+		} else {
+			console.group('redo')
+		}
 
+		let action = this.actionStack[++this.currentStep]
+		console.log(action)
+		this.redoWithAction(action)
+		console.groupEnd()
 	}
 
+	/**
+	 * 
+	 * @param {UndoAction} action 
+	 */
 	undoWithAction(action)
 	{
-		if (action.type === "remove") {
+		if (action.type === 'remove') {
+
 			if (action.nextNode) {
-				this.nodeMan.insertChildBefore(action.affectedNode, action.previousNode.nodeID)
+				this.nodeMan.insertChildBefore(action.affectedNode, action.nextNode.nodeID)
 			} else {
 				this.nodeMan.appendChild(action.affectedNode)
 			}
 			
 			this.sel.setRange(action.before.range)
+
+		} else if (action.type === 'insert') {
+
+			this.nodeMan.removeChild(action.affectedNode.nodeID)
+
 		}
+
+		this.sel.setRange(action.before.range)
+
+	}
+
+	/**
+	 * 
+	 * @param {UndoAction} action 
+	 */
+	redoWithAction(action)
+	{
+		if (action.type === 'remove') {
+
+			this.nodeMan.removeChild(action.affectedNode.nodeID)
+
+		} else if (action.type === 'insert') {
+
+			if (action.nextNode) {
+				this.nodeMan.insertChildBefore(action.affectedNode, action.nextNode.nodeID)
+			} else {
+				this.nodeMan.appendChild(action.affectedNode)
+			}
+
+		}
+
+		this.sel.setRange(action.after.range)
+
 	}
 
 }

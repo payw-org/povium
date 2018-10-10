@@ -14,7 +14,6 @@ export default class EventManager {
 		this.sel = editSession.selection
 		this.undoMan = editSession.undoManager
 		this.nodeMan = editSession.pvmNodeManager
-		this.editor = this.session.editor
 
 	}
 
@@ -24,15 +23,10 @@ export default class EventManager {
 		let self = this
 
 		this.mouseDownStart = false
-
 		this.linkRange = document.createRange()
-
 		this.charKeyDownLocked = false
-
 		this.multipleSpaceLocked = false
-
 		this.selectedAll = false
-
 
 		// Event Listeners
 		window.addEventListener('click', (e) => {
@@ -542,10 +536,13 @@ export default class EventManager {
 			if (
 				currentRange &&
 				currentRange.isCollapsed() &&
-				(currentRange.start.state !== 1 || currentRange.start.state !== 4)
+				(currentRange.start.state !== 1 && currentRange.start.state !== 4)
 			) {
 				enableTextChangeRecord = true
 				key = "backspace"
+			} else {
+				enableTextChangeRecord = false
+				this.editor.onPressBakcspace(e)
 			}
 
 			// Backspace
@@ -715,8 +712,6 @@ export default class EventManager {
 			this.postEditor.selManager.setCursorAt(currentNode, 0)
 
 		}
-
-		console.log(currentNode.textDom.innerHTML)
 
 		this.charKeyDownLocked = false
 		let lastAction = this.undoMan.getLastestAction()
