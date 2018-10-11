@@ -46,7 +46,15 @@ export default class UndoManager {
 
 	/**
 	 * 
-	 * @param {Object} config 
+	 * @param {Object} config
+	 * @param {string} config.type
+	 * @param {PVMNode} config.affectedNode
+	 * @param {Object} config.before
+	 * @param {PVMRange} config.before.range
+	 * @param {string=} config.before.type
+	 * @param {Object} config.after
+	 * @param {PVMRange} config.after.range
+	 * @param {string=} config.after.type
 	 */
 	record(config)
 	{
@@ -121,6 +129,9 @@ export default class UndoManager {
 		} else if (action.type === 'insert') {
 
 			this.nodeMan.removeChild(action.affectedNode.nodeID)
+
+		} else if (action.type === 'transform') {
+
 
 		}
 
