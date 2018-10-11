@@ -301,12 +301,14 @@ export default class PopTool {
 			if (chunks[i].type !== tagName) {
 				isAllAlreaySet = false
 			}
-			chunks[i].transformTo(tagName)
+			// chunks[i].transformTo(tagName)
+			this.nodeMan.transformNode(chunks[i], tagName)
 		}
 
 		if (isAllAlreaySet) {
 			for (let i = 0; i < chunks.length; i++) {
-				chunks[i].transformTo("P")
+				// chunks[i].transformTo("P")
+				this.nodeMan.transformNode(chunks[i], "P")
 			}
 		}
 
