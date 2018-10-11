@@ -331,7 +331,7 @@ export default class PVMNodeManager {
 				}
 			})
 		} else {
-			console.info(``)
+			console.info(`Inserted without recording.`)
 		}
 
 	}
@@ -704,6 +704,28 @@ export default class PVMNodeManager {
 
 	}
 
-	transform
+	/**
+	 * 
+	 * @param {PVMNode} node 
+	 * @param {string} tag 
+	 */
+	transformNode(node, tag)
+	{
+		let currentRange = this.sel.getCurrentRange()
+		let originalType = node.type
+		node.transformTo(tag)
+		this.undoMan.record({
+			type: 'transform',
+			affectedNode: node,
+			before: {
+				range: currentRange,
+				type: originalType
+			},
+			after: {
+				range: currentRange,
+				type: tag
+			}
+		})
+	}
 
 }
