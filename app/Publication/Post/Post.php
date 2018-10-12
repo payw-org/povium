@@ -11,7 +11,7 @@ namespace Povium\Publication\Post;
 class Post
 {
 	/**
-	 * @var int
+	 * @var string
 	 */
 	private $id;
 
@@ -58,7 +58,7 @@ class Post
 	/**
 	 * @var string	Datetime
 	 */
-	private $lastModifiedDt;
+	private $lastEditedDt;
 
 	/**
 	 * @var int|null
@@ -76,7 +76,7 @@ class Post
 	private $subtitle;
 
 	/**
-	 * @param int     		$id
+	 * @param string     	$id
 	 * @param int     		$user_id
 	 * @param string  		$title
 	 * @param string  		$contents
@@ -85,13 +85,13 @@ class Post
 	 * @param int     		$view_cnt
 	 * @param int     		$share_cnt
 	 * @param string  		$publishing_dt
-	 * @param string  		$last_modified_dt
+	 * @param string  		$last_edited_dt
 	 * @param int|null    	$series_id
 	 * @param string|null 	$thumbnail
 	 * @param string|null 	$subtitle
 	 */
 	public function __construct(
-		int $id,
+		string $id,
 		int $user_id,
 		string $title,
 		string $contents,
@@ -100,7 +100,7 @@ class Post
 		int $view_cnt,
 		int $share_cnt,
 		string $publishing_dt,
-		string $last_modified_dt,
+		string $last_edited_dt,
 		?int $series_id,
 		?string $thumbnail,
 		?string $subtitle
@@ -114,14 +114,14 @@ class Post
 		$this->viewCnt = $view_cnt;
 		$this->shareCnt = $share_cnt;
 		$this->publishingDt = $publishing_dt;
-		$this->lastModifiedDt = $last_modified_dt;
+		$this->lastEditedDt = $last_edited_dt;
 		$this->seriesID = $series_id;
 		$this->thumbnail = $thumbnail;
 		$this->subtitle = $subtitle;
 	}
 
 	/**
-	 * @return int
+	 * @return string
 	 */
 	public function getID()
 	{
@@ -195,9 +195,9 @@ class Post
 	/**
 	 * @return string	Datetime
 	 */
-	public function getLastModifiedDt()
+	public function getLastEditedDt()
 	{
-		return $this->lastModifiedDt;
+		return $this->lastEditedDt;
 	}
 
 	/**

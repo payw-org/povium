@@ -9,6 +9,8 @@
 
 namespace Povium\Publication\Post;
 
+use Povium\Generator\RandomStringGenerator;
+
 class PostManager
 {
 	/**
@@ -24,19 +26,26 @@ class PostManager
 	protected $conn;
 
 	/**
-	 * @param array $config
-	 * @param PDO   $conn
+	 * @var RandomStringGenerator
 	 */
-	public function __construct(array $config, \PDO $conn)
+	protected $randomStringGenerator;
+
+	/**
+	 * @param array 				$config
+	 * @param PDO   				$conn
+	 * @param RandomStringGenerator	$generator
+	 */
+	public function __construct(array $config, \PDO $conn, RandomStringGenerator $generator)
 	{
 		$this->config = $config;
 		$this->conn = $conn;
+		$this->randomStringGenerator = $generator;
 	}
 
 	/**
 	 * Returns a post instance;
 	 *
-	 * @param  int	$post_id
+	 * @param  string	$post_id
 	 *
 	 * @return Post|false
 	 */
@@ -83,10 +92,11 @@ class PostManager
 	) {
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['post_table']}
-			(user_id, title, contents, is_premium, series_id, thumbnail, subtitle)
-			VALUES (:user_id, :title, :contents, :is_premium, :series_id, :thumbnail, :subtitle)"
+			(id, user_id, title, contents, is_premium, series_id, thumbnail, subtitle)
+			VALUES (:id, :user_id, :title, :contents, :is_premium, :series_id, :thumbnail, :subtitle)"
 		);
 		$query_params = [
+			':id' => $this->createPostID(),
 			':user_id' => $user_id,
 			':title' => $title,
 			':contents' => $contents,
@@ -105,7 +115,7 @@ class PostManager
 	/**
 	 * Update some fields data of post record.
 	 *
-	 * @param  int		$post_id
+	 * @param  string	$post_id
 	 * @param  array 	$params		Assoc array (Field name => New value)
 	 *
 	 * @return bool		Whether successfully updated
@@ -133,5 +143,19 @@ class PostManager
 		}
 
 		return true;
+	}
+
+	/**
+	 * Create unique random post id.
+	 *
+	 * @return string
+	 */
+	protected function createPostID()
+	{
+		do {
+			$post_id = $this->randomStringGenerator->generateRandomString($this->config['post_id_length']);
+		} while ($this->getPost($post_id) !== false);
+
+		return $post_id;
 	}
 }

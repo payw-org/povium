@@ -122,7 +122,7 @@ class SessionManager
 	 *
 	 * @return bool Whether session id is valid.
 	 */
-	public function checkSessionID($session_id)
+	protected function checkSessionID($session_id)
 	{
 		if (empty($session_id)) {
 			return false;
@@ -174,7 +174,7 @@ class SessionManager
 	 *
 	 * @return string
 	 */
-	public function createSessionID()
+	protected function createSessionID()
 	{
 		$len = $this->config['session_id_length'];
 

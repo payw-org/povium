@@ -1,6 +1,6 @@
 <?php
 /**
- * Control publishing post.
+ * Manage post publication.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -59,7 +59,7 @@ class PostPublicationController
 
 	/**
 	 * Validate post components.
-	 * Then publish post.
+	 * Then publish the post.
 	 *
 	 * @param  string  		$title
 	 * @param  string  		$contents   Json string
@@ -70,17 +70,23 @@ class PostPublicationController
 	 *
 	 * @return array 	Error flag and message
 	 */
-	public function publishPost($title, $contents, $is_premium, $series_id = null, $thumbnail = null, $subtitle = null)
-	{
+	public function publishPost(
+		$title,
+ 		$contents,
+ 		$is_premium,
+ 		$series_id = null,
+ 		$thumbnail = null,
+ 		$subtitle = null
+	) {
 		$return = array(
 			'err' => true,
 			'msg' => ''
 		);
 
-		$user = $this->auth->getCurrentUser();
+		$current_user = $this->auth->getCurrentUser();
 
 		//	Not logged in
-		if (false === $user) {
+		if ($current_user === false) {
 			$return['msg'] = $this->config['msg']['not_logged_in'];
 
 			return $return;
@@ -106,7 +112,7 @@ class PostPublicationController
 			return $return;
 		}
 
-		//	If set thumbnail
+		//	If thumbnail is set
 		if ($thumbnail !== null) {
 			$validate_thumbnail = $this->thumbnailValidator->validate($thumbnail);
 
@@ -118,7 +124,7 @@ class PostPublicationController
 			}
 		}
 
-		//	If set subtitle
+		//	If subtitle is set
 		if ($subtitle !== null) {
 			$validate_subtitle = $this->subtitleValidator->validate($subtitle);
 
@@ -135,16 +141,16 @@ class PostPublicationController
 			// @TODO	Check if the current user is possible to publish premium post
 		}
 
-		//	If set series
+		//	If series is set
 		if ($series_id !== null) {
 			// @TODO	Check if the current user's series
 		}
 
 		/* All components are valid */
 
-		//	If failed to add post to database
+		//	If failed to add post record
 		if (!$this->postManager->addPost(
-			$user->getID(),
+			$current_user->getID(),
  			$title,
  			$contents,
  			$is_premium,
@@ -157,7 +163,8 @@ class PostPublicationController
 			return $return;
 		}
 
-		//	Publication success
+		/* Publication success */
+
 		$return['err'] = false;
 
 		return $return;

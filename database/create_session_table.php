@@ -8,7 +8,7 @@
 */
 
 $sql = "CREATE TABLE session (
-	id VARCHAR(512) PRIMARY KEY,
+	id VARCHAR(255) PRIMARY KEY,
 	data TEXT,
 	creation_dt DATETIME NOT NULL,
 	touched_dt DATETIME NOT NULL
