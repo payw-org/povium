@@ -227,6 +227,7 @@ export default class PVMSelection {
 
 		window.getSelection().removeAllRanges()
 		window.getSelection().addRange(range)
+
 	}
 
 	// Getters
