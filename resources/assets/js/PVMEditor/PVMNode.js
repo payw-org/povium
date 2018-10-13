@@ -246,7 +246,10 @@ export default class PVMNode {
 	 */
 	transformTo(newTagName)
 	{
+		
 		let originalType = this.type
+		newTagName = newTagName.toUpperCase()
+
 		if (originalType === newTagName) return
 		let newNode = document.createElement(newTagName)
 		newNode.setAttribute('data-ni', this.nodeID)
@@ -290,8 +293,9 @@ export default class PVMNode {
 				this.dom.parentElement.replaceChild(newNode, this.dom)
 			}
 
-			// Change this PVMNode's dom data.
+			// Change this PVMNode's data.
 			this.dom = newNode
+			this.type = newTagName
 
 		} else {
 
