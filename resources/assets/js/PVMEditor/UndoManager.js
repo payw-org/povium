@@ -132,6 +132,9 @@ export default class UndoManager {
 
 		} else if (action.type === 'transform') {
 
+			console.log('undo transform', action.before.type, action.affectedNode)
+
+			action.affectedNode.transformTo(action.before.type)
 
 		}
 
@@ -156,6 +159,10 @@ export default class UndoManager {
 			} else {
 				this.nodeMan.appendChild(action.affectedNode)
 			}
+
+		} else if (action.type === 'transform') {
+
+			action.affectedNode.transformTo(action.after.type)
 
 		}
 
