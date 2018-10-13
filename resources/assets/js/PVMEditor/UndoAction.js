@@ -11,7 +11,7 @@ export default class UndoAction {
 		/**
 		 * @type {boolean}
 		 */
-		this.isLinked = null
+		this.isLinked = false
 		/**
 		 * @type {PVMNode}
 		 */
