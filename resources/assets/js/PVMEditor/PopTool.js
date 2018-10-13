@@ -42,7 +42,7 @@ export default class PopTool {
 			
 		})
 
-		this.session.editorBody.addEventListener("keydown", (e) => {
+		this.session.editorBody.addEventListener("keyup", (e) => {
 			let keyCode = e.which
 			if (keyCode === 37 || keyCode === 38 || keyCode === 39 || keyCode === 40) {
 				this.togglePopTool()
@@ -300,9 +300,10 @@ export default class PopTool {
 			}
 			if (chunks[i].type !== tagName) {
 				isAllAlreaySet = false
+				// chunks[i].transformTo(tagName)
+				this.nodeMan.transformNode(chunks[i], tagName)
 			}
-			// chunks[i].transformTo(tagName)
-			this.nodeMan.transformNode(chunks[i], tagName)
+			
 		}
 
 		if (isAllAlreaySet) {
