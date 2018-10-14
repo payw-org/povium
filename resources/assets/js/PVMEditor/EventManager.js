@@ -82,8 +82,6 @@ export default class EventManager {
 
 		this.session.editorBody.addEventListener('keydown', (e) => {
 
-			// this.onSelectionChanged()
-
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
 
 
@@ -112,8 +110,6 @@ export default class EventManager {
 			if (!e.target.closest("#poptool")) {
 				this.pt.hidePopTool()
 			}
-
-
 
 		})
 
@@ -601,11 +597,12 @@ export default class EventManager {
 				this.undoMan.record({
 					type: "textChange",
 					affectedNode: currentNode,
+					affectedNodeID: currentNode.nodeID,
 					key: key,
 					locked: false,
 					before: {
 						innerHTML: this.sel.currentState.innerHTML,
-						range: currentRange
+						range: this.sel.currentState.range
 					}
 				})
 
@@ -733,11 +730,17 @@ export default class EventManager {
 
 	onSelectionChanged() {
 
+		// console.log('selection has been changed')
+
+		let currentRange = this.sel.getCurrentRange()
 		let currentNode = this.sel.getCurrentTextNode()
 		if (currentNode) {
 			this.sel.currentState.nodeID = currentNode.nodeID
 			this.sel.currentState.innerHTML = currentNode.textDom.innerHTML
+			this.sel.currentState.range = currentRange
 		}
+
+		this.pt.togglePopTool()
 
 		// console.log(this.sel.currentState.innerHTML)
 

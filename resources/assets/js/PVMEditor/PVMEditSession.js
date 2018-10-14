@@ -24,7 +24,14 @@ export default class PVMEditSession {
 		this.selection.setNodeManager(this.pvmNodeManager)
 		this.undoManager.setNodeManager(this.pvmNodeManager)
 
-		this.lastNodeID = 100
+		let nodes = this.selection.getAllNodesInEditor()
+		let maxNodeID = 0
+		for (let i = 0; i < nodes.length; i++) {
+			if (nodes[i].nodeID > maxNodeID) {
+				maxNodeID = nodes[i].nodeID
+			}
+		}
+		this.lastNodeID = maxNodeID
 
 	}
 

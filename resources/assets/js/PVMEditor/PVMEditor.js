@@ -28,9 +28,6 @@ export default class PVMEditor {
 		// let range = this.sel.createRange(this.nodeMan.getChildByID(1), 1, this.nodeMan.getChildByID(1), 2)
 		// this.sel.setRange(range)
 
-		let node = this.nodeMan.createEmptyNode("BLOCKQUOTE")
-		node.dom.innerHTML = "끼어들기ㅋ"
-		this.nodeMan.insertChildAfter(node, 4)
 	}
 
 	// Methods
@@ -76,24 +73,13 @@ export default class PVMEditor {
 
 			let currentNode = this.sel.getCurrentTextNode()
 			let nextNode = currentNode.getNextSibling()
+			let newNode, newRange
 
 			if (currentRange.start.state === 3 || currentRange.start.state === 4) {
-				
-				let newNode, newRange
 
 				if (currentNode.type === "LI") {
 					if (currentRange.start.state === 4) {
-						currentNode.transformTo("P")
-						this.undoMan.record({
-							type: 'transform',
-							affectedNode: currentNode,
-							before: {
-								range: currentRange
-							},
-							after: {
-								range: currentRange
-							}
-						})
+						this.nodeMan.transformNode(currentNode, 'P')
 						this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
 					} else {
 						newNode = this.nodeMan.createEmptyNode("LI")
@@ -117,7 +103,12 @@ export default class PVMEditor {
 				}
 
 			} else if (currentRange.start.state === 1) {
-				this.nodeMan.insertChildBefore(this.nodeMan.createEmptyNode(this.nodeMan.getChildByID(currentRange.start.nodeID).type), currentRange.start.nodeID)
+				newNode = this.nodeMan.createEmptyNode(currentNode.type)
+				this.nodeMan.insertChildBefore(newNode, currentRange.start.nodeID, {
+					beforeRange: currentRange,
+					afterRange: currentRange,
+					nextNode: currentNode
+				})
 			} else {
 				if (currentNode.type === "FIGURE") return
 				this.nodeMan.splitElementNode3()
@@ -180,7 +171,8 @@ export default class PVMEditor {
 				if (!previousNode || currentNode.type === 'LI') {
 
 					// No previousNode. It should be the first line.
-					currentNode.transformTo("P")
+					// currentNode.transformTo("P")
+					this.nodeMan.transformNode(currentNode, 'P')
 					this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
 
 				} else {

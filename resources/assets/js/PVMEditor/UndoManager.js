@@ -116,6 +116,15 @@ export default class UndoManager {
 	 */
 	undoWithAction(action)
 	{
+
+		if (action.affectedNode && !action.affectedNode.dom.parentElement) {
+			action.affectedNode.dom = this.nodeMan.getChildByID(action.affectedNode.nodeID).dom
+		}
+
+		if (action.nextNode && !action.nextNode.dom.parentElement) {
+			action.nextNode.dom = this.nodeMan.getChildByID(action.nextNode.nodeID).dom
+		}
+
 		if (action.type === 'remove') {
 
 			if (action.nextNode) {
@@ -132,9 +141,11 @@ export default class UndoManager {
 
 		} else if (action.type === 'transform') {
 
-			console.log('undo transform', action.before.type, action.affectedNode)
+			this.nodeMan.transformNode(action.affectedNode, action.before.type, false)
 
-			action.affectedNode.transformTo(action.before.type)
+		} else if (action.type === 'textChange') {
+
+			action.affectedNode.setInnerHTML(action.before.innerHTML)
 
 		}
 
@@ -162,7 +173,11 @@ export default class UndoManager {
 
 		} else if (action.type === 'transform') {
 
-			action.affectedNode.transformTo(action.after.type)
+			this.nodeMan.transformNode(action.affectedNode, action.after.type, false)
+
+		} else if (action.type === 'textChange') {
+
+			action.affectedNode.setInnerHTML(action.after.innerHTML)
 
 		}
 

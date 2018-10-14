@@ -62,6 +62,7 @@ export default class PVMNode {
 		if (this.dom.getAttribute('data-ni')) {
 			this.nodeID = Number(this.dom.getAttribute('data-ni'))
 		} else {
+			console.error("This node has no ID.", this.dom)
 			this.nodeID = null
 		}
 
@@ -98,6 +99,16 @@ export default class PVMNode {
 	{
 		this.nodeID = nodeID
 		this.dom.setAttribute('data-ni', nodeID)
+	}
+
+	/**
+	 * 
+	 * @param {string} html 
+	 */
+	setInnerHTML(html)
+	{
+		this.innerHTML = html
+		this.dom.innerHTML = html
 	}
 
 	// Getters
@@ -246,7 +257,7 @@ export default class PVMNode {
 	 */
 	transformTo(newTagName)
 	{
-		
+
 		let originalType = this.type
 		newTagName = newTagName.toUpperCase()
 
@@ -255,6 +266,7 @@ export default class PVMNode {
 		newNode.setAttribute('data-ni', this.nodeID)
 		let child
 		if (AN.transformable.includes(this.type)) {
+
 			while (child = this.dom.firstChild) {
 				newNode.appendChild(child)
 			}
@@ -290,7 +302,17 @@ export default class PVMNode {
 				}
 
 			} else {
+
 				this.dom.parentElement.replaceChild(newNode, this.dom)
+
+				if (newTagName === 'LI') {
+					let previous = this.getPreviousSibling(), next = this.getNextSibling()
+					if (previous && next && previous.type === "LI" && next.type === "LI") {
+
+					}
+				}
+
+
 			}
 
 			// Change this PVMNode's data.

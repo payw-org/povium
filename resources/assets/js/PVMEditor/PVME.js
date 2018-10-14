@@ -14,9 +14,9 @@ export default class PVME {
 		this.editor = new PVMEditor(this.session)
 		this.session.eventManager.setEditor(this.editor)
 		let browser = require('detect-browser').detect()
-		console.log(browser.name, browser.version)
+		console.info(browser.name, browser.version)
 		if (browser.name.toLowerCase() === 'firefox') {
-			console.warn(`The editor's feature does not work with Firefox.`)
+			console.warn(`Firefox에서는 에디터 기능이 정상적으로 작동하지 않을 수 있습니다. (권장 Firefox 버전: 68 이상)`)
 		}
 	}
 

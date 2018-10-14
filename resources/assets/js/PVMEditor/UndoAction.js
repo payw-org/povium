@@ -17,6 +17,10 @@ export default class UndoAction {
 		 */
 		this.affectedNode = null
 		/**
+		 * @type {number}
+		 */
+		this.affectedNodeID = null
+		/**
 		 * @type {PVMNode}
 		 */
 		this.nextNode = null
@@ -42,7 +46,9 @@ export default class UndoAction {
 		if ('type' in config) this.type = config.type
 		if ('isLinked' in config) this.isLinked = config.isLinked
 		if ('affectedNode' in config) this.affectedNode = config.affectedNode
+		if ('affectedNodeID' in config) this.affectedNodeID = config.affectedNodeID
 		if ('nextNode' in config) this.nextNode = config.nextNode
+		if ('nextNodeID' in config) this.nextNodeID = config.nextNodeID
 		if ('before' in config) this.before = config.before
 		if ('after' in config) this.after = config.after
 		if ('key' in config) this.key = config.key

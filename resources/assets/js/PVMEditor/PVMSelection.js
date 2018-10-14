@@ -25,7 +25,11 @@ export default class PVMSelection {
 			/**
 			 * @type {string}
 			 */
-			innerHTML: null
+			innerHTML: null,
+			/**
+			 * @type {PVMRange}
+			 */
+			range: null
 		}
 
 		// this.session.editorBody.addEventListener("click", () => {
@@ -40,9 +44,8 @@ export default class PVMSelection {
 
 	onSelectionChanged()
 	{
-		setTimeout(() => {
-			console.log(this.getCurrentRange())
-		}, 0);
+
+		this.currentState.range = this.getCurrentRange()
 		
 	}
 
@@ -344,6 +347,18 @@ export default class PVMSelection {
 		return nodes
 
 
+	}
+
+	getAllNodesInEditor()
+	{
+		let travelNode = this.nodeMan.getFirstChild()
+		let allNodes = []
+		allNodes.push(travelNode)
+		while (travelNode = travelNode.getNextSibling()) {
+			allNodes.push(travelNode)
+		}
+
+		return allNodes
 	}
 
 	/**
