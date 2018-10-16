@@ -97,7 +97,6 @@ class RegisterController
 	*/
 	public function register($readable_id, $name, $password)
 	{
-		# $return = array('err' => true, 'email_msg' => '', 'name_msg' => '', 'password_msg' => '');
 		$return = array(
 			'err' => true,
 			'msg' => ''
@@ -131,6 +130,8 @@ class RegisterController
 
 			return $return;
 		}
+
+		/* Register processing */
 
 		$user_manager = $this->auth->getUserManager();
 

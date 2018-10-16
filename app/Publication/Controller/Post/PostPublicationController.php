@@ -146,7 +146,7 @@ class PostPublicationController
 			// @TODO	Check if the current user's series
 		}
 
-		/* All components are valid */
+		/* Publication processing */
 
 		//	If failed to add post record
 		if (!$this->postManager->addPost(
@@ -163,8 +163,7 @@ class PostPublicationController
 			return $return;
 		}
 
-		/* Publication success */
-
+		//	Successfully published
 		$return['err'] = false;
 
 		return $return;

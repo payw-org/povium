@@ -85,6 +85,8 @@ class PostEditController
 			'msg' => ''
 		);
 
+		/* Validate post edit request */
+
 		$current_user = $this->auth->getCurrentUser();
 
 		//	Not logged in
@@ -176,7 +178,7 @@ class PostEditController
 			$components_to_update['subtitle'] = $subtitle;
 		}
 
-		//	Is premium is changed
+		//	Premium setting is changed
 		if ($is_premium != $post->isPremium()) {
 			//	If want to publish as premium
 			if ($is_premium) {
@@ -186,7 +188,7 @@ class PostEditController
 			$components_to_update['is_premium'] = $is_premium;
 		}
 
-		//	Series id is changed
+		//	Series setting is changed
 		if ($series_id != $post->getSeriesID()) {
 			//	Series is set
 			if ($series_id !== null) {
@@ -196,7 +198,7 @@ class PostEditController
 			$components_to_update['series_id'] = $series_id;
 		}
 
-		/* Update the post record */
+		/* Edit processing */
 
 		$components_to_update['last_edited_dt'] = date('Y-m-d H:i:s');
 
@@ -207,8 +209,7 @@ class PostEditController
 			return $return;
 		}
 
-		/* Edit success */
-
+		//	Successfully edited
 		$return['err'] = false;
 
 		return $return;

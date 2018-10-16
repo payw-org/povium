@@ -118,7 +118,8 @@ class EmailActivationController
 			return $return;
 		}
 
-		/* Activate email address */
+		/* Activate email */
+
 		$params = array(
 			'is_verified' => true,
 			'email' => $record['email']
@@ -131,6 +132,7 @@ class EmailActivationController
 		);
 		$stmt->execute([$record['email']]);
 
+		//	Successfully activated
 		$return['err'] = false;
 
 		return $return;

@@ -85,7 +85,7 @@ class LoginController
 			'msg' => ''
 		);
 
-		/* Validate account */
+		/* Validate inputs */
 
 		$validate_readable_id = $this->readableIDValidator->validate($identifier);
 
@@ -110,6 +110,8 @@ class LoginController
 			return $return;
 		}
 
+		/* Check if registered account */
+
 		$user_manager = $this->auth->getUserManager();
 
 		//	Unregistered readable id
@@ -121,6 +123,8 @@ class LoginController
 				return $return;
 			}
 		}
+
+		/* Check if password match */
 
 		//	Fetch user data
 		$user = $user_manager->getUser($user_id);
@@ -144,6 +148,8 @@ class LoginController
 			$user_manager->updateUser($user_id, $params);
 		}
 
+		/* Check if valid account */
+
 		//	Deleted account
 		if ($user->isDeleted()) {
 			$return['msg'] = $this->config['msg']['account_is_deleted'];
@@ -161,8 +167,6 @@ class LoginController
 		/* Login processing */
 
 		$session_manager = $this->auth->getSessionManager();
-
-		//	Regenerate session id
 		$session_manager->regenerateSessionID(true, true);
 
 		//	Error occurred issuing access key

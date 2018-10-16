@@ -87,6 +87,8 @@ class EmailAddController
 		$user_id = $this->auth->getCurrentUser()->getID();
 
 		$validate_email = $this->emailValidator->validate($email, true);
+
+		//	Invalid email
 		if ($validate_email['err']) {
 			$return['msg'] = $validate_email['msg'];
 
