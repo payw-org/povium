@@ -117,14 +117,6 @@ export default class UndoManager {
 	undoWithAction(action)
 	{
 
-		if (action.affectedNode && !action.affectedNode.dom.parentElement) {
-			action.affectedNode.dom = this.nodeMan.getChildByID(action.affectedNode.nodeID).dom
-		}
-
-		if (action.nextNode && !action.nextNode.dom.parentElement) {
-			action.nextNode.dom = this.nodeMan.getChildByID(action.nextNode.nodeID).dom
-		}
-
 		if (action.type === 'remove') {
 
 			if (action.nextNode) {
@@ -145,7 +137,21 @@ export default class UndoManager {
 
 		} else if (action.type === 'textChange') {
 
+			if (action.affectedNode && !action.affectedNode.dom.parentElement) {
+				action.affectedNode.dom = this.nodeMan.getChildByID(action.affectedNode.nodeID).dom
+			}
 			action.affectedNode.setInnerHTML(action.before.innerHTML)
+
+		} else if (action.type === "merge") {
+
+			this.sel.setRange(action.after.range)
+			this.nodeMan.splitElementNode3(action.before.range.start.nodeID)
+
+		} else if (action.type === "split") {
+
+			let node1 = this.nodeMan.getChildByID(action.before.range.start.nodeID)
+			let node2 = this.nodeMan.getChildByID(action.after.range.start.nodeID)
+			this.nodeMan.mergeNodes(node1, node2, true, false)
 
 		}
 
@@ -177,7 +183,21 @@ export default class UndoManager {
 
 		} else if (action.type === 'textChange') {
 
+			if (action.affectedNode && !action.affectedNode.dom.parentElement) {
+				action.affectedNode.dom = this.nodeMan.getChildByID(action.affectedNode.nodeID).dom
+			}
 			action.affectedNode.setInnerHTML(action.after.innerHTML)
+
+		} else if (action.type === "merge") {
+
+			let node1 = this.nodeMan.getChildByID(action.after.range.start.nodeID)
+			let node2 = this.nodeMan.getChildByID(action.before.range.start.nodeID)
+			this.nodeMan.mergeNodes(node1, node2, true, false)
+
+		} else if (action.type === "split") {
+
+			this.sel.setRange(action.before.range)
+			this.nodeMan.splitElementNode3(action.after.range.start.nodeID, false)
 
 		}
 
