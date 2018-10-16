@@ -10,7 +10,7 @@ namespace Povium\Base\Http\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
-use Povium\Base\DBConnection;
+use Povium\Base\Database\DBConnection;
 
 class SessionManagerFactory extends AbstractChildFactory
 {

@@ -9,7 +9,7 @@
 namespace Povium\Base\Http\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\DBConnection;
+use Povium\Base\Database\DBConnection;
 
 class PDOSessionHandlerFactory extends AbstractChildFactory
 {

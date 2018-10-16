@@ -1,12 +1,12 @@
 <?php
 /**
-* Create a database connection using PDO
+* Create a database connection using PDO.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop
 */
 
-namespace Povium\Base;
+namespace Povium\Base\Database;
 
 use Povium\Traits\SingletonTrait;
 
@@ -38,7 +38,7 @@ class DBConnection
 	*/
 	private function __construct()
 	{
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/connection.php');
+		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/database.php');
 
 		$this->generatePDOConnection();
 	}
@@ -60,7 +60,7 @@ class DBConnection
 			$dsn =
 				"" . $this->config['driver'] .
 				":host=" . $this->config['host'] .
-				";dbname=" . $this->config['dbname'];
+				";";
 
 			try {
 				$this->conn = new \PDO(
@@ -69,6 +69,9 @@ class DBConnection
  					$this->config['password'],
  					$this->config['opt']
 				);
+
+				$this->conn->exec("CREATE DATABASE IF NOT EXISTS " . $this->config['dbname']);
+				$this->conn->exec("USE " . $this->config['dbname']);
 			} catch (\PDOException $e) {
 				error_log("ERROR: " . $e->getMessage() . " on line " . __LINE__);
 			}

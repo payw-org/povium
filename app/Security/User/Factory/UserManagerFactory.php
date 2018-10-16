@@ -10,7 +10,7 @@ namespace Povium\Security\User\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
-use Povium\Base\DBConnection;
+use Povium\Base\Database\DBConnection;
 
 class UserManagerFactory extends AbstractChildFactory
 {

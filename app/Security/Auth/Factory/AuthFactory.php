@@ -10,7 +10,7 @@ namespace Povium\Security\Auth\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
-use Povium\Base\DBConnection;
+use Povium\Base\Database\DBConnection;
 use Povium\Base\Http\Session\SessionManager;
 
 class AuthFactory extends AbstractChildFactory
