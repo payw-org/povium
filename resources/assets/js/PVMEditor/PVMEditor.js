@@ -141,7 +141,8 @@ export default class PVMEditor {
 
 				if (currentNode.type === "LI") {
 
-					currentNode.transformTo("P")
+					// currentNode.transformTo("P")
+					this.nodeMan.transformNode(currentNode, "P")
 					this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
 
 				} else if (previousNode.type === "FIGURE") {
