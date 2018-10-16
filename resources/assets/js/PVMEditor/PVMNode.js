@@ -9,13 +9,11 @@ export default class PVMNode {
 	constructor(node)
 	{
 
-		/**
-			@name dom
-			@type HTMLElement
-			@default null
-		*/
 		this.dom = null
 		this.nodeID = null
+		/**
+		 * @type string
+		 */
 		this.type = null
 		this.parentType = null
 
@@ -62,7 +60,7 @@ export default class PVMNode {
 		if (this.dom.getAttribute('data-ni')) {
 			this.nodeID = Number(this.dom.getAttribute('data-ni'))
 		} else {
-			console.error("This node has no ID.", this.dom)
+			console.warn("This node has no ID.", this.dom)
 			this.nodeID = null
 		}
 
@@ -111,20 +109,30 @@ export default class PVMNode {
 		this.dom.innerHTML = html
 	}
 
+	/**
+	 * 
+	 * @param {Element} dom 
+	 */
+	setDOM(dom)
+	{
+		this.dom = dom
+	}
+
 	// Getters
 
 	getPreviousSibling()
 	{
-		let previousElement = this.dom.previousElementSibling
+		let dom = this.getDOM()
+		let previousElement = dom.previousElementSibling
 		let pvmnd = null
 
 		if (!previousElement) {
 
 			if (
-				this.dom.parentElement.nodeName.toUpperCase() === "UL" ||
-				this.dom.parentElement.nodeName.toUpperCase() === "OL"
+				dom.parentElement.nodeName.toUpperCase() === "UL" ||
+				dom.parentElement.nodeName.toUpperCase() === "OL"
 			) {
-				previousElement = this.dom.parentElement.previousElementSibling
+				previousElement = dom.parentElement.previousElementSibling
 			} else {
 				return null
 			}
@@ -163,17 +171,17 @@ export default class PVMNode {
 
 	getNextSibling()
 	{
-		let nextElement = this.dom.nextElementSibling
+		let dom = this.getDOM()
+		let nextElement = dom.nextElementSibling
 		let pvmnd = null
-
 
 		if (!nextElement) {
 
 			if (
-				this.dom.parentElement.nodeName === "UL" ||
-				this.dom.parentElement.nodeName === "OL"
+				dom.parentElement.nodeName === "UL" ||
+				dom.parentElement.nodeName === "OL"
 			) {
-				nextElement = this.dom.parentElement.nextElementSibling
+				nextElement = dom.parentElement.nextElementSibling
 			} else {
 				return null
 			}
@@ -246,6 +254,33 @@ export default class PVMNode {
 		}
 
 		return returnNode
+
+	}
+
+	getDOM()
+	{
+
+		let dom = document.querySelector('[data-ni="' + this.nodeID + '"]')
+		if (!dom) {
+			dom = document.createElement(this.type)
+			dom.innerHTML = this.innerHTML
+			dom.setAttribute("data-ni", this.nodeID)
+		}
+
+		return dom
+
+	}
+
+	getTextDOM()
+	{
+
+		let textDOM = this.getDOM()
+
+		if (this.type === "FIGURE") {
+			textDOM = textDOM.querySelector("figcaption")
+		}
+
+		return textDOM
 
 	}
 
