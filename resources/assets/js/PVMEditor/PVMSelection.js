@@ -46,6 +46,7 @@ export default class PVMSelection {
 	{
 
 		this.currentState.range = this.getCurrentRange()
+		this.currentState.innerHTML = this.getCurrentTextNode().innerHTML
 		
 	}
 
@@ -74,10 +75,7 @@ export default class PVMSelection {
 			console.error("Couldn't find the node.", startNodeID)
 			return
 		}
-		let startNodeDOM = startNodePVMN.dom
-		if (startNodePVMN.type === "FIGURE") {
-			startNodeDOM = startNodeDOM.querySelector("figcaption")
-		}
+		let startNodeDOM = startNodePVMN.getTextDOM()
 		let startNodeOffset = pvmRange.start.offset
 
 		// Calculate start
@@ -156,10 +154,7 @@ export default class PVMSelection {
 			console.error("Couldn't find the node.", endNodeID)
 			return
 		}
-		let endNodeDOM = endNodePVMN.dom
-		if (endNodePVMN.type === "FIGURE") {
-			endNodeDOM = endNodeDOM.querySelector("figcaption")
-		}
+		let endNodeDOM = endNodePVMN.getTextDOM()
 		let endNodeOffset = pvmRange.end.offset
 
 		// Calculate end
@@ -230,6 +225,8 @@ export default class PVMSelection {
 
 		window.getSelection().removeAllRanges()
 		window.getSelection().addRange(range)
+
+		this.onSelectionChanged()
 
 	}
 
