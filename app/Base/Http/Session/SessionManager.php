@@ -63,38 +63,48 @@ class SessionManager
 	}
 
 	/**
-	 * If session id is invalid, set new one.
+	 * Customized 'session_start'.
+	 * If old session id is invalid, set new one.
+	 * Then start session.
 	 *
 	 * @return null
 	 */
-	public function checkAndSetSessionID()
+	public function startSession()
 	{
-		$current_session_id = $this->getCurrentSessionID();
+		$old_session_id = $this->getOldSessionID();
 
-		if (!$this->checkSessionID($current_session_id)) {
+		if (!$this->checkSessionID($old_session_id)) {
 			$new_session_id = $this->createSessionID();
-			session_id($new_session_id);
+			session_id($new_session_id);	//	Set new one
 		}
+
+		session_start();
 	}
 
 	/**
 	 * Customized 'session_regenerate_id'.
-	 * Update the current session id with a newly created one.
+	 * Update the session id with a newly created one.
 	 *
 	 * @param  boolean $keep_session_data	If false, initialize session data.
-	 * @param  boolean $delete_old_session	If true, delete current session immediately.
+	 * @param  boolean $delete_old_session	If true, delete old session immediately.
 	 *
 	 * @return null
 	 */
 	public function regenerateSessionID($keep_session_data = true, $delete_old_session = false)
 	{
-		//	Store current session data
-		$session_data = $_SESSION;
+		//	Store session data
+		$temp_session_data = $_SESSION;
+
+		//	Set destroy timestamp
+		$_SESSION['destroyed'] = time();
+
+		session_write_close();
 
 		if ($delete_old_session) {
+			session_start();
 			session_destroy();
+			session_write_close();
 		}
-		session_write_close();
 
 		//	Create new session id
 		$new_session_id = $this->createSessionID();
@@ -111,7 +121,7 @@ class SessionManager
 		session_start();
 
 		if ($keep_session_data) {
-			$_SESSION = $session_data;
+			$_SESSION = $temp_session_data;
 		}
 	}
 
@@ -141,28 +151,42 @@ class SessionManager
 
 		$session_record = $stmt->fetch();
 
-		//	Expired session. (Creation date is too old)
+		//	Expired session (Creation date is too old)
 		if (strtotime($session_record['creation_dt']) + $this->config['cookie_params']['lifetime'] < time()) {
 			return false;
 		}
 
-		//	Expired session. (Touched date is too old)
+		//	Expired session (Touched date is too old)
 		if (strtotime($session_record['touched_dt']) + $this->config['gc_maxlifetime'] < time()) {
 			return false;
+		}
+
+		//	Get session data
+		session_start();
+		$temp_session_data = $_SESSION;
+		session_write_close();
+
+		//	Destroyed session
+		if (isset($temp_session_data['destroyed'])) {
+			// Should not happen usually.
+			// This could be attack or due to unstable network.
+			if ($temp_session_data['destroyed'] + $this->config['delay_time'] < time()) {
+				return false;
+			}
 		}
 
 		return true;
 	}
 
 	/**
-	 * Returns current session id.
+	 * Returns old session id.
 	 *
 	 * @return	string|false
 	 */
-	public function getCurrentSessionID()
+	public function getOldSessionID()
 	{
-		if (isset($_COOKIE[$this->config['cookie_params']['name']])) {
-			return $_COOKIE[$this->config['cookie_params']['name']];
+		if (isset($_COOKIE[session_name()])) {
+			return $_COOKIE[session_name()];
 		}
 
 		return false;

@@ -18,8 +18,7 @@ $factory = new MasterFactory();
 //	Initialize session
 $session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
 $session_manager->setSessionConfig();
-$session_manager->checkAndSetSessionID();
-session_start();
+$session_manager->startSession();
 
 //	Initialize authentication system
 $auth = $factory->createInstance('\Povium\Security\Auth\Auth', $session_manager);

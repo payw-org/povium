@@ -18,8 +18,8 @@ $sql = "CREATE TABLE post (
 	publishing_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	last_edited_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	series_id INT(11) UNSIGNED,
-	thumbnail VARCHAR(512),
 	subtitle VARCHAR(500),
+	thumbnail VARCHAR(512),
 	CONSTRAINT FK__user__post FOREIGN KEY (user_id)
 	REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT FK__series__post FOREIGN KEY (series_id)

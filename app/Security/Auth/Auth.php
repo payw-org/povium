@@ -290,7 +290,7 @@ class Auth
 		//	Not logged in user
 		if ($stmt->rowCount() == 0) {
 			$this->deleteCurrentAccessKey();
-			$this->sessionManager->regenerateSessionID(false, true);
+			$this->sessionManager->regenerateSessionID(false);
 
 			return false;
 		}
@@ -330,7 +330,7 @@ class Auth
 	/**
 	 * Update current access key cookie.
 	 * Update current access key record from db.
-	 * Renew access key expiration time if needed.
+	 * Renew access key if expires soon.
 	 *
 	 * @return bool	Whether update is success
 	 */
@@ -369,12 +369,16 @@ class Auth
 			$params_to_update['agent'] = $agent;
 		}
 
-		//	Time to renew access key expiration time
+		//	If access key expires soon, renew it.
 		if (
 			strtotime($record['expn_dt']) - time() <
 			$this->config['cookie']['access_key']['expire'] - $this->config['cookie']['access_key']['renew']
 		) {
+			$new_access_key = $this->generateAccessKey();
+			$new_access_hash = $this->generateAccessHash($new_access_key);
 			$new_expiration_time = time() + $this->config['cookie']['access_key']['expire'];
+
+			$params_to_update['hash'] = $new_access_hash;
 			$params_to_update['expn_dt'] = date("Y-m-d H:i:s", $new_expiration_time);
 		}
 
@@ -400,21 +404,21 @@ class Auth
 			"UPDATE {$this->config['connected_user_table']} SET " . $set_params .
 			" WHERE id = ?"
 		);
-		$stmt->execute($val_list);
+		if (!$stmt->execute($val_list)) {
+			return false;
+		}
 
 		/* Update access key cookie */
 
 		//	No need to update cookie
-		if (!isset($new_expiration_time)) {
+		if (!isset($new_access_key)) {
 			return true;
 		}
-
-		$access_key = $_COOKIE[$this->config['cookie']['access_key']['name']];
 
 		//	Failed to update cookie
 		if (!setcookie(
 			$this->config['cookie']['access_key']['name'],
-			$access_key,
+			$new_access_key,
 			$new_expiration_time,
 			$this->config['cookie']['access_key']['path'],
 			$this->config['cookie']['access_key']['domain'],
@@ -423,6 +427,8 @@ class Auth
 		)) {
 			return false;
 		}
+
+		$_COOKIE[$this->config['cookie']['access_key']['name']] = $new_access_key;
 
 		return true;
 	}

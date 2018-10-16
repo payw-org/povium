@@ -13,7 +13,7 @@ $sql = "CREATE TABLE connected_user (
 	user_id INT(11) UNSIGNED NOT NULL,
 	ip VARCHAR(50) NOT NULL,
 	expn_dt DATETIME NOT NULL,
-	agent TEXT,
+	agent TEXT NOT NULL,
 	CONSTRAINT FK__session__connected_user FOREIGN KEY (session_id)
 	REFERENCES session (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT FK__user__connected_user FOREIGN KEY (user_id)
