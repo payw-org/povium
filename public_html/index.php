@@ -9,11 +9,18 @@
 date_default_timezone_set("Asia/Seoul");
 define('BASE_URI', 'http://' . $_SERVER['HTTP_HOST']);
 
+require_once($_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php');
+
 use Povium\Base\Factory\MasterFactory;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php';
-
 $factory = new MasterFactory();
+
+/*
+* To initialize povium database, uncomment 2 lines code below.
+* To use drop option, use "true" param on "build" method.
+*/
+// $db_builder = $factory->createInstance('\Povium\Base\Database\DBBuilder');
+// $db_builder->build(false);
 
 //	Initialize session
 $session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
@@ -29,8 +36,8 @@ $router = $factory->createInstance('\Povium\Base\Routing\Router');
 
 //	Create routes and add to collection.
 $collection = $factory->createInstance('\Povium\Base\Routing\RouteCollection');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php';
+require_once($_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php');
 
 //	Set collection
 $router->setRouteCollection($collection);

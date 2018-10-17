@@ -38,7 +38,7 @@ class DBConnection
 	*/
 	private function __construct()
 	{
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/database.php');
+		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/db_connection.php');
 
 		$this->generatePDOConnection();
 	}
@@ -60,7 +60,7 @@ class DBConnection
 			$dsn =
 				"" . $this->config['driver'] .
 				":host=" . $this->config['host'] .
-				";";
+				";dbname=" . $this->config['dbname'];
 
 			try {
 				$this->conn = new \PDO(
@@ -69,9 +69,6 @@ class DBConnection
  					$this->config['password'],
  					$this->config['opt']
 				);
-
-				$this->conn->exec("CREATE DATABASE IF NOT EXISTS " . $this->config['dbname']);
-				$this->conn->exec("USE " . $this->config['dbname']);
 			} catch (\PDOException $e) {
 				error_log("ERROR: " . $e->getMessage() . " on line " . __LINE__);
 			}

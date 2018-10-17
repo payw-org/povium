@@ -7,7 +7,7 @@
 */
 
 return [
-	'email_waiting_for_activation_table' => 'email_waiting_for_activation',
+	'email_requesting_activation_table' => 'email_requesting_activation',
 
 	'err' => [
 		'not_logged_in' => [

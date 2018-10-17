@@ -81,7 +81,7 @@ class EmailActivationController
 		$user_id = $this->auth->getCurrentUser()->getID();
 
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['email_waiting_for_activation_table']}
+			"SELECT * FROM {$this->config['email_requesting_activation_table']}
 			WHERE user_id = ?"
 		);
 		$stmt->execute([$user_id]);
@@ -107,7 +107,7 @@ class EmailActivationController
 		//	Request expired
 		if (strtotime($record['expn_dt']) < time()) {
 			$stmt = $this->conn->prepare(
-				"DELETE FROM {$this->config['email_waiting_for_activation_table']}
+				"DELETE FROM {$this->config['email_requesting_activation_table']}
 				WHERE id = ?"
 			);
 			$stmt->execute([$record['id']]);
@@ -127,7 +127,7 @@ class EmailActivationController
 		$this->auth->getUserManager()->updateUser($record['user_id'], $params);
 
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['email_waiting_for_activation_table']}
+			"DELETE FROM {$this->config['email_requesting_activation_table']}
 			WHERE email = ?"
 		);
 		$stmt->execute([$record['email']]);

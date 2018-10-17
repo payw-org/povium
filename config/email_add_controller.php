@@ -7,7 +7,7 @@
 */
 
 return [
-	'email_waiting_for_activation_table' => 'email_waiting_for_activation',
+	'email_requesting_activation_table' => 'email_requesting_activation',
 
 	'email_activation_expire' => 1800,	//	Email activation expiration term (30 minutes)
 

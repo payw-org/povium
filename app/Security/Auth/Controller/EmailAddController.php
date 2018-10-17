@@ -97,14 +97,14 @@ class EmailAddController
 
 		//	Delete old record of same user
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->config['email_waiting_for_activation_table']}
+			"DELETE FROM {$this->config['email_requesting_activation_table']}
 			WHERE user_id = ?"
 		);
 		$stmt->execute([$user_id]);
 
 		//	Add new record
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['email_waiting_for_activation_table']}
+			"INSERT INTO {$this->config['email_requesting_activation_table']}
 			(user_id, token, email, expn_dt)
 			VALUES (:user_id, :token, :email, :expn_dt)"
 		);

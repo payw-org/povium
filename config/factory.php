@@ -9,6 +9,8 @@
 */
 
 return [
+	'\Povium\Base\Database\DBBuilder' => '\Povium\Base\Database\Factory\DBBuilderFactory',
+
 	'\Povium\Base\Http\Client' => '\Povium\Base\Http\Factory\ClientFactory',
 	'\Povium\Base\Http\Session\PDOSessionHandler' => '\Povium\Base\Http\Factory\PDOSessionHandlerFactory',
 	'\Povium\Base\Http\Session\SessionManager' => '\Povium\Base\Http\Factory\SessionManagerFactory',
