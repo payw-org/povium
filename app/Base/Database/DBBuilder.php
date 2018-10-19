@@ -24,7 +24,7 @@ class DBBuilder
 
 	/**
 	 * @param array $config
-	 * @param \PDO   $conn
+	 * @param \PDO  $conn
 	 */
 	public function __construct(array $config, \PDO $conn)
 	{
@@ -36,12 +36,26 @@ class DBBuilder
 	 * Build database.
 	 * Create all tables.
 	 *
-	 * @param  boolean $drop	Whether drop all tables before create them.
+	 * @param  int	$build_option
 	 *
 	 * @return null
 	 */
-	public function build($drop = false)
+	public function build($build_option)
 	{
+		switch ($build_option) {
+			case DB_BUILD_OPTION['NOT_BUILD']:
+
+				return;
+			case DB_BUILD_OPTION['CREATE']:
+				$drop = false;
+
+				break;
+			case DB_BUILD_OPTION['DROP_AND_CREATE']:
+				$drop = true;
+
+				break;
+		}
+
 		$this->conn->exec("SET FOREIGN_KEY_CHECKS = 0");
 
 		try {

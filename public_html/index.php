@@ -8,6 +8,11 @@
 
 date_default_timezone_set("Asia/Seoul");
 define('BASE_URI', 'http://' . $_SERVER['HTTP_HOST']);
+const DB_BUILD_OPTION = array(
+	'NOT_BUILD' => 0,
+	'CREATE' => 1,
+	'DROP_AND_CREATE' => 2
+);
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php');
 
@@ -15,12 +20,9 @@ use Povium\Base\Factory\MasterFactory;
 
 $factory = new MasterFactory();
 
-/*
-* To initialize povium database, uncomment 2 lines code below.
-* To use drop option, use "true" param on "build" method.
-*/
-// $db_builder = $factory->createInstance('\Povium\Base\Database\DBBuilder');
-// $db_builder->build(false);
+//	Build database (Choose the build option)
+$db_builder = $factory->createInstance('\Povium\Base\Database\DBBuilder');
+$db_builder->build(DB_BUILD_OPTION['NOT_BUILD']);
 
 //	Initialize session
 $session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
