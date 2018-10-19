@@ -20,7 +20,7 @@ use Povium\Base\Factory\MasterFactory;
 
 $factory = new MasterFactory();
 
-//	Build database (Choose the build option)
+//	Build database (Set the build option)
 $db_builder = $factory->createInstance('\Povium\Base\Database\DBBuilder');
 $db_builder->build(DB_BUILD_OPTION['NOT_BUILD']);
 
