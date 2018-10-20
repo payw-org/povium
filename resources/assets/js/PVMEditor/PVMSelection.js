@@ -45,8 +45,10 @@ export default class PVMSelection {
 	onSelectionChanged()
 	{
 
-		this.currentState.range = this.getCurrentRange()
-		this.currentState.innerHTML = this.getCurrentTextNode().innerHTML
+		let currentRange = this.getCurrentRange()
+		this.currentState.range = currentRange
+		let currentNode = this.getCurrentTextNode()
+		this.currentState.innerHTML = currentNode.innerHTML
 		
 	}
 
@@ -70,7 +72,7 @@ export default class PVMSelection {
 		let range = document.createRange() // JS Range
 		let rangeStartContainer, rangeStartOffset, rangeEndContainer, rangeEndOffset
 		let startNodeID = pvmRange.start.nodeID
-		let startNodePVMN = this.nodeMan.getChildByID(startNodeID)
+		let startNodePVMN = this.nodeMan.getNodeByID(startNodeID)
 		if (!startNodePVMN) {
 			console.error("Couldn't find the node.", startNodeID)
 			return
@@ -149,7 +151,7 @@ export default class PVMSelection {
 		range.setStart(rangeStartContainer, rangeStartOffset)
 		
 		let endNodeID = pvmRange.end.nodeID
-		let endNodePVMN = this.nodeMan.getChildByID(endNodeID)
+		let endNodePVMN = this.nodeMan.getNodeByID(endNodeID)
 		if (!endNodePVMN) {
 			console.error("Couldn't find the node.", endNodeID)
 			return
@@ -325,7 +327,7 @@ export default class PVMSelection {
 
 		let nodes = []
 
-		let travelNode = this.nodeMan.getChildByID(startID)
+		let travelNode = this.nodeMan.getNodeByID(startID)
 		let nextNode
 
 		while (1) {
@@ -464,6 +466,14 @@ export default class PVMSelection {
 	focusAt(node, offset)
 	{
 
+	}
+
+	removeSelection()
+	{
+		let nodes = this.getAllNodesInRange()
+		nodes.forEach(node => {
+			console.log(node)
+		})
 	}
 
 }

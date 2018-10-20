@@ -15,20 +15,28 @@ export default class PVMRange {
 		// Properties
 
 		this.start = {
+			node: null,
 			nodeID: null,
 			offset: startOffset,
 			state: 0
 		}
 
 		this.end = {
+			node: null,
 			nodeID: null,
 			offset: endOffset,
 			state: 0
 		}
 
-		if (startNode) this.start.nodeID = startNode.nodeID
+		if (startNode) {
+			this.start.node = startNode
+			this.start.nodeID = startNode.nodeID
+		}
 
-		if (endNode) this.end.nodeID = endNode.nodeID
+		if (endNode) {
+			this.end.node = endNode
+			this.end.nodeID = endNode.nodeID
+		}
 
 		if (startNode && startNode.dom.textContent.length === startOffset) {
 			if (startNode.dom.textContent.length === 0) {
@@ -79,6 +87,7 @@ export default class PVMRange {
 	 */
 	setStart(startNode, startOffset)
 	{
+		this.start.node = startNode
 		this.start.nodeID = startNode.nodeID
 		this.start.offset = startOffset
 		if (startNode.dom.textContent.length === startOffset) {
@@ -99,6 +108,7 @@ export default class PVMRange {
 	 */
 	setEnd(endNode, endOffset)
 	{
+		this.end.node = endNode
 		this.end.nodeID = endNode.nodeID
 		this.end.offset = endOffset
 		if (endNode.dom.textContent.length === endOffset) {

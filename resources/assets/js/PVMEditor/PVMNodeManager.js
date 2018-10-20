@@ -24,27 +24,27 @@ export default class PVMNodeManager {
 	* Creates a PVMNode with the given element.
 	* @param {Element} dom 
 	*/
-	createNode(dom)
+	createNode(dom, parentTag = null)
 	{
 		if (!dom) return null
 
-		let node = new PVMNode(dom)
+		let node = new PVMNode(dom, parentTag)
 		if (!node.nodeID) {
 			this.session.lastNodeID += 1
 			node.setNodeID(this.session.lastNodeID)
 		}
-		return new PVMNode(dom)
+		return node
 	}
 
 	/**
 	* 
 	* @param {string} tag 
 	*/
-	createEmptyNode(tag)
+	createEmptyNode(tag, parentTag = null)
 	{
 		let dom = document.createElement(tag)
 		dom.innerHTML = "<br>"
-		let node = this.createNode(dom)
+		let node = this.createNode(dom, parentTag)
 		return node
 	}
 
@@ -76,7 +76,7 @@ export default class PVMNodeManager {
 	* @param {number} refNodeID 
 	* @return {PVMNode}
 	*/
-	getChildByID(refNodeID)
+	getNodeByID(refNodeID)
 	{
 		let dom = document.querySelector('[data-ni="' + refNodeID + '"]')
 		if (!dom) {
@@ -99,11 +99,12 @@ export default class PVMNodeManager {
 	removeChild(nodeID, recordData)
 	{
 
-		let targetNode = this.getChildByID(nodeID)
-		let previousNode = targetNode.getPreviousSibling()
-		let nextNode = targetNode.getNextSibling()
+		let targetNode = this.getNodeByID(nodeID)
 
 		if (!targetNode) return
+
+		let previousNode = targetNode.getPreviousSibling()
+		let nextNode = targetNode.getNextSibling()
 
 		targetNode.isAppended = false
 
@@ -167,41 +168,45 @@ export default class PVMNodeManager {
 	appendChild(node, recordData)
 	{
 
-		let lastChild = this.getLastChild()
-
-		console.log('lastChild: ', lastChild)
-		if (lastChild) {
-
-			this.insertChildAfter(node, lastChild.nodeID, recordData)
-
+		if (node.type === "LI") {
+			let list = document.createElement(node.parentType)
+			list.appendChild(node.dom)
+			this.session.editorBody.appendChild(list)
 		} else {
-
-			if (node.type === "LI") {
-				let list = document.createElement(node.parentType)
-				list.appendChild(node.dom)
-				this.session.editorBody.appendChild(list)
-			} else {
-				this.session.editorBody.appendChild(node.dom)
-			}
-
-			if (recordData) {
-				this.undoMan.record({
-					type: 'insert',
-					affectedNode: node,
-					affectedNode: node.nodeID,
-					nextNode: nextNode,
-					nextNodeID: null,
-					before: {
-						range: recordData.beforeRange
-					},
-					after: {
-						range: recordData.afterRange
-					}
-				})
-			}
-
+			this.session.editorBody.appendChild(node.dom)
 		}
 
+		if (recordData) {
+			this.undoMan.record({
+				type: 'insert',
+				affectedNode: node,
+				affectedNode: node.nodeID,
+				nextNode: nextNode,
+				nextNodeID: null,
+				before: {
+					range: recordData.beforeRange
+				},
+				after: {
+					range: recordData.afterRange
+				}
+			})
+		}
+
+	}
+
+	/**
+	* Appends a pvmnode before the given node.
+	* @param {PVMNode} insertingNode
+	* @param {PVMNode} refNode 
+	* @param {object} recordData { beforeRange, afterRange, nextNode }
+	* @param {PVMRange} recordData.beforeRange
+	* @param {PVMRange} recordData.afterRange
+	* @param {PVMNode} recordData.nextNode
+	*/
+	insertChildBefore2(insertingNode, refNode, recordData)
+	{
+		let nextNode = refNode
+		let previousNode = refNode.getPreviousSibling()
 	}
 
 	/**
@@ -215,26 +220,58 @@ export default class PVMNodeManager {
 	*/
 	insertChildBefore(insertingNode, refNodeID, recordData)
 	{
-		let target = this.getChildByID(refNodeID)
-		if (!target) {
+		let next = this.getNodeByID(refNodeID)
+		console.log(next)
+		if (!next) {
+
+			this.appendChild(insertingNode)
 
 			return
 		}
-		let previous = target.getPreviousSibling()
-		let previousDOM = previous.getDOM()
-		let targetDOM = target.getDOM()
+		let previous = next.getPreviousSibling()
+		let previousDOM
+		if (previous) {
+			previousDOM = previous.getDOM()
+		}
+		let targetDOM = next.getDOM()
 		let insertingDOM = insertingNode.getDOM()
 
 		insertingNode.isAppended = true
 
-		if (insertingNode.type === "LI") {
-			if (target.type === "LI") {
+		let tempNode
 
-				targetDOM.parentElement.insertBefore(insertingDOM, targetDOM)
+		if (insertingNode.type === "LI") {
+
+			if (next && next.type === "LI") {
+
+				if (next.parentType === insertingNode.parentType) {
+
+					targetDOM.parentElement.insertBefore(insertingDOM, targetDOM)
+				
+				} else {
+
+					let newList = document.createElement(insertingNode.parentType)
+					newList.appendChild(insertingDOM)
+					let list1 = targetDOM.parentElement
+					let list2 = document.createElement(list1.nodeName)
+					while (tempNode = list1.lastElementChild) {
+						list2.appendChild(tempNode)
+						if (tempNode.isSameNode(targetDOM)) {
+							break
+						}
+					}
+					list1.parentElement.insertBefore(list2, list1)
+					if (list1.childElementCount === 0) {
+						list1.parentElement.removeChild(list1)
+					}
+					list2.parentElement.insertBefore(newList, list2)
+
+				}				
 
 			} else {
 
 				if (previous && previous.type === "LI") {
+
 					previousDOM.parentElement.insertBefore(insertingDOM, previousDOM.nextElementSibling)
 				} else {
 					let list = document.createElement(insertingNode.parentType)
@@ -244,9 +281,8 @@ export default class PVMNodeManager {
 
 			}
 		} else {
-			if (target.type === "LI") {
-				let previousNode = target.getPreviousSibling()
-				if (previousNode.type === "LI") {
+			if (next.type === "LI") {
+				if (previous && previous.type === "LI") {
 					let originalList = targetDOM.parentElement
 					let newList = document.createElement(originalList.nodeName)
 					let tempNode
@@ -263,87 +299,6 @@ export default class PVMNodeManager {
 			} else {
 				targetDOM.parentElement.insertBefore(insertingDOM, targetDOM)
 			}
-		}
-
-		if (recordData) {
-			this.undoMan.record({
-				type: 'insert',
-				affectedNode: insertingNode,
-				affectedNodeID: insertingNode.nodeID,
-				nextNode: recordData.nextNode,
-				nextNodeID: recordData.nextNode.nodeID,
-				before: {
-					range: recordData.beforeRange
-				},
-				after: {
-					range: recordData.afterRange
-				}
-			})
-		} else {
-			console.info(`Inserted without recording.`)
-		}
-
-	}
-
-	/**
-	* Appends a pvmnode after the given node.
-	* @param {PVMNode} insertingNode
-	* @param {number} refNodeID
-	* @param {object} recordData { beforeRange, afterRange, nextNode }
-	* @param {PVMRange} recordData.beforeRange
-	* @param {PVMRange} recordData.afterRange
-	* @param {PVMNode} recordData.nextNode
-	*/
-	insertChildAfter(insertingNode, refNodeID, recordData)
-	{
-		let target = this.getChildByID(refNodeID)
-		if (!target) {
-
-			return
-		}
-		let next = target.getNextSibling()
-		let nextDOM = next.getDOM()
-		let targetDOM = target.getDOM()
-		let insertingDOM = insertingNode.getDOM()
-
-		insertingNode.isAppended = true
-
-		if (insertingNode.type === "LI") {
-			if (target.type === "LI") {
-
-				targetDOM.parentElement.insertBefore(insertingDOM, targetDOM.nextElementSibling)
-
-			} else {
-
-				if (next && next.type === "LI") {
-					nextDOM.parentElement.insertBefore(insertingDOM, nextDOM)
-				} else {
-					let list = document.createElement(insertingNode.parentType)
-					list.appendChild(insertingDOM)
-					targetDOM.parentElement.insertBefore(list, targetDOM.nextElementSibling)
-				}
-
-			}
-		} else {
-			if (target.type === "LI") {
-				let nextNode = target.getNextSibling()
-				if (nextNode.type === "LI") {
-					let originalList = targetDOM.parentElement
-					let newList = document.createElement(originalList.nodeName)
-					let tempNode
-					while (tempNode = originalList.firstElementChild) {
-						newList.appendChild(tempNode)
-						if (tempNode === targetDOM) break
-					}
-					originalList.parentElement.insertBefore(newList, originalList)
-					originalList.parentElement.insertBefore(insertingDOM, originalList)
-				} else {
-					targetDOM.parentElement.parentElement.insertBefore(insertingDOM, targetDOM.parentElement.nextElementSibling)
-				}
-			} else {
-				targetDOM.parentElement.insertBefore(insertingDOM, targetDOM.nextElementSibling)
-			}
-
 		}
 
 		if (recordData) {
@@ -406,8 +361,8 @@ export default class PVMNodeManager {
 
 			if (front.nodeName !== back.nodeName) {
 				if (
-					front === first.textDom &&
-					back === second.textDom &&
+					front === first.textDOM &&
+					back === second.textDOM &&
 					matchTopNode
 				) {
 
@@ -476,6 +431,9 @@ export default class PVMNodeManager {
 		this.undoMan.record({
 			type: "merge",
 			affectedNode: first,
+			mergedNodes: [
+				first, second
+			],
 			before: {
 				range: currentRange
 			},
@@ -483,6 +441,8 @@ export default class PVMNodeManager {
 				range: this.sel.getCurrentRange()
 			}
 		})
+
+		this.sel.onSelectionChanged()
 
 
 	}
@@ -521,7 +481,7 @@ export default class PVMNodeManager {
 		let startNode = orgRange.startContainer
 
 		let currentNode = this.sel.getCurrentTextNode()
-		let currentParentNode = currentNode.textDom
+		let currentParentNode = currentNode.textDOM
 
 		let currentRange = this.sel.getCurrentRange()
 
@@ -779,15 +739,15 @@ export default class PVMNodeManager {
 	 * @param {PVMNode} node 
 	 * @param {string} newTag 
 	 */
-	transformNode(node, newTag, isRecording = true)
+	transformNode(node, newTag, isRecording = true, newParentType = null)
 	{
 
 		let currentRange = this.sel.getCurrentRange()
 		let originalType = node.type
+		let originalParentType = node.parentType
 		let originalDOM = node.getDOM()
 		newTag = newTag.toUpperCase()
 
-		// node.transformTo(tag)
 
 		if (originalType === newTag) return
 		if (!AN.transformable.includes(node.type)) return
@@ -837,10 +797,15 @@ export default class PVMNodeManager {
 			originalDOM.parentElement.replaceChild(newNode, originalDOM)
 
 			node.type = newTag
+			node.parentType = newParentType
 
 			if (newTag === 'LI') {
+				let id = null
+				if (node.getNextSibling()) {
+					id = node.getNextSibling().nodeID
+				}
 				this.removeChild(node.nodeID)
-				this.insertChildAfter(node, previousNode.nodeID)
+				this.insertChildBefore(node, id)
 			}
 
 		}
@@ -856,11 +821,13 @@ export default class PVMNodeManager {
 			affectedNodeID: node.nodeID,
 			before: {
 				range: currentRange,
-				type: originalType
+				type: originalType,
+				parentType: originalParentType
 			},
 			after: {
 				range: currentRange,
-				type: newTag
+				type: newTag,
+				parentType: newParentType
 			}
 		})
 	}

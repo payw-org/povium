@@ -82,9 +82,9 @@ export default class PVMEditor {
 						this.nodeMan.transformNode(currentNode, 'P')
 						this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
 					} else {
-						newNode = this.nodeMan.createEmptyNode("LI")
+						newNode = this.nodeMan.createEmptyNode("LI", currentNode.parentType)
 						newRange = this.sel.createRange(newNode, 0, newNode, 0)
-						this.nodeMan.insertChildAfter(newNode, currentNode.nodeID, {
+						this.nodeMan.insertChildBefore(newNode, currentNode.getNextSibling().nodeID, {
 							beforeRange: currentRange,
 							afterRange: newRange,
 							nextNode: nextNode
@@ -93,8 +93,9 @@ export default class PVMEditor {
 					}
 				} else {
 					newNode = this.nodeMan.createEmptyNode("P")
+					console.log(newNode)
 					newRange = this.sel.createRange(newNode, 0, newNode, 0)
-					this.nodeMan.insertChildAfter(newNode, currentNode.nodeID, {
+					this.nodeMan.insertChildBefore(newNode, currentNode.getNextSibling().nodeID, {
 						beforeRange: currentRange,
 						afterRange: newRange,
 						nextNode: nextNode
@@ -103,7 +104,7 @@ export default class PVMEditor {
 				}
 
 			} else if (currentRange.start.state === 1) {
-				newNode = this.nodeMan.createEmptyNode(currentNode.type)
+				newNode = this.nodeMan.createEmptyNode(currentNode.type, currentNode.parentType)
 				this.nodeMan.insertChildBefore(newNode, currentRange.start.nodeID, {
 					beforeRange: currentRange,
 					afterRange: currentRange,
@@ -123,7 +124,7 @@ export default class PVMEditor {
 	 * 
 	 * @param {KeyboardEvent} e 
 	 */
-	onPressBakcspace(e)
+	onPressBackspace(e)
 	{
 
 		let currentRange = this.sel.getCurrentRange()
@@ -135,6 +136,11 @@ export default class PVMEditor {
 				e.preventDefault()
 				return
 			}
+
+			if (currentRange.start.state === 1 || currentRange.start.state === 4) {
+				this.undoMan.clearTXundoAction(currentNode.innerHTML, currentRange)
+			}
+
 			if (currentRange.start.state === 1) {
 
 				e.preventDefault()
@@ -145,16 +151,17 @@ export default class PVMEditor {
 					this.nodeMan.transformNode(currentNode, "P")
 					this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
 
-				} else if (previousNode.type === "FIGURE") {
+				} else if (previousNode && previousNode.type === "FIGURE") {
 
-					this.nodeMan.removeChild(previousNode.nodeIDm, {
+					this.nodeMan.removeChild(previousNode.nodeID, {
 						beforeRange: currentRange,
 						afterRange: currentRange
 					})
 
 				} else {
 
-					if (previousNode.textContent.length === 0) {
+					// PreviousNode is empty
+					if (previousNode && previousNode.textContent.length === 0) {
 
 						this.nodeMan.removeChild(previousNode.nodeID)
 
@@ -178,19 +185,30 @@ export default class PVMEditor {
 
 				} else {
 
-					console.log('removed node')
+					if (previousNode && previousNode.type === "FIGURE") {
+						this.nodeMan.removeChild(previousNode.nodeID, {
+							beforeRange: currentRange,
+							afterRange: currentRange
+						})
+					} else {
+						let nextRange = this.sel.createRange(previousNode, previousNode.textContent.length, previousNode, previousNode.textContent.length)
+						this.sel.setRange(nextRange)
+						this.nodeMan.removeChild(currentNode.nodeID, {
+							beforeRange: currentRange,
+							afterRange: nextRange
+						})
+					}
 
-					let nextRange = this.sel.createRange(previousNode, previousNode.textContent.length, previousNode, previousNode.textContent.length)
-					this.sel.setRange(nextRange)
-					this.nodeMan.removeChild(currentNode.nodeID, {
-						beforeRange: currentRange,
-						afterRange: nextRange
-					})
+					
 
 				}
 			}
 		} else {
 			
+			// The range is not collapsed
+			e.preventDefault()
+			this.sel.removeSelection()
+
 		}
 	}
 
@@ -201,7 +219,55 @@ export default class PVMEditor {
 	onPressDelete(e)
 	{
 		let currentRange = this.sel.getCurrentRange()
-		let currentNode = this.nodeMan.getChildByID(currentRange.start.nodeID)
+		let currentNode = this.sel.getCurrentTextNode()
+		let nextNode = currentNode.getNextSibling()
+
+		if (currentRange.isCollapsed()) {
+
+			if (
+				currentNode.type === "FIGURE" &&
+				(currentRange.start.state === 1 || currentRange.start.state === 4)
+			) {
+				e.preventDefault()
+				return
+			}
+
+			if (currentRange.start.state === 3 || currentRange.start.state === 4) {
+				this.undoMan.clearTXundoAction(currentNode.innerHTML, currentRange)
+			}
+
+			if (currentRange.start.state === 3) {
+
+				e.preventDefault()
+
+				if (nextNode && nextNode.type === "FIGURE") {
+
+					this.nodeMan.removeChild(nextNode.nodeID, {
+						beforeRange: currentRange,
+						afterRange: currentRange
+					})
+
+				} else {
+
+					this.nodeMan.mergeNodes(currentNode, nextNode)
+
+				}
+
+			} else if (currentRange.start.state === 4) {
+
+				e.preventDefault()
+
+				let newRange = this.sel.createRange(nextNode, 0, nextNode, 0)
+
+				this.nodeMan.removeChild(currentNode.nodeID, {
+					beforeRange: currentRange,
+					afterRange: newRange
+				})
+				this.sel.setRange(newRange)
+
+			}
+
+		}
 	}
 
 	// is-

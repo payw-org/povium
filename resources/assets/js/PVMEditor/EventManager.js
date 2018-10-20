@@ -538,7 +538,7 @@ export default class EventManager {
 				key = "backspace"
 			} else {
 				enableTextChangeRecord = false
-				this.editor.onPressBakcspace(e)
+				this.editor.onPressBackspace(e)
 			}
 
 			// Backspace
@@ -549,15 +549,14 @@ export default class EventManager {
 			if (
 				currentRange &&
 				currentRange.isCollapsed() &&
-				(currentRange.start.state !== 3 || currentRange.start.state !== 4)
+				(currentRange.start.state !== 3 && currentRange.start.state !== 4)
 			) {
 				enableTextChangeRecord = true
 				key = "delete"
+			} else {
+				enableTextChangeRecord = false
+				this.editor.onPressDelete(e)
 			}
-
-			// Delete
-			// this.postEditor.selManager.delete(e)
-			// this.session.editor.onPressEnter(e)
 
 		} else if (keyCode === 13) {
 
@@ -633,6 +632,8 @@ export default class EventManager {
 	*/
 	onKeyUp(e) {
 
+		// console.log("keyup")
+
 		this.keyCode = e.which
 		this.physKeyCode = e.code
 
@@ -643,15 +644,15 @@ export default class EventManager {
 		if (!currentNode) {
 			return
 		}
-		let br = currentNode.textDom.querySelector("br")
+		let br = currentNode.textDOM.querySelector("br")
 		if (currentNode && currentNode.textContent !== "" && br) {
 
 			console.log('removed br')
-			currentNode.textDom.removeChild(br)
+			currentNode.textDOM.removeChild(br)
 
 		} else if (currentNode && currentNode.textContent === "" && !br) {
 
-			currentNode.textDom.appendChild(document.createElement("br"))
+			currentNode.textDOM.appendChild(document.createElement("br"))
 
 		}
 
@@ -720,7 +721,7 @@ export default class EventManager {
 		) {
 
 			lastAction.setAfter({
-				innerHTML: currentNode.textDom.innerHTML,
+				innerHTML: currentNode.textDOM.innerHTML,
 				range: currentRange
 			})
 
@@ -736,7 +737,7 @@ export default class EventManager {
 		let currentNode = this.sel.getCurrentTextNode()
 		if (currentNode) {
 			this.sel.currentState.nodeID = currentNode.nodeID
-			this.sel.currentState.innerHTML = currentNode.textDom.innerHTML
+			this.sel.currentState.innerHTML = currentNode.textDOM.innerHTML
 			this.sel.currentState.range = currentRange
 		}
 

@@ -19,7 +19,7 @@ module.exports = {
 		],
 
 		"editor.new": [
-			'./resources/assets/js/PVMEditor/main'
+			'./resources/assets/js/newEditor/main'
 		]
 
 	},

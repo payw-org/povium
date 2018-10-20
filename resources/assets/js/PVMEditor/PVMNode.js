@@ -6,21 +6,25 @@ export default class PVMNode {
 	 *
 	 * @param {Element} node
 	 */
-	constructor(node)
+	constructor(node, parentTag = null)
 	{
 
-		this.dom = null
+		/**
+		 * @type {number}
+		 */
 		this.nodeID = null
 		/**
-		 * @type string
+		 * @type {string}
 		 */
 		this.type = null
-		this.parentType = null
+		/**
+		 * @type {string}
+		 */
+		this.parentType = parentTag
 
 		if (AN.all.includes(node.nodeName)) {
 			this.dom = node
 			if (node.nodeName === "LI") {
-				this.parentType = "UL"
 				if (
 					this.dom.parentElement &&
 					(this.dom.parentElement.nodeName === "UL" ||
@@ -28,6 +32,19 @@ export default class PVMNode {
 				) {
 					this.parentType = this.dom.parentElement.nodeName
 				}
+			} else if (node.nodeName === "FIGURE") {
+
+				this.imageMeta = {
+					src: "",
+					size: "normal"
+				}
+
+				this.imageMeta.src = node.querySelector("img").src
+
+				if (node.classList.contains("full")) {
+					this.imageMeta.size = "full"
+				}
+
 			}
 		} else {
 
@@ -65,13 +82,19 @@ export default class PVMNode {
 		}
 
 		if (this.type === "FIGURE") {
-			this.textDom = this.dom.querySelector("FIGCAPTION")
+			this.textDOM = this.dom.querySelector("FIGCAPTION")
 		} else {
-			this.textDom = this.dom
+			this.textDOM = this.dom
 		}
 
-		this.textContent = this.textDom.textContent
-		this.innerHTML = this.textDom.innerHTML
+		this.textContent = this.textDOM.textContent
+		if (this.type === "FIGURE") {
+			this.innerHTML = this.dom.innerHTML
+		} else {
+			this.innerHTML = this.textDOM.innerHTML
+		}
+
+		// this.dom = this.getDOM()
 
 		// this.previousSibling = this.getPreviousSibling()
 		// this.nextSibling = this.getNextSibling()
@@ -96,7 +119,7 @@ export default class PVMNode {
 	setNodeID(nodeID)
 	{
 		this.nodeID = nodeID
-		this.dom.setAttribute('data-ni', nodeID)
+		// this.dom.setAttribute('data-ni', nodeID)
 	}
 
 	/**
@@ -106,7 +129,8 @@ export default class PVMNode {
 	setInnerHTML(html)
 	{
 		this.innerHTML = html
-		this.dom.innerHTML = html
+		this.textDOM.innerHTML = html
+		this.getDOM().innerHTML = html
 	}
 
 	/**
@@ -265,7 +289,16 @@ export default class PVMNode {
 			dom = document.createElement(this.type)
 			dom.innerHTML = this.innerHTML
 			dom.setAttribute("data-ni", this.nodeID)
+
+			if (this.type === "FIGURE") {
+				dom.classList.add("image")
+				if (this.imageMeta.size === "full") {
+					dom.classList.add("full")
+				}
+			}
 		}
+
+		this.dom = dom
 
 		return dom
 

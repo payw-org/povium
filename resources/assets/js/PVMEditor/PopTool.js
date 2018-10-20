@@ -151,7 +151,7 @@ export default class PopTool {
 		var range = document.getSelection().getRangeAt(0)
 
 		let currentRange = this.sel.getCurrentRange()
-		var currentNode = this.nodeMan.getChildByID(currentRange.start.nodeID)
+		var currentNode = this.nodeMan.getNodeByID(currentRange.start.nodeID)
 
 		if (!currentNode) {
 			this.hidePopTool()

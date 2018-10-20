@@ -133,24 +133,27 @@ export default class UndoManager {
 
 		} else if (action.type === 'transform') {
 
-			this.nodeMan.transformNode(action.affectedNode, action.before.type, false)
+			this.nodeMan.transformNode(action.affectedNode, action.before.type, false, action.before.parentType)
 
 		} else if (action.type === 'textChange') {
 
 			if (action.affectedNode && !action.affectedNode.dom.parentElement) {
-				action.affectedNode.dom = this.nodeMan.getChildByID(action.affectedNode.nodeID).dom
+				action.affectedNode.dom = this.nodeMan.getNodeByID(action.affectedNode.nodeID).dom
 			}
 			action.affectedNode.setInnerHTML(action.before.innerHTML)
 
 		} else if (action.type === "merge") {
 
 			this.sel.setRange(action.after.range)
-			this.nodeMan.splitElementNode3(action.before.range.start.nodeID)
+			this.nodeMan.splitElementNode3(action.mergedNodes[1].nodeID, false)
+			let splittedNode = this.nodeMan.getNodeByID(action.mergedNodes[1].nodeID)
+			splittedNode.parentType = action.mergedNodes[1].parentType
+			this.nodeMan.transformNode(splittedNode, action.mergedNodes[1].type, false, splittedNode.parentType)
 
 		} else if (action.type === "split") {
 
-			let node1 = this.nodeMan.getChildByID(action.before.range.start.nodeID)
-			let node2 = this.nodeMan.getChildByID(action.after.range.start.nodeID)
+			let node1 = this.nodeMan.getNodeByID(action.before.range.start.nodeID)
+			let node2 = this.nodeMan.getNodeByID(action.after.range.start.nodeID)
 			this.nodeMan.mergeNodes(node1, node2, true, false)
 
 		}
@@ -179,19 +182,19 @@ export default class UndoManager {
 
 		} else if (action.type === 'transform') {
 
-			this.nodeMan.transformNode(action.affectedNode, action.after.type, false)
+			this.nodeMan.transformNode(action.affectedNode, action.after.type, false, action.after.parentType)
 
 		} else if (action.type === 'textChange') {
 
 			if (action.affectedNode && !action.affectedNode.dom.parentElement) {
-				action.affectedNode.dom = this.nodeMan.getChildByID(action.affectedNode.nodeID).dom
+				action.affectedNode.dom = this.nodeMan.getNodeByID(action.affectedNode.nodeID).dom
 			}
 			action.affectedNode.setInnerHTML(action.after.innerHTML)
 
 		} else if (action.type === "merge") {
 
-			let node1 = this.nodeMan.getChildByID(action.after.range.start.nodeID)
-			let node2 = this.nodeMan.getChildByID(action.before.range.start.nodeID)
+			let node1 = this.nodeMan.getNodeByID(action.mergedNodes[0].nodeID)
+			let node2 = this.nodeMan.getNodeByID(action.mergedNodes[1].nodeID)
 			this.nodeMan.mergeNodes(node1, node2, true, false)
 
 		} else if (action.type === "split") {
@@ -203,6 +206,17 @@ export default class UndoManager {
 
 		this.sel.setRange(action.after.range)
 
+	}
+
+	clearTXundoAction(html, range)
+	{
+		let lastAction = this.getLastestAction()
+		if (lastAction && lastAction.type === "textChange") {
+			lastAction.after = {
+				innerHTML: html,
+				range: range
+			}
+		}
 	}
 
 }
