@@ -21,17 +21,17 @@ $token = $_GET['token'];
 
 $email_activation_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailActivationController', $auth);
 
+$current_user = $auth->getCurrentUser();
+
 #	array(
 #		'err' => bool,
 #		'code' => err code,
 #		'msg' => err message
 #	);
-$return = $email_activation_controller->activateEmail($token);
+$return = $email_activation_controller->activateEmail($current_user, $token);
 
 if ($return['err']) {	//	Failed to activate email address
 	switch ($return['code']) {
-		case $email_activation_controller->getConfig()['err']['not_logged_in']['code']:
-			break;
 		case $email_activation_controller->getConfig()['err']['user_not_found']['code']:
 			throw new GoneHttpException($return['msg']);
 

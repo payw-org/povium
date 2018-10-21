@@ -13,7 +13,7 @@ use Povium\Publication\Validator\PostInfo\ContentsValidator;
 use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
 use Povium\Publication\Validator\PostInfo\SubtitleValidator;
 use Povium\Publication\Post\PostManager;
-use Povium\Security\Auth\Auth;
+use Povium\Security\User\User;
 
 class PostEditController
 {
@@ -47,11 +47,6 @@ class PostEditController
 	 */
 	protected $postManager;
 
-	/**
-	 * @var Auth
-	 */
-	protected $auth;
-
 	public function __construct()
 	{
 
@@ -61,6 +56,7 @@ class PostEditController
 	 * Check and validate components to update.
 	 * Then edit the post.
 	 *
+	 * @param  User			$user		User who edited the post
 	 * @param  string  		$post_id	ID of the post to edit
 	 * @param  string  		$title		Json string
 	 * @param  string  		$contents   Json string
@@ -72,6 +68,7 @@ class PostEditController
 	 * @return
 	 */
 	public function editPost(
+		$user,
 		$post_id,
  		$title,
  		$contents,
@@ -87,15 +84,6 @@ class PostEditController
 
 		/* Validate post edit request */
 
-		$current_user = $this->auth->getCurrentUser();
-
-		//	Not logged in
-		if ($current_user === false) {
-			$return['msg'] = $this->config['msg']['not_logged_in'];
-
-			return $return;
-		}
-
 		$post = $this->postManager->getPost($post_id);
 
 		//	Nonexistent or already deleted post
@@ -106,7 +94,7 @@ class PostEditController
 		}
 
 		//	Current user is not the writer of the post
-		if ($current_user->getID() != $post->getUserID()) {
+		if ($user->getID() != $post->getUserID()) {
 			$return['msg'] = $this->config['msg']['post_id_invalid'];
 
 			return $return;

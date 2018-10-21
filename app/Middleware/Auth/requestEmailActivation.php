@@ -12,17 +12,17 @@ global $factory, $router, $auth;
 # $email = json_decode(file_get_contents('php://input'), true)['email'];
 $email = '1000jaman@naver.com';
 
-$email_add_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailAddController', $auth);
+$email_add_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailAddController');
 $mail_sender = $factory->createInstance('\Povium\MailSender\ActivationMailSender');
 
-//	Generate authentication token
+$current_user = $auth->getCurrentUser();
 $token = $auth->getRandomStringGenerator()->generateUUIDV4();
 
 #	array(
 #		'err' => bool,
 #		'msg' => err msg for display,
 #	);
-$return = $email_add_controller->addEmail($email, $token);
+$return = $email_add_controller->addEmail($email, $current_user, $token);
 
 if ($return['err']) {	//	Failed to add new email address
 

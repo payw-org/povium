@@ -13,7 +13,7 @@ use Povium\Publication\Validator\PostInfo\ContentsValidator;
 use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
 use Povium\Publication\Validator\PostInfo\SubtitleValidator;
 use Povium\Publication\Post\PostManager;
-use Povium\Security\Auth\Auth;
+use Povium\Security\User\User;
 
 class PostPublicationController
 {
@@ -47,11 +47,6 @@ class PostPublicationController
 	 */
 	protected $postManager;
 
-	/**
-	 * @var Auth
-	 */
-	protected $auth;
-
 	public function __construct()
 	{
 
@@ -61,6 +56,7 @@ class PostPublicationController
 	 * Validate post components.
 	 * Then publish the post.
 	 *
+	 * @param  User			$user		User who wrote the post
 	 * @param  string  		$title		Json string
 	 * @param  string  		$contents   Json string
 	 * @param  bool 		$is_premium
@@ -71,6 +67,7 @@ class PostPublicationController
 	 * @return array 	Error flag and message
 	 */
 	public function publishPost(
+		$user,
 		$title,
  		$contents,
  		$is_premium,
@@ -82,15 +79,6 @@ class PostPublicationController
 			'err' => true,
 			'msg' => ''
 		);
-
-		$current_user = $this->auth->getCurrentUser();
-
-		//	Not logged in
-		if ($current_user === false) {
-			$return['msg'] = $this->config['msg']['not_logged_in'];
-
-			return $return;
-		}
 
 		/* Validate post components */
 
@@ -150,7 +138,7 @@ class PostPublicationController
 
 		//	If failed to add post record
 		if (!$this->postManager->addPost(
-			$current_user->getID(),
+			$user->getID(),
  			$title,
  			$contents,
  			$is_premium,

@@ -9,6 +9,7 @@
 namespace Povium\Security\Auth\Controller;
 
 use Povium\Security\Auth\Auth;
+use Povium\Security\User\User;
 
 class EmailActivationController
 {
@@ -56,11 +57,12 @@ class EmailActivationController
 	 * Validate email activation request.
 	 * Activate email address.
 	 *
-	 * @param  string $token
+	 * @param  User	  $user		User who requested activation
+	 * @param  string $token	Authentication token
 	 *
 	 * @return array 	Error flag, code and message
 	 */
-	public function activateEmail($token)
+	public function activateEmail($user, $token)
 	{
 		$return = array(
 			'err' => true,
@@ -70,21 +72,11 @@ class EmailActivationController
 
 		/* Validate email activation request */
 
-		//	Not logged in
-		if (false === $this->auth->getCurrentUser()) {
-			$return['code'] = $this->config['err']['not_logged_in']['code'];
-			$return['msg'] = $this->config['err']['not_logged_in']['msg'];
-
-			return $return;
-		}
-
-		$user_id = $this->auth->getCurrentUser()->getID();
-
 		$stmt = $this->conn->prepare(
 			"SELECT * FROM {$this->config['email_requesting_activation_table']}
 			WHERE user_id = ?"
 		);
-		$stmt->execute([$user_id]);
+		$stmt->execute([$user->getID()]);
 
 		//	User not found
 		if ($stmt->rowCount() == 0) {

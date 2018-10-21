@@ -9,7 +9,7 @@
 namespace Povium\Security\Auth\Controller;
 
 use Povium\Security\Validator\UserInfo\EmailValidator;
-use Povium\Security\Auth\Auth;
+use Povium\Security\User\User;
 
 class EmailAddController
 {
@@ -31,26 +31,18 @@ class EmailAddController
 	protected $emailValidator;
 
 	/**
-	 * @var Auth
-	 */
-	protected $auth;
-
-	/**
 	 * @param array          $config
 	 * @param \PDO           $conn
 	 * @param EmailValidator $email_validator
-	 * @param Auth           $auth
 	 */
 	public function __construct(
 		array $config,
 		\PDO $conn,
-		EmailValidator $email_validator,
-		Auth $auth
+		EmailValidator $email_validator
 	) {
 		$this->config = $config;
 		$this->conn = $conn;
 		$this->emailValidator = $email_validator;
-		$this->auth = $auth;
 	}
 
 	/**
@@ -66,25 +58,17 @@ class EmailAddController
 	 * User cannot add multiple new email address at once.
 	 *
 	 * @param string $email		New email address
+	 * @param User	 $user		User who requested activation
 	 * @param string $token		Authentication token
 	 *
 	 * @return array 	Error flag and message
 	 */
-	public function addEmail($email, $token)
+	public function addEmail($email, $user, $token)
 	{
 		$return = array(
 			'err' => true,
 			'msg' => ''
 		);
-
-		//	Not logged in
-		if (false === $this->auth->getCurrentUser()) {
-			$return['msg'] = $this->config['msg']['not_logged_in'];
-
-			return $return;
-		}
-
-		$user_id = $this->auth->getCurrentUser()->getID();
 
 		$validate_email = $this->emailValidator->validate($email, true);
 
@@ -100,7 +84,7 @@ class EmailAddController
 			"DELETE FROM {$this->config['email_requesting_activation_table']}
 			WHERE user_id = ?"
 		);
-		$stmt->execute([$user_id]);
+		$stmt->execute([$user->getID()]);
 
 		//	Add new record
 		$stmt = $this->conn->prepare(
@@ -109,7 +93,7 @@ class EmailAddController
 			VALUES (:user_id, :token, :email, :expn_dt)"
 		);
 		$query_params = array(
-			':user_id' => $user_id,
+			':user_id' => $user->getID(),
 			':token' => $token,
 			':email' => $email,
 			':expn_dt' => date('Y-m-d H:i:s', time() + $this->config['email_activation_expire'])
