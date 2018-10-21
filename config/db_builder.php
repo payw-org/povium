@@ -18,6 +18,7 @@ require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_session_table.ph
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_tag_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_topic_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_user_table.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_autosave_post_table.php');
 
 return [
 	'dbname' => 'povium_local_db',
@@ -34,6 +35,7 @@ return [
 		new CreateSessionTable(),
 		new CreateTagTable(),
 		new CreateTopicTable(),
-		new CreateUserTable()
+		new CreateUserTable(),
+		new CreateAutosavePostTable()
 	]
 ];

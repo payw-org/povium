@@ -62,12 +62,12 @@ class PostEditController
 	 * Then edit the post.
 	 *
 	 * @param  string  		$post_id	ID of the post to edit
-	 * @param  string  		$title
+	 * @param  string  		$title		Json string
 	 * @param  string  		$contents   Json string
 	 * @param  bool			$is_premium
 	 * @param  int|null		$series_id
 	 * @param  string|null	$thumbnail
-	 * @param  string|null	$subtitle
+	 * @param  string|null	$subtitle	Json string
 	 *
 	 * @return
 	 */

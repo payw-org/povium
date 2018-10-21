@@ -21,7 +21,7 @@ class Post
 	private $userID;
 
 	/**
-	 * @var string
+	 * @var string	Json string
 	 */
 	private $title;
 
@@ -53,7 +53,7 @@ class Post
 	/**
 	 * @var string	Datetime
 	 */
-	private $publishingDt;
+	private $publicationDt;
 
 	/**
 	 * @var string	Datetime
@@ -71,7 +71,7 @@ class Post
 	private $thumbnail;
 
 	/**
-	 * @var string|null
+	 * @var string|null	Json string
 	 */
 	private $subtitle;
 
@@ -84,7 +84,7 @@ class Post
 	 * @param bool    		$is_deleted
 	 * @param int     		$view_cnt
 	 * @param int     		$share_cnt
-	 * @param string  		$publishing_dt
+	 * @param string  		$publication_dt
 	 * @param string  		$last_edited_dt
 	 * @param int|null    	$series_id
 	 * @param string|null 	$thumbnail
@@ -99,7 +99,7 @@ class Post
 		bool $is_deleted,
 		int $view_cnt,
 		int $share_cnt,
-		string $publishing_dt,
+		string $publication_dt,
 		string $last_edited_dt,
 		?int $series_id,
 		?string $thumbnail,
@@ -113,7 +113,7 @@ class Post
 		$this->isDeleted = $is_deleted;
 		$this->viewCnt = $view_cnt;
 		$this->shareCnt = $share_cnt;
-		$this->publishingDt = $publishing_dt;
+		$this->publicationDt = $publication_dt;
 		$this->lastEditedDt = $last_edited_dt;
 		$this->seriesID = $series_id;
 		$this->thumbnail = $thumbnail;
@@ -137,7 +137,7 @@ class Post
 	}
 
 	/**
-	 * @return string
+	 * @return string	Json string
 	 */
 	public function getTitle()
 	{
@@ -187,9 +187,9 @@ class Post
 	/**
 	 * @return string	Datetime
 	 */
-	public function getPublishingDt()
+	public function getPublicationDt()
 	{
-		return $this->publishingDt;
+		return $this->publicationDt;
 	}
 
 	/**
@@ -217,7 +217,7 @@ class Post
 	}
 
 	/**
-	 * @return string|null
+	 * @return string|null	Json string
 	 */
 	public function getSubtitle()
 	{
