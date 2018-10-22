@@ -8,11 +8,12 @@
 
 return [
 	'len' => [
-		'subtitle_max_length' => 500
+		'subtitle_max_length' => 200
 	],
 
 	'msg' => [
 		'subtitle_empty' => '부제목이 없습니다.',
-		'subtitle_long' => '부제목을 500글자 이내로 입력하세요.'
+		'subtitle_invalid' => '유효하지 않은 부제목 형식입니다.',
+		'subtitle_long' => '부제목을 200글자 이내로 입력하세요.'
 	]
 ];

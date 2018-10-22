@@ -43,7 +43,26 @@ class TitleValidator implements ValidatorInterface
 			return $return;
 		}
 
-		if (mb_strlen($title) > $this->config['len']['title_max_length']) {
+		$json_array = json_decode($title, true);
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			$return['msg'] = $this->config['msg']['title_invalid'];
+
+			return $return;
+		}
+
+		//	Only extract plain text from json
+		ob_start();
+		array_walk_recursive(
+			$json_array,
+			function ($value, $key) {
+				if ($key == "data") {
+					echo $value;
+				}
+			}
+		);
+		$title_string = ob_get_clean();
+
+		if (mb_strlen($title_string) > $this->config['len']['title_max_length']) {
 			$return['msg'] = $this->config['msg']['title_long'];
 
 			return $return;
