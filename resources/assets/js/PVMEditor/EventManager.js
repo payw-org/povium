@@ -405,7 +405,7 @@ export default class EventManager {
 
 						} else {
 
-							let p = this.session.generateEmptyNode("P")
+							let p = this.session.generateEmptyNode("p")
 							p.innerHTML = travelNode.textContent
 							this.session.editorBody.insertBefore(p, lastPastedNode.nextSibling)
 
