@@ -15,8 +15,10 @@ export default class AJAX
 	}
 
 	/**
-	 *
 	 * @param {Object} config
+	 * @param {string} config.type get | post
+	 * @param {string} config.url
+	 * @param {string} config.data JSON data
 	 */
 	chirp (config) {
 		/*
