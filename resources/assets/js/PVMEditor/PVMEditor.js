@@ -77,12 +77,12 @@ export default class PVMEditor {
 
 			if (currentRange.start.state === 3 || currentRange.start.state === 4) {
 
-				if (currentNode.type === "LI") {
+				if (currentNode.type === "li") {
 					if (currentRange.start.state === 4) {
 						this.nodeMan.transformNode(currentNode, 'P')
 						this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
 					} else {
-						newNode = this.nodeMan.createEmptyNode("LI", currentNode.parentType)
+						newNode = this.nodeMan.createEmptyNode("li", currentNode.parentType)
 						newRange = this.sel.createRange(newNode, 0, newNode, 0)
 						this.nodeMan.insertChildBefore(newNode, currentNode.getNextSibling().nodeID, {
 							beforeRange: currentRange,
@@ -92,7 +92,7 @@ export default class PVMEditor {
 						this.sel.setRange(newRange)
 					}
 				} else {
-					newNode = this.nodeMan.createEmptyNode("P")
+					newNode = this.nodeMan.createEmptyNode("p")
 					console.log(newNode)
 					newRange = this.sel.createRange(newNode, 0, newNode, 0)
 					this.nodeMan.insertChildBefore(newNode, currentNode.getNextSibling().nodeID, {
@@ -145,10 +145,10 @@ export default class PVMEditor {
 
 				e.preventDefault()
 
-				if (currentNode.type === "LI") {
+				if (currentNode.type === "li") {
 
-					// currentNode.transformTo("P")
-					this.nodeMan.transformNode(currentNode, "P")
+					// currentNode.transformTo("p")
+					this.nodeMan.transformNode(currentNode, "p")
 					this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
 
 				} else if (previousNode && previousNode.type === "FIGURE") {
@@ -179,7 +179,7 @@ export default class PVMEditor {
 				if (!previousNode || currentNode.type === 'LI') {
 
 					// No previousNode. It should be the first line.
-					// currentNode.transformTo("P")
+					// currentNode.transformTo("p")
 					this.nodeMan.transformNode(currentNode, 'P')
 					this.sel.setRange(this.sel.createRange(currentNode, 0, currentNode, 0))
 
