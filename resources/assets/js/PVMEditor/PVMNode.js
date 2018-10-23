@@ -24,7 +24,7 @@ export default class PVMNode {
 
 		if (AN.all.includes(node.nodeName)) {
 			this.dom = node
-			if (node.nodeName === "LI") {
+			if (node.nodeName === "li") {
 				if (
 					this.dom.parentElement &&
 					(this.dom.parentElement.nodeName === "UL" ||
@@ -341,11 +341,11 @@ export default class PVMNode {
 
 			if (!this.isAppended) return // If the PVMNode is not in the editor, return.
 
-			if (this.type === "LI") {
+			if (this.type === "li") {
 
 				let currentList = this.dom.parentElement
 
-				let liArray = currentList.querySelectorAll("LI")
+				let liArray = currentList.querySelectorAll("li")
 				if (liArray[liArray.length - 1] === this.dom) {
 					currentList.removeChild(this.dom)
 					currentList.parentElement.insertBefore(newNode, currentList.nextElementSibling)
@@ -365,7 +365,7 @@ export default class PVMNode {
 					currentList.parentElement.insertBefore(newNode, newList)
 				}
 
-				if (currentList.querySelectorAll("LI").length === 0) {
+				if (currentList.querySelectorAll("li").length === 0) {
 					currentList.parentElement.removeChild(currentList)
 				}
 
@@ -375,7 +375,7 @@ export default class PVMNode {
 
 				if (newTagName === 'LI') {
 					let previous = this.getPreviousSibling(), next = this.getNextSibling()
-					if (previous && next && previous.type === "LI" && next.type === "LI") {
+					if (previous && next && previous.type === "li" && next.type === "li") {
 
 					}
 				}

@@ -1,15 +1,15 @@
 module.exports =
 {
 	"all": [
-		"P", "H1", "H2", "H3", "BLOCKQUOTE", "LI", "FIGURE"
+		"p", "h1", "h2", "h3", "blockquote", "li", "FIGURE"
 	],
 	"transformable": [
-		"P", "H1", "H2", "H3", "BLOCKQUOTE", "LI"
+		"p", "h1", "h2", "h3", "blockquote", "li"
 	],
 	"textContained": [
-		"P", "H1", "H2", "H3", "BLOCKQUOTE", "LI", "FIGCAPTION"
+		"p", "h1", "h2", "h3", "blockquote", "li", "FIGCAPTION"
 	],
 	"alignable": [
-		"P", "H1", "H2", "H3"
+		"p", "h1", "h2", "h3"
 	]
 }

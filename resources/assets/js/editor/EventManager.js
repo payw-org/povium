@@ -436,7 +436,7 @@ export default class EventManager
 
 						} else {
 
-							let p = this.postEditor.domManager.generateEmptyNode("P")
+							let p = this.postEditor.domManager.generateEmptyNode("p")
 							p.innerHTML = travelNode.textContent
 							this.postEditor.domManager.editorBody.insertBefore(p, lastPastedNode.nextSibling)
 

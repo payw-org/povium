@@ -181,7 +181,7 @@ export default class SelectionManager
 			}
 
 			if (chunks[i].nodeName === type) {
-				type = "P"
+				type = "p"
 			}
 
 			var changedNode = this.changeNodeName(chunks[i], type, true, false)
@@ -349,7 +349,7 @@ export default class SelectionManager
 
 				nextNode = itemNode.nextElementSibling
 
-				if (itemNode.nodeName !== "LI") {
+				if (itemNode.nodeName !== "li") {
 					itemNode = itemNode.nextElementSibling
 					continue
 				}
@@ -448,7 +448,7 @@ export default class SelectionManager
 
 		let listDOM = this.postEditor.domManager.generateEmptyNode(type, false)
 		let currentNode = this.getNodeInSelection()
-		let listItemDOM = this.changeNodeName(currentNode, "LI", true, true)
+		let listItemDOM = this.changeNodeName(currentNode, "li", true, true)
 
 		listItemDOM.parentNode.replaceChild(listDOM, listItemDOM)
 		listDOM.appendChild(listItemDOM)
@@ -525,7 +525,7 @@ export default class SelectionManager
 
 		for (var i = 0; i < chunks.length; i++) {
 
-			if (chunks[i].nodeName === "BLOCKQUOTE") {
+			if (chunks[i].nodeName === "blockquote") {
 				continue
 			} else {
 				isAllBlockquote = false
@@ -565,7 +565,7 @@ export default class SelectionManager
 		if (isAllBlockquote) {
 			for (var i = 0; i < chunks.length; i++) {
 
-				var changedNode = this.changeNodeName(chunks[i], "P", false, false)
+				var changedNode = this.changeNodeName(chunks[i], "p", false, false)
 
 				action.targets.push({
 					previousTarget: chunks[i],
@@ -723,7 +723,7 @@ export default class SelectionManager
 					this.isAvailableParentNode(currentNode) &&
 					!this.isParagraph(currentNode)
 				) {
-					let changedNode = this.changeNodeName(currentNode, "P")
+					let changedNode = this.changeNodeName(currentNode, "p")
 					this.setCursorAt(changedNode)
 				}
 
@@ -1064,7 +1064,7 @@ export default class SelectionManager
 				this.isHeading(currentNode)
 			) {
 
-				newNodeName = "P"
+				newNodeName = "p"
 
 			} else if (this.isListItem(currentNode)) {
 				if (this.isEmptyNode(currentNode)) {
@@ -1628,7 +1628,7 @@ export default class SelectionManager
 
 				// this.removeNode(back)
 				let parentNode = back.parentNode
-				if (this.isListItem(back) && parentNode.querySelectorAll("LI").length === 1) {
+				if (this.isListItem(back) && parentNode.querySelectorAll("li").length === 1) {
 
 					removedNode = parentNode
 					removedNodePreviousNode = parentNode.previousSibling
@@ -1850,7 +1850,7 @@ export default class SelectionManager
 					console.log("list is detected")
 					var parentNode = currentParentNode.parentNode
 
-					if (this.isListItem(currentParentNode) && parentNode.querySelectorAll("LI").length === 1) {
+					if (this.isListItem(currentParentNode) && parentNode.querySelectorAll("li").length === 1) {
 
 						// record action
 						action.targets.push({
@@ -2063,7 +2063,7 @@ export default class SelectionManager
 
 		if (this.isListItem(node)) {
 
-			if (parentNode.querySelectorAll("LI").length === 1) {
+			if (parentNode.querySelectorAll("li").length === 1) {
 
 				// record action
 				if (recordRangeState) {
@@ -2733,7 +2733,7 @@ export default class SelectionManager
 			) {
 				// Find the available node
 				if (this.isList(travelNode)) {
-					var itemNodes = travelNode.querySelectorAll("LI")
+					var itemNodes = travelNode.querySelectorAll("li")
 					travelNode = itemNodes[itemNodes.length - 1]
 				}
 				returnNode = travelNode
@@ -2765,7 +2765,7 @@ export default class SelectionManager
 			) {
 				// Find the available node
 				if (this.isList(travelNode)) {
-					travelNode = travelNode.querySelectorAll("LI")[0]
+					travelNode = travelNode.querySelectorAll("li")[0]
 				}
 				returnNode = travelNode
 				break

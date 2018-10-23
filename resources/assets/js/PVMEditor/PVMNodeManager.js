@@ -108,7 +108,7 @@ export default class PVMNodeManager {
 
 		targetNode.isAppended = false
 
-		if (targetNode.type === "LI") {
+		if (targetNode.type === "li") {
 
 			let parent = targetNode.dom.parentElement
 			parent.removeChild(targetNode.dom)
@@ -118,7 +118,7 @@ export default class PVMNodeManager {
 
 			if (
 				previousNode && nextNode &&
-				previousNode.type === "LI" && nextNode.type === "LI" &&
+				previousNode.type === "li" && nextNode.type === "li" &&
 				previousNode.parentType === nextNode.parentType &&
 				!previousNode.dom.parentElement.isSameNode(nextNode.dom.parentElement)
 			) {
@@ -129,7 +129,7 @@ export default class PVMNodeManager {
 
 			if (
 				previousNode && nextNode &&
-				previousNode.type === "LI" && nextNode.type === "LI" &&
+				previousNode.type === "li" && nextNode.type === "li" &&
 				previousNode.parentType === nextNode.parentType
 			) {
 				this.mergeLists(previousNode.dom.parentElement, nextNode.dom.parentElement)
@@ -168,7 +168,7 @@ export default class PVMNodeManager {
 	appendChild(node, recordData)
 	{
 
-		if (node.type === "LI") {
+		if (node.type === "li") {
 			let list = document.createElement(node.parentType)
 			list.appendChild(node.dom)
 			this.session.editorBody.appendChild(list)
@@ -240,9 +240,9 @@ export default class PVMNodeManager {
 
 		let tempNode
 
-		if (insertingNode.type === "LI") {
+		if (insertingNode.type === "li") {
 
-			if (next && next.type === "LI") {
+			if (next && next.type === "li") {
 
 				if (next.parentType === insertingNode.parentType) {
 
@@ -270,7 +270,7 @@ export default class PVMNodeManager {
 
 			} else {
 
-				if (previous && previous.type === "LI") {
+				if (previous && previous.type === "li") {
 
 					previousDOM.parentElement.insertBefore(insertingDOM, previousDOM.nextElementSibling)
 				} else {
@@ -281,8 +281,8 @@ export default class PVMNodeManager {
 
 			}
 		} else {
-			if (next.type === "LI") {
-				if (previous && previous.type === "LI") {
+			if (next.type === "li") {
+				if (previous && previous.type === "li") {
 					let originalList = targetDOM.parentElement
 					let newList = document.createElement(originalList.nodeName)
 					let tempNode
@@ -390,7 +390,7 @@ export default class PVMNodeManager {
 
 				// this.removeNode(back)
 				let parentNode = back.parentNode
-				if (back.nodeName === "LI" && parentNode.querySelectorAll("LI").length === 1) {
+				if (back.nodeName === "li" && parentNode.querySelectorAll("li").length === 1) {
 
 					removedNode = parentNode
 					removedNodePreviousNode = parentNode.previousSibling
@@ -763,11 +763,11 @@ export default class PVMNodeManager {
 			newNode.appendChild(child)
 		}
 
-		if (node.type === "LI") {
+		if (node.type === "li") {
 
 			let currentList = originalDOM.parentElement
 
-			let liArray = currentList.querySelectorAll("LI")
+			let liArray = currentList.querySelectorAll("li")
 
 			if (liArray[liArray.length - 1] === originalDOM) {
 				currentList.removeChild(originalDOM)
@@ -788,7 +788,7 @@ export default class PVMNodeManager {
 				currentList.parentElement.insertBefore(newNode, newList)
 			}
 
-			if (currentList.querySelectorAll("LI").length === 0) {
+			if (currentList.querySelectorAll("li").length === 0) {
 				currentList.parentElement.removeChild(currentList)
 			}
 

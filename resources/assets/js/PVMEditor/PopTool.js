@@ -59,9 +59,9 @@ export default class PopTool {
 		})
 
 		// this.pt.querySelector("#pt-p").addEventListener('click', (e) => { this.postEditor.selManager.heading('P') })
-		this.dom.querySelector("#pt-h1").addEventListener('click', (e) => { this.transformNodes("H1") })
-		this.dom.querySelector("#pt-h2").addEventListener('click', (e) => { this.transformNodes("H2") })
-		this.dom.querySelector("#pt-h3").addEventListener('click', (e) => { this.transformNodes("H3") })
+		this.dom.querySelector("#pt-h1").addEventListener('click', (e) => { this.transformNodes("h1") })
+		this.dom.querySelector("#pt-h2").addEventListener('click', (e) => { this.transformNodes("h2") })
+		this.dom.querySelector("#pt-h3").addEventListener('click', (e) => { this.transformNodes("h3") })
 		this.dom.querySelector("#pt-bold").addEventListener('click', (e) => { this.changeTextStyle("bold") })
 		this.dom.querySelector("#pt-italic").addEventListener('click', (e) => { this.changeTextStyle("italic") })
 		this.dom.querySelector("#pt-underline").addEventListener('click', (e) => { this.changeTextStyle("underline") })
@@ -159,7 +159,7 @@ export default class PopTool {
 		}
 
 		if (
-			currentNode.type === "LI"
+			currentNode.type === "li"
 		) {
 
 			this.setPopToolMenu({
@@ -169,7 +169,7 @@ export default class PopTool {
 			})
 
 		} else if (
-			currentNode.type === "BLOCKQUOTE"
+			currentNode.type === "blockquote"
 		) {
 
 			this.setPopToolMenu({
@@ -308,8 +308,8 @@ export default class PopTool {
 
 		if (isAllAlreaySet) {
 			for (let i = 0; i < chunks.length; i++) {
-				// chunks[i].transformTo("P")
-				this.nodeMan.transformNode(chunks[i], "P")
+				// chunks[i].transformTo("p")
+				this.nodeMan.transformNode(chunks[i], "p")
 			}
 		}
 
