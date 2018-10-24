@@ -1,24 +1,36 @@
 import NodeManager from "./NodeManager"
 import EventManager from "./EventManager"
 import SelectionManager from "./SelectionManager"
+import EditSession from "./EditSession"
+import Action from "./Action"
 
-export default class UndoManager
-{
+export default class UndoManager {
 
-	constructor()
-	{
+	constructor() {
+
 		/**
-		 * @type NodeManager
+		 * @type {NodeManager}
 		 */
 		this.nodeMan = null
 		/**
-		 * @type EventManager
+		 * @type {EventManager}
 		 */
 		this.eventMan = null
 		/**
-		 * @type SelectionManager
+		 * @type {SelectionManager}
 		 */
 		this.selMan = null
+		/**
+		 * @type {EditSession}
+		 */
+		this.editSession = null
+
+		/**
+		 * @type {Action[]}
+		 */
+		this.actionStack = []
+		this.currentStep = -1
+
 	}
 
 }
