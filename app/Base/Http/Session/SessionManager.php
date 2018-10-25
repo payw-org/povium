@@ -71,14 +71,17 @@ class SessionManager
 	 */
 	public function startSession()
 	{
-		$old_session_id = $this->getOldSessionID();
-
-		if (!$this->checkSessionID($old_session_id)) {
-			$new_session_id = $this->createSessionID();
-			session_id($new_session_id);	//	Set new one
+		if (!$this->checkSessionID($this->getOldSessionID())) {
+			session_id($this->createSessionID());	//	Set new one
 		}
 
 		session_start();
+
+		if ($this->isDestroyed()) {
+			session_write_close();
+			session_id($this->createSessionID());
+			session_start();
+		}
 	}
 
 	/**
@@ -161,21 +164,26 @@ class SessionManager
 			return false;
 		}
 
-		//	Get session data
-		session_start();
-		$temp_session_data = $_SESSION;
-		session_write_close();
+		return true;
+	}
 
+	/**
+	 * Check if the current session is destroyed.
+	 *
+	 * @return boolean
+	 */
+	protected function isDestroyed()
+	{
 		//	Destroyed session
-		if (isset($temp_session_data['destroyed'])) {
+		if (isset($_SESSION['destroyed'])) {
 			// Should not happen usually.
 			// This could be attack or due to unstable network.
-			if ($temp_session_data['destroyed'] + $this->config['delay_time'] < time()) {
-				return false;
+			if ($_SESSION['destroyed'] + $this->config['delay_time'] < time()) {
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
