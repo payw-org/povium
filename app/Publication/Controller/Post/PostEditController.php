@@ -9,9 +9,10 @@
 namespace Povium\Publication\Controller\Post;
 
 use Povium\Publication\Validator\PostInfo\TitleValidator;
+use Povium\Publication\Validator\PostInfo\BodyValidator;
 use Povium\Publication\Validator\PostInfo\ContentsValidator;
-use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
 use Povium\Publication\Validator\PostInfo\SubtitleValidator;
+use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
 use Povium\Publication\Post\PostManager;
 use Povium\Security\User\User;
 
@@ -28,19 +29,24 @@ class PostEditController
 	protected $titleValidator;
 
 	/**
+	 * @var BodyValidator
+	 */
+	protected $bodyValidator;
+
+	/**
 	 * @var ContentsValidator
 	 */
 	protected $contentsValidator;
 
 	/**
-	 * @var ThumbnailValidator
-	 */
-	protected $thumbnailValidator;
-
-	/**
 	 * @var SubtitleValidator
 	 */
 	protected $subtitleValidator;
+
+	/**
+	 * @var ThumbnailValidator
+	 */
+	protected $thumbnailValidator;
 
 	/**
 	 * @var PostManager
@@ -56,26 +62,28 @@ class PostEditController
 	 * Check and validate components to update.
 	 * Then edit the post.
 	 *
-	 * @param  User			$user		User who edited the post
 	 * @param  string  		$post_id	ID of the post to edit
-	 * @param  string  		$title		Json string
+	 * @param  User			$user		User who edited the post
+	 * @param  string  		$title
+	 * @param  string		$body
 	 * @param  string  		$contents   Json string
 	 * @param  bool			$is_premium
 	 * @param  int|null		$series_id
+	 * @param  string|null	$subtitle
 	 * @param  string|null	$thumbnail
-	 * @param  string|null	$subtitle	Json string
 	 *
-	 * @return
+	 * @return array 	Error flag and message
 	 */
 	public function editPost(
-		$user,
 		$post_id,
+		$user,
  		$title,
+		$body,
  		$contents,
  		$is_premium,
  		$series_id = null,
- 		$thumbnail = null,
- 		$subtitle = null
+		$subtitle = null,
+ 		$thumbnail = null
 	) {
 		$return = array(
 			'err' => true,
@@ -104,33 +112,52 @@ class PostEditController
 
 		$components_to_update = array();
 
-		//	Title is changed
-		if ($title != $post->getTitle()) {
-			$validate_title = $this->titleValidator->validate($title);
+		$validate_title = $this->titleValidator->validate($title);
 
-			//	Invalid title
-			if ($validate_title['err']) {
-				$return['msg'] = $validate_title['msg'];
+		//	If invalid title
+		if ($validate_title['err']) {
+			$return['msg'] = $validate_title['msg'];
+
+			return $return;
+		}
+
+		$components_to_update['title'] = $title;
+
+		$validate_body = $this->bodyValidator->validate($body);
+
+		//	If invalid body
+		if ($validate_body['err']) {
+			$return['msg'] = $validate_body['msg'];
+
+			return $return;
+		}
+
+		$components_to_update['body'] = $body;
+
+		$validate_contents = $this->contentsValidator->validate($contents);
+
+		//	If invalid contents
+		if ($validate_contents['err']) {
+			$return['msg'] = $validate_contents['msg'];
+
+			return $return;
+		}
+
+		$components_to_update['contents'] = $contents;
+
+		//	Subtitle is set
+		if ($subtitle !== null) {
+			$validate_subtitle = $this->subtitleValidator->validate($subtitle);
+
+			//	If invalid subtitle
+			if ($validate_subtitle['err']) {
+				$return['msg'] = $validate_subtitle['msg'];
 
 				return $return;
 			}
-
-			$components_to_update['title'] = $title;
 		}
 
-		//	Contents is changed
-		if ($contents != $post->getContents()) {
-			$validate_contents = $this->contentsValidator->validate($contents);
-
-			//	Invalid contents
-			if ($validate_contents['err']) {
-				$return['msg'] = $validate_contents['msg'];
-
-				return $return;
-			}
-
-			$components_to_update['contents'] = $contents;
-		}
+		$components_to_update['subtitle'] = $subtitle;
 
 		//	Thumbnail is changed
 		if ($thumbnail != $post->getThumbnail()) {
@@ -138,7 +165,7 @@ class PostEditController
 			if ($thumbnail !== null) {
 				$validate_thumbnail = $this->thumbnailValidator->validate($thumbnail);
 
-				//	Invalid thumbnail
+				//	If invalid thumbnail
 				if ($validate_thumbnail['err']) {
 					$return['msg'] = $validate_thumbnail['msg'];
 
@@ -147,23 +174,6 @@ class PostEditController
 			}
 
 			$components_to_update['thumbnail'] = $thumbnail;
-		}
-
-		//	Subtitle is changed
-		if ($subtitle != $post->getSubtitle()) {
-			//	Subtitle is set
-			if ($subtitle !== null) {
-				$validate_subtitle = $this->subtitleValidator->validate($subtitle);
-
-				//	Invalid subtitle
-				if ($validate_subtitle['err']) {
-					$return['msg'] = $validate_subtitle['msg'];
-
-					return $return;
-				}
-			}
-
-			$components_to_update['subtitle'] = $subtitle;
 		}
 
 		//	Premium setting is changed
@@ -191,7 +201,7 @@ class PostEditController
 		$components_to_update['last_edited_dt'] = date('Y-m-d H:i:s');
 
 		//	If failed to update post record
-		if (!$this->postManager->updatePost($post_id, $components_to_update)) {
+		if (!$this->postManager->updateRecord($post_id, $components_to_update)) {
 			$return['msg'] = $this->config['msg']['post_edit_err'];
 
 			return $return;

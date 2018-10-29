@@ -43,7 +43,7 @@ class ContentsValidator implements ValidatorInterface
 			return $return;
 		}
 
-		json_decode($contents);
+		$contents_array = json_decode($contents, true);
 		if (json_last_error() !== JSON_ERROR_NONE) {
 			$return['msg'] = $this->config['msg']['contents_invalid'];
 

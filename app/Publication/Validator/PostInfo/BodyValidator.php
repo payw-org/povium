@@ -1,6 +1,6 @@
 <?php
 /**
- * Validate post thumbnail file path.
+ * Validate post body.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -10,7 +10,7 @@ namespace Povium\Publication\Validator\PostInfo;
 
 use Povium\Validator\ValidatorInterface;
 
-class ThumbnailValidator implements ValidatorInterface
+class BodyValidator implements ValidatorInterface
 {
 	/**
 	 * @var array
@@ -30,21 +30,18 @@ class ThumbnailValidator implements ValidatorInterface
 	 *
 	 * @return array 	Error flag and message
 	 */
-	public function validate($thumbnail)
+	public function validate($body)
 	{
 		$return = array(
 			'err' => true,
 			'msg' => ''
 		);
 
-		if (empty($thumbnail)) {
-			$return['msg'] = $this->config['msg']['thumbnail_empty'];
+		if (empty($body)) {
+			$return['msg'] = $this->config['msg']['body_empty'];
 
 			return $return;
 		}
-
-		// @TODO Check if it is a valid thumbnail path
-		// (Check directory, file extension and file exists)
 
 		$return['err'] = false;
 

@@ -43,26 +43,7 @@ class SubtitleValidator implements ValidatorInterface
 			return $return;
 		}
 
-		$json_array = json_decode($subtitle, true);
-		if (json_last_error() !== JSON_ERROR_NONE) {
-			$return['msg'] = $this->config['msg']['subtitle_invalid'];
-
-			return $return;
-		}
-
-		//	Only extract plain text from json
-		ob_start();
-		array_walk_recursive(
-			$json_array,
-			function ($value, $key) {
-				if ($key == "data") {
-					echo $value;
-				}
-			}
-		);
-		$subtitle_string = ob_get_clean();
-
-		if (mb_strlen($subtitle_string) > $this->config['len']['subtitle_max_length']) {
+		if (mb_strlen($subtitle) > $this->config['len']['subtitle_max_length']) {
 			$return['msg'] = $this->config['msg']['subtitle_long'];
 
 			return $return;

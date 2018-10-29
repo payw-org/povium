@@ -1,7 +1,6 @@
 <?php
 /**
-* Manage all user info.
-* Communicate with user table in database.
+* Manage all user record.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop
@@ -9,21 +8,16 @@
 
 namespace Povium\Security\User;
 
+use Povium\Base\Database\Record\AbstractRecordManager;
 use Povium\Security\Encoder\PasswordEncoder;
+use Povium\Base\Database\Exception\InvalidParameterNumberException;
 
-class UserManager
+class UserManager extends AbstractRecordManager
 {
 	/**
 	 * @var array
 	 */
 	protected $config;
-
-	/**
-	* Database connection (PDO)
-	*
-	* @var \PDO
-	*/
-	protected $conn;
 
 	/**
 	 * @var PasswordEncoder
@@ -35,11 +29,16 @@ class UserManager
 	 * @param \PDO				$conn
 	 * @param PasswordEncoder	$password_encoder
 	 */
-	public function __construct(array $config, \PDO $conn, PasswordEncoder $password_encoder)
-	{
+	public function __construct(
+		array $config,
+ 		\PDO $conn,
+ 		PasswordEncoder $password_encoder
+	) {
 		$this->config = $config;
 		$this->conn = $conn;
 		$this->passwordEncoder = $password_encoder;
+
+		$this->table = $this->config['user_table'];
 	}
 
 	/**
@@ -60,7 +59,7 @@ class UserManager
 	public function getUserIDFromReadableID($readable_id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->config['user_table']}
+			"SELECT id FROM {$this->table}
 			WHERE readable_id = ?"
 		);
 		$stmt->execute([$readable_id]);
@@ -82,7 +81,7 @@ class UserManager
 	public function getUserIDFromName($name)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->config['user_table']}
+			"SELECT id FROM {$this->table}
 			WHERE name = ?"
 		);
 		$stmt->execute([$name]);
@@ -104,7 +103,7 @@ class UserManager
 	public function getUserIDFromEmail($email)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->config['user_table']}
+			"SELECT id FROM {$this->table}
 			WHERE email = ?"
 		);
 		$stmt->execute([$email]);
@@ -125,17 +124,7 @@ class UserManager
 	*/
 	public function getUser($user_id)
 	{
-		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['user_table']}
-			WHERE id = ?"
-		);
-		$stmt->execute([$user_id]);
-
-		if ($stmt->rowCount() == 0) {
-			return false;
-		}
-
-		$record = $stmt->fetch();
+		$record = $this->getRecord($user_id);
 
 		$user = new User(...array_values($record));
 
@@ -143,20 +132,28 @@ class UserManager
 	}
 
 	/**
-	* Add new user record.
+	* {@inheritdoc}
 	*
 	* @param string 	$readable_id
 	* @param string 	$name
 	* @param string 	$password
-	*
-	* @return bool		Whether successfully added
 	*/
-	public function addUser($readable_id, $name, $password)
+	public function addRecord()
 	{
+		if (func_num_args() != 3) {
+			throw new InvalidParameterNumberException('Invalid parameter number for creating "User" record.');
+		}
+
+		$args = func_get_args();
+
+		$readable_id = $args[0];
+		$name = $args[1];
+		$password = $args[2];
+
 		$password_hash = $this->passwordEncoder->encode($password);
 
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['user_table']}
+			"INSERT INTO {$this->table}
 			(readable_id, name, password)
 			VALUES (:readable_id, :name, :password)"
 		);
@@ -166,39 +163,6 @@ class UserManager
 			':password' => $password_hash
 		];
 		if (!$stmt->execute($query_params)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	* Update some fields data of user record.
-	*
-	* @param  int	$user_id
-	* @param  array $params Associative array (column name to update => new value)
-	*
-	* @return bool		Whether successfully updated
-	*/
-	public function updateUser($user_id, $params)
-	{
-		$col_list = array();
-		$val_list = array();
-
-		foreach ($params as $col => $val) {
-			array_push($col_list, $col . ' = ?');
-			array_push($val_list, $val);
-		}
-		array_push($val_list, $user_id);
-
-		$set_params = implode(', ', $col_list);
-
-		$stmt = $this->conn->prepare(
-			"UPDATE {$this->config['user_table']}
- 			SET " . $set_params .
-			" WHERE id = ?"
-		);
-		if (!$stmt->execute($val_list)) {
 			return false;
 		}
 

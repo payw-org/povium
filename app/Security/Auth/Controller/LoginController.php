@@ -145,7 +145,7 @@ class LoginController
 			$params = array(
 				'password' => $verify_password['new_encoded']
 			);
-			$user_manager->updateUser($user_id, $params);
+			$user_manager->updateRecord($user_id, $params);
 		}
 
 		/* Check if valid account */
@@ -183,7 +183,7 @@ class LoginController
 		$params = array(
 			'last_login_dt' => date('Y-m-d H:i:s')
 		);
-		$user_manager->updateUser($user_id, $params);
+		$user_manager->updateRecord($user_id, $params);
 
 		return $return;
 	}

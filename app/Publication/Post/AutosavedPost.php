@@ -1,6 +1,6 @@
 <?php
 /**
- * Post class store published post info.
+ * AutosavedPost class store autosaved post info.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -8,32 +8,22 @@
 
 namespace Povium\Publication\Post;
 
-class Post extends DefinedPost
+class AutosavedPost extends DefinedPost
 {
-	/**
-	 * @var bool
-	 */
-	protected $isDeleted;
-
-	/**
-	 * @var int
-	 */
-	protected $viewCnt;
-
-	/**
-	 * @var int
-	 */
-	protected $shareCnt;
-
 	/**
 	 * @var string	Datetime
 	 */
-	protected $publicationDt;
+	protected $creationDt;
 
 	/**
 	 * @var string	Datetime
 	 */
 	protected $lastEditedDt;
+
+	/**
+	 * @var string|null
+	 */
+	protected $postID;
 
 	/**
 	 * @param string     	$id
@@ -42,11 +32,9 @@ class Post extends DefinedPost
 	 * @param string		$body
 	 * @param string  		$contents
 	 * @param bool    		$is_premium
-	 * @param bool    		$is_deleted
-	 * @param int     		$view_cnt
-	 * @param int     		$share_cnt
-	 * @param string  		$publication_dt
+	 * @param string  		$creation_dt
 	 * @param string  		$last_edited_dt
+	 * @param string|null	$post_id
 	 * @param int|null    	$series_id
 	 * @param string|null 	$subtitle
 	 * @param string|null 	$thumbnail
@@ -58,11 +46,9 @@ class Post extends DefinedPost
 		string $body,
 		string $contents,
 		bool $is_premium,
-		bool $is_deleted,
-		int $view_cnt,
-		int $share_cnt,
-		string $publication_dt,
+		string $creation_dt,
 		string $last_edited_dt,
+		?string $post_id,
 		?int $series_id,
 		?string $subtitle,
 		?string $thumbnail
@@ -73,46 +59,20 @@ class Post extends DefinedPost
 		$this->body = $body;
 		$this->contents = $contents;
 		$this->isPremium = $is_premium;
-		$this->isDeleted = $is_deleted;
-		$this->viewCnt = $view_cnt;
-		$this->shareCnt = $share_cnt;
-		$this->publicationDt = $publication_dt;
+		$this->creationDt = $creation_dt;
 		$this->lastEditedDt = $last_edited_dt;
+		$this->postID = $post_id;
 		$this->seriesID = $series_id;
 		$this->subtitle = $subtitle;
 		$this->thumbnail = $thumbnail;
 	}
 
 	/**
-	 * @return bool
-	 */
-	public function isDeleted()
-	{
-		return $this->isDeleted;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getViewCnt()
-	{
-		return $this->viewCnt;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getShareCnt()
-	{
-		return $this->shareCnt;
-	}
-
-	/**
 	 * @return string	Datetime
 	 */
-	public function getPublicationDt()
+	public function getCreationDt()
 	{
-		return $this->publicationDt;
+		return $this->creationDt;
 	}
 
 	/**
@@ -121,5 +81,13 @@ class Post extends DefinedPost
 	public function getLastEditedDt()
 	{
 		return $this->lastEditedDt;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getPostID()
+	{
+		return $this->postID;
 	}
 }

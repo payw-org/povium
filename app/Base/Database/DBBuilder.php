@@ -70,7 +70,6 @@ class DBBuilder
 			$this->conn->commit();
 		} catch (\PDOException $e) {
 			$this->conn->rollBack();
-
 			error_log("ERROR: " . $e->getMessage() . " on line " . __LINE__);
 		} finally {
 			$this->conn->exec('SET FOREIGN_KEY_CHECKS = 1');

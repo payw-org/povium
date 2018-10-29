@@ -9,11 +9,11 @@
 
 namespace Povium\Security\Auth;
 
-use Povium\Base\Http\Session\SessionManager;
+use Povium\Generator\RandomStringGenerator;
 use Povium\Base\Http\Client;
 use Povium\Security\User\UserManager;
+use Povium\Base\Http\Session\SessionManager;
 use Povium\Security\User\User;
-use Povium\Generator\RandomStringGenerator;
 
 class Auth
 {
@@ -143,7 +143,7 @@ class Auth
 	{
 		if (!$this->isLoggedIn) {
 			if ($this->checkCurrentAccessKey()) {
-				$this->updateCurrentAccessKey();
+				$this->updateAndReissueCurrentAccessKey();
 
 				$this->isLoggedIn = true;
 			} else {
@@ -328,107 +328,80 @@ class Auth
 	}
 
 	/**
-	 * Update current access key cookie.
-	 * Update current access key record from db.
-	 * Renew access key if expires soon.
+	 * Update current access key.
+	 * And reissue access key if expires soon.
 	 *
-	 * @return bool	Whether update is success
+	 * @return bool	Success or failure
 	 */
-	protected function updateCurrentAccessKey()
+	protected function updateAndReissueCurrentAccessKey()
 	{
 		$session_id = session_id();
+
+		/* Update ip and agent */
+
 		$ip = $this->client->getIP();
 		$agent = $this->client->getAgent();
 
-		/* Fetch access key record */
+		$stmt = $this->conn->prepare(
+			"UPDATE {$this->config['connected_user_table']}
+			SET ip = :ip, agent = :agent
+			WHERE session_id = :session_id"
+		);
+		$query_params = [
+			':ip' => $ip,
+			':agent' => $agent,
+			':session_id' => $session_id
+		];
+		if (!$stmt->execute($query_params)) {
+			return false;
+		}
+
+		/* Get expiration date of current access key */
 
 		$stmt = $this->conn->prepare(
-			"SELECT id, ip, expn_dt, agent FROM {$this->config['connected_user_table']}
+			"SELECT expn_dt FROM {$this->config['connected_user_table']}
 			WHERE session_id = ?"
 		);
 		$stmt->execute([$session_id]);
 
-		//	Not logged in user
-		if ($stmt->rowCount() == 0) {
-			return false;
-		}
+		$expn_dt = $stmt->fetchColumn();
 
-		$record = $stmt->fetch();
+		/* If access key expires soon, reissue it */
 
-		/* Check params to update */
-
-		$params_to_update = array();
-
-		//	User ip is changed
-		if ($ip !== $record['ip']) {
-			$params_to_update['ip'] = $ip;
-		}
-
-		//	User agent is changed
-		if ($agent !== $record['agent']) {
-			$params_to_update['agent'] = $agent;
-		}
-
-		//	If access key expires soon, renew it.
 		if (
-			strtotime($record['expn_dt']) - time() <
+			strtotime($expn_dt) - time() <
 			$this->config['cookie']['access_key']['expire'] - $this->config['cookie']['access_key']['renew']
 		) {
-			$new_access_key = $this->generateAccessKey();
-			$new_access_hash = $this->generateAccessHash($new_access_key);
-			$new_expiration_time = time() + $this->config['cookie']['access_key']['expire'];
-
-			$params_to_update['hash'] = $new_access_hash;
-			$params_to_update['expn_dt'] = date("Y-m-d H:i:s", $new_expiration_time);
+			if (!$this->reissueAccessKey()) {
+				return false;
+			}
 		}
 
-		/* Update access key record */
+		return true;
+	}
 
-		//	Nothing to update
-		if (empty($params_to_update)) {
-			return true;
-		}
+	/**
+	 * Reissue access key to current user.
+	 *
+	 * @return bool	Whether reissue is success
+	 */
+	protected function reissueAccessKey()
+	{
+		$current_user_id = $this->getCurrentUserID();
 
-		$col_list = array();
-		$val_list = array();
+		try {
+			$this->conn->beginTransaction();
 
-		foreach ($params_to_update as $col => $val) {
-			array_push($col_list, $col . ' = ?');
-			array_push($val_list, $val);
-		}
-		array_push($val_list, $record['id']);
+			$this->deleteCurrentAccessKeyRecord();
+			$this->addAccessKey($current_user_id);
 
-		$set_params = implode(', ', $col_list);
+			$this->conn->commit();
+		} catch (\PDOException $e) {
+			$this->conn->rollBack();
+			error_log("ERROR: " . $e->getMessage() . " on line " . __LINE__);
 
-		$stmt = $this->conn->prepare(
-			"UPDATE {$this->config['connected_user_table']} SET " . $set_params .
-			" WHERE id = ?"
-		);
-		if (!$stmt->execute($val_list)) {
 			return false;
 		}
-
-		/* Update access key cookie */
-
-		//	No need to update cookie
-		if (!isset($new_access_key)) {
-			return true;
-		}
-
-		//	Failed to update cookie
-		if (!setcookie(
-			$this->config['cookie']['access_key']['name'],
-			$new_access_key,
-			$new_expiration_time,
-			$this->config['cookie']['access_key']['path'],
-			$this->config['cookie']['access_key']['domain'],
-			$this->config['cookie']['access_key']['secure'],
-			$this->config['cookie']['access_key']['httponly']
-		)) {
-			return false;
-		}
-
-		$_COOKIE[$this->config['cookie']['access_key']['name']] = $new_access_key;
 
 		return true;
 	}
