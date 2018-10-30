@@ -72,7 +72,7 @@ class PostManager extends AbstractRecordManager
 	public function addRecord()
 	{
 		if (func_num_args() != 8) {
-			throw new InvalidParameterNumberException('Invalid parameter number for creating "Post" record.');
+			throw new InvalidParameterNumberException('Invalid parameter number for creating "post" record.');
 		}
 
 		$args = func_get_args();

@@ -9,21 +9,16 @@
 
 namespace Povium\Publication\Post;
 
+use Povium\Base\Database\Record\AbstractRecordManager;
 use Povium\Generator\RandomStringGenerator;
+use Povium\Base\Database\Exception\InvalidParameterNumberException;
 
-class AutosavedPostManager
+class AutosavedPostManager extends AbstractRecordManager
 {
 	/**
 	 * @var array
 	 */
 	protected $config;
-
-	/**
-	 * Database connection (PDO)
-	 *
-	 * @var \PDO
-	 */
-	protected $conn;
 
 	/**
 	 * @var RandomStringGenerator
@@ -40,10 +35,12 @@ class AutosavedPostManager
 		$this->config = $config;
 		$this->conn = $conn;
 		$this->randomStringGenerator = $generator;
+
+		$this->table = $this->config['autosaved_post_table'];
 	}
 
 	/**
-	 * Returns an autosaved post instance from id.
+	 * Returns an autosaved post instance.
 	 *
 	 * @param  string	$autosaved_post_id
 	 *
@@ -51,17 +48,7 @@ class AutosavedPostManager
 	 */
 	public function getAutoSavedPost($autosaved_post_id)
 	{
-		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['autosaved_post_table']}
-			WHERE id = ?"
-		);
-		$stmt->execute([$autosaved_post_id]);
-
-		if ($stmt->rowCount() == 0) {
-			return false;
-		}
-
-		$record = $stmt->fetch();
+		$record = $this->getRecord($autosaved_post_id);
 
 		$autosaved_post = new AutosavedPost(...array_values($record));
 
@@ -78,7 +65,7 @@ class AutosavedPostManager
 	public function getAutoSavedPostFromPostID($post_id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->config['autosaved_post_table']}
+			"SELECT * FROM {$this->table}
 			WHERE post_id = ?"
 		);
 		$stmt->execute([$post_id]);
@@ -95,7 +82,7 @@ class AutosavedPostManager
 	}
 
 	/**
-	 * Add new autosaved post record.
+	 * {@inheritdoc}
 	 *
 	 * @param int	 		$user_id
 	 * @param string  		$title
@@ -106,22 +93,27 @@ class AutosavedPostManager
 	 * @param int|null  	$series_id
 	 * @param string|null  	$subtitle
 	 * @param string|null  	$thumbnail
-	 *
-	 * @return bool		Whether successfully added
 	 */
-	public function addAutosavedPost(
-		$user_id,
-		$title,
-		$body,
-		$contents,
-		$is_premium,
-		$post_id,
-		$series_id,
-		$subtitle,
-		$thumbnail
-	) {
+	public function addRecord()
+	{
+		if (func_num_args() != 9) {
+			throw new InvalidParameterNumberException('Invalid parameter number for creating "autosaved_post" record.');
+		}
+
+		$args = func_get_args();
+
+		$user_id = $args[0];
+		$title = $args[1];
+		$body = $args[2];
+		$contents = $args[3];
+		$is_premium = $args[4];
+		$post_id = $args[5];
+		$series_id = $args[6];
+		$subtitle = $args[7];
+		$thumbnail = $args[8];
+
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->config['autosaved_post_table']}
+			"INSERT INTO {$this->table}
 			(id, user_id, title, body, contents, is_premium, post_id, series_id, subtitle, thumbnail)
 			VALUES (:id, :user_id, :title, :body, :contents, :is_premium, :post_id, :series_id, :subtitle, :thumbnail)"
 		);
@@ -142,11 +134,6 @@ class AutosavedPostManager
 		}
 
 		return true;
-	}
-
-	public function updateAutosavedPost($autosaved_post_id, $params)
-	{
-
 	}
 
 	/**

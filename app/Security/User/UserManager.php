@@ -141,7 +141,7 @@ class UserManager extends AbstractRecordManager
 	public function addRecord()
 	{
 		if (func_num_args() != 3) {
-			throw new InvalidParameterNumberException('Invalid parameter number for creating "User" record.');
+			throw new InvalidParameterNumberException('Invalid parameter number for creating "user" record.');
 		}
 
 		$args = func_get_args();
