@@ -22,7 +22,6 @@ class CreateUserTable
 			password VARCHAR(255) NOT NULL,
 			is_verified BOOLEAN NOT NULL DEFAULT FALSE,
 			is_active BOOLEAN NOT NULL DEFAULT TRUE,
-			is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
 			registration_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			last_login_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			profile_image VARCHAR(512) NOT NULL DEFAULT 'C:/example/default_image.png',

@@ -16,7 +16,7 @@ class CreateAutosavedPostTable
 	public function getCreateSQL()
 	{
 		$sql = "CREATE TABLE IF NOT EXISTS autosaved_post (
-			id VARCHAR(32) PRIMARY KEY,
+			id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 			user_id INT(11) UNSIGNED NOT NULL,
 			title VARCHAR(128) NOT NULL,
 			body MEDIUMTEXT NOT NULL,
@@ -24,7 +24,7 @@ class CreateAutosavedPostTable
 			is_premium BOOLEAN NOT NULL,
 			creation_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			last_edited_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			post_id VARCHAR(32) UNIQUE,
+			post_id INT(11) UNSIGNED UNIQUE,
 			series_id INT(11) UNSIGNED,
 			subtitle VARCHAR(256),
 			thumbnail VARCHAR(512),
