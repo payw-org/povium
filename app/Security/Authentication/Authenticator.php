@@ -1,7 +1,7 @@
 <?php
 /**
 * Authenticate the current user.
-* Isuue access key and manage it.
+* Issue access key and update it periodically.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
