@@ -117,7 +117,7 @@ $collection->get(
  * Post Page
  */
 $collection->get(
-	'/@{readable_id:.+}/{post_title:.+}-{post_id:\d+}',
+	'/@{readable_id:.+}/{post_title:.+}-{post_id:\w+}',
  	function ($readable_id, $post_title, $post_id) use ($template_engine) {
 		//	post_id에 해당하는 포스트가 있는지 체크
 		//	없으면 return false

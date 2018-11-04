@@ -1,7 +1,6 @@
 <?php
 /**
- * Manage all autosaved post info.
- * Communicate with autosaved_post table in database.
+ * Manage all autosaved post records.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -10,7 +9,6 @@
 namespace Povium\Publication\Post;
 
 use Povium\Base\Database\Record\AbstractRecordManager;
-use Povium\Generator\RandomStringGenerator;
 use Povium\Base\Database\Exception\InvalidParameterNumberException;
 
 class AutosavedPostManager extends AbstractRecordManager
@@ -21,20 +19,13 @@ class AutosavedPostManager extends AbstractRecordManager
 	protected $config;
 
 	/**
-	 * @var RandomStringGenerator
+	 * @param array 	$config
+	 * @param \PDO   	$conn
 	 */
-	protected $randomStringGenerator;
-
-	/**
-	 * @param array 				$config
-	 * @param \PDO   				$conn
-	 * @param RandomStringGenerator	$generator
-	 */
-	public function __construct(array $config, \PDO $conn, RandomStringGenerator $generator)
+	public function __construct(array $config, \PDO $conn)
 	{
 		$this->config = $config;
 		$this->conn = $conn;
-		$this->randomStringGenerator = $generator;
 
 		$this->table = $this->config['autosaved_post_table'];
 	}
@@ -42,11 +33,11 @@ class AutosavedPostManager extends AbstractRecordManager
 	/**
 	 * Returns an autosaved post instance.
 	 *
-	 * @param  string	$autosaved_post_id
+	 * @param  int	$autosaved_post_id
 	 *
 	 * @return AutosavedPost|false
 	 */
-	public function getAutoSavedPost($autosaved_post_id)
+	public function getAutosavedPost($autosaved_post_id)
 	{
 		$record = $this->getRecord($autosaved_post_id);
 
@@ -58,11 +49,11 @@ class AutosavedPostManager extends AbstractRecordManager
 	/**
 	 * Returns an autosaved post instance from original post id.
 	 *
-	 * @param  string	$post_id	Original post id
+	 * @param  int	$post_id	Original post id
 	 *
 	 * @return AutosavedPost|false
 	 */
-	public function getAutoSavedPostFromPostID($post_id)
+	public function getAutosavedPostFromPostID($post_id)
 	{
 		$stmt = $this->conn->prepare(
 			"SELECT * FROM {$this->table}
@@ -88,8 +79,8 @@ class AutosavedPostManager extends AbstractRecordManager
 	 * @param string  		$title
 	 * @param string  		$body
 	 * @param string  		$contents   Json string
-	 * @param boolean 		$is_premium
-	 * @param string|null  	$post_id
+	 * @param bool 			$is_premium
+	 * @param int|null  	$post_id
 	 * @param int|null  	$series_id
 	 * @param string|null  	$subtitle
 	 * @param string|null  	$thumbnail
@@ -114,11 +105,10 @@ class AutosavedPostManager extends AbstractRecordManager
 
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->table}
-			(id, user_id, title, body, contents, is_premium, post_id, series_id, subtitle, thumbnail)
-			VALUES (:id, :user_id, :title, :body, :contents, :is_premium, :post_id, :series_id, :subtitle, :thumbnail)"
+			(user_id, title, body, contents, is_premium, post_id, series_id, subtitle, thumbnail)
+			VALUES (:user_id, :title, :body, :contents, :is_premium, :post_id, :series_id, :subtitle, :thumbnail)"
 		);
 		$query_params = [
-			':id' => $this->createAutosavedPostID(),
 			':user_id' => $user_id,
 			':title' => $title,
 			':body' => $body,
@@ -137,16 +127,12 @@ class AutosavedPostManager extends AbstractRecordManager
 	}
 
 	/**
-	 * Create unique random autosaved post id
+	 * Returns the ID of the last inserted record.
 	 *
-	 * @return string
+	 * @return int
 	 */
-	protected function createAutosavedPostID()
+	public function getLastInsertID()
 	{
-		do {
-			$autosaved_post_id = $this->randomStringGenerator->generateRandomString($this->config['autosaved_post_id_length']);
-		} while ($this->getAutoSavedPost($autosaved_post_id) !== false);
-
-		return $autosaved_post_id;
+		return $this->conn->lastInsertId();
 	}
 }

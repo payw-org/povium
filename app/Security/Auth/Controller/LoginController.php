@@ -150,13 +150,6 @@ class LoginController
 
 		/* Check if valid account */
 
-		//	Deleted account
-		if ($user->isDeleted()) {
-			$return['msg'] = $this->config['msg']['account_is_deleted'];
-
-			return $return;
-		}
-
 		//	Inactive account
 		if (!$user->isActive()) {
 			$return['msg'] = $this->config['msg']['account_inactive'];

@@ -8,6 +8,6 @@
 
 namespace Povium\Publication\Controller\Post;
 
-class PostAutoSavingController
+class PostAutosavingController
 {
 }

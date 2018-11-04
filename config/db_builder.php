@@ -19,6 +19,9 @@ require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_tag_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_topic_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_user_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_autosaved_post_table.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_deleted_comment_table.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_deleted_post_table.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_deleted_series_table.php');
 
 return [
 	'dbname' => 'povium_local_db',
@@ -36,6 +39,9 @@ return [
 		new CreateTagTable(),
 		new CreateTopicTable(),
 		new CreateUserTable(),
-		new CreateAutosavedPostTable()
+		new CreateAutosavedPostTable(),
+		new CreateDeletedCommentTable(),
+		new CreateDeletedPostTable(),
+		new CreateDeletedSeriesTable()
 	]
 ];

@@ -1,6 +1,6 @@
 <?php
 /**
- * DefinedPost class store defined info of post.
+ * Frame for post classes.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -8,10 +8,10 @@
 
 namespace Povium\Publication\Post;
 
-class DefinedPost
+class PostFrame
 {
 	/**
-	 * @var string
+	 * @var int
 	 */
 	protected $id;
 
@@ -56,7 +56,7 @@ class DefinedPost
 	protected $thumbnail;
 
 	/**
-	 * @return string
+	 * @return int
 	 */
 	public function getID()
 	{

@@ -31,10 +31,6 @@ $login_return = $login_controller->login($identifier, $password);
 
 if ($login_return['err']) {		//	Login fail
 	switch ($login_return['msg']) {
-		case $login_controller->getConfig()['msg']['account_is_deleted']:
-			//	@TODO	Set redirect url to cancel account deletion.
-
-			break;
 		case  $login_controller->getConfig()['msg']['account_inactive']:
 			//	@TODO	Set redirect url to reactivate user account.
 

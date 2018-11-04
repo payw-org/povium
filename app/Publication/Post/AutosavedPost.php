@@ -8,7 +8,7 @@
 
 namespace Povium\Publication\Post;
 
-class AutosavedPost extends DefinedPost
+class AutosavedPost extends PostFrame
 {
 	/**
 	 * @var string	Datetime
@@ -21,12 +21,12 @@ class AutosavedPost extends DefinedPost
 	protected $lastEditedDt;
 
 	/**
-	 * @var string|null
+	 * @var int|null
 	 */
 	protected $postID;
 
 	/**
-	 * @param string     	$id
+	 * @param int	     	$id
 	 * @param int     		$user_id
 	 * @param string  		$title
 	 * @param string		$body
@@ -34,13 +34,13 @@ class AutosavedPost extends DefinedPost
 	 * @param bool    		$is_premium
 	 * @param string  		$creation_dt
 	 * @param string  		$last_edited_dt
-	 * @param string|null	$post_id
+	 * @param int|null		$post_id
 	 * @param int|null    	$series_id
 	 * @param string|null 	$subtitle
 	 * @param string|null 	$thumbnail
 	 */
 	public function __construct(
-		string $id,
+		int $id,
 		int $user_id,
 		string $title,
 		string $body,
@@ -48,7 +48,7 @@ class AutosavedPost extends DefinedPost
 		bool $is_premium,
 		string $creation_dt,
 		string $last_edited_dt,
-		?string $post_id,
+		?int $post_id,
 		?int $series_id,
 		?string $subtitle,
 		?string $thumbnail
@@ -84,7 +84,7 @@ class AutosavedPost extends DefinedPost
 	}
 
 	/**
-	 * @return string|null
+	 * @return int|null
 	 */
 	public function getPostID()
 	{

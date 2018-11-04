@@ -1,6 +1,6 @@
 <?php
 /**
- * Manage all post record.
+ * Manage all post records.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -9,7 +9,6 @@
 namespace Povium\Publication\Post;
 
 use Povium\Base\Database\Record\AbstractRecordManager;
-use Povium\Generator\RandomStringGenerator;
 use Povium\Base\Database\Exception\InvalidParameterNumberException;
 
 class PostManager extends AbstractRecordManager
@@ -20,23 +19,13 @@ class PostManager extends AbstractRecordManager
 	protected $config;
 
 	/**
-	 * @var RandomStringGenerator
+	 * @param array 	$config
+	 * @param \PDO   	$conn
 	 */
-	protected $randomStringGenerator;
-
-	/**
-	 * @param array 				$config
-	 * @param \PDO   				$conn
-	 * @param RandomStringGenerator	$generator
-	 */
-	public function __construct(
-		array $config,
- 		\PDO $conn,
- 		RandomStringGenerator $generator
-	) {
+	public function __construct(array $config, \PDO $conn)
+	{
 		$this->config = $config;
 		$this->conn= $conn;
-		$this->randomStringGenerator = $generator;
 
 		$this->table = $this->config['post_table'];
 	}
@@ -44,7 +33,7 @@ class PostManager extends AbstractRecordManager
 	/**
 	 * Returns a post instance.
 	 *
-	 * @param  string	$post_id
+	 * @param  int	$post_id
 	 *
 	 * @return Post|false
 	 */
@@ -88,11 +77,10 @@ class PostManager extends AbstractRecordManager
 
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->table}
-			(id, user_id, title, body, contents, is_premium, series_id, subtitle, thumbnail)
-			VALUES (:id, :user_id, :title, :body, :contents, :is_premium, :series_id, :subtitle, :thumbnail)"
+			(user_id, title, body, contents, is_premium, series_id, subtitle, thumbnail)
+			VALUES (:user_id, :title, :body, :contents, :is_premium, :series_id, :subtitle, :thumbnail)"
 		);
 		$query_params = [
-			':id' => $this->createPostID(),
 			':user_id' => $user_id,
 			':title' => $title,
 			':body' => $body,
@@ -107,19 +95,5 @@ class PostManager extends AbstractRecordManager
 		}
 
 		return true;
-	}
-
-	/**
-	 * Create unique random post id.
-	 *
-	 * @return string
-	 */
-	protected function createPostID()
-	{
-		do {
-			$post_id = $this->randomStringGenerator->generateRandomString($this->config['post_id_length']);
-		} while ($this->getPost($post_id) !== false);
-
-		return $post_id;
 	}
 }

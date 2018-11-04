@@ -1,6 +1,6 @@
 <?php
 /**
- * Manage post publication.
+ * Manage temp post creation.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -13,10 +13,10 @@ use Povium\Publication\Validator\PostInfo\BodyValidator;
 use Povium\Publication\Validator\PostInfo\ContentsValidator;
 use Povium\Publication\Validator\PostInfo\SubtitleValidator;
 use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
-use Povium\Publication\Post\PostManager;
+use Povium\Publication\Post\AutosavedPostManager;
 use Povium\Security\User\User;
 
-class PostPublicationController
+class TempPostCreationController
 {
 	/**
 	 * @var array
@@ -49,9 +49,9 @@ class PostPublicationController
 	protected $thumbnailValidator;
 
 	/**
-	 * @var PostManager
+	 * @var AutosavedPostManager
 	 */
-	protected $postManager;
+	protected $autosavedPostManager;
 
 	public function __construct()
 	{
@@ -59,33 +59,34 @@ class PostPublicationController
 	}
 
 	/**
-	 * Validate post components.
-	 * Then create a post record.
+	 * Validate temp post components.
+	 * Then create an autosaved_post record.
 	 *
-	 * @param  User			$user		User who wrote the post
+	 * @param  User			$user		User who wrote the temp post
 	 * @param  string  		$title
-	 * @param  string		$body
-	 * @param  string  		$contents   Json string
+	 * @param  string  		$body
+	 * @param  string  		$contents	Json string
 	 * @param  bool 		$is_premium
-	 * @param  int|null  	$series_id
-	 * @param  string|null  $subtitle
+	 * @param  int|null		$series_id
+	 * @param  string|null	$subtitle
 	 * @param  string|null  $thumbnail
 	 *
-	 * @return array 	Error flag and message
+	 * @return array 	Error flag, message and id of the created record.
 	 */
-	public function publishPost(
+	public function createTempPost(
 		$user,
 		$title,
 		$body,
- 		$contents,
- 		$is_premium,
- 		$series_id = null,
+		$contents,
+		$is_premium,
+		$series_id = null,
 		$subtitle = null,
- 		$thumbnail = null
+		$thumbnail = null
 	) {
 		$return = array(
 			'err' => true,
-			'msg' => ''
+			'msg' => '',
+			'id' => null
 		);
 
 		//	If user is not verified
@@ -95,24 +96,30 @@ class PostPublicationController
 			return $return;
 		}
 
-		/* Validate post components */
+		/* Validate temp post componenets */
 
-		$validate_title = $this->titleValidator->validate($title);
+		//	If title is set
+		if (!empty($title)) {
+			$validate_title = $this->titleValidator->validate($title);
 
-		//	If invalid title
-		if ($validate_title['err']) {
-			$return['msg'] = $validate_title['msg'];
+			//	If invalid title
+			if ($validate_title['err']) {
+				$return['msg'] = $validate_title['msg'];
 
-			return $return;
+				return $return;
+			}
 		}
 
-		$validate_body = $this->bodyValidator->validate($body);
+		//	If body is set
+		if (!empty($body)) {
+			$validate_body = $this->bodyValidator->validate($body);
 
-		//	If invalid body
-		if ($validate_body['err']) {
-			$return['msg'] = $validate_body['msg'];
+			//	If invalid body
+			if ($validate_body['err']) {
+				$return['msg'] = $validate_body['msg'];
 
-			return $return;
+				return $return;
+			}
 		}
 
 		$validate_contents = $this->contentsValidator->validate($contents);
@@ -158,26 +165,27 @@ class PostPublicationController
 			// @TODO	Check if the user's series
 		}
 
-		/* Publication processing */
+		/* Create an autosaved_post record */
 
-		//	If failed to add post record
-		if (!$this->postManager->addRecord(
+		if (!$this->autosavedPostManager->addRecord(
 			$user->getID(),
- 			$title,
+			$title,
 			$body,
- 			$contents,
- 			$is_premium,
- 			$series_id,
+			$contents,
+			$is_premium,
+			null,
+			$series_id,
 			$subtitle,
- 			$thumbnail
+			$thumbnail
 		)) {
-			$return['msg'] = $this->config['msg']['post_publication_err'];
+			$return['msg'] = $this->config['msg']['temp_post_creation_err'];
 
 			return $return;
 		}
 
-		//	Successfully published
+		//	Successfully created
 		$return['err'] = false;
+		$return['id'] = $this->autosavedPostManager->getLastInsertID();
 
 		return $return;
 	}

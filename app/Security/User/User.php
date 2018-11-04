@@ -41,11 +41,6 @@ class User
 	private $isActive;
 
 	/**
-	 * @var bool
-	 */
-	private $isDeleted;
-
-	/**
 	 * @var string	Datetime
 	 */
 	private $registrationDt;
@@ -77,7 +72,6 @@ class User
 	 * @param string 		$password
 	 * @param bool   		$is_verified
 	 * @param bool   		$is_active
-	 * @param bool   		$is_deleted
 	 * @param string 		$registration_dt
 	 * @param string 		$last_login_dt
 	 * @param string 		$profile_image
@@ -91,7 +85,6 @@ class User
 		string $password,
 		bool $is_verified,
 		bool $is_active,
-		bool $is_deleted,
 		string $registration_dt,
 		string $last_login_dt,
 		string $profile_image,
@@ -104,7 +97,6 @@ class User
 		$this->password = $password;
 		$this->isVerified = $is_verified;
 		$this->isActive = $is_active;
-		$this->isDeleted = $is_deleted;
 		$this->registrationDt = $registration_dt;
 		$this->lastLoginDt = $last_login_dt;
 		$this->profileImage = $profile_image;
@@ -158,14 +150,6 @@ class User
 	public function isActive()
 	{
 		return $this->isActive;
-	}
-
-	/**
-	 * @return	bool
-	 */
-	public function isDeleted()
-	{
-		return $this->isDeleted;
 	}
 
 	/**

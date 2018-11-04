@@ -31,7 +31,7 @@ abstract class AbstractRecordManager
 	 *
 	 * @param  int|string	$id		Table record id
 	 *
-	 * @return array 	Assoc array
+	 * @return array|false
 	 */
 	public function getRecord($id)
 	{
@@ -67,7 +67,7 @@ abstract class AbstractRecordManager
 	 * @param  int|string	$id		Table record id
 	 * @param  array 		$params	Assoc array (Field name => New value)
 	 *
-	 * @return bool		Whether successfully updated
+	 * @return bool	Whether successfully updated
 	 */
 	public function updateRecord($id, $params)
 	{
@@ -92,5 +92,23 @@ abstract class AbstractRecordManager
 		}
 
 		return true;
+	}
+
+	/**
+	 * Delete a table record.
+	 *
+	 * @param  int|string	$id		Table record id
+	 *
+	 * @return bool	Whether successfully deleted
+	 */
+	public function deleteRecord($id)
+	{
+		$stmt = $this->conn->prepare(
+			"DELETE FROM {$this->table}
+			WHERE id = ?"
+		);
+		$stmt->execute([$id]);
+
+		return $stmt->rowCount() == 1;
 	}
 }

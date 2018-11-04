@@ -59,11 +59,11 @@ class PostEditController
 	}
 
 	/**
-	 * Check and validate components to update.
-	 * Then edit the post.
+	 * Validate components to update.
+	 * Then edit the post record.
 	 *
-	 * @param  string  		$post_id	ID of the post to edit
 	 * @param  User			$user		User who edited the post
+	 * @param  int  		$post_id	ID of the post to edit
 	 * @param  string  		$title
 	 * @param  string		$body
 	 * @param  string  		$contents   Json string
@@ -75,8 +75,8 @@ class PostEditController
 	 * @return array 	Error flag and message
 	 */
 	public function editPost(
-		$post_id,
 		$user,
+		$post_id,
  		$title,
 		$body,
  		$contents,
@@ -90,18 +90,25 @@ class PostEditController
 			'msg' => ''
 		);
 
+		//	If user is not verified
+		if (!$user->isVerified()) {
+			$return['msg'] = $this->config['msg']['is_not_verified_user'];
+
+			return $return;
+		}
+
 		/* Validate post edit request */
 
 		$post = $this->postManager->getPost($post_id);
 
-		//	Nonexistent or already deleted post
-		if ($post === false || $post->isDeleted()) {
+		//	Nonexistent post
+		if ($post === false) {
 			$return['msg'] = $this->config['msg']['post_id_invalid'];
 
 			return $return;
 		}
 
-		//	Current user is not the writer of the post
+		//	User is not the writer of the post
 		if ($user->getID() != $post->getUserID()) {
 			$return['msg'] = $this->config['msg']['post_id_invalid'];
 
@@ -180,7 +187,7 @@ class PostEditController
 		if ($is_premium != $post->isPremium()) {
 			//	If want to publish as premium
 			if ($is_premium) {
-				// @TODO	Check if the current user is possible to publish premium post
+				// @TODO	Check if the user is possible to publish premium post
 			}
 
 			$components_to_update['is_premium'] = $is_premium;
@@ -190,7 +197,7 @@ class PostEditController
 		if ($series_id != $post->getSeriesID()) {
 			//	Series is set
 			if ($series_id !== null) {
-				// @TODO	Check if the current user's series
+				// @TODO	Check if the user's series
 			}
 
 			$components_to_update['series_id'] = $series_id;
