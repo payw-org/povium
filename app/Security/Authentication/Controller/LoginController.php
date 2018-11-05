@@ -11,6 +11,9 @@ namespace Povium\Security\Authentication\Controller;
 use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 use Povium\Security\Validator\UserInfo\EmailValidator;
 use Povium\Security\Validator\UserInfo\PasswordValidator;
+use Povium\Security\Encoder\PasswordEncoder;
+use Povium\Security\User\UserManager;
+use Povium\Base\Http\Session\SessionManager;
 use Povium\Security\Authentication\Authenticator;
 
 class LoginController
@@ -36,6 +39,21 @@ class LoginController
 	protected $passwordValidator;
 
 	/**
+	 * @var PasswordEncoder
+	 */
+	protected $passwordEncoder;
+
+	/**
+	 * @var UserManager
+	 */
+	protected $userManager;
+
+	/**
+	 * @var SessionManager
+	 */
+	protected $sessionManager;
+
+	/**
 	 * @var Authenticator
 	 */
 	protected $authenticator;
@@ -45,6 +63,9 @@ class LoginController
 	 * @param ReadableIDValidator $readable_id_validator
 	 * @param EmailValidator      $email_validator
 	 * @param PasswordValidator   $password_validator
+	 * @param PasswordEncoder	  $password_encoder
+	 * @param UserManager		  $user_manager
+	 * @param SessionManager	  $session_manager
 	 * @param Authenticator       $authenticator
 	 */
 	public function __construct(
@@ -52,12 +73,18 @@ class LoginController
 		ReadableIDValidator $readable_id_validator,
 		EmailValidator $email_validator,
 		PasswordValidator $password_validator,
+		PasswordEncoder $password_encoder,
+		UserManager $user_manager,
+		SessionManager $session_manager,
 		Authenticator $authenticator
 	) {
 		$this->config = $config;
 		$this->readableIDValidator = $readable_id_validator;
 		$this->emailValidator = $email_validator;
 		$this->passwordValidator = $password_validator;
+		$this->passwordEncoder = $password_encoder;
+		$this->userManager = $user_manager;
+		$this->sessionManager = $session_manager;
 		$this->authenticator = $authenticator;
 	}
 
@@ -112,12 +139,10 @@ class LoginController
 
 		/* Check if registered account */
 
-		$user_manager = $this->authenticator->getUserManager();
-
 		//	Unregistered readable id
-		if (false === $user_id = $user_manager->getUserIDFromReadableID($identifier)) {
+		if (false === $user_id = $this->userManager->getUserIDFromReadableID($identifier)) {
 			//	Unregistered email
-			if (false === $user_id = $user_manager->getUserIDFromEmail($identifier)) {
+			if (false === $user_id = $this->userManager->getUserIDFromEmail($identifier)) {
 				$return['msg'] = $this->config['msg']['account_incorrect'];
 
 				return $return;
@@ -127,11 +152,10 @@ class LoginController
 		/* Check if password match */
 
 		//	Fetch user data
-		$user = $user_manager->getUser($user_id);
+		$user = $this->userManager->getUser($user_id);
 
 		//	Verify password
-		$password_encoder = $user_manager->getPasswordEncoder();
-		$verify_password = $password_encoder->verifyAndReEncode($password, $user->getPassword());
+		$verify_password = $this->passwordEncoder->verifyAndReEncode($password, $user->getPassword());
 
 		//	Password does not match
 		if (!$verify_password['is_verified']) {
@@ -145,7 +169,7 @@ class LoginController
 			$params = array(
 				'password' => $verify_password['new_encoded']
 			);
-			$user_manager->updateRecord($user_id, $params);
+			$this->userManager->updateRecord($user_id, $params);
 		}
 
 		/* Check if valid account */
@@ -159,8 +183,7 @@ class LoginController
 
 		/* Login processing */
 
-		$session_manager = $this->authenticator->getSessionManager();
-		$session_manager->regenerateSessionID(true, true);
+		$this->sessionManager->regenerateSessionID(true, true);
 
 		//	Error occurred issuing access key
 		if (!$this->authenticator->addAccessKey($user_id)) {
@@ -176,7 +199,7 @@ class LoginController
 		$params = array(
 			'last_login_dt' => date('Y-m-d H:i:s')
 		);
-		$user_manager->updateRecord($user_id, $params);
+		$this->userManager->updateRecord($user_id, $params);
 
 		return $return;
 	}

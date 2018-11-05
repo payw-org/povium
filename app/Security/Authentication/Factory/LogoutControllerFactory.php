@@ -9,6 +9,7 @@
 namespace Povium\Security\Authentication\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
 use Povium\Security\Authentication\Authenticator;
 
 class LogoutControllerFactory extends AbstractChildFactory
@@ -21,10 +22,13 @@ class LogoutControllerFactory extends AbstractChildFactory
 	protected function prepareArgs()
 	{
 		$materials = func_get_args();
+		$master_factory = new MasterFactory();
 
+		$session_manager = $master_factory->createInstance('\Povium\Base\Http\Session\SessionManager');
 		$authenticator = $materials[0];
 
 		$this->args = array(
+			$session_manager,
 			$authenticator
 		);
 	}

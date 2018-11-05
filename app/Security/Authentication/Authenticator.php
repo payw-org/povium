@@ -90,35 +90,11 @@ class Authenticator
 	}
 
 	/**
-	 * @return RandomStringGenerator
-	 */
-	public function getRandomStringGenerator()
-	{
-		return $this->randomStringGenerator;
-	}
-
-	/**
 	 * @return Client
 	 */
 	public function getClient()
 	{
 		return $this->client;
-	}
-
-	/**
-	 * @return UserManager
-	 */
-	public function getUserManager()
-	{
-		return $this->userManager;
-	}
-
-	/**
-	 * @return SessionManager
-	 */
-	public function getSessionManager()
-	{
-		return $this->sessionManager;
 	}
 
 	/**

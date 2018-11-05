@@ -12,9 +12,7 @@ use Povium\Traits\SingletonTrait;
 
 class DBConnection
 {
-	/**
-	* Apply singleton pattern.
-	*/
+	/* Apply singleton pattern */
 	use SingletonTrait;
 
 	/**

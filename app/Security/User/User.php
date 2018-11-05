@@ -13,57 +13,57 @@ class User
 	/**
 	 * @var int
 	 */
-	private $id;
+	protected $id;
 
 	/**
 	 * @var string
 	 */
-	private $readableID;
+	protected $readableID;
 
 	/**
 	 * @var string
 	 */
-	private $name;
+	protected $name;
 
 	/**
 	 * @var string
 	 */
-	private $password;
+	protected $password;
 
 	/**
 	 * @var bool
 	 */
-	private $isVerified;
+	protected $isVerified;
 
 	/**
 	 * @var bool
 	 */
-	private $isActive;
+	protected $isActive;
 
 	/**
 	 * @var string	Datetime
 	 */
-	private $registrationDt;
+	protected $registrationDt;
 
 	/**
 	 * @var string	Datetime
 	 */
-	private $lastLoginDt;
+	protected $lastLoginDt;
 
 	/**
 	 * @var string
 	 */
-	private $profileImage;
+	protected $profileImage;
 
 	/**
 	 * @var string|null
 	 */
-	private $email;
+	protected $email;
 
 	/**
 	 * @var string|null
 	 */
-	private $bio;
+	protected $bio;
 
 	/**
 	 * @param int    		$id

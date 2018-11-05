@@ -16,7 +16,7 @@ $logout_controller->logout();
 #		'err' => Whether an error occured,
 #		'redirect' => redirect url
 #	);
-$logout_return['err'] = false;
-$logout_return['redirect'] = '/';
+$return['err'] = false;
+$return['redirect'] = '/';
 
-echo json_encode($logout_return);
+echo json_encode($return);

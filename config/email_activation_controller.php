@@ -9,20 +9,9 @@
 return [
 	'email_requesting_activation_table' => 'email_requesting_activation',
 
-	'err' => [
-		'user_not_found' => [
-			'code' => 0x0401,
-			'msg' => '인증 코드가 만료되었습니다. 인증을 다시 요청해주세요.'
-		],
-
-		'token_not_match' => [
-			'code' => 0x0402,
-			'msg' => '인증 실패. 토큰이 일치하지 않습니다.'
-		],
-
-		'request_expired' => [
-			'code' => 0x0403,
-			'msg' => '인증 코드가 만료되었습니다. 인증을 다시 요청해주세요.'
-		]
+	'msg' => [
+		'user_not_found' => '인증 코드가 만료되었습니다. 인증을 다시 요청해주세요.',
+		'token_not_match' => '인증 실패. 토큰이 일치하지 않습니다.',
+		'request_expired' => '인증 코드가 만료되었습니다. 인증을 다시 요청해주세요.'
 	]
 ];

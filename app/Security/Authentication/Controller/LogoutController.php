@@ -8,20 +8,30 @@
 
 namespace Povium\Security\Authentication\Controller;
 
+use Povium\Base\Http\Session\SessionManager;
 use Povium\Security\Authentication\Authenticator;
 
 class LogoutController
 {
+	/**
+	 * @var SessionManager
+	 */
+	protected $sessionManager;
+
 	/**
 	 * @var Authenticator
 	 */
 	protected $authenticator;
 
 	/**
-	 * @param Authenticator $authenticator
+	 * @param SessionManager	$session_manager
+	 * @param Authenticator		$authenticator
 	 */
-	public function __construct(Authenticator $authenticator)
-	{
+	public function __construct(
+		SessionManager $session_manager,
+ 		Authenticator $authenticator
+	) {
+		$this->sessionManager = $session_manager;
 		$this->authenticator = $authenticator;
 	}
 
@@ -40,7 +50,6 @@ class LogoutController
 
 		//	TODO : VISITOR로 권한 재부여
 
-		$session_manager = $this->authenticator->getSessionManager();
-		$session_manager->regenerateSessionID(false, true);
+		$this->sessionManager->regenerateSessionID(false, true);
 	}
 }

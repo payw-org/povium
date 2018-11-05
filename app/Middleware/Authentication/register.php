@@ -29,21 +29,21 @@ $redirect_uri_validator = $factory->createInstance('\Povium\Base\Routing\Validat
 #		'msg' => err msg for display,
 #		'redirect' => redirect url (optional param)
 #	);
-$register_return = $register_controller->register($readable_id, $name, $password);
+$return = $register_controller->register($readable_id, $name, $password);
 
-if ($register_return['err']) {			//	Register fail
+if ($return['err']) {			//	Register fail
 
 } else {								//	Register success
 	$login_controller->login($readable_id, $password);
 
-	$register_return['redirect'] = '/';
+	$return['redirect'] = '/';
 
 	if (
 		isset($query_params['redirect']) &&
 		$redirect_uri_validator->validate($query_params['redirect'])
 	) {
-		$register_return['redirect'] = $query_params['redirect'];
+		$return['redirect'] = $query_params['redirect'];
 	}
 }
 
-echo json_encode($register_return);
+echo json_encode($return);

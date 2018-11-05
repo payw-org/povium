@@ -27,28 +27,24 @@ $redirect_uri_validator = $factory->createInstance('\Povium\Base\Routing\Validat
 #		'msg' => err msg for display,
 #		'redirect' => redirect url (optional param)
 #	);
-$login_return = $login_controller->login($identifier, $password);
+$return = $login_controller->login($identifier, $password);
 
-if ($login_return['err']) {		//	Login fail
-	switch ($login_return['msg']) {
+if ($return['err']) {		//	Login fail
+	switch ($return['msg']) {
 		case  $login_controller->getConfig()['msg']['account_inactive']:
 			//	@TODO	Set redirect url to reactivate user account.
 
 			break;
-		case  $login_controller->getConfig()['msg']['issuing_access_key_err'];
-			//	@TODO	Ask the user for understanding
-
-			break;
 	}
-} else {						//	Login success
-	$login_return['redirect'] = '/';
+} else {		//	Login success
+	$return['redirect'] = '/';
 
 	if (
 		isset($query_params['redirect']) &&
 		$redirect_uri_validator->validate($query_params['redirect'])
 	) {
-		$login_return['redirect'] = $query_params['redirect'];
+		$return['redirect'] = $query_params['redirect'];
 	}
 }
 
-echo json_encode($login_return);
+echo json_encode($return);

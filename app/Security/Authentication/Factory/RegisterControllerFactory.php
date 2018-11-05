@@ -24,6 +24,7 @@ class RegisterControllerFactory extends AbstractChildFactory
 		$readable_id_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
 		$name_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\NameValidator');
 		$password_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+		$password_encoder = $master_factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
 		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
 
 		$this->args = array(
@@ -31,6 +32,7 @@ class RegisterControllerFactory extends AbstractChildFactory
 			$readable_id_validator,
 			$name_validator,
 			$password_validator,
+			$password_encoder,
 			$user_manager
 		);
 	}

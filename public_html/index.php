@@ -26,7 +26,7 @@ $session_manager->setSessionConfig();
 $session_manager->startSession();
 
 //	Initialize authentication system
-$authenticator = $factory->createInstance('\Povium\Security\Authentication\Authenticator', $session_manager);
+$authenticator = $factory->createInstance('\Povium\Security\Authentication\Authenticator');
 
 $template_engine = $factory->createInstance('\Povium\Base\Templating\TemplateEngine');
 

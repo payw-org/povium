@@ -13,6 +13,11 @@ use Povium\Security\User\User;
 
 class EmailActivationController
 {
+	/* Error codes */
+	const USER_NOT_FOUND = 0x01;
+	const TOKEN_NOT_MATCH = 0x02;
+	const REQUEST_EXPIRED = 0x03;
+
 	/**
 	 * @var array
 	 */
@@ -46,14 +51,6 @@ class EmailActivationController
 	}
 
 	/**
-	 * @return array
-	 */
-	public function getConfig()
-	{
-		return $this->config;
-	}
-
-	/**
 	 * Validate email activation request.
 	 * Activate email address.
 	 *
@@ -80,8 +77,8 @@ class EmailActivationController
 
 		//	User not found
 		if ($stmt->rowCount() == 0) {
-			$return['code'] = $this->config['err']['user_not_found']['code'];
-			$return['msg'] = $this->config['err']['user_not_found']['msg'];
+			$return['code'] = self::USER_NOT_FOUND;
+			$return['msg'] = $this->config['msg']['user_not_found'];
 
 			return $return;
 		}
@@ -90,8 +87,8 @@ class EmailActivationController
 
 		//	Token not match
 		if (!hash_equals($record['token'], $token)) {
-			$return['code'] = $this->config['err']['token_not_match']['code'];
-			$return['msg'] = $this->config['err']['token_not_match']['msg'];
+			$return['code'] = self::TOKEN_NOT_MATCH;
+			$return['msg'] = $this->config['msg']['token_not_match'];
 
 			return $return;
 		}
@@ -104,8 +101,8 @@ class EmailActivationController
 			);
 			$stmt->execute([$record['id']]);
 
-			$return['code'] = $this->config['err']['request_expired']['code'];
-			$return['msg'] = $this->config['err']['request_expired']['msg'];
+			$return['code'] = self::REQUEST_EXPIRED;
+			$return['msg'] = $this->config['msg']['request_expired'];
 
 			return $return;
 		}

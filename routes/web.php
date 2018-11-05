@@ -14,8 +14,8 @@ use Povium\Base\Http\Exception\NotFoundHttpException;
 $collection->get(
 	'/',
  	function () use ($template_engine) {
-		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php');
-		$template_engine->render($settings['template_dir'], $settings['config']);
+		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php');
+		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
 	}
 );
 
@@ -45,8 +45,8 @@ $collection->get(
 			}
 		}
 
-		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/login.php');
-		$template_engine->render($settings['template_dir'], $settings['config']);
+		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/login.php');
+		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
 	}
 );
 
@@ -75,8 +75,8 @@ $collection->get(
 			}
 		}
 
-		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/register.php');
-		$template_engine->render($settings['template_dir'], $settings['config']);
+		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/register.php');
+		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
 	}
 );
 
@@ -86,8 +86,8 @@ $collection->get(
 $collection->get(
 	'/editor',
  	function () use ($template_engine) {
-		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php');
-		$template_engine->render($settings['template_dir'], $settings['config']);
+		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php');
+		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
 	}
 );
 
@@ -100,15 +100,12 @@ $collection->get(
  */
 $collection->get(
 	'/@{readable_id:.+}',
- 	function ($readable_id) use ($authenticator, $template_engine) {
+ 	function ($readable_id) use ($template_engine) {
 		$readable_id = strtolower($readable_id);
 
-		//	Nonexistent readable id.
-		if (false === $user_id = $authenticator->getUserManager()->getUserIDFromReadableID($readable_id)) {
-			throw new NotFoundHttpException();
-		}
+		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/View/userProfile.php');
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_home.php';
+		require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_profile.php');
 	},
 	'user_profile'
 );
@@ -119,6 +116,7 @@ $collection->get(
 $collection->get(
 	'/@{readable_id:.+}/{post_title:.+}-{post_id:\w+}',
  	function ($readable_id, $post_title, $post_id) use ($template_engine) {
+		/* Middleware part */
 		//	post_id에 해당하는 포스트가 있는지 체크
 		//	없으면 return false
 		//	있으면 포스트 작성자의 readable id와 포스트 타이틀을 가져옴
@@ -126,7 +124,7 @@ $collection->get(
 		//	대소문자 무시하고 가져온 title과 파라미터 title값을 비교 (가져온 title은 raw한 형태 -> 특문과 공백이 섞여있음)
 		//	둘중 하나라도 다르면 올바른 uri로 redirect시킴
 		//	둘다 같으면 포스트페이지 require
-		require $_SERVER['DOCUMENT_ROOT'] . '/../resources/views/post.php';
+		require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/post.php');
 	},
  	'post'
 );
@@ -162,8 +160,8 @@ $collection->get(
 	function ($response_code, $title, $heading, $details) use ($template_engine) {
 		http_response_code($response_code);
 
-		$settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_error.php');
-		$template_engine->render($settings['template_dir'], $settings['config']);
+		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_error.php');
+		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
 	},
 	'http_error'
 );

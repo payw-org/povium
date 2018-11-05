@@ -10,7 +10,6 @@ namespace Povium\Security\Authentication\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
-use Povium\Security\Authentication\Authenticator;
 
 class LoginControllerFactory extends AbstractChildFactory
 {
@@ -28,6 +27,9 @@ class LoginControllerFactory extends AbstractChildFactory
 		$readable_id_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
 		$email_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
 		$password_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+		$password_encoder = $master_factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
+		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
+		$session_manager = $master_factory->createInstance('\Povium\Base\Http\Session\SessionManager');
 		$authenticator = $materials[0];
 
 		$this->args = array(
@@ -35,6 +37,9 @@ class LoginControllerFactory extends AbstractChildFactory
 			$readable_id_validator,
 			$email_validator,
 			$password_validator,
+			$password_encoder,
+			$user_manager,
+			$session_manager,
 			$authenticator
 		);
 	}

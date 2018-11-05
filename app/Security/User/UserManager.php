@@ -9,7 +9,6 @@
 namespace Povium\Security\User;
 
 use Povium\Base\Database\Record\AbstractRecordManager;
-use Povium\Security\Encoder\PasswordEncoder;
 use Povium\Base\Database\Exception\InvalidParameterNumberException;
 
 class UserManager extends AbstractRecordManager
@@ -20,33 +19,17 @@ class UserManager extends AbstractRecordManager
 	protected $config;
 
 	/**
-	 * @var PasswordEncoder
-	 */
-	protected $passwordEncoder;
-
-	/**
-	 * @param array 			$config
-	 * @param \PDO				$conn
-	 * @param PasswordEncoder	$password_encoder
+	 * @param array $config
+	 * @param \PDO	$conn
 	 */
 	public function __construct(
 		array $config,
- 		\PDO $conn,
- 		PasswordEncoder $password_encoder
+ 		\PDO $conn
 	) {
 		$this->config = $config;
 		$this->conn = $conn;
-		$this->passwordEncoder = $password_encoder;
 
 		$this->table = $this->config['user_table'];
-	}
-
-	/**
-	 * @return PasswordEncoder
-	 */
-	public function getPasswordEncoder()
-	{
-		return $this->passwordEncoder;
 	}
 
 	/**
@@ -150,8 +133,6 @@ class UserManager extends AbstractRecordManager
 		$name = $args[1];
 		$password = $args[2];
 
-		$password_hash = $this->passwordEncoder->encode($password);
-
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->table}
 			(readable_id, name, password)
@@ -160,7 +141,7 @@ class UserManager extends AbstractRecordManager
 		$query_params = [
 			':readable_id' => $readable_id,
 			':name' => $name,
-			':password' => $password_hash
+			':password' => $password
 		];
 		if (!$stmt->execute($query_params)) {
 			return false;

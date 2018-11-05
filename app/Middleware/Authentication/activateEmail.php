@@ -7,6 +7,7 @@
 * @copyright	2018 DesignAndDevelop
 */
 
+use Povium\Security\Authentication\Controller\EmailActivationController;
 use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
 
@@ -32,19 +33,19 @@ $return = $email_activation_controller->activateEmail($current_user, $token);
 
 if ($return['err']) {	//	Failed to activate email address
 	switch ($return['code']) {
-		case $email_activation_controller->getConfig()['err']['user_not_found']['code']:
+		case EmailActivationController::USER_NOT_FOUND:
 			throw new GoneHttpException($return['msg']);
 
 			break;
-		case $email_activation_controller->getConfig()['err']['token_not_match']['code']:
+		case EmailActivationController::TOKEN_NOT_MATCH:
 			throw new ForbiddenHttpException($return['msg']);
 
 			break;
-		case $email_activation_controller->getConfig()['err']['request_expired']['code']:
+		case EmailActivationController::REQUEST_EXPIRED:
 			throw new GoneHttpException($return['msg']);
 
 			break;
 	}
-} else {				//	Successfully activated email address
-	$router->redirect('/');		#	홈에서 인증완료됨을 알리는 modal이 뜨도록 query params 추가하기
+} else {	//	Successfully activated email address
+	$router->redirect('/');		// @TODO: 홈에서 인증완료됨을 알리는 modal이 뜨도록 query 추가하기
 }

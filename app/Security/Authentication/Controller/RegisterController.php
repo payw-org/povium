@@ -11,6 +11,7 @@ namespace Povium\Security\Authentication\Controller;
 use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 use Povium\Security\Validator\UserInfo\NameValidator;
 use Povium\Security\Validator\UserInfo\PasswordValidator;
+use Povium\Security\Encoder\PasswordEncoder;
 use Povium\Security\User\UserManager;
 
 class RegisterController
@@ -36,6 +37,11 @@ class RegisterController
 	protected $passwordValidator;
 
 	/**
+	 * @var PasswordEncoder
+	 */
+	protected $passwordEncoder;
+
+	/**
 	 * @var UserManager
 	 */
 	protected $userManager;
@@ -45,6 +51,7 @@ class RegisterController
 	 * @param ReadableIDValidator $readable_id_validator
 	 * @param NameValidator       $name_validator
 	 * @param PasswordValidator   $password_validator
+	 * @param PasswordEncoder	  $password_encoder
 	 * @param UserManager		  $user_manager
 	 */
 	public function __construct(
@@ -52,37 +59,15 @@ class RegisterController
 		ReadableIDValidator $readable_id_validator,
 		NameValidator $name_validator,
 		PasswordValidator $password_validator,
+		PasswordEncoder $password_encoder,
 		UserManager $user_manager
 	) {
 		$this->config = $config;
 		$this->readableIDValidator = $readable_id_validator;
 		$this->nameValidator = $name_validator;
 		$this->passwordValidator = $password_validator;
+		$this->passwordEncoder = $password_encoder;
 		$this->userManager = $user_manager;
-	}
-
-	/**
-	 * @return ReadableIDValidator
-	 */
-	public function getReadableIDValidator()
-	{
-		return $this->readableIDValidator;
-	}
-
-	/**
-	 * @return NameValidator
-	 */
-	public function getNameValidator()
-	{
-		return $this->nameValidator;
-	}
-
-	/**
-	 * @return PasswordValidator
-	 */
-	public function getPasswordValidator()
-	{
-		return $this->passwordValidator;
 	}
 
 	/**
@@ -133,8 +118,10 @@ class RegisterController
 
 		/* Register processing */
 
+		$encoded_password = $this->passwordEncoder->encode($password);
+
 		//	If failed to add user to database
-		if (!$this->userManager->addRecord($readable_id, $name, $password)) {
+		if (!$this->userManager->addRecord($readable_id, $name, $encoded_password)) {
 			$return['msg'] = $this->config['msg']['registration_err'];
 
 			return $return;

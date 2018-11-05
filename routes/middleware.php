@@ -20,7 +20,7 @@ $collection->post(
 			$router->redirect('/');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/login.php';
+		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/login.php');
 	}
 );
 
@@ -35,7 +35,7 @@ $collection->post(
 			$router->redirect('/');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/register.php';
+		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/register.php');
 	}
 );
 
@@ -50,7 +50,7 @@ $collection->put(
 			$router->redirect('/');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/validateRegisterInputs.php';
+		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/validateRegisterInputs.php');
 	}
 );
 
@@ -65,7 +65,7 @@ $collection->post(
 			$router->redirect('/register');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/logout.php';
+		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/logout.php');
 	}
 );
 
@@ -82,7 +82,7 @@ $collection->get(
 			$router->redirect('/register');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/requestEmailActivation.php';
+		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/requestEmailActivation.php');
 	}
 );
 
@@ -100,7 +100,7 @@ $collection->get(
 			$router->redirect('/login', true);
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/activateEmail.php';
+		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/activateEmail.php');
 	},
 	'email_activation'
 );

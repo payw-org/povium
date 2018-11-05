@@ -12,11 +12,12 @@ global $factory, $router, $authenticator;
 # $email = json_decode(file_get_contents('php://input'), true)['email'];
 $email = '1000jaman@naver.com';
 
+$random_string_generator = $factory->createInstance('\Povium\Generator\RandomStringGenerator');
 $email_add_controller = $factory->createInstance('\Povium\Security\Authentication\Controller\EmailAddController');
 $mail_sender = $factory->createInstance('\Povium\MailSender\ActivationMailSender');
 
 $current_user = $authenticator->getCurrentUser();
-$token = $authenticator->getRandomStringGenerator()->generateUUIDV4();
+$token = $random_string_generator->generateUUIDV4();
 
 #	array(
 #		'err' => bool,
