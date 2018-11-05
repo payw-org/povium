@@ -6,7 +6,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-global $factory, $auth;
+global $factory, $authenticator;
 
 //	Receive register inputs by ajax
 $register_inputs = json_decode(file_get_contents('php://input'), true);
@@ -20,8 +20,8 @@ if (isset($querystring)) {
 	parse_str($querystring, $query_params);
 }
 
-$login_controller = $factory->createInstance('\Povium\Security\Auth\Controller\LoginController', $auth);
-$register_controller = $factory->createInstance('\Povium\Security\Auth\Controller\RegisterController', $auth);
+$login_controller = $factory->createInstance('\Povium\Security\Authentication\Controller\LoginController', $authenticator);
+$register_controller = $factory->createInstance('\Povium\Security\Authentication\Controller\RegisterController');
 $redirect_uri_validator = $factory->createInstance('\Povium\Base\Routing\Validator\RedirectURIValidator');
 
 #	array(

@@ -14,13 +14,13 @@ use Povium\Base\Http\Exception\GoneHttpException;
  */
 $collection->post(
 	'/login',
-	function () use ($auth, $router) {
+	function () use ($authenticator, $router) {
 		//	If already logged in, send to home page.
-		if ($auth->isLoggedIn()) {
+		if ($authenticator->isLoggedIn()) {
 			$router->redirect('/');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/login.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/login.php';
 	}
 );
 
@@ -29,13 +29,13 @@ $collection->post(
  */
 $collection->post(
 	'/register',
-	function () use ($auth, $router) {
+	function () use ($authenticator, $router) {
 		//	If already logged in, send to home page.
-		if ($auth->isLoggedIn()) {
+		if ($authenticator->isLoggedIn()) {
 			$router->redirect('/');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/register.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/register.php';
 	}
 );
 
@@ -44,13 +44,13 @@ $collection->post(
  */
 $collection->put(
 	'/register',
-	function () use ($auth, $router) {
+	function () use ($authenticator, $router) {
 		//	If already logged in, send to home page.
-		if ($auth->isLoggedIn()) {
+		if ($authenticator->isLoggedIn()) {
 			$router->redirect('/');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/validateRegisterInputs.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/validateRegisterInputs.php';
 	}
 );
 
@@ -59,13 +59,13 @@ $collection->put(
  */
 $collection->post(
 	'/logout',
-	function () use ($auth, $router) {
+	function () use ($authenticator, $router) {
 		//	If not logged in, redirect to register page.
-		if (!$auth->isLoggedIn()) {
+		if (!$authenticator->isLoggedIn()) {
 			$router->redirect('/register');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/logout.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/logout.php';
 	}
 );
 
@@ -76,13 +76,13 @@ $collection->post(
  */
 $collection->get(
 	'/me/settings/email/new-request',
-	function () use ($auth, $router) {
+	function () use ($authenticator, $router) {
 		//	If not logged in, redirect to register page.
-		if (!$auth->isLoggedIn()) {
+		if (!$authenticator->isLoggedIn()) {
 			$router->redirect('/register');
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/requestEmailActivation.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/requestEmailActivation.php';
 	}
 );
 
@@ -94,13 +94,13 @@ $collection->get(
  */
 $collection->get(
 	'/c/email/activation',
-	function () use ($auth, $router) {
+	function () use ($authenticator, $router) {
 		//	If not logged in, redirect to login page.
-		if (!$auth->isLoggedIn()) {
+		if (!$authenticator->isLoggedIn()) {
 			$router->redirect('/login', true);
 		}
 
-		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Auth/activateEmail.php';
+		require $_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/activateEmail.php';
 	},
 	'email_activation'
 );

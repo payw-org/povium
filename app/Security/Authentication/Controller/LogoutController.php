@@ -6,23 +6,23 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Security\Auth\Controller;
+namespace Povium\Security\Authentication\Controller;
 
-use Povium\Security\Auth\Auth;
+use Povium\Security\Authentication\Authenticator;
 
 class LogoutController
 {
 	/**
-	 * @var Auth
+	 * @var Authenticator
 	 */
-	protected $auth;
+	protected $authenticator;
 
 	/**
-	 * @param Auth $auth
+	 * @param Authenticator $authenticator
 	 */
-	public function __construct(Auth $auth)
+	public function __construct(Authenticator $authenticator)
 	{
-		$this->auth = $auth;
+		$this->authenticator = $authenticator;
 	}
 
 	/**
@@ -34,11 +34,13 @@ class LogoutController
 	*/
 	public function logout()
 	{
-		$this->auth->initializeAuthStatus();
-		$this->auth->deleteCurrentAccessKey();
-		$this->auth->deleteCurrentAccessKeyRecord();
+		$this->authenticator->initializeAuthenticationStatus();
+		$this->authenticator->deleteCurrentAccessKey();
+		$this->authenticator->deleteCurrentAccessKeyRecord();
 
-		$session_manager = $this->auth->getSessionManager();
+		//	TODO : VISITOR로 권한 재부여
+
+		$session_manager = $this->authenticator->getSessionManager();
 		$session_manager->regenerateSessionID(false, true);
 	}
 }

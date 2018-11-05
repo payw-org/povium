@@ -6,17 +6,17 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-global $factory, $router, $auth;
+global $factory, $router, $authenticator;
 
 //	Receive email address by ajax
 # $email = json_decode(file_get_contents('php://input'), true)['email'];
 $email = '1000jaman@naver.com';
 
-$email_add_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailAddController');
+$email_add_controller = $factory->createInstance('\Povium\Security\Authentication\Controller\EmailAddController');
 $mail_sender = $factory->createInstance('\Povium\MailSender\ActivationMailSender');
 
-$current_user = $auth->getCurrentUser();
-$token = $auth->getRandomStringGenerator()->generateUUIDV4();
+$current_user = $authenticator->getCurrentUser();
+$token = $authenticator->getRandomStringGenerator()->generateUUIDV4();
 
 #	array(
 #		'err' => bool,

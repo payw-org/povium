@@ -6,12 +6,12 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Security\Auth\Controller;
+namespace Povium\Security\Authentication\Controller;
 
 use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 use Povium\Security\Validator\UserInfo\NameValidator;
 use Povium\Security\Validator\UserInfo\PasswordValidator;
-use Povium\Security\Auth\Auth;
+use Povium\Security\User\UserManager;
 
 class RegisterController
 {
@@ -36,29 +36,29 @@ class RegisterController
 	protected $passwordValidator;
 
 	/**
-	 * @var Auth
+	 * @var UserManager
 	 */
-	protected $auth;
+	protected $userManager;
 
 	/**
 	 * @param array               $config
 	 * @param ReadableIDValidator $readable_id_validator
 	 * @param NameValidator       $name_validator
 	 * @param PasswordValidator   $password_validator
-	 * @param Auth                $auth
+	 * @param UserManager		  $user_manager
 	 */
 	public function __construct(
 		array $config,
 		ReadableIDValidator $readable_id_validator,
 		NameValidator $name_validator,
 		PasswordValidator $password_validator,
-		Auth $auth
+		UserManager $user_manager
 	) {
 		$this->config = $config;
 		$this->readableIDValidator = $readable_id_validator;
 		$this->nameValidator = $name_validator;
 		$this->passwordValidator = $password_validator;
-		$this->auth = $auth;
+		$this->userManager = $user_manager;
 	}
 
 	/**
@@ -133,10 +133,8 @@ class RegisterController
 
 		/* Register processing */
 
-		$user_manager = $this->auth->getUserManager();
-
 		//	If failed to add user to database
-		if (!$user_manager->addRecord($readable_id, $name, $password)) {
+		if (!$this->userManager->addRecord($readable_id, $name, $password)) {
 			$return['msg'] = $this->config['msg']['registration_err'];
 
 			return $return;

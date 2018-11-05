@@ -6,12 +6,12 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Security\Auth\Controller;
+namespace Povium\Security\Authentication\Controller;
 
 use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 use Povium\Security\Validator\UserInfo\EmailValidator;
 use Povium\Security\Validator\UserInfo\PasswordValidator;
-use Povium\Security\Auth\Auth;
+use Povium\Security\Authentication\Authenticator;
 
 class LoginController
 {
@@ -36,29 +36,29 @@ class LoginController
 	protected $passwordValidator;
 
 	/**
-	 * @var Auth
+	 * @var Authenticator
 	 */
-	protected $auth;
+	protected $authenticator;
 
 	/**
 	 * @param array               $config
 	 * @param ReadableIDValidator $readable_id_validator
 	 * @param EmailValidator      $email_validator
 	 * @param PasswordValidator   $password_validator
-	 * @param Auth                $auth
+	 * @param Authenticator       $authenticator
 	 */
 	public function __construct(
 		array $config,
 		ReadableIDValidator $readable_id_validator,
 		EmailValidator $email_validator,
 		PasswordValidator $password_validator,
-		Auth $auth
+		Authenticator $authenticator
 	) {
 		$this->config = $config;
 		$this->readableIDValidator = $readable_id_validator;
 		$this->emailValidator = $email_validator;
 		$this->passwordValidator = $password_validator;
-		$this->auth = $auth;
+		$this->authenticator = $authenticator;
 	}
 
 	/**
@@ -112,7 +112,7 @@ class LoginController
 
 		/* Check if registered account */
 
-		$user_manager = $this->auth->getUserManager();
+		$user_manager = $this->authenticator->getUserManager();
 
 		//	Unregistered readable id
 		if (false === $user_id = $user_manager->getUserIDFromReadableID($identifier)) {
@@ -159,11 +159,11 @@ class LoginController
 
 		/* Login processing */
 
-		$session_manager = $this->auth->getSessionManager();
+		$session_manager = $this->authenticator->getSessionManager();
 		$session_manager->regenerateSessionID(true, true);
 
 		//	Error occurred issuing access key
-		if (!$this->auth->addAccessKey($user_id)) {
+		if (!$this->authenticator->addAccessKey($user_id)) {
 			$return['msg'] = $this->config['msg']['issuing_access_key_err'];
 
 			return $return;

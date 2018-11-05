@@ -1,13 +1,13 @@
 <?php
 /**
-* Authenticate the current user.
+* Authenticate the current client.
 * Issue access key and update it periodically.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Security\Auth;
+namespace Povium\Security\Authentication;
 
 use Povium\Generator\RandomStringGenerator;
 use Povium\Base\Http\Client;
@@ -15,7 +15,7 @@ use Povium\Security\User\UserManager;
 use Povium\Base\Http\Session\SessionManager;
 use Povium\Security\User\User;
 
-class Auth
+class Authenticator
 {
 	/**
 	* @var array
@@ -50,7 +50,7 @@ class Auth
 	protected $sessionManager;
 
 	/**
-	 * Whether user is logged in
+	 * Whether client is logged in
 	 *
 	 * @var bool
 	 */
@@ -126,18 +126,18 @@ class Auth
 	 *
 	 * @return null
 	 */
-	public function initializeAuthStatus()
+	public function initializeAuthenticationStatus()
 	{
 		$this->isLoggedIn = false;
 		$this->currentUser = null;
 	}
 
 	/**
-	 * Check if user is logged in.
+	 * Check if client is logged in.
 	 * If access key is valid, return true.
 	 * After verifying that this is a valid access key, update it.
 	 *
-	 * @return bool		Whether user is logged in
+	 * @return bool		Whether client is logged in
 	 */
 	public function isLoggedIn()
 	{
@@ -165,7 +165,7 @@ class Auth
 			if ($this->isLoggedIn) {
 				$current_user_id = $this->getCurrentUserID();
 
-				//	Not logged in user
+				//	Not logged in
 				if ($current_user_id === false) {
 					return false;
 				}
@@ -194,7 +194,7 @@ class Auth
 		);
 		$stmt->execute([$session_id]);
 
-		//	Not logged in user
+		//	Not logged in
 		if ($stmt->rowCount() == 0) {
 			return false;
 		}
@@ -287,7 +287,7 @@ class Auth
 		);
 		$stmt->execute([$session_id]);
 
-		//	Not logged in user
+		//	Not logged in
 		if ($stmt->rowCount() == 0) {
 			$this->deleteCurrentAccessKey();
 			$this->sessionManager->regenerateSessionID(false);

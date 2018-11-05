@@ -6,7 +6,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Security\Auth\Controller;
+namespace Povium\Security\Authentication\Controller;
 
 use Povium\Security\Validator\UserInfo\EmailValidator;
 use Povium\Security\User\User;

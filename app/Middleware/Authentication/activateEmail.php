@@ -10,7 +10,7 @@
 use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
 
-global $factory, $auth, $router;
+global $factory, $authenticator, $router;
 
 //	Fetch query params
 if (!isset($_GET['token'])) {
@@ -19,9 +19,9 @@ if (!isset($_GET['token'])) {
 
 $token = $_GET['token'];
 
-$email_activation_controller = $factory->createInstance('\Povium\Security\Auth\Controller\EmailActivationController', $auth);
+$email_activation_controller = $factory->createInstance('\Povium\Security\Authentication\Controller\EmailActivationController');
 
-$current_user = $auth->getCurrentUser();
+$current_user = $authenticator->getCurrentUser();
 
 #	array(
 #		'err' => bool,

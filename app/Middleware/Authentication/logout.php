@@ -6,9 +6,9 @@
 * @copyright	2018 DesignAndDevelop
 */
 
-global $factory, $auth;
+global $factory, $authenticator;
 
-$logout_controller = $factory->createInstance('\Povium\Security\Auth\Controller\LogoutController', $auth);
+$logout_controller = $factory->createInstance('\Povium\Security\Authentication\Controller\LogoutController', $authenticator);
 
 $logout_controller->logout();
 

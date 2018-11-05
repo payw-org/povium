@@ -1,6 +1,6 @@
 <?php
 /**
-* Config array for authentication
+* Config array for Authenticator
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop

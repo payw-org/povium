@@ -6,7 +6,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-global $factory, $auth;
+global $factory, $authenticator;
 
 //	Receive register inputs by ajax
 $register_inputs = json_decode(file_get_contents('php://input'), true);
@@ -14,7 +14,7 @@ $readable_id = $register_inputs['readable_id'];
 $name = $register_inputs['name'];
 $password = $register_inputs['password'];
 
-$register_controller = $factory->createInstance('\Povium\Security\Auth\Controller\RegisterController', $auth);
+$register_controller = $factory->createInstance('\Povium\Security\Authentication\Controller\RegisterController', $authenticator);
 $readable_id_validator = $register_controller->getReadableIDValidator();
 $name_validator = $register_controller->getNameValidator();
 $password_validator = $register_controller->getPasswordValidator();

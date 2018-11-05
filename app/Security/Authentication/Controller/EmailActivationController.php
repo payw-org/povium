@@ -6,9 +6,9 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Security\Auth\Controller;
+namespace Povium\Security\Authentication\Controller;
 
-use Povium\Security\Auth\Auth;
+use Povium\Security\User\UserManager;
 use Povium\Security\User\User;
 
 class EmailActivationController
@@ -26,23 +26,23 @@ class EmailActivationController
 	protected $conn;
 
 	/**
-	 * @var Auth
+	 * @var UserManager
 	 */
-	protected $auth;
+	protected $userManager;
 
 	/**
 	 * @param array          $config
 	 * @param \PDO           $conn
-	 * @param Auth           $auth
+	 * @param UserManager	 $user_manager
 	 */
 	public function __construct(
 		array $config,
 		\PDO $conn,
-		Auth $auth
+		UserManager $user_manager
 	) {
 		$this->config = $config;
 		$this->conn = $conn;
-		$this->auth = $auth;
+		$this->userManager = $user_manager;
 	}
 
 	/**
@@ -116,7 +116,7 @@ class EmailActivationController
 			'is_verified' => true,
 			'email' => $record['email']
 		);
-		$this->auth->getUserManager()->updateRecord($record['user_id'], $params);
+		$this->userManager->updateRecord($record['user_id'], $params);
 
 		$stmt = $this->conn->prepare(
 			"DELETE FROM {$this->config['email_requesting_activation_table']}

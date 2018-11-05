@@ -24,9 +24,9 @@ $collection->get(
  */
 $collection->get(
 	'/login',
- 	function () use ($auth, $router, $template_engine) {
+ 	function () use ($authenticator, $router, $template_engine) {
 		//	If already logged in, send to home page.
-		if ($auth->isLoggedIn()) {
+		if ($authenticator->isLoggedIn()) {
 			$router->redirect('/');
 		}
 
@@ -55,9 +55,9 @@ $collection->get(
  */
 $collection->get(
 	'/register',
- 	function () use ($auth, $router, $template_engine) {
+ 	function () use ($authenticator, $router, $template_engine) {
 		//	If already logged in, send to home page.
-		if ($auth->isLoggedIn()) {
+		if ($authenticator->isLoggedIn()) {
 			$router->redirect('/');
 		}
 
@@ -100,11 +100,11 @@ $collection->get(
  */
 $collection->get(
 	'/@{readable_id:.+}',
- 	function ($readable_id) use ($auth, $template_engine) {
+ 	function ($readable_id) use ($authenticator, $template_engine) {
 		$readable_id = strtolower($readable_id);
 
 		//	Nonexistent readable id.
-		if (false === $user_id = $auth->getUserManager()->getUserIDFromReadableID($readable_id)) {
+		if (false === $user_id = $authenticator->getUserManager()->getUserIDFromReadableID($readable_id)) {
 			throw new NotFoundHttpException();
 		}
 
@@ -136,9 +136,9 @@ $collection->get(
  */
 $collection->get(
 	'/me/settings/email',
-	function () use ($auth, $router, $template_engine) {
+	function () use ($authenticator, $router, $template_engine) {
 		//	If not logged in, redirect to register page.
-		if (!$auth->isLoggedIn()) {
+		if (!$authenticator->isLoggedIn()) {
 			$router->redirect('/register', true);
 		}
 

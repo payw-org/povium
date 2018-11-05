@@ -10,6 +10,11 @@ namespace Povium\Base\Database;
 
 class DBBuilder
 {
+	/* Database build options */
+	const NOT_BUILD = 0;
+	const CREATE = 1;
+	const DROP_AND_CREATE = 2;
+
 	/**
 	 * @var array
 	 */
@@ -43,14 +48,14 @@ class DBBuilder
 	public function build($build_option)
 	{
 		switch ($build_option) {
-			case DB_BUILD_OPTION['NOT_BUILD']:
+			case self::NOT_BUILD:
 
 				return;
-			case DB_BUILD_OPTION['CREATE']:
+			case self::CREATE:
 				$drop = false;
 
 				break;
-			case DB_BUILD_OPTION['DROP_AND_CREATE']:
+			case self::DROP_AND_CREATE:
 				$drop = true;
 
 				break;

@@ -28,12 +28,12 @@ return [
 
 	'\Povium\MailSender\ActivationMailSender' => '\Povium\MailSender\Factory\ActivationMailSenderFactory',
 
-	'\Povium\Security\Auth\Auth' => '\Povium\Security\Auth\Factory\AuthFactory',
-	'\Povium\Security\Auth\Controller\LoginController' => '\Povium\Security\Auth\Factory\LoginControllerFactory',
-	'\Povium\Security\Auth\Controller\LogoutController' => '\Povium\Security\Auth\Factory\LogoutControllerFactory',
-	'\Povium\Security\Auth\Controller\RegisterController' => '\Povium\Security\Auth\Factory\RegisterControllerFactory',
-	'\Povium\Security\Auth\Controller\EmailAddController' => '\Povium\Security\Auth\Factory\EmailAddControllerFactory',
-	'\Povium\Security\Auth\Controller\EmailActivationController' => '\Povium\Security\Auth\Factory\EmailActivationControllerFactory',
+	'\Povium\Security\Authentication\Authenticator' => '\Povium\Security\Authentication\Factory\AuthenticatorFactory',
+	'\Povium\Security\Authentication\Controller\LoginController' => '\Povium\Security\Authentication\Factory\LoginControllerFactory',
+	'\Povium\Security\Authentication\Controller\LogoutController' => '\Povium\Security\Authentication\Factory\LogoutControllerFactory',
+	'\Povium\Security\Authentication\Controller\RegisterController' => '\Povium\Security\Authentication\Factory\RegisterControllerFactory',
+	'\Povium\Security\Authentication\Controller\EmailAddController' => '\Povium\Security\Authentication\Factory\EmailAddControllerFactory',
+	'\Povium\Security\Authentication\Controller\EmailActivationController' => '\Povium\Security\Authentication\Factory\EmailActivationControllerFactory',
 
 	'\Povium\Security\Encoder\PasswordEncoder' => '\Povium\Security\Encoder\Factory\PasswordEncoderFactory',
 
