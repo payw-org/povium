@@ -96,7 +96,7 @@ class TempPostCreationController
 			return $return;
 		}
 
-		/* Validate temp post componenets */
+		/* Validate temp post components */
 
 		//	If title is set
 		if (!empty($title)) {
