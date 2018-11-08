@@ -6,6 +6,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
+use Povium\Security\Authorization\Authorizer;
 use Povium\Base\Http\Exception\NotFoundHttpException;
 
 /**
@@ -24,11 +25,10 @@ $collection->get(
  */
 $collection->get(
 	'/login',
- 	function () use ($authenticator, $router, $template_engine) {
-		//	If already logged in, send to home page.
-		if ($authenticator->isLoggedIn()) {
-			$router->redirect('/');
-		}
+ 	function () use ($router, $template_engine) {
+		if ($GLOBALS['authority_level'] >= Authorizer::USER) {
+		    $router->redirect('/');
+        }
 
 		//	If referer is register page
 		if (
@@ -51,15 +51,14 @@ $collection->get(
 );
 
 /**
- * Regsiter Page
+ * Register Page
  */
 $collection->get(
 	'/register',
- 	function () use ($authenticator, $router, $template_engine) {
-		//	If already logged in, send to home page.
-		if ($authenticator->isLoggedIn()) {
-			$router->redirect('/');
-		}
+ 	function () use ($router, $template_engine) {
+        if ($GLOBALS['authority_level'] >= Authorizer::USER) {
+            $router->redirect('/');
+        }
 
 		//	If referer is login page
 		if (
@@ -134,11 +133,10 @@ $collection->get(
  */
 $collection->get(
 	'/me/settings/email',
-	function () use ($authenticator, $router, $template_engine) {
-		//	If not logged in, redirect to register page.
-		if (!$authenticator->isLoggedIn()) {
-			$router->redirect('/register', true);
-		}
+	function () use ($router, $template_engine) {
+		if ($GLOBALS['authority_level'] < Authorizer::USER) {
+		    $router->redirect('/register', true);
+        }
 
 		//	Render page
 	}

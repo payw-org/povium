@@ -8,7 +8,7 @@
 
 namespace Povium\Publication\Post;
 
-class PostFrame
+abstract class PostFrame
 {
 	/**
 	 * @var int

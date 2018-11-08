@@ -10,6 +10,7 @@ namespace Povium\Security\Authentication\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Security\Authentication\Authenticator;
 
 class LoginControllerFactory extends AbstractChildFactory
 {

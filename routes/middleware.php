@@ -6,6 +6,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
+use Povium\Security\Authorization\Authorizer;
 use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
 
@@ -14,11 +15,10 @@ use Povium\Base\Http\Exception\GoneHttpException;
  */
 $collection->post(
 	'/login',
-	function () use ($authenticator, $router) {
-		//	If already logged in, send to home page.
-		if ($authenticator->isLoggedIn()) {
-			$router->redirect('/');
-		}
+	function () use ($router) {
+		if ($GLOBALS['authority_level'] >= Authorizer::USER) {
+            $router->redirect('/');
+        }
 
 		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/login.php');
 	}
@@ -29,11 +29,10 @@ $collection->post(
  */
 $collection->post(
 	'/register',
-	function () use ($authenticator, $router) {
-		//	If already logged in, send to home page.
-		if ($authenticator->isLoggedIn()) {
-			$router->redirect('/');
-		}
+	function () use ($router) {
+		if ($GLOBALS['authority_level'] >= Authorizer::USER) {
+		    $router->redirect('/');
+        }
 
 		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/register.php');
 	}
@@ -44,11 +43,10 @@ $collection->post(
  */
 $collection->put(
 	'/register',
-	function () use ($authenticator, $router) {
-		//	If already logged in, send to home page.
-		if ($authenticator->isLoggedIn()) {
-			$router->redirect('/');
-		}
+	function () use ($router) {
+        if ($GLOBALS['authority_level'] >= Authorizer::USER) {
+            $router->redirect('/');
+        }
 
 		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/validateRegisterInputs.php');
 	}
@@ -59,11 +57,10 @@ $collection->put(
  */
 $collection->post(
 	'/logout',
-	function () use ($authenticator, $router) {
-		//	If not logged in, redirect to register page.
-		if (!$authenticator->isLoggedIn()) {
-			$router->redirect('/register');
-		}
+	function () use ($router) {
+		if ($GLOBALS['authority_level'] < Authorizer::USER) {
+		    $router->redirect('/register');
+        }
 
 		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/logout.php');
 	}
@@ -76,11 +73,10 @@ $collection->post(
  */
 $collection->get(
 	'/me/settings/email/new-request',
-	function () use ($authenticator, $router) {
-		//	If not logged in, redirect to register page.
-		if (!$authenticator->isLoggedIn()) {
-			$router->redirect('/register');
-		}
+	function () use ($router) {
+        if ($GLOBALS['authority_level'] < Authorizer::USER) {
+            $router->redirect('/register');
+        }
 
 		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/requestEmailActivation.php');
 	}
@@ -94,11 +90,10 @@ $collection->get(
  */
 $collection->get(
 	'/c/email/activation',
-	function () use ($authenticator, $router) {
-		//	If not logged in, redirect to login page.
-		if (!$authenticator->isLoggedIn()) {
-			$router->redirect('/login', true);
-		}
+	function () use ($router) {
+		if ($GLOBALS['authority_level'] < Authorizer::USER) {
+		    $router->redirect('/login', true);
+        }
 
 		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/activateEmail.php');
 	},

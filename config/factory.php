@@ -35,6 +35,8 @@ return [
 	'\Povium\Security\Authentication\Controller\EmailAddController' => '\Povium\Security\Authentication\Factory\EmailAddControllerFactory',
 	'\Povium\Security\Authentication\Controller\EmailActivationController' => '\Povium\Security\Authentication\Factory\EmailActivationControllerFactory',
 
+    '\Povium\Security\Authorization\Authorizer' => '\Povium\Security\Authorization\Factory\AuthorizerFactory',
+
 	'\Povium\Security\Encoder\PasswordEncoder' => '\Povium\Security\Encoder\Factory\PasswordEncoderFactory',
 
 	'\Povium\Security\User\UserManager' => '\Povium\Security\User\Factory\UserManagerFactory',
