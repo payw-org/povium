@@ -852,8 +852,20 @@ export default class EventManager {
 					}					
 				} else if (currentNode.type === "blockquote") {
 					if (state === 4) {
+						let originalType = currentNode.type
+						let originalParentType = currentNode.parentType
 						this.nodeMan.transformNode(currentNode, "p")
 						this.selMan.setRange(currentRange)
+						this.undoMan.record({
+							type: "transform",
+							targetNode: currentNode,
+							previousType: originalType,
+							previousParentType: originalParentType,
+							nextType: "p",
+							nextParentType: null,
+							previousRange: currentRange,
+							nextRange: currentRange
+						})
 						return
 					} else {
 						newNode = this.nodeMan.createNode("p")
@@ -910,8 +922,20 @@ export default class EventManager {
 			if (state === 1) {
 
 				if (currentNode.type === "li") {
+					let originalType = currentNode.type
+					let originalParentType = currentNode.parentType
 					this.nodeMan.transformNode(currentNode, "p")
 					this.selMan.setRange(currentRange)
+					this.undoMan.record({
+						type: "transform",
+						targetNode: currentNode,
+						previousType: originalType,
+						previousParentType: originalParentType,
+						nextType: "p",
+						nextParentType: null,
+						previousRange: currentRange,
+						nextRange: currentRange
+					})
 					return
 				}
 
@@ -964,8 +988,20 @@ export default class EventManager {
 			} else if (state === 4) {
 
 				if (currentNode.type === "li") {
+					let originalType = currentNode.type
+					let originalParentType = currentNode.parentType
 					this.nodeMan.transformNode(currentNode, "p")
 					this.selMan.setRange(currentRange)
+					this.undoMan.record({
+						type: "transform",
+						targetNode: currentNode,
+						previousType: originalType,
+						previousParentType: originalParentType,
+						nextType: "p",
+						nextParentType: null,
+						previousRange: currentRange,
+						nextRange: currentRange
+					})
 					return
 				}
 
