@@ -80,6 +80,17 @@ export default class PopTool {
 		if (document.queryCommandState("underline")) isApplied.push("underline")
 		if (document.queryCommandState("strikethrough")) isApplied.push("strikethrough")
 
+		if (currentNode.textElement) {
+			let textAlign = currentNode.textElement.style.textAlign
+			if (textAlign === "" || textAlign === "left") {
+				isApplied.push("alignleft")
+			} else if (textAlign === "center") {
+				isApplied.push("aligncenter")
+			} else if (textAlign === "right") {
+				isApplied.push("alignright")
+			}
+		}
+
 		if (
 			currentNode.type === "li"
 		) {
@@ -198,6 +209,9 @@ export default class PopTool {
 				if (ia === "italic") this.pt.querySelector("#pt-italic").classList.add("is-applied")
 				if (ia === "underline") this.pt.querySelector("#pt-underline").classList.add("is-applied")
 				if (ia === "strikethrough") this.pt.querySelector("#pt-strike").classList.add("is-applied")
+				if (ia === "alignleft") this.pt.querySelector("#pt-alignleft").classList.add("is-applied")
+				if (ia === "aligncenter") this.pt.querySelector("#pt-alignmiddle").classList.add("is-applied")
+				if (ia === "alignright") this.pt.querySelector("#pt-alignright").classList.add("is-applied")
 			})
 		}
 
@@ -252,8 +266,9 @@ export default class PopTool {
 
 		tagName = tagName.toLowerCase()
 		let chunks = this.selMan.getAllNodesInSelection()
-		let range = this.selMan.getCurrentRange()
+		let currentRange = this.selMan.getCurrentRange()
 		let isAllAlreaySet = true
+		let actions = []
 		for (let i = 0; i < chunks.length; i++) {
 			if (!AT.transformable.includes(chunks[i].type)) {
 				continue
@@ -261,7 +276,19 @@ export default class PopTool {
 			if (chunks[i].type !== tagName) {
 				isAllAlreaySet = false
 				// chunks[i].transformTo(tagName)
+				let originalType = chunks[i].type
+				let originalParentType = chunks[i].parentType
 				this.nodeMan.transformNode(chunks[i], tagName)
+				actions.push({
+					type: "transform",
+					targetNode: chunks[i],
+					previousType: originalType,
+					previousParentType: originalParentType,
+					nextType: tagName,
+					nextParentType: null,
+					previousRange: currentRange,
+					nextRange: currentRange
+				})
 			}
 
 		}
@@ -269,11 +296,25 @@ export default class PopTool {
 		if (isAllAlreaySet) {
 			for (let i = 0; i < chunks.length; i++) {
 				// chunks[i].transformTo("p")
+				let originalType = chunks[i].type
+				let originalParentType = chunks[i].parentType
 				this.nodeMan.transformNode(chunks[i], "p")
+				actions.push({
+					type: "transform",
+					targetNode: chunks[i],
+					previousType: originalType,
+					previousParentType: originalParentType,
+					nextType: "p",
+					nextParentType: null,
+					previousRange: currentRange,
+					nextRange: currentRange
+				})
 			}
 		}
 
-		this.selMan.setRange(range)
+		this.selMan.setRange(currentRange)
+
+		this.undoMan.record(actions)
 
 	}
 
