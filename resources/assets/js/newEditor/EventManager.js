@@ -51,44 +51,41 @@ export default class EventManager {
 			// 	this.onSelectionChanged()
 			// }
 		})
-		window.addEventListener('mousedown', (e) => {
-			if (!e.target.closest("#poptool")) {
-				this.popTool.hidePopTool()
-				this.mouseDownStart = true
-			}
 
-		})
-		window.addEventListener('touchstart', (e) => {
-			if (!e.target.closest("#poptool")) {
-				this.popTool.hidePopTool()
-				this.mouseDownStart = true
-			}
+		let eventNames
 
+		eventNames = ["mousedown", "touchstart"]
+		eventNames.forEach((eventName) => {
+			window.addEventListener(eventName, e => {
+				if (!e.target.closest("#poptool")) {
+					this.popTool.hidePopTool()
+					this.mouseDownStart = true
+				}
+			})
 		})
 
-		this.editSession.editorBody.addEventListener('mouseup', (e) => {
-			this.onSelectionChanged()
+		eventNames = ["mouseup", "touchend"]
+		eventNames.forEach((eventName) => {
+			this.editSession.editorBody.addEventListener(eventName, (e) => {
+				this.onSelectionChanged()
+			})
 		})
-		this.editSession.editorBody.addEventListener('touchend', (e) => {
-			this.onSelectionChanged()
+
+		eventNames = ["mouseup", "touchend"]
+		eventNames.forEach(eventName => {
+			window.addEventListener(eventName, (e) => {
+				if (this.mouseDownStart && !e.target.closest("#editor-body")) {
+					this.mouseDownStart = false
+					this.onSelectionChanged()
+				}
+			})
 		})
+
 		this.editSession.editorBody.addEventListener('dragstart', (e) => {
 			e.preventDefault()
 		})
 		this.editSession.editorBody.addEventListener('drop', (e) => {
 			e.preventDefault()
-		})
-		window.addEventListener('mouseup', (e) => {
-			if (this.mouseDownStart) {
-				this.mouseDownStart = false
-				this.onSelectionChanged()
-			}
-		})
-		window.addEventListener('touchend', (e) => {
-			if (this.mouseDownStart) {
-				this.mouseDownStart = false
-				this.onSelectionChanged()
-			}
 		})
 
 
@@ -140,9 +137,11 @@ export default class EventManager {
 		})
 
 		this.editSession.editorBody.addEventListener('keypress', (e) => {
-
 			this.onKeyPress(e)
+		})
 
+		this.editSession.editorBody.addEventListener("input", (e) => {
+			this.onInput(e)
 		})
 
 
@@ -264,8 +263,7 @@ export default class EventManager {
 		this.editSession.editorBody.addEventListener("mouseup", (e) => {
 			setTimeout(() => {
 				this.popTool.togglePopTool()
-			}, 0);
-
+			}, 0)
 		})
 
 		this.editSession.editorBody.addEventListener("keyup", (e) => {
@@ -297,8 +295,6 @@ export default class EventManager {
 		this.popTool.pt.querySelector("#pt-alignright").addEventListener('click', (e) => { this.popTool.align("right") })
 
 		this.popTool.pt.querySelector("#pt-title-pack").addEventListener('click', (e) => {
-
-			console.log("here")
 
 			this.popTool.pt.querySelector(".top-categories").classList.add("hidden")
 			this.popTool.pt.querySelector(".title-style").classList.remove("hidden")
@@ -419,7 +415,8 @@ export default class EventManager {
 			window.getSelection().addRange(originalRange)
 			this.postEditor.selManager.removeSelection("start")
 
-			let originalCurrentNode = this.postEditor.selManager.getNodeInSelection()
+			// let originalCurrentNode = this.postEditor.selManager.getNodeInSelection()
+			let originalCurrentNode = this.selMan.getno
 			let lastPastedNode = originalCurrentNode
 
 			var node, travelNode, nextNode
@@ -558,8 +555,11 @@ export default class EventManager {
 	}
 
 
+	/**
+	 * @param {KyboardEvent} e
+	 */
 	onKeyPress(e) {
-		// console.log("keypress")
+
 	}
 
 	/**
@@ -568,19 +568,23 @@ export default class EventManager {
 	*/
 	onKeyDown(e) {
 
-		let keyCode = e.which
+		// console.log("keydown")
+
+		let keyCode = e.keyCode
 		let physKeyCode = e.code
-		// console.log(keyCode, physKeyCode)
 
 		let currentRange = this.selMan.getCurrentRange()
 		let currentNode = this.selMan.getCurrentNode()
 		if (!currentNode) return
 
+		// This flag determines the availability of
+		// changing text.
 		let enableTextChangeRecord = false
 
 		let key = "char"
-		let validCharKey
-		validCharKey =
+		// When press a key where it puts any space inside the editor,
+		// this variable is true.
+		let validCharKey =
 			((keyCode > 47 && keyCode < 58) || // number keys
 				keyCode === 32 || // spacebar & return key(s) (if you want to allow carriage returns)
 				(keyCode > 64 && keyCode < 91) || // letter keys
@@ -590,29 +594,22 @@ export default class EventManager {
 				keyCode === 229)
 			&& !e.ctrlKey && !e.metaKey
 
-		// validCharKey =
-		// 	(physKeyCode === "KeyA" || physKeyCode === "KeyB" || physKeyCode === "KeyC" || physKeyCode === "KeyD" ||
-		// 	physKeyCode === "KeyE" || physKeyCode === "KeyF" || physKeyCode === "KeyG" || physKeyCode === "KeyH" ||
-		// 	physKeyCode === "KeyI" || physKeyCode === "KeyJ" || physKeyCode === "KeyK" || physKeyCode === "KeyL" ||
-		// 	physKeyCode === "KeyM" || physKeyCode === "KeyN" || physKeyCode === "KeyO" || physKeyCode === "KeyP" ||
-		// 	physKeyCode === "KeyQ" || physKeyCode === "KeyR" || physKeyCode === "KeyS" || physKeyCode === "KeyT" ||
-		// 	physKeyCode === "KeyU" || physKeyCode === "KeyV" || physKeyCode === "KeyW" || physKeyCode === "KeyX" ||
-		// 	physKeyCode === "KeyY" || physKeyCode === "KeyZ" ||
-		// 	physKeyCode === "Digit0" || physKeyCode === "Digit1" || physKeyCode === "Digit2" || physKeyCode === "Digit3" ||
-		// 	physKeyCode === "Digit4" || physKeyCode === "Digit5" || physKeyCode === "Digit6" || physKeyCode === "Digit7" ||
-		// 	physKeyCode === "Digit8" || physKeyCode === "Digit9" ||
-		// 	physKeyCode === "Numpad0" || physKeyCode === "Numpad1" || physKeyCode === "Numpad2" || physKeyCode === "Numpad3" ||
-		// 	physKeyCode === "Numpad4" || physKeyCode === "Numpad5" || physKeyCode === "Numpad6" || physKeyCode === "Numpad7" ||
-		// 	physKeyCode === "Numpad8" || physKeyCode === "Numpad9" ||
-		// 	physKeyCode === "NumpadDecimal" || physKeyCode === "NumpadDivide" || physKeyCode === "NumpadMultiply" ||
-		// 	physKeyCode === "NumpadSubtract" || physKeyCode === "NumpadAdd" ||
-		// 	physKeyCode === "Backquote" || physKeyCode === "Minus" || physKeyCode === "Equal" || physKeyCode === "Backslash" ||
-		// 	physKeyCode === "BracketLeft" || physKeyCode === "BracketRight" || physKeyCode === "Semicolon" || physKeyCode === "Quote" ||
-		// 	physKeyCode === "Comma" || physKeyCode === "Period" || physKeyCode === "Slash" ||
-		// 	physKeyCode === "Space")
-		// 	&& !e.ctrlKey
-
+		// Backspace key (delete on macOS)
 		if (keyCode === 8) {
+
+			setTimeout(() => {
+				this.nodeMan.normalize(currentNode.textElement)
+				if (currentNode.textElement.textContent.length === 0) {
+					let brs = currentNode.textElement.querySelectorAll("br")
+					if (brs.length > 1) {
+						for (let i = 0; i < brs.length - 1; i++) {
+							brs[i].parentNode.removeChild(brs[i])
+						}
+					} else if (brs.length === 0) {
+						currentNode.textElement.appendChild(document.createElement("br"))
+					}
+				}
+			}, 1)
 
 			if (
 				currentRange &&
@@ -626,11 +623,7 @@ export default class EventManager {
 				this.onPressBackspace(e)
 			}
 
-			// Backspace
-			// this.postEditor.selManager.backspace(e)
-			// this.onPressBackspace(e)
-
-		} else if (keyCode === 46) {
+		} else if (keyCode === 46) { // Delete key (fn + delete on macOS)
 
 			if (
 				currentRange &&
@@ -644,13 +637,13 @@ export default class EventManager {
 				this.onPressDelete(e)
 			}
 
-		} else if (keyCode === 13) {
+		} else if (keyCode === 13) { // Enter key (return on macOS)
 
 			// Enter(Return)
 			e.preventDefault()
 			this.onPressEnter(e)
 
-		} else if (keyCode === 90 && e.ctrlKey) {
+		} else if (keyCode === 90 && e.ctrlKey) { // cmd + z (deprecated)
 
 			// e.preventDefault()
 			// this.ssManager.undo()
@@ -660,15 +653,57 @@ export default class EventManager {
 		if (validCharKey || enableTextChangeRecord) {
 
 			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
-				this.postEditor.selManager.removeSelection("backspace", true)
-				this.postEditor.selManager.backspace(document.createEvent("KeyboardEvent"), true)
+				this.selMan.removeSelection("backspace")
 			}
 
 			this.charKeyDownLocked = true
 
+			let originalContents = this.editSession.currentState.textHTML
+			let originalRange = this.editSession.currentState.range
+			let modifiedContents, newRange
+			setTimeout(() => {
+				modifiedContents = currentNode.textElement.innerHTML
+				newRange = this.selMan.getCurrentRange()
+	
+				let latestAction = this.undoMan.getLatestAction()
+				if (
+					latestAction &&
+					latestAction.type === "textChange" &&
+					latestAction.key === key &&
+					(keyCode !== 32 && physKeyCode !== "Space")
+				) {
+					latestAction.nextHTML = modifiedContents
+					latestAction.nextRange = newRange
+				} else {
+					this.undoMan.record({
+						type: "textChange",
+						previousHTML: originalContents,
+						nextHTML: modifiedContents,
+						targetNode: currentNode,
+						previousRange: originalRange,
+						nextRange: newRange,
+						key: key
+					})
+				}
+			}, 1)
+
 		} else {
 
 		}
+
+		// Image block controlling
+		setTimeout(() => {
+			if (currentNode.type === "image") {
+				if (currentNode.getTextContent() === "") {
+					currentNode.element.classList.remove("caption-enabled")
+				} else {
+					currentNode.element.classList.add("caption-enabled")
+				}
+			}
+		}, 1)
+
+
+
 
 	}
 
@@ -677,6 +712,7 @@ export default class EventManager {
 	 * @param {InputEvent} e
 	 */
 	onInput(e) {
+
 
 	}
 
@@ -688,8 +724,8 @@ export default class EventManager {
 
 		// console.log("keyup")
 
-		this.keyCode = e.which
-		this.physKeyCode = e.code
+		let keyCode = e.keyCode
+		let physKeyCode = e.code
 
 		let currentRange = this.selMan.getCurrentRange()
 
@@ -698,88 +734,56 @@ export default class EventManager {
 		if (!currentNode) {
 			return
 		}
-		let br = currentNode.textElement.querySelector("br")
-		if (currentNode && currentNode.textElement.textContent !== "" && br) {
-
-			console.log('removed br')
-			currentNode.textElement.removeChild(br)
-
-		} else if (currentNode && currentNode.textElement.textContent === "" && !br) {
-
-			currentNode.textElement.appendChild(document.createElement("br"))
-
-		}
 
 		// Image block controlling
 		if (currentNode.type === "FIGURE") {
-
 			if (currentNode.textContent === "") {
-
 				currentNode.dom.classList.remove("caption-enabled")
-
 			} else {
-
 				currentNode.dom.classList.add("caption-enabled")
-
 			}
-
 		}
 
 
 		// Generates a list when types "- " or "1. "
-
 		if (
-			currentNode && currentNode.getTextContent().match(/^- /) && AT.isParagraph(currentNode.type) ||
-			currentNode && currentNode.getTextContent().match(/^1. /) && AT.isParagraph(currentNode.type)
+			keyCode === 32 &&
+			AT.isParagraph(currentNode.type) &&
+			currentNode &&
+			(currentNode.getTextContent().match(/^- /) ||
+			currentNode.getTextContent().match(/^1\. /))
 		) {
+			console.log("here")
 			let parentType = "ul"
-			if (currentNode.getTextContent().match(/^1. /)) {
+			if (currentNode.getTextContent().match(/^1\. /)) {
 				parentType = "ol"
 			}
-			this.nodeMan.transformNode(currentNode, "li", true, parentType)
-			currentNode.textElement.innerHTML = currentNode.textElement.innerHTML.replace(/^- /, "")
-			currentNode.textElement.innerHTML = currentNode.textElement.innerHTML.replace(/^1. /, "")
+			let originalType = currentNode.type
+			let originalParentType = currentNode.parentType
+			this.nodeMan.transformNode(currentNode, "li", parentType)
 			currentNode.fixEmptiness()
-			this.selMan.setRange(this.selMan.createRange(currentNode, 0, currentNode, 0))
+			let newRange = this.selMan.createRange(currentNode, 0, currentNode, 0)
+			this.selMan.setRange(newRange)
+			this.undoMan.record({
+				type: "transform",
+				targetNode: currentNode,
+				previousType: originalType,
+				previousParentType: originalParentType,
+				nextType: "li",
+				nextParentType: parentType,
+				previousRange: newRange,
+				nextRange: newRange
+			})
 		}
 
-		// if (currentNode && currentNode.textContent.match(/^- /) && this.postEditor.selManager.isParagraph(currentNode)) {
-
-		// 	let currentNode = this.postEditor.selManager.getNodeInSelection()
-
-		// 	// console.log(currentNode.textContent.match(/^- /))
-
-		// 	currentNode.innerHTML = currentNode.innerHTML.replace(/^- /, "")
-
-		// 	this.postEditor.selManager.list("ul")
-
-		// 	if (this.postEditor.selManager.isTextEmptyNode(currentNode)) {
-		// 		currentNode.innerHTML = "<br>"
-		// 	}
-
-		// 	this.postEditor.selManager.setCursorAt(currentNode, 0)
-
-		// } else if (currentNode && currentNode.textContent.match(/^1\. /) && this.postEditor.selManager.isParagraph(currentNode)) {
-
-		// 	let currentNode = this.postEditor.selManager.getNodeInSelection()
-
-		// 	// console.log(currentNode.textContent.match(/^- /))
-
-		// 	currentNode.innerHTML = currentNode.innerHTML.replace(/^1\. /, "")
-
-		// 	this.postEditor.selManager.list("ol")
-
-		// 	if (this.postEditor.selManager.isTextEmptyNode(currentNode)) {
-		// 		currentNode.innerHTML = "<br>"
-		// 	}
-
-		// 	this.postEditor.selManager.setCursorAt(currentNode, 0)
-
-		// }
+		
 
 	}
 
-	onPressEnter(e) {
+	/**
+	 * @param {KeyboardEvent} e
+	 */
+	onPressEnter(e, finalAction = false) {
 
 		e.preventDefault()
 
@@ -798,26 +802,85 @@ export default class EventManager {
 
 				let newNode = this.nodeMan.createNode(currentNode.type)
 				this.nodeMan.insertChildBefore(newNode, currentNode)
+				this.undoMan.record({
+					type: "insert",
+					targetNode: newNode,
+					nextNode: currentNode,
+					previousRange: currentRange,
+					nextRange: currentRange,
+					finalAction: finalAction
+				})
 
 			} else if (state === 2) {
 
-				// this.nodeMan.splitElementNode3()
-				this.nodeMan.splitNode()
+				let newNode = this.nodeMan.splitNode()
+				let newRange = this.selMan.createRange(newNode, 0, newNode, 0)
+				this.selMan.setRange(newRange)
+				this.undoMan.record({
+					type: "split",
+					debris: currentNode.textElement.innerHTML,
+					targetNodes: [currentNode, newNode],
+					previousRange: currentRange,
+					nextRange: newRange,
+					finalAction: finalAction
+				})
 
 			} else if (state === 3 || state === 4) {
 
-				console.log("3 or 4")
-
-				let newNode = this.nodeMan.createNode("p")
-				this.nodeMan.insertChildBefore(newNode, currentNode.nextSibling)
+				let newNode
+				if (currentNode.type === "li") {
+					if (state === 3) {
+						newNode = this.nodeMan.createNode("LI", {
+							parentType: currentNode.parentType
+						})
+					} else if (state === 4) {
+						let originalType = currentNode.type
+						let originalParentType = currentNode.parentType
+						this.nodeMan.transformNode(currentNode, "p")
+						this.selMan.setRange(currentRange)
+						this.undoMan.record({
+							type: "transform",
+							targetNode: currentNode,
+							previousType: originalType,
+							previousParentType: originalParentType,
+							nextType: "p",
+							nextParentType: null,
+							previousRange: currentRange,
+							nextRange: currentRange
+						})
+						return
+					}					
+				} else if (currentNode.type === "blockquote") {
+					if (state === 4) {
+						this.nodeMan.transformNode(currentNode, "p")
+						this.selMan.setRange(currentRange)
+						return
+					} else {
+						newNode = this.nodeMan.createNode("p")
+					}
+				} else {
+					newNode = this.nodeMan.createNode("p")
+				}
+				let nextNode = currentNode.nextSibling
+				this.nodeMan.insertChildBefore(newNode, nextNode)
 				let newRange = this.selMan.createRange(newNode, 0, newNode, 0)
 				this.selMan.setRange(newRange)
+				this.undoMan.record({
+					type: "insert",
+					targetNode: newNode,
+					nextNode: nextNode,
+					previousRange: currentRange,
+					nextRange: newRange,
+					finalAction: finalAction
+				})
 
 			}
 
 		} else {
 
 			// Not collapsed
+
+			this.selMan.removeSelection("enter")
 
 		}
 
@@ -826,7 +889,7 @@ export default class EventManager {
 	/**
 	 * @param {KeyboardEvent} e
 	 */
-	onPressBackspace(e) {
+	onPressBackspace(e, finalAction = false) {
 
 		let currentRange = this.selMan.getCurrentRange()
 		let currentNode = this.selMan.getCurrentNode()
@@ -839,30 +902,89 @@ export default class EventManager {
 
 			if (state === 1 || state === 4) {
 				e.preventDefault()
+				if (!AT.mergeable.includes(currentNode.type)) {
+					return
+				}
 			}
 
 			if (state === 1) {
 
-				let prvs = currentNode.previousSibling
-
-				if (prvs && prvs.getTextContent() === "") {
-					this.nodeMan.removeChild(prvs)
-				} else if (prvs) {
-					let prvsOrgLen = prvs.textElement.textContent.length
-					this.nodeMan.mergeNodes(prvs, currentNode)
-					let newRange = this.selMan.createRange(prvs, prvsOrgLen, prvs, prvsOrgLen)
-					this.selMan.setRange(newRange)
+				if (currentNode.type === "li") {
+					this.nodeMan.transformNode(currentNode, "p")
+					this.selMan.setRange(currentRange)
+					return
 				}
 
+				let prvs = currentNode.previousSibling
+
+				if (!AT.mergeable.includes(prvs.type)) {
+
+					this.nodeMan.removeChild(prvs)
+					this.undoMan.record({
+						type: "remove",
+						targetNode: prvs,
+						nextNode: currentNode,
+						previousRange: currentRange,
+						nextRange: currentRange,
+						finalAction: finalAction
+					})
+
+				} else {
+
+					if (prvs && prvs.getTextContent() === "") {
+						this.nodeMan.removeChild(prvs)
+						this.undoMan.record({
+							type: "remove",
+							targetNode: prvs,
+							nextNode: currentNode,
+							previousRange: currentRange,
+							nextRange: currentRange,
+							finalAction: finalAction
+						})
+					} else if (prvs) {
+						let prvsOrgLen = prvs.textElement.textContent.length
+						let originalContents = prvs.textElement.innerHTML
+						this.nodeMan.mergeNodes(prvs, currentNode)
+						let newRange = this.selMan.createRange(prvs, prvsOrgLen, prvs, prvsOrgLen)
+						this.selMan.setRange(newRange)
+						this.undoMan.record({
+							type: "merge",
+							targetNodes: [prvs, currentNode],
+							debris: originalContents,
+							previousRange: currentRange,
+							nextRange: newRange,
+							finalAction: finalAction
+						})
+					}
+
+				}
+
+
+
 			} else if (state === 4) {
+
+				if (currentNode.type === "li") {
+					this.nodeMan.transformNode(currentNode, "p")
+					this.selMan.setRange(currentRange)
+					return
+				}
 
 				let prvs = currentNode.previousSibling
 
 				if (prvs) {
 
+					let nextNode = currentNode.nextSibling
 					this.nodeMan.removeChild(currentNode)
 					let newRange = this.selMan.createRange(prvs, prvs.textElement.textContent.length, prvs, prvs.textElement.textContent.length)
 					this.selMan.setRange(newRange)
+					this.undoMan.record({
+						type: "remove",
+						targetNode: currentNode,
+						nextNode: nextNode,
+						previousRange: currentRange,
+						nextRange: newRange,
+						finalAction: finalAction
+					})
 
 				} else {
 
@@ -871,7 +993,9 @@ export default class EventManager {
 			}
 
 		} else {
-
+			// selection is not collapsed
+			e.preventDefault()
+			this.selMan.removeSelection()
 		}
 
 	}
@@ -889,28 +1013,210 @@ export default class EventManager {
 
 			if (state === 3 || state === 4) {
 				e.preventDefault()
+				if (!AT.mergeable.includes(currentNode.type)) {
+					return
+				}
 			}
 
 			if (state === 3) {
 
 				let next = currentNode.nextSibling
-				if (next && next.textElement.textContent === "") {
+				let nextNext = next.nextSibling
+
+				if (!AT.mergeable.includes(next.type)) {
+
 					this.nodeMan.removeChild(next)
-				} else if (next) {
-					let nextOrgLen = next.textElement.textContent.length
-					this.nodeMan.mergeNodes(currentNode, next)
-					this.selMan.setRange(currentRange)
+					this.undoMan.record({
+						type: "remove",
+						targetNode: next,
+						nextNode: nextNext,
+						previousRange: currentRange,
+						nextRange: currentRange
+					})
+
+				} else {
+
+					if (next && next.getTextContent() === "") {
+						this.nodeMan.removeChild(next)
+						this.undoMan.record({
+							type: "remove",
+							targetNode: next,
+							nextNode: nextNext,
+							previousRange: currentRange,
+							nextRange: currentRange
+						})
+					} else if (next) {
+	
+						let nextOrgLen = next.textElement.textContent.length
+						let originalContents = currentNode.textElement.innerHTML
+						this.nodeMan.mergeNodes(currentNode, next)
+						this.selMan.setRange(currentRange)
+						this.undoMan.record({
+							type: "merge",
+							targetNodes: [currentNode, next],
+							debris: originalContents,
+							previousRange: currentRange,
+							nextRange: currentRange
+						})
+					}
+
+				}
+
+
+			} else if (state === 4) {
+
+				let nextNode = currentNode.nextSibling
+				if (nextNode) {
+					this.nodeMan.removeChild(currentNode)
+					let newRange = this.selMan.createRange(nextNode, 0, nextNode, 0)
+					this.selMan.setRange(newRange)
+					this.undoMan.record({
+						type: "remove",
+						targetNode: currentNode,
+						nextNode: nextNode,
+						previousRange: currentRange,
+						nextRange: newRange
+					})
 				}
 
 			}
 
 		} else {
-
+			// selection is not collapsed
+			e.preventDefault()
+			this.selMan.removeSelection()
 		}
 
 	}
 
 	onSelectionChanged() {
+
+		if (window.getSelection().rangeCount === 0) {
+			return
+		}
+
+		// Fix selection
+		let jsRange = window.getSelection().getRangeAt(0)
+		let newStartContainer, newEndContainer, newStartOffset, newEndOffset
+		let needsFix = false
+
+		// console.log(pvmRange)
+		// console.log(pvmRange.isCollapsed())
+
+		// set new start
+		if (jsRange.startContainer.nodeType !== 3 && jsRange.startContainer.childNodes.length > 0) {
+
+			needsFix = true
+
+			newStartContainer = jsRange.startContainer.childNodes[jsRange.startOffset]
+			newStartOffset = 0
+
+			while (1) {
+				if (!newStartContainer) {
+					break
+				}
+				if (newStartContainer.firstChild) {
+					if (newStartContainer.firstChild.nodeType === 3) {
+						newStartContainer = newStartContainer.firstChild
+						break
+					} else {
+						newStartContainer = newStartContainer.firstChild
+						newStartOffset = newStartContainer.childNodes.length
+					}
+				} else {
+					break
+				}
+			}
+
+			if (newStartContainer.nodeName === "BR") {
+				jsRange.setStartBefore(newStartContainer)
+			} else {
+				jsRange.setStart(newStartContainer, newStartOffset)
+			}
+
+			// If <br> tag is set
+			// setstartbefore occurs an error
+			// so reset it.
+			// if (jsRange.startContainer.nodeType === 3) {
+			// 	jsRange.setStart(jsRange.startContainer, 0)
+			// }
+
+		}
+
+
+
+		// set new end
+		if (jsRange.endContainer.nodeType !== 3 && jsRange.endContainer.childNodes.length > 0) {
+
+			needsFix = true
+
+			let ofs = jsRange.endOffset - 1
+			// console.log(jsRange.endOffset)
+			if (ofs < 0) {
+				ofs = 0
+				newEndContainer = jsRange.endContainer.childNodes[ofs]
+				newEndOffset = 0
+			} else {
+				newEndContainer = jsRange.endContainer.childNodes[ofs]
+				newEndOffset = newEndContainer.childNodes.length
+			}
+
+			// console.log(newEndOffset)
+
+			while (1) {
+				if (!newEndContainer) {
+					break
+				}
+				if (newEndContainer.lastChild) {
+					if (newEndContainer.lastChild.nodeType === 3) {
+						newEndContainer = newEndContainer.lastChild
+						newEndOffset = newEndContainer.textContent.length
+						if (jsRange.endOffset === 0) {
+							newEndOffset = 0
+						}
+						break
+					} else {
+						newEndContainer = newEndContainer.lastChild
+						newEndOffset = newEndContainer.childNodes.length
+						if (jsRange.endOffset === 0) {
+							newEndOffset = 0
+						}
+					}
+				} else {
+					break
+				}
+			}
+
+			if (newEndContainer.nodeName === "BR") {
+				jsRange.setEndBefore(newEndContainer)
+			} else {
+				jsRange.setEnd(newEndContainer, newEndOffset)
+			}
+
+			// If <br> tag is set
+			// setstartbefore occurs an error
+			// so reset it.
+			// if (jsRange.endContainer.nodeType === 3) {
+			// 	jsRange.setEnd(jsRange.endContainer, jsRange.endContainer.textContent.length)
+			// }
+			
+		}
+
+		if (needsFix) {
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(jsRange)
+		}
+
+		// if (!pvmRange.isCollapsed()) {
+		// 	if (pvmRange.start.state === 3 || pvmRange.start.state === 4) {
+		// 		pvmRange.setStart(pvmRange.start.node.nextSibling, 0)
+		// 	}
+		// 	if (pvmRange.end.state === 1 || pvmRange.end.state === 4) {
+		// 		pvmRange.setEnd(pvmRange.end.node.previousSibling, pvmRange.end.node.previousSibling.getTextContent().length)
+		// 	}
+		// 	console.log("here")
+		// 	this.selMan.setRange(pvmRange)
+		// }
 
 		let currentRange = this.selMan.getCurrentRange()
 		let currentNode = this.selMan.getCurrentNode()
@@ -922,40 +1228,13 @@ export default class EventManager {
 
 		this.popTool.togglePopTool()
 
-		// console.log(this.selMan.currentState.innerHTML)
-
-
-		// let lastAction = this.postEditor.undoManager.getTheLatestAction()
-		// if (lastAction && lastAction.type === "textChange") {
-		// 	lastAction.locked = true
-		// }
-
-		// this.postEditor.selManager.fixSelection()
-
-		// // update selection manager's currentnode original html
-		// if (this.postEditor.selManager.getNodeInSelection()) {
-
-		// 	this.postEditor.selManager.currentNodeOrgHTML = this.postEditor.selManager.getNodeInSelection().innerHTML
-
-		// } else {
-
-		// 	this.postEditor.selManager.currentNodeOrgHTML = ""
-
-		// }
-
-
-		// setTimeout(() => {
-		// 	this.editSession.togglePopTool()
-		// }, 0)
-
-
-
-		// // Detect lists and merge them
-		// let currentNode = this.postEditor.selManager.getNodeInSelection()
-		// if (this.postEditor.selManager.isListItem(currentNode)) {
-		// 	console.log("list")
-		// }
+		this.editSession.currentState.node = currentNode
+		this.editSession.currentState.range = currentRange
+		if (currentNode && currentNode.textElement) {
+			this.editSession.currentState.textHTML = currentNode.textElement.innerHTML
+		}
 
 	}
+
 
 }

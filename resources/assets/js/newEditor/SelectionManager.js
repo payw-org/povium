@@ -199,67 +199,6 @@ export default class SelectionManager {
 
 	}
 
-	// Getters
-
-	// /**
-	// * Returns the PVMRange for the selected part.
-	// * @returns {PVMRange}
-	// */
-	// getCurrentRange() {
-
-	// 	let pvmRange = new PVMRange()
-
-	// 	let startCursorState, endCursorState
-
-	// 	if (document.getSelection().rangeCount === 0) {
-	// 		return null
-	// 	}
-
-	// 	let range = document.getSelection().getRangeAt(0)
-
-	// 	let closestTarget
-
-	// 	for (let i = 0; i < AT.topTypes.length; i++) {
-
-	// 		if (range.startContainer.closest) {
-	// 			closestTarget = range.startContainer
-	// 		} else {
-	// 			closestTarget = range.startContainer.parentElement
-	// 		}
-
-	// 		if (closestTarget.closest(AT.topTypes[i])) {
-	// 			let startNode = closestTarget.closest(AT.topTypes[i])
-	// 			let nodeID = this.nodeMan.getNodeID(startNode)
-	// 			let pvmNode = this.nodeMan.getNodeByID(nodeID)
-	// 			let textDOM = pvmNode.textElement
-	// 			let textOffset = this.getTextOffset2()
-	// 			pvmRange.setStart(pvmNode, this.getTextOffset(textDOM, range.startContainer, range.startOffset))
-	// 			break
-	// 		}
-	// 	}
-
-	// 	for (let i = 0; i < AT.topTypes.length; i++) {
-
-	// 		if (range.endContainer.closest) {
-	// 			closestTarget = range.endContainer
-	// 		} else {
-	// 			closestTarget = range.endContainer.parentElement
-	// 		}
-
-	// 		if (closestTarget.closest(AT.topTypes[i])) {
-	// 			let endNode = closestTarget.closest(AT.topTypes[i])
-	// 			let nodeID = this.nodeMan.getNodeID(endNode)
-	// 			let pvmNode = this.nodeMan.getNodeByID(nodeID)
-	// 			let textDOM = pvmNode.textElement
-	// 			pvmRange.setEnd(pvmNode, this.getTextOffset(textDOM, range.endContainer, range.endOffset))
-	// 			break
-	// 		}
-	// 	}
-
-	// 	return pvmRange
-
-	// }
-
 	getCurrentRange() {
 
 		if (document.getSelection().rangeCount === 0) {
@@ -272,7 +211,7 @@ export default class SelectionManager {
 		let startNode, endNode
 		let startOffset = 0, endOffset = 0
 
-		for (let i = 0; i < AT.topTypes.length; i++) {
+		for (let i = 0; i < AT.topTags.length; i++) {
 
 			if (range.startContainer.closest) {
 				closestTarget = range.startContainer
@@ -280,8 +219,8 @@ export default class SelectionManager {
 				closestTarget = range.startContainer.parentElement
 			}
 
-			if (closestTarget.closest(AT.topTypes[i])) {
-				let startElm = closestTarget.closest(AT.topTypes[i])
+			if (closestTarget.closest(AT.topTags[i])) {
+				let startElm = closestTarget.closest(AT.topTags[i])
 				startNode = this.nodeMan.getNodeByID(this.nodeMan.getNodeID(startElm))
 				let n, walk = document.createTreeWalker(startElm, NodeFilter.SHOW_TEXT, null, false)
 				while (n = walk.nextNode()) {
@@ -299,7 +238,8 @@ export default class SelectionManager {
 		if (range.collapsed) {
 			endNode = startNode, endOffset = startOffset
 		} else {
-			for (let i = 0; i < AT.topTypes.length; i++) {
+
+			for (let i = 0; i < AT.topTags.length; i++) {
 
 				if (range.endContainer.closest) {
 					closestTarget = range.endContainer
@@ -307,8 +247,8 @@ export default class SelectionManager {
 					closestTarget = range.endContainer.parentElement
 				}
 	
-				if (closestTarget.closest(AT.topTypes[i])) {
-					let endElm = closestTarget.closest(AT.topTypes[i])
+				if (closestTarget.closest(AT.topTags[i])) {
+					let endElm = closestTarget.closest(AT.topTags[i])
 					endNode = this.nodeMan.getNodeByID(this.nodeMan.getNodeID(endElm))
 					let n, walk = document.createTreeWalker(endElm, NodeFilter.SHOW_TEXT, null, false)
 					while (n = walk.nextNode()) {
@@ -322,6 +262,11 @@ export default class SelectionManager {
 				}
 	
 			}
+
+			if (range.endContainer.nodeType !== 3) {
+				endOffset = range.endOffset
+			}
+
 		}
 
 		return new PVMRange(startNode, startOffset, endNode, endOffset)
@@ -345,12 +290,12 @@ export default class SelectionManager {
 		 */
 		let node = null
 
-		for (let i = 0; i < AT.topTypes.length; i++) {
+		for (let i = 0; i < AT.topTags.length; i++) {
 
 			if (startNode.closest) {
-				node = startNode.closest(AT.topTypes[i])
+				node = startNode.closest(AT.topTags[i])
 			} else {
-				node = startNode.parentElement.closest(AT.topTypes[i])
+				node = startNode.parentElement.closest(AT.topTags[i])
 			}
 
 			if (node) break
@@ -370,9 +315,10 @@ export default class SelectionManager {
 	}
 
 	/**
+	 * @param {string} type "textContained" | "p" | "h1" | ...
 	 * @return {Array.<PVMNode>}
 	 */
-	getAllNodesInSelection() {
+	getAllNodesInSelection(type) {
 
 		let currentRange = this.getCurrentRange()
 		let startNode = currentRange.start.node
@@ -385,7 +331,20 @@ export default class SelectionManager {
 
 		while (1) {
 
-			nodes.push(travelNode)
+			if (type) {
+				if (type === "textContained") {
+					if (AT.textContained.includes(travelNode.type)) {
+						nodes.push(travelNode)
+					}
+				} else {
+					if (type === travelNode.type) {
+						nodes.push(travelNode)
+					}
+				}
+			} else {
+				nodes.push(travelNode)
+			}
+			
 
 			if (travelNode.isSameAs(endNode)) break
 
@@ -517,11 +476,123 @@ export default class SelectionManager {
 
 	}
 
-	removeSelection() {
+	removeSelection(withKey = "backspace") {
+		let jsSel = window.getSelection()
+		let jsRange = window.getSelection().getRangeAt(0)
+		let pvmRange = this.getCurrentRange()
 		let nodes = this.getAllNodesInSelection()
-		nodes.forEach(node => {
-			console.log(node)
-		})
+
+		let extraBackspace = true, extraEnter = false
+		
+		// console.log(pvmRange)
+		// console.log(jsRange)
+
+		let actions = []
+
+		for (let i = 0; i < nodes.length; i++) {
+			if (
+				nodes[i].element.contains(jsRange.startContainer) &&
+				nodes[i].element.contains(jsRange.endContainer)
+			) {
+				extraBackspace = false
+				extraEnter = true
+				let originalContents = nodes[i].textElement.innerHTML
+				jsRange.deleteContents()
+				if (!nodes[i].element.querySelector("br")) {
+					nodes[i].element.appendChild(document.createElement("br"))
+				}
+				let newRange = pvmRange.clone()
+				newRange.setEnd(pvmRange.start.node, pvmRange.start.offset)
+				this.setRange(newRange)
+				actions.push({
+					type: "textChange",
+					targetNode: nodes[i],
+					previousHTML: originalContents,
+					nextHTML: nodes[i].textElement.innerHTML,
+					previousRange: pvmRange,
+					nextRange: newRange
+				})
+			} else if (
+				nodes[i].element.contains(jsRange.startContainer) &&
+				!nodes[i].element.contains(jsRange.endContainer)
+			) {
+				if (!nodes[i].element.querySelector("br")) {
+					nodes[i].element.appendChild(document.createElement("br"))
+				}
+				let newRange = pvmRange.clone()
+				let originalContents = nodes[i].textElement.innerHTML
+				newRange.setEnd(nodes[i], nodes[i].textElement.textContent.length)
+				this.setRange(newRange)
+				window.getSelection().getRangeAt(0).deleteContents()
+				newRange.setStart(nodes[i], nodes[i].getTextContent().length)
+				newRange.setEnd(nodes[i], nodes[i].getTextContent().length)
+				this.setRange(newRange)
+				actions.push({
+					type: "textChange",
+					targetNode: nodes[i],
+					previousHTML: originalContents,
+					nextHTML: nodes[i].textElement.innerHTML,
+					previousRange: pvmRange,
+					nextRange: newRange
+				})
+			} else if (
+				!nodes[i].element.contains(jsRange.startContainer) &&
+				nodes[i].element.contains(jsRange.endContainer)
+			) {
+				if (!nodes[i].element.querySelector("br")) {
+					nodes[i].element.appendChild(document.createElement("br"))
+				}
+				let newRange = pvmRange.clone()
+				let originalContents = nodes[i].textElement.innerHTML
+				newRange.setStart(nodes[i], 0)
+				this.setRange(newRange)
+				window.getSelection().getRangeAt(0).deleteContents()
+				newRange.setStart(nodes[i], 0)
+				newRange.setEnd(nodes[i], 0)
+				this.setRange(newRange)
+				actions.push({
+					type: "textChange",
+					targetNode: nodes[i],
+					previousHTML: originalContents,
+					nextHTML: nodes[i].textElement.innerHTML,
+					previousRange: pvmRange,
+					nextRange: newRange
+				})
+			} else if (
+				!nodes[i].element.contains(jsRange.startContainer) &&
+				!nodes[i].element.contains(jsRange.endContainer)
+			) {
+				let nextNode = nodes[i].nextSibling
+				this.nodeMan.removeChild(nodes[i])
+				actions.push({
+					type: "remove",
+					targetNode: nodes[i],
+					nextNode: nextNode,
+					previousRange: pvmRange,
+					nextRange: pvmRange
+				})
+			}
+		}
+
+		this.undoMan.record(actions)
+
+		if (extraBackspace && withKey === "backspace") {
+			console.log("backsapce")
+			let ke = document.createEvent("KeyboardEvent")
+			this.eventMan.onPressBackspace(ke, true)
+			// setTimeout(() => {
+			// 	let ke = document.createEvent("KeyboardEvent")
+			// 	this.eventMan.onPressBackspace(ke, true)
+			// }, 0)
+		} else if (extraEnter && withKey === "enter") {
+			let ke = document.createEvent("KeyboardEvent")
+			this.eventMan.onPressEnter(ke, true)
+			// setTimeout(() => {
+			// 	let ke = document.createEvent("KeyboardEvent")
+			// 	this.eventMan.onPressEnter(ke, true)
+			// }, 0)
+		}
+
 	}
 
 }

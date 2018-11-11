@@ -37,11 +37,11 @@ export default class PVMNode {
 		 */
 		this.isConnected = false
 		/**
-		 * @type {Element}
+		 * @type {HTMLElement}
 		 */
 		this.element = null
 		/**
-		 * @type {Element}
+		 * @type {HTMLElement}
 		 */
 		this.textElement = null
 

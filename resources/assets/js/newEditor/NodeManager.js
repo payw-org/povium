@@ -26,6 +26,8 @@ export default class NodeManager {
 		 */
 		this.editSession = null
 
+		this.a = 10
+
 	}
 
 	/**
@@ -36,15 +38,20 @@ export default class NodeManager {
 	 */
 	insertChildBefore(insertingChild, refChild) {
 
+		// If the refChild is null,
+		// append it to the last.
 		if (!refChild) {
 			this.appendChild(insertingChild)
 			return
 		}
+
 		let previousChild = refChild.previousSibling
 		let refChildDOM = refChild.element
 		let refChildIndex = this.getChildIndex(refChild)
 
 		let newChildDOM = insertingChild.element
+
+		// Adds a node to JS storage
 		this.editSession.nodeList.splice(refChildIndex, 0, insertingChild)
 		if (this.editSession.nodeList[refChildIndex - 1]) {
 			this.editSession.nodeList[refChildIndex - 1].nextSibling = insertingChild
@@ -53,8 +60,57 @@ export default class NodeManager {
 		refChild.previousSibling = insertingChild
 		insertingChild.nextSibling = refChild
 
+		// Updates view
 
-		this.editSession.editorBody.insertBefore(newChildDOM, refChildDOM)
+		// Inserting node is a list item
+		if (AT.isListItem(insertingChild.type)) {
+			// Referenced node is a list item
+			if (AT.isListItem(refChild.type)) {
+				if (refChild.parentType === insertingChild.parentType) {
+					if (previousChild && previousChild.type === "li" && previousChild.parentType === refChild.parentType) {
+						this.mergeLists(previousChild.element.parentElement, refChild.element.parentElement)
+					}
+					refChild.element.parentElement.insertBefore(insertingChild.element, refChild.element)
+				} else {
+					let abc = this.splitListByItem(refChild.element.parentElement, refChild.element)
+					if (previousChild && AT.isListItem(previousChild.type)) {
+						if (previousChild.parentType === insertingChild.parentType) {
+							previousChild.element.parentElement.insertBefore(insertingChild.element, previousChild.element.nextElementSibling)
+						} else {
+							let wrapper = document.createElement(insertingChild.parentType)
+							wrapper.appendChild(insertingChild.element)
+							abc.parentElement.insertBefore(wrapper, abc)
+						}
+					} else {
+						let wrapper = document.createElement(insertingChild.parentType)
+						wrapper.appendChild(insertingChild.element)
+						abc.parentElement.insertBefore(wrapper, abc)
+					}
+				}
+			} else {
+				if (previousChild && AT.isListItem(previousChild.type)) {
+					if (previousChild.parentType === insertingChild.parentType) {
+						previousChild.element.parentElement.insertBefore(insertingChild.element, previousChild.element.nextElementSibling)
+					} else {
+						let wrapper = document.createElement(insertingChild.parentType)
+						wrapper.appendChild(insertingChild.element)
+						refChild.element.parentElement.insertBefore(wrapper, refChild.element)
+					}
+				} else {
+					let wrapper = document.createElement(insertingChild.parentType)
+					wrapper.appendChild(insertingChild.element)
+					refChild.element.parentElement.insertBefore(wrapper, refChild.element)
+				}
+			}
+		} else { // Inserting node is not a list item
+			// Referenced node is a list item
+			if (AT.isListItem(refChild.type)) {
+				let abc = this.splitListByItem(refChild.element.parentElement, refChild.element)
+				abc.parentElement.insertBefore(insertingChild.element, abc)
+			} else {
+				refChild.element.parentElement.insertBefore(insertingChild.element, refChild.element)
+			}
+		}
 
 	}
 
@@ -72,7 +128,16 @@ export default class NodeManager {
 		nodeList.push(child)
 
 		// Render dom
-		this.editSession.editorBody.appendChild(child.element)
+		if (child.type === "li") {
+			let wrapper = document.createElement(child.parentType)
+			wrapper.appendChild(child.element)
+			this.editSession.editorBody.appendChild(wrapper)
+			if (child.previousSibling && child.previousSibling.type === "li" && child.previousSibling.parentType === child.parentType) {
+				this.mergeLists(child.previousSibling.element.parentElement, child.element.parentElement)
+			}
+		} else {
+			this.editSession.editorBody.appendChild(child.element)
+		}
 
 	}
 
@@ -128,14 +193,16 @@ export default class NodeManager {
 
 	/**
 	 * @param {string} type
-	 * @param {object} options
+	 * @param {object=} options
 	 * @param {string} options.parentType
 	 * @param {string} options.html
-	 * @param {string} options.src
+	 * @param {string} options.url
 	 * @param {string} options.mode
 	 * @return {PVMNode}
 	 */
 	createNode(type, options) {
+
+		type = type.toLowerCase()
 
 		if (
 			type === "li" && options && !("parentType" in options) ||
@@ -147,7 +214,13 @@ export default class NodeManager {
 
 		let newNode = new PVMNode()
 
-		newNode.id = ++this.editSession.lastNodeID
+		// Set an unique auto incremental node ID
+		if (options && options.nodeID) {
+			newNode.id = options.nodeID
+		} else {
+			newNode.id = ++this.editSession.lastNodeID
+		}
+		
 		newNode.type = type
 		if (options && "parentType" in options) {
 			newNode.parentType = options.parentType
@@ -155,7 +228,9 @@ export default class NodeManager {
 
 		let dom
 
-		if (AT.textContained.includes(newNode.type)) {
+		if (AT.textOnly.includes(newNode.type)) {
+
+			// Text nodes
 			dom = document.createElement(newNode.type)
 			dom.innerHTML = "<br>"
 			if (options && ("html" in options)) {
@@ -166,6 +241,31 @@ export default class NodeManager {
 			}
 			newNode.element = dom
 			newNode.textElement = dom
+
+		} else if (newNode.type === "image") {
+
+			// Image node
+			dom = document.createElement("figure")
+			dom.classList.add("image")
+			if (options.size) {
+				dom.classList.add(options.size)
+			}
+			let imgWrapper = document.createElement("div")
+			imgWrapper.className = "image-wrapper"
+			imgWrapper.contentEditable = false
+			let imgDOM = document.createElement("img")
+			imgDOM.src = options.url
+			imgWrapper.appendChild(imgDOM)
+			let captionDOM = document.createElement("figcaption")
+			captionDOM.innerHTML = options.html
+			if (options.html.length > 0) {
+				dom.classList.add("caption-enabled")
+			}
+			dom.appendChild(imgWrapper)
+			dom.appendChild(captionDOM)
+			newNode.element = dom
+			newNode.textElement = captionDOM
+
 		}
 
 		dom.setAttribute("data-ni", newNode.id)
@@ -195,7 +295,7 @@ export default class NodeManager {
 	* @param {PVMNode} node
 	* @param {object} recordData { beforeRange, afterRange }
 	*/
-	removeChild(node, recordData)
+	removeChild(node)
 	{
 
 		let index = this.getChildIndex(node)
@@ -208,15 +308,25 @@ export default class NodeManager {
 			node.nextSibling.previousSibling = node.previousSibling
 		}
 
+		// Process the js object
 		this.editSession.nodeList[index].previousSibling = null
 		this.editSession.nodeList[index].nextSibling = null
 		this.editSession.nodeList.splice(index, 1)
 
-		this.editSession.editorBody.removeChild(node.element)
+		// Process the dom. (view)
+		if (node.type === "li") {
+			let list = node.element.parentElement
+			list.removeChild(node.element)
+			if (list.querySelectorAll("li").length === 0) {
+				list.parentElement.removeChild(list)
+			}
+		} else {
+			node.element.parentElement.removeChild(node.element)
+		}
 
 	}
 
-	splitNode() {
+	splitNode(newNodeID = null) {
 
 		let range
 		let currentNode = this.selMan.getCurrentNode()
@@ -233,7 +343,10 @@ export default class NodeManager {
 
 		let extractedContents = range.extractContents()
 
-		let newNode = this.createNode(currentNode.type, { parentType: currentNode.parentType })
+		let newNode = this.createNode(currentNode.type, {
+			parentType: currentNode.parentType,
+			nodeID: newNodeID
+		})
 		let n
 		newNode.textElement.innerHTML = ""
 		while (n = extractedContents.firstChild) {
@@ -245,8 +358,7 @@ export default class NodeManager {
 		newNode.textElement.innerHTML = newNode.textElement.innerHTML.replace(/ $/g, "")
 		this.insertChildBefore(newNode, currentNode.nextSibling)
 
-		newRange = this.selMan.createRange(newNode, 0, newNode, 0)
-		this.selMan.setRange(newRange)
+		return newNode
 		
 	}
 
@@ -259,6 +371,9 @@ export default class NodeManager {
 		if (!node1 || !node2) {
 			return
 		}
+
+		this.normalize(node1.textElement)
+		this.normalize(node2.textElement)
 
 		node1.textElement.innerHTML += node2.textElement.innerHTML
 		// node1.textElement.normalize()
@@ -273,11 +388,44 @@ export default class NodeManager {
 	 * @param {HTMLElement} listElm
 	 * @param {number} index
 	 */
-	splitList(listElm, index) {
+	splitListByIndex(listElm, index) {
 		let itemCount = listElm.querySelectorAll("li").length
 		if (index + 1 > itemCount) {
 			console.error("The given index " + index + " is bigger than the list size.", listElm)
 		}
+	}
+
+	/**
+	 * Splits list and returns the new generated list element.
+	 * If the splitting target is the first child,
+	 * then it does nothing and returns given list element.
+	 * @param {HTMLElement} listElm
+	 * @param {HTMLElement} childItem
+	 */
+	splitListByItem(listElm, childItem) {
+		let newList = document.createElement(listElm.nodeName)
+		let yesInsert = false
+
+		let returnList = newList
+
+		let items = listElm.querySelectorAll("li")
+		for (let i = 0; i < items.length; i++) {
+			if (items[i].isSameNode(childItem)) {
+				yesInsert = true
+				if (i === 0) {
+					returnList = listElm
+					break
+				}
+			}
+			if (yesInsert) {
+				newList.appendChild(items[i])
+			}
+		}
+		if (newList.querySelectorAll("li").length > 0) {
+			listElm.parentElement.insertBefore(newList, listElm.nextElementSibling)
+		}
+
+		return returnList
 	}
 
 	/**
@@ -306,6 +454,7 @@ export default class NodeManager {
 	 * @param {HTMLElement} element
 	 */
 	normalize(element) {
+		let currentRange = this.selMan.getCurrentRange()
 		while (1) {
 			if (!element.innerHTML.match(/<\/(.)><\1 ?.*?>/gi)) {
 				break
@@ -313,6 +462,17 @@ export default class NodeManager {
 				element.innerHTML = element.innerHTML.replace(/<\/(.)><\1 ?.*?>/gi, "")
 			}
 		}
+		element.childNodes.forEach((child) => {
+			if (child.textContent.length === 0) {
+				child.parentNode.removeChild(child)
+			}
+		})
+
+		if (element.textContent.length === 0) {
+			element.appendChild(document.createElement("br"))
+		}
+
+		this.selMan.setRange(currentRange)
 	}
 
 	textNodesUnder(elm) {
@@ -430,24 +590,37 @@ export default class NodeManager {
 	 * @param {boolean} isRecording
 	 * @param {string} newParentType
 	 */
-	transformNode(node, newType, isRecording = true, newParentType = null)
+	transformNode(node, newType, newParentType = null)
 	{
+		// If the original node type and
+		// the new type is same, do nothing.
+		newType = newType.toLowerCase()
+		if (node.type === newType && node.parentType === newParentType) return
 
 		let oldElm = node.element
 
 		let newElm = document.createElement(newType)
+
+		let nextNode = node.nextSibling
+
+		this.removeChild(node)
+
 		this.copySoul(node.element, newElm)
 		node.type = newType
 		node.parentType = newParentType
 		node.replaceElement(newElm)
 
-		if (AT.isListItem(newType)) {
-			let list = document.createElement(newParentType)
-			list.appendChild(newElm)
-			this.editSession.editorBody.replaceChild(list, oldElm)
-		} else {
-			this.editSession.editorBody.replaceChild(newElm, oldElm)
-		}		
+		if (newType === "li") {
+			if (newParentType === "ol") {
+				node.textElement.innerHTML = node.textElement.innerHTML.replace(/^(<.* ?.*?)?1. /, "$1")
+				node.fixEmptiness()
+			} else if (newParentType === "ul") {
+				node.textElement.innerHTML = node.textElement.innerHTML.replace(/^(<.* ?.*?)?- /, "$1")
+				node.fixEmptiness()
+			}
+		}
+
+		this.insertChildBefore(node, nextNode)
 		
 	}
 

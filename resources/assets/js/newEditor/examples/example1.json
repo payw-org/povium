@@ -66,6 +66,28 @@
 			]
 		},
 		{
+			"type": "image",
+			"size": "",
+			"url": "/assets/images/post-test-img.gif",
+			"caption": {
+				"data": [
+					{
+						"type": "text",
+						"data": "This is an image caption."
+					}
+				]
+			}
+		},
+		{
+			"type": "p",
+			"data": [
+				{
+					"type": "text",
+					"data": "A short sentence."
+				}
+			]
+		},
+		{
 			"type": "blockquote",
 			"data": [
 				{
