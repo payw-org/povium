@@ -91,11 +91,25 @@ export default class EventManager {
 
 		this.isBackspaceKeyPressed = false
 
-		this.editSession.editorBody.addEventListener('keydown', (e) => {
+		window.addEventListener("keydown", (e) => {
+			if (e.keyCode === 8 || e.keyCode === 46) {
+				if (this.editSession.editorBody.querySelector(".image-selected")) {
+					console.log("image should be deleted")
+					let imageNode = this.nodeMan.getNodeByID(this.nodeMan.getNodeID(this.editSession.editorBody.querySelector(".image-selected")))
+					let nextNode = imageNode.nextSibling
+					this.nodeMan.removeChild(imageNode)
+					this.popTool.hideImageTool()
+					this.undoMan.record({
+						type: "remove",
+						targetNode: imageNode,
+						nextNode: nextNode
+					})
+				}
+			}
+		})
 
+		window.addEventListener("keydown", (e) => {
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
-
-
 				if (e.shiftKey) {
 					e.preventDefault()
 					this.undoMan.redo()
@@ -103,25 +117,20 @@ export default class EventManager {
 					e.preventDefault()
 					this.undoMan.undo()
 				}
-
-				// this.onSelectionChanged()
-
-			} else {
-				this.onKeyDown(e)
 			}
+		})
 
+		this.editSession.editorBody.addEventListener('keydown', (e) => {
+			this.onKeyDown(e)
 			if (e.which >= 37 && e.which <= 40) {
 				// this.onSelectionChanged()
 			}
-
 			if (e.which === 65 && e.ctrlKey) {
 				this.selectedAll = true
 			}
-
 			if (!e.target.closest("#poptool")) {
 				this.popTool.hidePopTool()
 			}
-
 		})
 
 		this.editSession.editorBody.addEventListener('keyup', (e) => {
