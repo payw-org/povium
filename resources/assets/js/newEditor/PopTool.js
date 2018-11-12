@@ -325,12 +325,25 @@ export default class PopTool {
 	align(dir)
 	{
 		let chunks = this.selMan.getAllNodesInSelection()
+		let currentRange = this.editSession.currentState.range
+		let actions = [], previousDir
 		for (let i = 0; i < chunks.length; i++) {
 			if (!AT.alignable.includes(chunks[i].type)) {
 				continue
 			}
+			previousDir = chunks[i].textElement.style.textAlign
+			if (previousDir === "") previousDir = "left"
 			chunks[i].textElement.style.textAlign = dir
+			actions.push({
+				type: "textAlign",
+				targetNode: chunks[i],
+				previousDir: previousDir,
+				nextDir: dir,
+				previousRange: currentRange,
+				nextRange: currentRange
+			})
 		}
+		this.undoMan.record(actions)
 	}
 
 	/**
