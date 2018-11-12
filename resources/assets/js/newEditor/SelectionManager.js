@@ -46,6 +46,8 @@ export default class SelectionManager {
 	 */
 	setRange(pvmRange) {
 
+		if (!pvmRange) return
+
 		let range = document.createRange() // JS Range
 		let rangeStartContainer, rangeStartOffset, rangeEndContainer, rangeEndOffset
 		let startNodePVMN = pvmRange.start.node
