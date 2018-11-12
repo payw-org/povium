@@ -40,6 +40,7 @@ export default class UndoManager {
 	 * @param {Array} action
 	 */
 	record(action) {
+		// console.log(action)
 		if (!Array.isArray(action)) {
 			if (action.finalAction) {
 				if (this.getLatestAction() && Array.isArray(this.getLatestAction())) {
@@ -122,6 +123,10 @@ export default class UndoManager {
 			this.nodeMan.transformNode(action.targetNode, action.previousType, action.previousParentType)
 		}
 
+		if (action.type === "textAlign") {
+			action.targetNode.textElement.style.textAlign = action.previousDir
+		}
+
 		this.selMan.setRange(action.previousRange)
 	}
 
@@ -149,6 +154,10 @@ export default class UndoManager {
 
 		if (action.type === "transform") {
 			this.nodeMan.transformNode(action.targetNode, action.nextType, action.nextParentType)
+		}
+
+		if (action.type === "textAlign") {
+			action.targetNode.textElement.style.textAlign = action.nextDir
 		}
 
 		this.selMan.setRange(action.nextRange)
