@@ -46,7 +46,11 @@ export default class PVMRange {
 	}
 
 	isCollapsed() {
-		return this.start.node.id === this.end.node.id && this.start.offset === this.end.offset
+		if (this.start.node && this.end.node) {
+			return this.start.node.id === this.end.node.id && this.start.offset === this.end.offset
+		} else {
+			return false
+		}
 	}
 
 	// Setters
