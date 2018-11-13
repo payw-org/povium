@@ -2,38 +2,31 @@ import NodeManager from "./NodeManager"
 import EventManager from "./EventManager"
 import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession"
+import { Action } from "./Action"
 
 export default class UndoManager {
 
+	nodeMan: NodeManager
+	eventMan: EventManager
+	selMan: SelectionManager
+	editSession: EditSession
+	private static actionStack: Array<Action | Array<Action>>
+	private static currentStep: number = -1
+
 	constructor() {
 
-		/**
-		 * @type {NodeManager}
-		 */
 		this.nodeMan = null
-		/**
-		 * @type {EventManager}
-		 */
 		this.eventMan = null
-		/**
-		 * @type {SelectionManager}
-		 */
 		this.selMan = null
-		/**
-		 * @type {EditSession}
-		 */
 		this.editSession = null
-
-		/**
-		 * @type {Array}
-		 */
-		this.actionStack = []
-		this.currentStep = -1
 
 	}
 
+	/**
+	 * Returns the latest undo action.
+	 */
 	getLatestAction() {
-		return this.actionStack[this.currentStep]
+		return UndoManager.actionStack[UndoManager.currentStep]
 	}
 
 	/**
@@ -49,21 +42,21 @@ export default class UndoManager {
 				}
 			}
 		}
-		this.actionStack.length = this.currentStep + 1
-		this.actionStack.push(action)
-		this.currentStep = this.actionStack.length - 1
+		UndoManager.actionStack.length = UndoManager.currentStep + 1
+		UndoManager.actionStack.push(action)
+		UndoManager.currentStep = UndoManager.actionStack.length - 1
 		// console.log(this.actionStack.slice(0))
 	}
 
 	undo() {
-		if (this.currentStep < 0) {
+		if (UndoManager.currentStep < 0) {
 			// console.info("No more action records to undo.")
 			return
 		} else {
 			// console.group("undo")
 		}
 
-		let actions = this.actionStack[this.currentStep--]
+		let actions = UndoManager.actionStack[UndoManager.currentStep--]
 
 		if (Array.isArray(actions)) {
 			for (let i = actions.length - 1; i >= 0; i--) {
@@ -77,14 +70,14 @@ export default class UndoManager {
 	}
 
 	redo() {
-		if (this.currentStep >= this.actionStack.length - 1) {
+		if (UndoManager.currentStep >= UndoManager.actionStack.length - 1) {
 			// console.info('No more actions to recover')
 			return
 		} else {
 			// console.group('redo')
 		}
 
-		let actions = this.actionStack[++this.currentStep]
+		let actions = UndoManager.actionStack[++UndoManager.currentStep]
 
 		if (Array.isArray(actions)) {
 			for (let i = 0; i < actions.length; i++) {

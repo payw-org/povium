@@ -6,6 +6,10 @@ function showError(errCode) {
 
 }
 
-module.exports = {
+// module.exports = {
+// 	showError: showError
+// }
+
+export const ErrorManager = {
 	showError: showError
 }
