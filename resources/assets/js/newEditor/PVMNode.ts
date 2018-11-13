@@ -1,57 +1,24 @@
-import AT from "./config/AvailableTypes"
+import {AT} from "./config/AvailableTypes"
 
 export default class PVMNode {
 
-	constructor() {
+	id             : number
+	type           : string
+	parentType     : string
+	nextSibling    : PVMNode
+	previousSibling: PVMNode
+	isConnected    : boolean = false
+	element        : HTMLElement
+	textElement    : HTMLElement
 
-		/**
-		 * @type {number}
-		 */
-		this.id = null
-		/**
-		 * @type {string}
-		 */
-		this.type = null
-		/**
-		 * @type {string}
-		 */
-		this.parentType = null
-		/**
-		 * @type {PVMNode}
-		 */
-		this.nextSibling = null
-		/**
-		 * @type {PVMNode}
-		 */
-		this.previousSibling = null
-		// /**
-		//  * @type {string}
-		//  */
-		// this.textHTML = ""
-		// /**
-		//  * @type {string}
-		//  */
-		// this.rawText = ""
-		/**
-		 * @type {boolean}
-		 */
-		this.isConnected = false
-		/**
-		 * @type {HTMLElement}
-		 */
-		this.element = null
-		/**
-		 * @type {HTMLElement}
-		 */
-		this.textElement = null
+	constructor() {
 
 	}
 
-	setInnerHTML(html) {
+	setInnerHTML(html: string) {
 		if (html === "") {
 			html = "<br>"
 		}
-
 		this.textElement.innerHTML = html
 	}
 
@@ -61,45 +28,23 @@ export default class PVMNode {
 		}
 	}
 
-	/**
-	 *
-	 * @param {PVMNode} node
-	 */
-	isSameAs(node) {
+	isSameAs(node: PVMNode) {
 		return this.id === node.id
 	}
 
-	/**
-	 * @param {Element} elm
-	 */
-	replaceElement(elm) {
+	replaceElement(elm: HTMLElement) {
 		this.element = elm
 		if (AT.textContained.includes(this.type)) {
 			this.textElement = elm
 		}
 	}
 
-	generateDOM() {
-
-		let dom
-
-		if (AT.textContained.includes(this.type)) {
-			dom = document.createElement(this.type)
-			if (this.rawText === "") {
-				dom.innerHTML = "<br>"
-			} else {
-				dom.innerHTML = this.textHTML
-			}
-		}
-
-		dom.setAttribute("data-ni", this.id)
-
-		return dom
-
-	}
-
 	getTextContent() {
-		return this.textElement.textContent
+		if (this.textElement) {
+			return this.textElement.textContent
+		} else {
+			return null
+		}
 	}
 
 }

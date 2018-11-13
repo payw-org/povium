@@ -1,36 +1,30 @@
 import SelectionManager from "./SelectionManager"
 import NodeManager from "./NodeManager"
 import EditSession from "./EditSession"
-import AT from "./config/AvailableTypes"
+import {AT} from "./config/AvailableTypes"
 import UndoManager from "./UndoManager"
+import PVMRange from "./PVMRange";
 
 export default class PopTool {
 
-	/**
-	 * @param {EditSession} editSession
-	 */
-	constructor(editSession)
-	{
-		/**
-		 * @type {EditSession}
-		 */
-		this.editSession = editSession
-		/**
-		 * @type {SelectionManager}
-		 */
-		this.selMan = null
-		/**
-		 * @type {NodeManager}
-		 */
-		this.nodeMan = null
-		/**
-		 * @type {UndoManager}
-		 */
-		this.undoMan = null
-		this.pt = this.editSession.editorDOM.querySelector('#poptool')
-		this.imageTool = this.editSession.editorDOM.querySelector('#image-preference-view')
+	editSession  : EditSession
+	selMan       : SelectionManager
+	nodeMan      : NodeManager
+	undoMan      : UndoManager
+	pt           : HTMLElement
+	imageTool    : HTMLElement
+	tempLinkRange: PVMRange
 
-		this.tempLinkRange
+
+	constructor(editSession: EditSession)
+	{
+
+		this.editSession = editSession
+		this.selMan      = null
+		this.nodeMan     = null
+		this.undoMan     = null
+		this.pt          = this.editSession.editorDOM.querySelector('#poptool')
+		this.imageTool   = this.editSession.editorDOM.querySelector('#image-preference-view')
 	}
 
 	// Methods
@@ -52,7 +46,7 @@ export default class PopTool {
 		var range = document.getSelection().getRangeAt(0)
 
 		let currentRange = this.selMan.getCurrentRange()
-		var currentNode = this.selMan.getCurrentNode()
+		var currentNode  = this.selMan.getCurrentNode()
 
 		if (!currentNode) {
 			this.hidePopTool()
@@ -60,11 +54,11 @@ export default class PopTool {
 		}
 
 		let isApplied = []
-		let config = {
-			heading: true,
-			align: true,
+		let config    = {
+			heading   : true,
+			align     : true,
 			blockquote: true,
-			isApplied: isApplied
+			isApplied : isApplied
 		}
 
 		if (AT.headings.includes(currentNode.type)) {
@@ -95,8 +89,8 @@ export default class PopTool {
 			currentNode.type === "li"
 		) {
 
-			config.heading = false
-			config.align = false
+			config.heading    = false
+			config.align      = false
 			config.blockquote = false
 
 		} else if (
@@ -104,14 +98,14 @@ export default class PopTool {
 		) {
 
 			config.heading = false
-			config.align = false
+			config.align   = false
 
 		} else if (
 			currentNode.type === "image"
 		) {
 
-			config.heading = false
-			config.align = false
+			config.heading    = false
+			config.align      = false
 			config.blockquote = false
 
 		}
@@ -228,7 +222,7 @@ export default class PopTool {
 		// this.itmotnTT("strong")
 		// this.styleText("strong")
 
-		let chunks = this.selMan.getAllNodesInSelection("textContained")
+		let chunks       = this.selMan.getAllNodesInSelection("textContained")
 		let currentRange = this.selMan.getCurrentRange()
 
 		let originalContents = []
@@ -244,12 +238,12 @@ export default class PopTool {
 		for (let i = 0; i < chunks.length; i++) {
 			if (chunks[i].textElement.innerHTML !== originalContents[i]) {
 				actions.push({
-					type: "textChange",
-					targetNode: chunks[i],
-					previousHTML: originalContents[i],
-					nextHTML: chunks[i].textElement.innerHTML,
+					type         : "textChange",
+					targetNode   : chunks[i],
+					previousHTML : originalContents[i],
+					nextHTML     : chunks[i].textElement.innerHTML,
 					previousRange: currentRange,
-					nextRange: currentRange
+					nextRange    : currentRange
 				})
 			}
 		}
@@ -264,11 +258,11 @@ export default class PopTool {
 	transformNodes(tagName)
 	{
 
-		tagName = tagName.toLowerCase()
-		let chunks = this.selMan.getAllNodesInSelection()
-		let currentRange = this.selMan.getCurrentRange()
-		let isAllAlreaySet = true
-		let actions = []
+		                        tagName        = tagName.toLowerCase()
+		                    let chunks         = this.selMan.getAllNodesInSelection()
+		                    let currentRange   = this.selMan.getCurrentRange()
+		                    let isAllAlreaySet = true
+		                    let actions        = []
 		for (let i = 0; i < chunks.length; i++) {
 			if (!AT.transformable.includes(chunks[i].type)) {
 				continue
@@ -276,18 +270,18 @@ export default class PopTool {
 			if (chunks[i].type !== tagName) {
 				isAllAlreaySet = false
 				// chunks[i].transformTo(tagName)
-				let originalType = chunks[i].type
+				let originalType       = chunks[i].type
 				let originalParentType = chunks[i].parentType
 				this.nodeMan.transformNode(chunks[i], tagName)
 				actions.push({
-					type: "transform",
-					targetNode: chunks[i],
-					previousType: originalType,
+					type              : "transform",
+					targetNode        : chunks[i],
+					previousType      : originalType,
 					previousParentType: originalParentType,
-					nextType: tagName,
-					nextParentType: null,
-					previousRange: currentRange,
-					nextRange: currentRange
+					nextType          : tagName,
+					nextParentType    : null,
+					previousRange     : currentRange,
+					nextRange         : currentRange
 				})
 			}
 
@@ -296,18 +290,18 @@ export default class PopTool {
 		if (isAllAlreaySet) {
 			for (let i = 0; i < chunks.length; i++) {
 				// chunks[i].transformTo("p")
-				let originalType = chunks[i].type
+				let originalType       = chunks[i].type
 				let originalParentType = chunks[i].parentType
 				this.nodeMan.transformNode(chunks[i], "p")
 				actions.push({
-					type: "transform",
-					targetNode: chunks[i],
-					previousType: originalType,
+					type              : "transform",
+					targetNode        : chunks[i],
+					previousType      : originalType,
 					previousParentType: originalParentType,
-					nextType: "p",
-					nextParentType: null,
-					previousRange: currentRange,
-					nextRange: currentRange
+					nextType          : "p",
+					nextParentType    : null,
+					previousRange     : currentRange,
+					nextRange         : currentRange
 				})
 			}
 		}
@@ -324,23 +318,23 @@ export default class PopTool {
 	 */
 	align(dir)
 	{
-		let chunks = this.selMan.getAllNodesInSelection()
+		let chunks       = this.selMan.getAllNodesInSelection()
 		let currentRange = this.editSession.currentState.range
-		let actions = [], previousDir
+		let actions      = [], previousDir
 		for (let i = 0; i < chunks.length; i++) {
 			if (!AT.alignable.includes(chunks[i].type)) {
 				continue
 			}
-			previousDir = chunks[i].textElement.style.textAlign
-			if (previousDir === "") previousDir = "left"
-			chunks[i].textElement.style.textAlign = dir
+			                                          previousDir                      = chunks[i].textElement.style.textAlign
+			                                   if     (previousDir === "") previousDir = "left"
+			                                   chunks[i].textElement.style.textAlign   = dir
 			actions.push({
-				type: "textAlign",
-				targetNode: chunks[i],
-				previousDir: previousDir,
-				nextDir: dir,
+				type         : "textAlign",
+				targetNode   : chunks[i],
+				previousDir  : previousDir,
+				nextDir      : dir,
 				previousRange: currentRange,
-				nextRange: currentRange
+				nextRange    : currentRange
 			})
 		}
 		this.undoMan.record(actions)
@@ -356,13 +350,13 @@ export default class PopTool {
 
 		this.imageTool.classList.add("active")
 
-		this.imageTool.style.left =
+		this.imageTool.style.left = 
 		imageBlock.getBoundingClientRect().left +
 		imageBlock.getBoundingClientRect().width / 2 -
 		this.imageTool.getBoundingClientRect().width / 2
 		+ "px"
 
-		this.imageTool.style.top =
+		this.imageTool.style.top = 
 		- editorBody.getBoundingClientRect().top +
 		imageBlock.getBoundingClientRect().top +
 		imageBlock.getBoundingClientRect().height / 2 -

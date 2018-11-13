@@ -1,5 +1,4 @@
-module.exports =
-{
+export const AT = {
 	"topTags": [
 		"p", "h1", "h2", "h3", "blockquote", "li", "figure"
 	],

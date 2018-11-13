@@ -1,36 +1,28 @@
 import PVMNode from "./PVMNode"
-import SelectionManager from "./SelectionManager";
+import SelectionManager from "./SelectionManager"
+
+interface RangePoint {
+	node  : PVMNode
+	offset: number
+	state : number
+}
 
 export default class PVMRange {
 
-	/**
-	 * 
-	 * @param {PVMNode} startNode
-	 * @param {number} startOffset 
-	 * @param {PVMNode} endNode
-	 * @param {number} endOffset 
-	 */
-	constructor(startNode = null, startOffset = null, endNode = null, endOffset = null) {
+	start: RangePoint = {
+		node: undefined,
+		offset: undefined,
+		state: 2
+	}
+	end  : RangePoint = {
+		node: undefined,
+		offset: undefined,
+		state: 2
+	}
+
+	constructor(startNode: PVMNode, startOffset: number, endNode: PVMNode, endOffset: number) {
 
 		// Properties
-
-		this.start = {
-			/**
-			 * @type {PVMNode}
-			 */
-			node: null,
-			offset: null,
-			state: 2
-		}
-
-		this.end = {
-			/**
-			 * @type {PVMNode}
-			 */
-			node: null,
-			offset: null,
-			state: 2
-		}
 
 		this.setStart(startNode, startOffset)
 		this.setEnd(endNode, endOffset)
@@ -55,13 +47,8 @@ export default class PVMRange {
 
 	// Setters
 
-	/**
-	 * Sets the starting point of the range.
-	 * @param {PVMNode} startNode 
-	 * @param {Number} startOffset 
-	 */
-	setStart(startNode, startOffset) {
-		this.start.node = startNode
+	setStart(startNode: PVMNode, startOffset: number) {
+		this.start.node   = startNode
 		this.start.offset = startOffset
 		if (!startNode) {
 			return
@@ -79,13 +66,8 @@ export default class PVMRange {
 		}
 	}
 
-	/**
-	 * Sets the ending point of the range.
-	 * @param {PVMNode} endNode 
-	 * @param {Number} endOffset 
-	 */
-	setEnd(endNode, endOffset) {
-		this.end.node = endNode
+	setEnd(endNode: PVMNode, endOffset: number) {
+		this.end.node   = endNode
 		this.end.offset = endOffset
 		if (!endNode) {
 			return
@@ -115,7 +97,7 @@ export default class PVMRange {
 	}
 
 	clone() {
-		let sel = new SelectionManager()
+		let sel   = new SelectionManager()
 		let range = sel.createRange(this.start.node, this.start.offset, this.end.node, this.end.offset)
 		return range
 	}

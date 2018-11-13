@@ -3,30 +3,21 @@ import EventManager from "./EventManager"
 import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession"
 import PVMNode from "./PVMNode"
-import AT from "./config/AvailableTypes"
+import {AT} from "./config/AvailableTypes"
 
 export default class NodeManager {
 
+	eventMan   : EventManager
+	undoMan    : UndoManager
+	selMan     : SelectionManager
+	editSession: EditSession
+
 	constructor() {
 
-		/**
-		 * @type {EventManager}
-		 */
 		this.eventMan = null
-		/**
-		 * @type {UndoManager}
-		 */
 		this.undoMan = null
-		/**
-		 * @type {SelectionManager}
-		 */
 		this.selMan = null
-		/**
-		 * @type {EditSession}
-		 */
 		this.editSession = null
-
-		this.a = 10
 
 	}
 
@@ -46,7 +37,7 @@ export default class NodeManager {
 		}
 
 		let previousChild = refChild.previousSibling
-		let refChildDOM = refChild.element
+		let refChildDOM   = refChild.element
 		let refChildIndex = this.getChildIndex(refChild)
 
 		let newChildDOM = insertingChild.element
@@ -55,9 +46,9 @@ export default class NodeManager {
 		this.editSession.nodeList.splice(refChildIndex, 0, insertingChild)
 		if (this.editSession.nodeList[refChildIndex - 1]) {
 			this.editSession.nodeList[refChildIndex - 1].nextSibling = insertingChild
-			insertingChild.previousSibling = this.editSession.nodeList[refChildIndex - 1]
+			                          insertingChild.previousSibling = this.editSession.nodeList[refChildIndex - 1]
 		}
-		refChild.previousSibling = insertingChild
+		refChild.previousSibling   = insertingChild
 		insertingChild.nextSibling = refChild
 
 		// Updates view
@@ -122,7 +113,7 @@ export default class NodeManager {
 		let nodeList = this.editSession.nodeList
 		if (nodeList[nodeList.length - 1]) {
 			nodeList[nodeList.length - 1].nextSibling = child
-			child.previousSibling = nodeList[nodeList.length - 1]
+			         child.previousSibling            = nodeList[nodeList.length - 1]
 		}
 		child.isConnected = true
 		nodeList.push(child)
@@ -146,9 +137,9 @@ export default class NodeManager {
 	 * @param {PVMNode} node
 	 * @return {number}
 	 */
-	getChildIndex(node) {
+	getChildIndex(node: PVMNode) {
 
-		return this.editSession.nodeList.findIndex(function(element) {
+		return this.editSession.nodeList.findIndex(function(element: PVMNode) {
 			return element.isSameAs(node)
 		})
 
@@ -157,7 +148,7 @@ export default class NodeManager {
 	/**
 	 * @param {number} id
 	 */
-	getNodeByID(id) {
+	getNodeByID(id: number) {
 
 		return this.editSession.nodeList.find(function(element) {
 			return element.id === id
@@ -200,7 +191,7 @@ export default class NodeManager {
 	 * @param {string} options.mode
 	 * @return {PVMNode}
 	 */
-	createNode(type, options) {
+	createNode(type, options?) {
 
 		type = type.toLowerCase()
 
@@ -231,7 +222,7 @@ export default class NodeManager {
 		if (AT.textOnly.includes(newNode.type)) {
 
 			// Text nodes
-			dom = document.createElement(newNode.type)
+			dom           = document.createElement(newNode.type)
 			dom.innerHTML = "<br>"
 			if (options && ("html" in options)) {
 				dom.innerHTML = options.html
@@ -239,7 +230,7 @@ export default class NodeManager {
 					dom.innerHTML = "<br>"
 				}
 			}
-			newNode.element = dom
+			newNode.element     = dom
 			newNode.textElement = dom
 
 		} else if (newNode.type === "image") {
@@ -250,20 +241,20 @@ export default class NodeManager {
 			if (options.size) {
 				dom.classList.add(options.size)
 			}
-			let imgWrapper = document.createElement("div")
-			imgWrapper.className = "image-wrapper"
-			imgWrapper.contentEditable = false
-			let imgDOM = document.createElement("img")
-			imgDOM.src = options.url
+			let imgWrapper                 = document.createElement("div")
+			    imgWrapper.className       = "image-wrapper"
+			    imgWrapper.contentEditable = "false"
+			let imgDOM                     = document.createElement("img")
+			    imgDOM.src                 = options.url
 			imgWrapper.appendChild(imgDOM)
-			let captionDOM = document.createElement("figcaption")
-			captionDOM.innerHTML = options.html
+			let captionDOM           = document.createElement("figcaption")
+			    captionDOM.innerHTML = options.html
 			if (options.html.length > 0) {
 				dom.classList.add("caption-enabled")
 			}
 			dom.appendChild(imgWrapper)
 			dom.appendChild(captionDOM)
-			newNode.element = dom
+			newNode.element     = dom
 			newNode.textElement = captionDOM
 
 		}
@@ -310,7 +301,7 @@ export default class NodeManager {
 
 		// Process the js object
 		this.editSession.nodeList[index].previousSibling = null
-		this.editSession.nodeList[index].nextSibling = null
+		this.editSession.nodeList[index].nextSibling     = null
 		this.editSession.nodeList.splice(index, 1)
 
 		// Process the dom. (view)
@@ -329,7 +320,7 @@ export default class NodeManager {
 	splitNode(newNodeID = null) {
 
 		let range
-		let currentNode = this.selMan.getCurrentNode()
+		let currentNode  = this.selMan.getCurrentNode()
 		let currentRange = this.selMan.getCurrentRange()
 
 		let bugSolver = document.createTextNode(" ")
@@ -345,7 +336,7 @@ export default class NodeManager {
 
 		let newNode = this.createNode(currentNode.type, {
 			parentType: currentNode.parentType,
-			nodeID: newNodeID
+			nodeID    : newNodeID
 		})
 		let n
 		newNode.textElement.innerHTML = ""
@@ -403,7 +394,7 @@ export default class NodeManager {
 	 * @param {HTMLElement} childItem
 	 */
 	splitListByItem(listElm, childItem) {
-		let newList = document.createElement(listElm.nodeName)
+		let newList   = document.createElement(listElm.nodeName)
 		let yesInsert = false
 
 		let returnList = newList
@@ -450,10 +441,7 @@ export default class NodeManager {
 
 	}
 
-	/**
-	 * @param {HTMLElement} element
-	 */
-	normalize(element) {
+	normalize(element: HTMLElement) {
 		let currentRange = this.selMan.getCurrentRange()
 		while (1) {
 			if (!element.innerHTML.match(/<\/(.)><\1 ?.*?>/gi)) {
@@ -475,9 +463,9 @@ export default class NodeManager {
 		this.selMan.setRange(currentRange)
 	}
 
-	textNodesUnder(elm) {
+	textNodesUnder(elm: HTMLElement) {
 
-		let n, a = []
+		let n,    a = []
 		let walk = document.createTreeWalker(elm, NodeFilter.SHOW_TEXT, null, false)
 		while (n = walk.nextNode()) {
 			a.push(n)
@@ -488,13 +476,10 @@ export default class NodeManager {
 
 	/**
 	* Get the first or last text node inside the HTMLElement
-	* @param {HTMLElement} node
-	* @param {String} firstOrLast
-	* "first" | "last"
 	*/
-	getTextNodeInElementNode(node, firstOrLast)
+	getTextNodeInElementNode(node: HTMLElement, firstOrLast: string)
 	{
-		var travelNode = node
+		var travelNode: ChildNode = node
 		var returnNode = null
 		if (!node) {
 			return null
@@ -531,59 +516,6 @@ export default class NodeManager {
 	}
 
 	/**
-	* Splits text nodes based on the selection and
-	* returns start and end node.
-	* @return {Object.<Text>}
-	*/
-	splitTextNode()
-	{
-		var range = window.getSelection().getRangeAt(0)
-		if (!range) {
-			return
-		}
-		var startNode = range.startContainer
-		var startOffset = range.startOffset
-
-		var returnNode = {
-			startNode: null,
-			endNode: null
-		}
-
-		returnNode.startNode = startNode
-
-		// Split start of the range.
-		if (
-			startNode.nodeType === 3 &&
-			startOffset > 0 &&
-			startOffset < startNode.textContent.length
-		) {
-
-			returnNode.startNode = startNode.splitText(startOffset)
-
-		}
-
-		range = window.getSelection().getRangeAt(0)
-		var endNode = range.endContainer
-		var endOffset = range.endOffset
-
-		returnNode.endNode = endNode
-
-		// Split end of the range.
-		if (
-			startNode !== endNode &&
-			endNode.nodeType === 3 &&
-			endOffset < endNode.textContent.length
-		) {
-
-			endNode.splitText(endOffset)
-
-		}
-
-		return returnNode
-
-	}
-
-	/**
 	 *
 	 * @param {PVMNode} node
 	 * @param {string} newType
@@ -606,7 +538,7 @@ export default class NodeManager {
 		this.removeChild(node)
 
 		this.copySoul(node.element, newElm)
-		node.type = newType
+		node.type       = newType
 		node.parentType = newParentType
 		node.replaceElement(newElm)
 

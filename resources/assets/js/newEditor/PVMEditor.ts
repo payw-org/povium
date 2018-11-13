@@ -5,48 +5,55 @@ import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession"
 import PopTool from "./PopTool"
 import AJAX from "../AJAX"
-import AT from "./config/AvailableTypes"
+import {AT} from "./config/AvailableTypes"
+import { Example } from "./examples/example1"
 
 export default class PVMEditor {
 
-	/**
-	 *
-	 * @param {Element} editorDOM HTMLElement that id="post-editor"
-	 */
-	constructor(editorDOM) {
+	undoMan    : UndoManager
+	nodeMan    : NodeManager
+	eventMan   : EventManager
+	selMan     : SelectionManager
+	editSession: EditSession
+	popTool    : PopTool
 
-		this.undoMan = new UndoManager()
-		this.nodeMan = new NodeManager()
-		this.eventMan = new EventManager()
-		this.selMan = new SelectionManager()
+	/**
+	 * @param editorDOM id = "post-editor"
+	 */
+	constructor(editorDOM: HTMLElement) {
+
+		this.undoMan     = new UndoManager()
+		this.nodeMan     = new NodeManager()
+		this.eventMan    = new EventManager()
+		this.selMan      = new SelectionManager()
 		this.editSession = new EditSession(editorDOM)
-		this.popTool = new PopTool(this.editSession)
+		this.popTool     = new PopTool(this.editSession)
 
 		this.editSession.nodeMan = this.nodeMan
 
 		this.popTool.nodeMan = this.nodeMan
-		this.popTool.selMan = this.selMan
+		this.popTool.selMan  = this.selMan
 		this.popTool.undoMan = this.undoMan
 
-		this.undoMan.nodeMan = this.nodeMan
-		this.undoMan.eventMan = this.eventMan
-		this.undoMan.selMan = this.selMan
+		this.undoMan.nodeMan     = this.nodeMan
+		this.undoMan.eventMan    = this.eventMan
+		this.undoMan.selMan      = this.selMan
 		this.undoMan.editSession = this.editSession
 
-		this.nodeMan.undoMan = this.undoMan
-		this.nodeMan.eventMan = this.eventMan
-		this.nodeMan.selMan = this.selMan
+		this.nodeMan.undoMan     = this.undoMan
+		this.nodeMan.eventMan    = this.eventMan
+		this.nodeMan.selMan      = this.selMan
 		this.nodeMan.editSession = this.editSession
 
-		this.eventMan.undoMan = this.undoMan
-		this.eventMan.nodeMan = this.nodeMan
-		this.eventMan.selMan = this.selMan
+		this.eventMan.undoMan     = this.undoMan
+		this.eventMan.nodeMan     = this.nodeMan
+		this.eventMan.selMan      = this.selMan
 		this.eventMan.editSession = this.editSession
-		this.eventMan.popTool = this.popTool
+		this.eventMan.popTool     = this.popTool
 
-		this.selMan.undoMan = this.undoMan
-		this.selMan.nodeMan = this.nodeMan
-		this.selMan.eventMan = this.eventMan
+		this.selMan.undoMan     = this.undoMan
+		this.selMan.nodeMan     = this.nodeMan
+		this.selMan.eventMan    = this.eventMan
 		this.selMan.editSession = this.editSession
 
 		this.eventMan.attachEvents()
@@ -61,7 +68,7 @@ export default class PVMEditor {
 
 		this.editSession.editorBody.innerHTML = ""
 
-		let data = require("./examples/example1.json")
+		let data = Example
 
 		/**
 		 * @type {Array}
@@ -85,9 +92,9 @@ export default class PVMEditor {
 				
 				for (let j = 0; j < contents[i].data.length; j++) {
 
-					let text = contents[i].data[j].data
+					let text     = contents[i].data[j].data
 					let htmlPart = text
-					let style = contents[i].data[j].style
+					let style    = contents[i].data[j].style
 
 					if (style === "bold") {
 						htmlPart = "<b>" + text + "</b>"
@@ -105,7 +112,7 @@ export default class PVMEditor {
 
 				let node = this.nodeMan.createNode(contents[i].type, {
 					parentType: parentType,
-					html: html
+					html      : html
 				})
 
 				this.nodeMan.appendChild(node)
@@ -116,9 +123,9 @@ export default class PVMEditor {
 
 				for (let j = 0; j < contents[i].caption.data.length; j++) {
 
-					let text = contents[i].caption.data[j].data
+					let text     = contents[i].caption.data[j].data
 					let htmlPart = text
-					let style = contents[i].caption.data[j].style
+					let style    = contents[i].caption.data[j].style
 
 					if (style === "bold") {
 						htmlPart = "<b>" + text + "</b>"
@@ -135,7 +142,7 @@ export default class PVMEditor {
 				}
 
 				let node = this.nodeMan.createNode(contents[i].type, {
-					url: contents[i].url,
+					url : contents[i].url,
 					html: html,
 					size: contents[i].size
 				})

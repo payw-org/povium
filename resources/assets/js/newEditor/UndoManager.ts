@@ -10,15 +10,12 @@ export default class UndoManager {
 	eventMan: EventManager
 	selMan: SelectionManager
 	editSession: EditSession
-	private static actionStack: Array<Action | Array<Action>>
+	private static actionStack: Array<Action | Array<Action>> = []
 	private static currentStep: number = -1
 
 	constructor() {
 
-		this.nodeMan = null
-		this.eventMan = null
-		this.selMan = null
-		this.editSession = null
+		
 
 	}
 
@@ -32,12 +29,13 @@ export default class UndoManager {
 	/**
 	 * @param {Array} action
 	 */
-	record(action) {
+	record(action: Action | Action[]) {
 		// console.log(action)
 		if (!Array.isArray(action)) {
 			if (action.finalAction) {
-				if (this.getLatestAction() && Array.isArray(this.getLatestAction())) {
-					this.getLatestAction().push(action)
+				let latestAction = this.getLatestAction()
+				if (latestAction && Array.isArray(latestAction)) {
+					latestAction.push(action)
 					return
 				}
 			}

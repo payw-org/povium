@@ -1,4 +1,4 @@
-{
+export const Example = {
 	"title": "Blockchain Is a Semantic WasteLand",
 	"contents": [
 		{
