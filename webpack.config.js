@@ -19,33 +19,33 @@ module.exports = {
 		],
 
 		"editor.new": [
-			'./resources/assets/js/newEditor/main'
+			'./resources/assets/js/newEditor/main.ts'
 		]
 
 	},
 
 	mode: 'development',
-
 	devtool: 'source-map',
-
 	output : {
-
 		path: __dirname + '/public_html/build/js',
 		filename: '[name].built.js'
-		
+	},
+
+	resolve: {
+		extensions: [ '.js', '.ts' ]
 	},
 
 	module: {
 		rules: [
 			{
-				test: /\.js$/,
+				test: [/\.ts$/],
 				exclude: /(node_modules|bower_components)/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-					presets: ['env']
-					}
-				}
+				loaders: ['babel-loader', 'ts-loader']
+			},
+			{
+				test: [/\.js$/],
+				exclude: /(node_modules|bower_components)/,
+				loaders: ['babel-loader']
 			}
 		]
 	},
