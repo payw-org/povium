@@ -2,35 +2,33 @@ import PVMRange from "./PVMRange"
 import PVMNode from "./PVMNode"
 import { ErrorManager } from "./ErrorManager"
 import NodeManager from "./NodeManager"
-import AT from "./config/AvailableTypes"
+import {AT} from "./config/AvailableTypes"
 
 export default class EditSession {
 
-	editorDOM: HTMLElement
-	editorBody: HTMLElement
-	lastNodeID: number
+	editorDOM   : HTMLElement
+	editorBody  : HTMLElement
+	lastNodeID  : number
 	currentState: {
-		node: PVMNode
+		node    : PVMNode
 		textHTML: string
-		range: PVMRange
+		range   : PVMRange
 	}
 	nodeList: PVMNode[]
-	nodeMan: NodeManager
+	nodeMan : NodeManager
 
 	constructor(editorDOM: HTMLElement) {
 
-		
-
-		this.editorDOM = editorDOM
-		this.editorBody = editorDOM.querySelector("#editor-body")
-		this.lastNodeID = 0
+		this.editorDOM    = editorDOM
+		this.editorBody   = editorDOM.querySelector("#editor-body")
+		this.lastNodeID   = 0
 		this.currentState = {
-			node: null,
+			node    : null,
 			textHTML: null,
-			range: null
+			range   : null
 		}
 		this.nodeList = []
-		this.nodeMan = null
+		this.nodeMan  = null
 
 	}
 
