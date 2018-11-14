@@ -80,30 +80,31 @@ function checkValidation () {
 		success: function(response) {
 
 			try {
+			    if (response !== "") {
+                    let result = JSON.parse(response)
 
-				var result = JSON.parse(response)
+                    console.log(result)
 
-				console.log(result)
+                    if (result['readable_id_return']['err']) {
+                        readableIDInputObj.showMsg(result['readable_id_return']['msg'])
+                    } else {
+                        readableIDInputObj.hideMsg()
+                    }
 
-				if (result['readable_id_return']['err']) {
-					readableIDInputObj.showMsg(result['readable_id_return']['msg'])
-				} else {
-					readableIDInputObj.hideMsg()
-				}
+                    if (result['name_return']['err']) {
+                        nameInputObj.showMsg(result['name_return']['msg'])
+                    } else {
+                        nameInputObj.hideMsg()
+                    }
 
-				if (result['name_return']['err']) {
-					nameInputObj.showMsg(result['name_return']['msg'])
-				} else {
-					nameInputObj.hideMsg()
-				}
-
-				if (result['password_return']['err']) {
-					passInputObj.showMsg(result['password_return']['msg'])
-					passStrengthIndicator.hide()
-				} else {
-					passInputObj.hideMsg()
-					passStrengthIndicator.setStrength(result['password_return']['strength'])
-				}
+                    if (result['password_return']['err']) {
+                        passInputObj.showMsg(result['password_return']['msg'])
+                        passStrengthIndicator.hide()
+                    } else {
+                        passInputObj.hideMsg()
+                        passStrengthIndicator.setStrength(result['password_return']['strength'])
+                    }
+                }
 				
 			} catch (error) {
 				alert(error + " " + response)
@@ -131,23 +132,23 @@ startButton.addEventListener("click", function() {
 		data: JSON.stringify(inputData),
 
 		success: function(response) {
-
-			var result = JSON.parse(response)
-			console.log(response)
-			
+            //  @TODO: msg가 비어있을 경우, 출력x AND err 여부와 상관없이 redirect가 설정되어있으면 리디렉션하기
 			try {
+			    if (response !== "") {
+                    let result = JSON.parse(response)
 
-				let result = JSON.parse(response)
-				
-				if (result['err']) {
+                    console.log(response)
 
-					alert("입력 정보에 문제가 있어요!")
+                    if (result['err']) {
 
-				} else {
+                        alert("입력 정보에 문제가 있어요!")
 
-					window.location.replace(result['redirect'])
+                    } else {
 
-				}
+                        window.location.replace(result['redirect'])
+
+                    }
+                }
 
 			} catch(e) {
 

@@ -15,8 +15,11 @@ if (document.querySelector("#globalnav .sign-out")) {
 			success: function(response) {
 
 				try {
-					let result = JSON.parse(response)
-					window.location.replace(result['redirect'])
+					if (response !== "") {
+                        let result = JSON.parse(response)
+                        window.location.replace(result['redirect'])
+					}
+
 				} catch(e) {
 					alert(e + " " + response)
 				}
