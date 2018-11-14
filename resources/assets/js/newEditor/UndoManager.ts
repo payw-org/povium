@@ -6,10 +6,10 @@ import { Action } from "./Action"
 
 export default class UndoManager {
 
-	nodeMan: NodeManager
-	eventMan: EventManager
-	selMan: SelectionManager
-	editSession: EditSession
+	nodeMan                   : NodeManager
+	eventMan                  : EventManager
+	selMan                    : SelectionManager
+	editSession               : EditSession
 	private static actionStack: Array<Action | Array<Action>> = []
 	private static currentStep: number = -1
 
@@ -22,14 +22,14 @@ export default class UndoManager {
 	/**
 	 * Returns the latest undo action.
 	 */
-	getLatestAction() {
+	public static getLatestAction() {
 		return UndoManager.actionStack[UndoManager.currentStep]
 	}
 
 	/**
 	 * @param {Array} action
 	 */
-	record(action: Action | Action[]) {
+	public static record(action: Action | Action[]) {
 		// console.log(action)
 		if (!Array.isArray(action)) {
 			if (action.finalAction) {
@@ -46,7 +46,7 @@ export default class UndoManager {
 		// console.log(this.actionStack.slice(0))
 	}
 
-	undo() {
+	public static undo() {
 		if (UndoManager.currentStep < 0) {
 			// console.info("No more action records to undo.")
 			return
@@ -67,7 +67,7 @@ export default class UndoManager {
 		// console.groupEnd()
 	}
 
-	redo() {
+	public static redo() {
 		if (UndoManager.currentStep >= UndoManager.actionStack.length - 1) {
 			// console.info('No more actions to recover')
 			return
@@ -88,21 +88,21 @@ export default class UndoManager {
 		// console.groupEnd()
 	}
 
-	undoWithAction(action) {
+	private static undoWithAction(action: Action) {
 		if (action.type === "remove") {
-			this.nodeMan.insertChildBefore(action.targetNode, action.nextNode)
+			NodeManager.insertChildBefore(action.targetNode, action.nextNode)
 		}
 
 		if (action.type === "insert") {
-			this.nodeMan.removeChild(action.targetNode)
+			NodeManager.removeChild(action.targetNode)
 		}
 
 		if (action.type === "split") {
-			this.nodeMan.mergeNodes(action.targetNodes[0], action.targetNodes[1])
+			NodeManager.mergeNodes(action.targetNodes[0], action.targetNodes[1])
 		}
 
 		if (action.type === "merge") {
-			this.nodeMan.insertChildBefore(action.targetNodes[1], action.targetNodes[0].nextSibling)
+			NodeManager.insertChildBefore(action.targetNodes[1], action.targetNodes[0].nextSibling)
 			action.targetNodes[0].textElement.innerHTML = action.debris
 		}
 
@@ -111,32 +111,32 @@ export default class UndoManager {
 		}
 
 		if (action.type === "transform") {
-			this.nodeMan.transformNode(action.targetNode, action.previousType, action.previousParentType)
+			NodeManager.transformNode(action.targetNode, action.previousType, action.previousParentType)
 		}
 
 		if (action.type === "textAlign") {
 			action.targetNode.textElement.style.textAlign = action.previousDir
 		}
 
-		this.selMan.setRange(action.previousRange)
+		SelectionManager.setRange(action.previousRange)
 	}
 
-	redoWithAction(action) {
+	private static redoWithAction(action: Action) {
 		if (action.type === "remove") {
-			this.nodeMan.removeChild(action.targetNode)
+			NodeManager.removeChild(action.targetNode)
 		}
 
 		if (action.type === "insert") {
-			this.nodeMan.insertChildBefore(action.targetNode, action.nextNode)
+			NodeManager.insertChildBefore(action.targetNode, action.nextNode)
 		}
 
 		if (action.type === "split") {
 			action.targetNodes[0].textElement.innerHTML = action.debris
-			this.nodeMan.insertChildBefore(action.targetNodes[1], action.targetNodes[0].nextSibling)
+			NodeManager.insertChildBefore(action.targetNodes[1], action.targetNodes[0].nextSibling)
 		}
 
 		if (action.type === "merge") {
-			this.nodeMan.mergeNodes(action.targetNodes[0], action.targetNodes[1])
+			NodeManager.mergeNodes(action.targetNodes[0], action.targetNodes[1])
 		}
 
 		if (action.type === "textChange") {
@@ -144,14 +144,14 @@ export default class UndoManager {
 		}
 
 		if (action.type === "transform") {
-			this.nodeMan.transformNode(action.targetNode, action.nextType, action.nextParentType)
+			NodeManager.transformNode(action.targetNode, action.nextType, action.nextParentType)
 		}
 
 		if (action.type === "textAlign") {
 			action.targetNode.textElement.style.textAlign = action.nextDir
 		}
 
-		this.selMan.setRange(action.nextRange)
+		SelectionManager.setRange(action.nextRange)
 	}
 
 }

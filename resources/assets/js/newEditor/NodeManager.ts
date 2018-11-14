@@ -5,34 +5,24 @@ import EditSession from "./EditSession"
 import PVMNode from "./PVMNode"
 import {AT} from "./config/AvailableTypes"
 
-export default class NodeManager {
-
-	eventMan   : EventManager
-	undoMan    : UndoManager
-	selMan     : SelectionManager
-	editSession: EditSession
+export default class NodeManager
+{
 
 	constructor() {
-
-		this.eventMan = null
-		this.undoMan = null
-		this.selMan = null
-		this.editSession = null
 
 	}
 
 	/**
 	 * Insert child before the referenced child.
 	 * If the referenced child is null, it appends child to last.
-	 * @param {PVMNode} insertingChild
-	 * @param {PVMNode} refChild
 	 */
-	insertChildBefore(insertingChild, refChild) {
+	public static insertChildBefore(insertingChild: PVMNode, refChild: PVMNode)
+	{
 
 		// If the refChild is null,
 		// append it to the last.
 		if (!refChild) {
-			this.appendChild(insertingChild)
+			NodeManager.appendChild(insertingChild)
 			return
 		}
 
@@ -43,10 +33,10 @@ export default class NodeManager {
 		let newChildDOM = insertingChild.element
 
 		// Adds a node to JS storage
-		this.editSession.nodeList.splice(refChildIndex, 0, insertingChild)
-		if (this.editSession.nodeList[refChildIndex - 1]) {
-			this.editSession.nodeList[refChildIndex - 1].nextSibling = insertingChild
-			                          insertingChild.previousSibling = this.editSession.nodeList[refChildIndex - 1]
+		EditSession.nodeList.splice(refChildIndex, 0, insertingChild)
+		if (EditSession.nodeList[refChildIndex - 1]) {
+			EditSession.nodeList[refChildIndex - 1].nextSibling = insertingChild
+			                          insertingChild.previousSibling = EditSession.nodeList[refChildIndex - 1]
 		}
 		refChild.previousSibling   = insertingChild
 		insertingChild.nextSibling = refChild
@@ -108,12 +98,13 @@ export default class NodeManager {
 	/**
 	 * @param {PVMNode} child
 	 */
-	appendChild(child) {
+	public static appendChild(child: PVMNode)
+	{
 
-		let nodeList = this.editSession.nodeList
+		let nodeList = EditSession.nodeList
 		if (nodeList[nodeList.length - 1]) {
 			nodeList[nodeList.length - 1].nextSibling = child
-			         child.previousSibling            = nodeList[nodeList.length - 1]
+			child.previousSibling = nodeList[nodeList.length - 1]
 		}
 		child.isConnected = true
 		nodeList.push(child)
@@ -122,44 +113,40 @@ export default class NodeManager {
 		if (child.type === "li") {
 			let wrapper = document.createElement(child.parentType)
 			wrapper.appendChild(child.element)
-			this.editSession.editorBody.appendChild(wrapper)
+			EditSession.editorBody.appendChild(wrapper)
 			if (child.previousSibling && child.previousSibling.type === "li" && child.previousSibling.parentType === child.parentType) {
 				this.mergeLists(child.previousSibling.element.parentElement, child.element.parentElement)
 			}
 		} else {
-			this.editSession.editorBody.appendChild(child.element)
+			EditSession.editorBody.appendChild(child.element)
 		}
 
 	}
 
 	/**
 	 * Returns the node's index.
-	 * @param {PVMNode} node
-	 * @return {number}
 	 */
-	getChildIndex(node: PVMNode) {
+	public static getChildIndex(node: PVMNode): number
+	{
 
-		return this.editSession.nodeList.findIndex(function(element: PVMNode) {
+		return EditSession.nodeList.findIndex(function(element: PVMNode) {
 			return element.isSameAs(node)
 		})
 
 	}
 
-	/**
-	 * @param {number} id
-	 */
-	getNodeByID(id: number) {
 
-		return this.editSession.nodeList.find(function(element) {
+	public static getNodeByID(id: number): PVMNode
+	{
+
+		return EditSession.nodeList.find(function(element) {
 			return element.id === id
 		})
 
 	}
 
-	/**
-	 * @param {Element} element
-	 */
-	getNodeID(element) {
+	public static getNodeID(element: Element): number
+	{
 
 		let id = Number(element.getAttribute("data-ni"))
 		if (!id) {
@@ -172,13 +159,11 @@ export default class NodeManager {
 
 	}
 
-	/**
-	 * @param {Element} element 
-	 * @param {number} id 
-	 */
-	setNodeID(element, id) {
 
-		element.setAttribute("data-ni", id)
+	public static setNodeID(element: HTMLElement, id: number | string)
+	{
+
+		element.setAttribute("data-ni", String(id))
 
 	}
 
@@ -191,7 +176,15 @@ export default class NodeManager {
 	 * @param {string} options.mode
 	 * @return {PVMNode}
 	 */
-	createNode(type, options?) {
+	public static createNode(type: string, options?: {
+		nodeID?    : number
+		parentType?: string
+		html?      : string
+		url?       : string
+		mode?      : string
+		size?      : string
+	}): PVMNode
+	{
 
 		type = type.toLowerCase()
 
@@ -209,7 +202,7 @@ export default class NodeManager {
 		if (options && options.nodeID) {
 			newNode.id = options.nodeID
 		} else {
-			newNode.id = ++this.editSession.lastNodeID
+			newNode.id = ++EditSession.lastNodeID
 		}
 		
 		newNode.type = type
@@ -259,26 +252,21 @@ export default class NodeManager {
 
 		}
 
-		dom.setAttribute("data-ni", newNode.id)
+		dom.setAttribute("data-ni", String(newNode.id))
 
 		return newNode
 
 	}
 
-	/**
-	 * @return {PVMNode}
-	 */
-	getFirstChild()
+
+	public static getFirstChild(): PVMNode
 	{
-		return this.editSession.nodeList[0]
+		return EditSession.nodeList[0]
 	}
 
-	/**
-	 * @return {PVMnode}
-	 */
-	getLastChild()
+	public static getLastChild(): PVMNode
 	{
-		return this.editSession.nodeList[this.editSession.nodeList.length - 1]
+		return EditSession.nodeList[EditSession.nodeList.length - 1]
 	}
 
 	/**
@@ -286,7 +274,7 @@ export default class NodeManager {
 	* @param {PVMNode} node
 	* @param {object} recordData { beforeRange, afterRange }
 	*/
-	removeChild(node)
+	public static removeChild(node: PVMNode)
 	{
 
 		let index = this.getChildIndex(node)
@@ -300,9 +288,9 @@ export default class NodeManager {
 		}
 
 		// Process the js object
-		this.editSession.nodeList[index].previousSibling = null
-		this.editSession.nodeList[index].nextSibling     = null
-		this.editSession.nodeList.splice(index, 1)
+		EditSession.nodeList[index].previousSibling = null
+		EditSession.nodeList[index].nextSibling     = null
+		EditSession.nodeList.splice(index, 1)
 
 		// Process the dom. (view)
 		if (node.type === "li") {
@@ -317,18 +305,19 @@ export default class NodeManager {
 
 	}
 
-	splitNode(newNodeID = null) {
+	public static splitNode(newNodeID: number = null)
+	{
 
 		let range
-		let currentNode  = this.selMan.getCurrentNode()
-		let currentRange = this.selMan.getCurrentRange()
+		let currentNode  = SelectionManager.getCurrentNode()
+		let currentRange = SelectionManager.getCurrentRange()
 
 		let bugSolver = document.createTextNode(" ")
 		currentNode.textElement.appendChild(bugSolver)
 
-		let newRange = this.selMan.createRange(currentNode, currentRange.start.offset, currentNode, currentNode.getTextContent().length)
+		let newRange = SelectionManager.createRange(currentNode, currentRange.start.offset, currentNode, currentNode.getTextContent().length)
 
-		this.selMan.setRange(newRange)
+		SelectionManager.setRange(newRange)
 
 		range = window.getSelection().getRangeAt(0)
 
@@ -353,11 +342,8 @@ export default class NodeManager {
 		
 	}
 
-	/**
-	 * @param {PVMNode} node1
-	 * @param {PVMNode} node2
-	 */
-	mergeNodes(node1, node2) {
+	public static mergeNodes(node1: PVMNode, node2: PVMNode)
+	{
 
 		if (!node1 || !node2) {
 			return
@@ -376,10 +362,9 @@ export default class NodeManager {
 
 	/**
 	 * Splits list from 0 ~ index, (index + 1) ~ last and returns new list elm.
-	 * @param {HTMLElement} listElm
-	 * @param {number} index
 	 */
-	splitListByIndex(listElm, index) {
+	public static splitListByIndex(listElm: HTMLElement, index: number)
+	{
 		let itemCount = listElm.querySelectorAll("li").length
 		if (index + 1 > itemCount) {
 			console.error("The given index " + index + " is bigger than the list size.", listElm)
@@ -390,10 +375,9 @@ export default class NodeManager {
 	 * Splits list and returns the new generated list element.
 	 * If the splitting target is the first child,
 	 * then it does nothing and returns given list element.
-	 * @param {HTMLElement} listElm
-	 * @param {HTMLElement} childItem
 	 */
-	splitListByItem(listElm, childItem) {
+	public static splitListByItem(listElm: HTMLElement, childItem: HTMLElement)
+	{
 		let newList   = document.createElement(listElm.nodeName)
 		let yesInsert = false
 
@@ -421,11 +405,8 @@ export default class NodeManager {
 
 	/**
 	 * Merges list1 and list2 into list1.
-	 * @param {Element} list1
-	 * @param {Element} list2
-	 * @param {boolean} forceMerge
 	 */
-	mergeLists(list1, list2, forceMerge = false)
+	public static mergeLists(list1: HTMLElement, list2: HTMLElement, forceMerge: boolean = false)
 	{
 
 		if (list1.nodeName !== list2.nodeName && !forceMerge) {
@@ -441,8 +422,12 @@ export default class NodeManager {
 
 	}
 
-	normalize(element: HTMLElement) {
-		let currentRange = this.selMan.getCurrentRange()
+	/**
+	 * Remove empty tags and add <br> tag if the node is text-empty.
+	 */
+	public static normalize(element: HTMLElement)
+	{
+		let currentRange = SelectionManager.getCurrentRange()
 		while (1) {
 			if (!element.innerHTML.match(/<\/(.)><\1 ?.*?>/gi)) {
 				break
@@ -460,10 +445,11 @@ export default class NodeManager {
 			element.appendChild(document.createElement("br"))
 		}
 
-		this.selMan.setRange(currentRange)
+		SelectionManager.setRange(currentRange)
 	}
 
-	textNodesUnder(elm: HTMLElement) {
+	public static textNodesUnder(elm: HTMLElement)
+	{
 
 		let n,    a = []
 		let walk = document.createTreeWalker(elm, NodeFilter.SHOW_TEXT, null, false)
@@ -477,7 +463,7 @@ export default class NodeManager {
 	/**
 	* Get the first or last text node inside the HTMLElement
 	*/
-	getTextNodeInElementNode(node: HTMLElement, firstOrLast: string)
+	public static getTextNodeInElementNode(node: HTMLElement, firstOrLast: string)
 	{
 		var travelNode: ChildNode = node
 		var returnNode = null
@@ -515,14 +501,8 @@ export default class NodeManager {
 
 	}
 
-	/**
-	 *
-	 * @param {PVMNode} node
-	 * @param {string} newType
-	 * @param {boolean} isRecording
-	 * @param {string} newParentType
-	 */
-	transformNode(node, newType, newParentType = null)
+
+	public static transformNode(node: PVMNode, newType: string, newParentType?: string)
 	{
 		// If the original node type and
 		// the new type is same, do nothing.
@@ -557,20 +537,20 @@ export default class NodeManager {
 	}
 
 	/**
-	 * @param {HTMLElement} fromElm 
-	 * @param {HTMLElement} toElm 
+	 * Copy nodeID and attributes.
 	 */
-	copySoul(fromElm, toElm) {
+	public static copySoul(fromElm: HTMLElement, toElm: HTMLElement)
+	{
 
 		toElm.innerHTML = fromElm.innerHTML
-		toElm.setAttribute("data-ni", this.getNodeID(fromElm))
+		toElm.setAttribute("data-ni", String(this.getNodeID(fromElm)))
 		if (AT.alignable.includes(toElm.nodeName) && fromElm.style.textAlign) {
 			toElm.style.textAlign = fromElm.style.textAlign
 		}
 		
 	}
 
-	convertToJSON() {
+	public static convertToJSON() {
 
 	}
 

@@ -98,7 +98,7 @@ export default class PVMRange {
 
 	clone() {
 		let sel   = new SelectionManager()
-		let range = sel.createRange(this.start.node, this.start.offset, this.end.node, this.end.offset)
+		let range = SelectionManager.createRange(this.start.node, this.start.offset, this.end.node, this.end.offset)
 		return range
 	}
 

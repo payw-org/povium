@@ -7,33 +7,28 @@ import PVMRange from "./PVMRange";
 
 export default class PopTool {
 
-	editSession  : EditSession
-	selMan       : SelectionManager
-	nodeMan      : NodeManager
-	undoMan      : UndoManager
-	pt           : HTMLElement
-	imageTool    : HTMLElement
-	tempLinkRange: PVMRange
+	public static pt       : HTMLElement
+	public static imageTool: HTMLElement
+	tempLinkRange          : PVMRange
 
-
-	constructor(editSession: EditSession)
+	constructor()
 	{
+		
+	}
 
-		this.editSession = editSession
-		this.selMan      = null
-		this.nodeMan     = null
-		this.undoMan     = null
-		this.pt          = this.editSession.editorDOM.querySelector('#poptool')
-		this.imageTool   = this.editSession.editorDOM.querySelector('#image-preference-view')
+	public static init() {
+		this.pt        = EditSession.editorDOM.querySelector('#poptool')
+		this.imageTool = EditSession.editorDOM.querySelector('#image-preference-view')
 	}
 
 	// Methods
 
-	togglePopTool() {
+	public static togglePopTool()
+	{
 		if (document.getSelection().rangeCount === 0) {
 			return
 		}
-		var range = this.selMan.getCurrentRange()
+		var range = SelectionManager.getCurrentRange()
 		if (range && !range.isCollapsed()) {
 			this.showPopTool()
 		} else {
@@ -41,19 +36,20 @@ export default class PopTool {
 		}
 	}
 
-	showPopTool() {
+	public static showPopTool()
+	{
 
 		var range = document.getSelection().getRangeAt(0)
 
-		let currentRange = this.selMan.getCurrentRange()
-		var currentNode  = this.selMan.getCurrentNode()
+		let currentRange = SelectionManager.getCurrentRange()
+		var currentNode  = SelectionManager.getCurrentNode()
 
 		if (!currentNode) {
 			this.hidePopTool()
 			return
 		}
 
-		let isApplied = []
+		let isApplied: string[] = []
 		let config    = {
 			heading   : true,
 			align     : true,
@@ -88,29 +84,23 @@ export default class PopTool {
 		if (
 			currentNode.type === "li"
 		) {
-
 			config.heading    = false
 			config.align      = false
 			config.blockquote = false
-
 		} else if (
 			currentNode.type === "blockquote"
 		) {
-
 			config.heading = false
 			config.align   = false
-
 		} else if (
 			currentNode.type === "image"
 		) {
-
 			config.heading    = false
 			config.align      = false
 			config.blockquote = false
-
 		}
 
-		this.setPopToolMenu(config)
+		PopTool.setPopToolMenu(config)
 
 		let left = range.getBoundingClientRect().left - document.querySelector("#post-editor").getBoundingClientRect().left + range.getBoundingClientRect().width / 2 - this.pt.getBoundingClientRect().width / 2
 
@@ -141,7 +131,7 @@ export default class PopTool {
 
 	}
 
-	hidePopTool() {
+	public static hidePopTool() {
 		this.pt.classList.remove("active")
 		setTimeout(() => {
 			this.pt.querySelector(".top-categories").classList.remove("hidden")
@@ -156,7 +146,13 @@ export default class PopTool {
 
 	}
 
-	setPopToolMenu(config) {
+	public static setPopToolMenu(config: {
+		heading?: boolean
+		align?: boolean
+		blockquote?: boolean
+		isApplied?: string[]
+	})
+	{
 
 		// Link and text style is always available
 
@@ -194,7 +190,7 @@ export default class PopTool {
 			this.pt.querySelectorAll(".is-applied").forEach(function(element) {
 				element.classList.remove("is-applied")
 			})
-			config["isApplied"].forEach((ia) => {
+			config["isApplied"].forEach((ia: string) => {
 				if (ia === "h1") this.pt.querySelector("#pt-h1").classList.add("is-applied")
 				if (ia === "h2") this.pt.querySelector("#pt-h2").classList.add("is-applied")
 				if (ia === "h3") this.pt.querySelector("#pt-h3").classList.add("is-applied")
@@ -213,19 +209,18 @@ export default class PopTool {
 
 	/**
 	 * Changes the selection's text style.
-	 * @param {string} method
 	 */
-	changeTextStyle(method)
+	public static changeTextStyle(method: string)
 	{
 
 		// console.log(document.execCommand('bold', false))
 		// this.itmotnTT("strong")
 		// this.styleText("strong")
 
-		let chunks       = this.selMan.getAllNodesInSelection("textContained")
-		let currentRange = this.selMan.getCurrentRange()
+		let chunks       = SelectionManager.getAllNodesInSelection("textContained")
+		let currentRange = SelectionManager.getCurrentRange()
 
-		let originalContents = []
+		let originalContents: string[] = []
 		chunks.forEach((chunk) => {
 			originalContents.push(chunk.textElement.innerHTML)
 		})
@@ -247,22 +242,20 @@ export default class PopTool {
 				})
 			}
 		}
-		this.undoMan.record(actions)
+		UndoManager.record(actions)
 
 	}
 
-	/**
-	 *
-	 * @param {string} tagName
-	 */
-	transformNodes(tagName)
+	public static transformNodes(tagName: string)
 	{
 
-		                        tagName        = tagName.toLowerCase()
-		                    let chunks         = this.selMan.getAllNodesInSelection()
-		                    let currentRange   = this.selMan.getCurrentRange()
-		                    let isAllAlreaySet = true
-		                    let actions        = []
+		tagName = tagName.toLowerCase()
+
+		let chunks         = SelectionManager.getAllNodesInSelection()
+		let currentRange   = SelectionManager.getCurrentRange()
+		let isAllAlreaySet = true
+		let actions        = []
+
 		for (let i = 0; i < chunks.length; i++) {
 			if (!AT.transformable.includes(chunks[i].type)) {
 				continue
@@ -272,7 +265,7 @@ export default class PopTool {
 				// chunks[i].transformTo(tagName)
 				let originalType       = chunks[i].type
 				let originalParentType = chunks[i].parentType
-				this.nodeMan.transformNode(chunks[i], tagName)
+				NodeManager.transformNode(chunks[i], tagName)
 				actions.push({
 					type              : "transform",
 					targetNode        : chunks[i],
@@ -292,7 +285,7 @@ export default class PopTool {
 				// chunks[i].transformTo("p")
 				let originalType       = chunks[i].type
 				let originalParentType = chunks[i].parentType
-				this.nodeMan.transformNode(chunks[i], "p")
+				NodeManager.transformNode(chunks[i], "p")
 				actions.push({
 					type              : "transform",
 					targetNode        : chunks[i],
@@ -306,28 +299,27 @@ export default class PopTool {
 			}
 		}
 
-		this.selMan.setRange(currentRange)
+		SelectionManager.setRange(currentRange)
 
-		this.undoMan.record(actions)
+		UndoManager.record(actions)
 
 	}
 
 	/**
-	 *
 	 * @param {string} dir "left" | "center" | "right"
 	 */
-	align(dir)
+	public static align(dir: string)
 	{
-		let chunks       = this.selMan.getAllNodesInSelection()
-		let currentRange = this.editSession.currentState.range
+		let chunks       = SelectionManager.getAllNodesInSelection()
+		let currentRange = EditSession.currentState.range
 		let actions      = [], previousDir
 		for (let i = 0; i < chunks.length; i++) {
 			if (!AT.alignable.includes(chunks[i].type)) {
 				continue
 			}
-			                                          previousDir                      = chunks[i].textElement.style.textAlign
-			                                   if     (previousDir === "") previousDir = "left"
-			                                   chunks[i].textElement.style.textAlign   = dir
+			previousDir = chunks[i].textElement.style.textAlign
+			if (previousDir === "") previousDir = "left"
+			chunks[i].textElement.style.textAlign   = dir
 			actions.push({
 				type         : "textAlign",
 				targetNode   : chunks[i],
@@ -337,37 +329,35 @@ export default class PopTool {
 				nextRange    : currentRange
 			})
 		}
-		this.undoMan.record(actions)
+		UndoManager.record(actions)
 	}
 
-	/**
-	*
-	* @param {HTMLElement} imageBlock
-	*/
-	showImageTool(imageBlock) {
+	public static showImageTool(imageBlock: HTMLElement)
+	{
 
-		let editorBody = this.editSession.editorBody
+		let editorBody = EditSession.editorBody
 
-		this.imageTool.classList.add("active")
+		PopTool.imageTool.classList.add("active")
 
-		this.imageTool.style.left = 
+		PopTool.imageTool.style.left = 
 		imageBlock.getBoundingClientRect().left +
 		imageBlock.getBoundingClientRect().width / 2 -
-		this.imageTool.getBoundingClientRect().width / 2
+		PopTool.imageTool.getBoundingClientRect().width / 2
 		+ "px"
 
-		this.imageTool.style.top = 
+		PopTool.imageTool.style.top = 
 		- editorBody.getBoundingClientRect().top +
 		imageBlock.getBoundingClientRect().top +
 		imageBlock.getBoundingClientRect().height / 2 -
-		this.imageTool.getBoundingClientRect().height / 2
+		PopTool.imageTool.getBoundingClientRect().height / 2
 		+ "px"
 
-		// this.imageTool.style.top = imageBlock.getBoundingClientRect().top - this.editor.getBoundingClientRect().top + "px"
+		// PopTool.imageTool.style.top = imageBlock.getBoundingClientRect().top - this.editor.getBoundingClientRect().top + "px"
 	}
 
-	hideImageTool() {
-		this.imageTool.classList.remove("active")
+	public static hideImageTool()
+	{
+		PopTool.imageTool.classList.remove("active")
 	}
 
 }

@@ -8,28 +8,13 @@ import {AT} from "./config/AvailableTypes"
 
 export default class SelectionManager {
 
-	nodeMan    : NodeManager
-	undoMan    : UndoManager
-	eventMan   : EventManager
-	editSession: EditSession
-
 	constructor() {
-
-		this.nodeMan     = null
-		this.undoMan     = null
-		this.eventMan    = null
-		this.editSession = null
 
 	}
 
 	// Setters
 
-	setNodeManager(nodeMan: NodeManager)
-	{
-		this.nodeMan = nodeMan
-	}
-
-	setRange(pvmRange: PVMRange) {
+	public static setRange(pvmRange: PVMRange) {
 
 		if (!pvmRange) return
 
@@ -53,9 +38,7 @@ export default class SelectionManager {
 
 		while (1) {
 
-			if (!travelNode) {
-				break
-			}
+			if (!travelNode) break
 
 			if (travelNode.nodeType === 3) {
 
@@ -127,6 +110,8 @@ export default class SelectionManager {
 
 		while (1) {
 
+			if (!travelNode) break
+
 			if (travelNode.nodeType === 3) {
 
 				if (length + travelNode.textContent.length >= endNodeOffset) {
@@ -182,18 +167,18 @@ export default class SelectionManager {
 		window.getSelection().removeAllRanges()
 		window.getSelection().addRange(range)
 
-		this.eventMan.onSelectionChanged()
+		EventManager.onSelectionChanged()
 
 	}
 
-	getCurrentRange() {
+	public static getCurrentRange() {
 
 		if (document.getSelection().rangeCount === 0) {
 			return null
 		}
 
 		let range = document.getSelection().getRangeAt(0)
-		let closestTarget
+		let closestTarget: Element
 
 		let startNode, endNode
 		let startOffset = 0, endOffset = 0
@@ -201,15 +186,15 @@ export default class SelectionManager {
 		for (let i = 0; i < AT.topTags.length; i++) {
 
 			if (range.startContainer.nodeType !== 3) {
-				closestTarget = range.startContainer
+				closestTarget = <Element>(range.startContainer)
 			} else {
 				closestTarget = range.startContainer.parentElement
 			}
 
 			if (closestTarget.closest(AT.topTags[i])) {
-				let startElm  = closestTarget.closest(AT.topTags[i])
-				    startNode = this.nodeMan.getNodeByID(this.nodeMan.getNodeID(startElm))
-				let n,         walk = document.createTreeWalker(startElm, NodeFilter.SHOW_TEXT, null, false)
+				let startElm = closestTarget.closest(AT.topTags[i])
+				startNode = NodeManager.getNodeByID(NodeManager.getNodeID(startElm))
+				let n, walk = document.createTreeWalker(startElm, NodeFilter.SHOW_TEXT, null, false)
 				while (n = walk.nextNode()) {
 					if (n.isSameNode(range.startContainer)) {
 						startOffset += range.startOffset
@@ -229,14 +214,14 @@ export default class SelectionManager {
 			for (let i = 0; i < AT.topTags.length; i++) {
 
 				if (range.endContainer.nodeType !== 3) {
-					closestTarget = range.endContainer
+					closestTarget = <Element>(range.endContainer)
 				} else {
 					closestTarget = range.endContainer.parentElement
 				}
 	
 				if (closestTarget.closest(AT.topTags[i])) {
 					let endElm  = closestTarget.closest(AT.topTags[i])
-					endNode = this.nodeMan.getNodeByID(this.nodeMan.getNodeID(endElm))
+					endNode = NodeManager.getNodeByID(NodeManager.getNodeID(endElm))
 					let n, walk = document.createTreeWalker(endElm, NodeFilter.SHOW_TEXT, null, false)
 					while (n = walk.nextNode()) {
 						if (n.isSameNode(range.endContainer)) {
@@ -260,7 +245,7 @@ export default class SelectionManager {
 
 	}
 
-	getCurrentNode(): PVMNode {
+	public static getCurrentNode(): PVMNode {
 
 		let sel = window.getSelection()
 		if (sel.rangeCount === 0) return null
@@ -288,14 +273,14 @@ export default class SelectionManager {
 
 		let nodeID = Number(node.getAttribute("data-ni"))
 
-		let pvmNode = this.nodeMan.getNodeByID(nodeID)
+		let pvmNode = NodeManager.getNodeByID(nodeID)
 
 		return pvmNode
 
 	}
 
 
-	getAllNodesInSelection(type?: string): PVMNode[] {
+	public static getAllNodesInSelection(type?: string): PVMNode[] {
 
 		let currentRange = this.getCurrentRange()
 		let startNode    = currentRange.start.node
@@ -338,8 +323,8 @@ export default class SelectionManager {
 
 	}
 
-	getAllNodesInEditor() {
-		let travelNode = this.nodeMan.getFirstChild()
+	public static getAllNodesInEditor() {
+		let travelNode = NodeManager.getFirstChild()
 		let allNodes   = []
 		allNodes.push(travelNode)
 		while (travelNode = travelNode.nextSibling) {
@@ -353,27 +338,16 @@ export default class SelectionManager {
 	 * Returns current cursor state.
 	 * 1. |hello, 2. he|llo, 3. hello|
 	 */
-	getCursorState() {
+	public static getCursorState() {
 
 	}
 
-	/**
-	 *
-	 * @param {Node} node
-	 * @param {Node} container
-	 * @param {number} rangeOffset
-	 * @return {number}
-	 */
-	getTextOffset(node, container, rangeOffset) {
+	public static getTextOffset(node: Node, container: Node, rangeOffset: number): number
+	{
 
-		if (!node) {
-			console.log("The given node is null")
-			return
-		}
-
-		let travelNode = node.firstChild
-		let length     = 0
-		let loopDone   = false
+		let travelNode: Node    = node.firstChild
+		let length    : number  = 0
+		let loopDone  : boolean = false
 
 		while (1) {
 
@@ -431,29 +405,24 @@ export default class SelectionManager {
 
 	// Actions
 
-	/**
-	 *
-	 * @param {PVMNode} startNode
-	 * @param {number} startOffset
-	 * @param {PVMNode} endNode
-	 * @param {number} endOffset
-	 */
-	createRange(startNode, startOffset, endNode, endOffset) {
 
+	public static createRange(startNode: PVMNode, startOffset: number, endNode: PVMNode, endOffset: number)
+	{
 		let range = new PVMRange(startNode, startOffset, endNode, endOffset)
 		return range
 	}
 
-	/**
-	 *
-	 * @param {PVMNode} node
-	 * @param {number} offset
-	 */
-	focusAt(node, offset) {
+
+	public static focusAt(node: PVMNode, offset: number)
+	{
 
 	}
 
-	removeSelection(withKey = "backspace") {
+	/**
+	 * Remove uncollapsed selection.
+	 */
+	public static removeSelection(withKey: string = "backspace")
+	{
 		let jsSel    = window.getSelection()
 		let jsRange  = window.getSelection().getRangeAt(0)
 		let pvmRange = this.getCurrentRange()
@@ -540,7 +509,7 @@ export default class SelectionManager {
 				!nodes[i].element.contains(jsRange.endContainer)
 			) {
 				let nextNode = nodes[i].nextSibling
-				this.nodeMan.removeChild(nodes[i])
+				NodeManager.removeChild(nodes[i])
 				actions.push({
 					type         : "remove",
 					targetNode   : nodes[i],
@@ -551,22 +520,22 @@ export default class SelectionManager {
 			}
 		}
 
-		this.undoMan.record(actions)
+		UndoManager.record(actions)
 
 		if (extraBackspace && withKey === "backspace") {
 			console.log("backsapce")
 			let ke = document.createEvent("KeyboardEvent")
-			this.eventMan.onPressBackspace(ke, true)
+			EventManager.onPressBackspace(ke, true)
 			// setTimeout(() => {
 			// 	let ke = document.createEvent("KeyboardEvent")
-			// 	this.eventMan.onPressBackspace(ke, true)
+			// 	EventManager.onPressBackspace(ke, true)
 			// }, 0)
 		} else if (extraEnter && withKey === "enter") {
 			let ke = document.createEvent("KeyboardEvent")
-			this.eventMan.onPressEnter(ke, true)
+			EventManager.onPressEnter(ke, true)
 			// setTimeout(() => {
 			// 	let ke = document.createEvent("KeyboardEvent")
-			// 	this.eventMan.onPressEnter(ke, true)
+			// 	EventManager.onPressEnter(ke, true)
 			// }, 0)
 		}
 

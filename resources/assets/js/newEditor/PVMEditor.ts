@@ -7,94 +7,56 @@ import PopTool from "./PopTool"
 import AJAX from "../AJAX"
 import {AT} from "./config/AvailableTypes"
 import { Example } from "./examples/example1"
+import * as PostData from "./PostData"
 
 export default class PVMEditor {
-
-	undoMan    : UndoManager
-	nodeMan    : NodeManager
-	eventMan   : EventManager
-	selMan     : SelectionManager
-	editSession: EditSession
-	popTool    : PopTool
 
 	/**
 	 * @param editorDOM id = "post-editor"
 	 */
 	constructor(editorDOM: HTMLElement) {
 
-		this.undoMan     = new UndoManager()
-		this.nodeMan     = new NodeManager()
-		this.eventMan    = new EventManager()
-		this.selMan      = new SelectionManager()
-		this.editSession = new EditSession(editorDOM)
-		this.popTool     = new PopTool(this.editSession)
+		EditSession.init(editorDOM)
+		PopTool.init()
 
-		this.editSession.nodeMan = this.nodeMan
-
-		this.popTool.nodeMan = this.nodeMan
-		this.popTool.selMan  = this.selMan
-		this.popTool.undoMan = this.undoMan
-
-		this.undoMan.nodeMan     = this.nodeMan
-		this.undoMan.eventMan    = this.eventMan
-		this.undoMan.selMan      = this.selMan
-		this.undoMan.editSession = this.editSession
-
-		this.nodeMan.undoMan     = this.undoMan
-		this.nodeMan.eventMan    = this.eventMan
-		this.nodeMan.selMan      = this.selMan
-		this.nodeMan.editSession = this.editSession
-
-		this.eventMan.undoMan     = this.undoMan
-		this.eventMan.nodeMan     = this.nodeMan
-		this.eventMan.selMan      = this.selMan
-		this.eventMan.editSession = this.editSession
-		this.eventMan.popTool     = this.popTool
-
-		this.selMan.undoMan     = this.undoMan
-		this.selMan.nodeMan     = this.nodeMan
-		this.selMan.eventMan    = this.eventMan
-		this.selMan.editSession = this.editSession
-
-		this.eventMan.attachEvents()
+		EventManager.attachEvents()
 
 		this.loadData()
 
-		this.editSession.validateData()
+		EditSession.validateData()
 
 	}
 
 	loadData() {
 
-		this.editSession.editorBody.innerHTML = ""
+		EditSession.editorBody.innerHTML = ""
 
-		let data = Example
+		let data: PostData.Frame = Example
 
-		/**
-		 * @type {Array}
-		 */
 		let contents = data.contents
 
 		let firstChild
 
 		for (let i = 0; i < contents.length; i++) {
 
-			// console.log(contents[i])
+			let block = contents[i]
 
 			let parentType = null
-			if (contents[i].type === "li") {
-				parentType = contents[i].parentType
+			if ((<PostData.TextBlock>block).parentType) {
+				parentType = (<PostData.TextBlock>block).parentType
 			}
 
-			if (AT.textOnly.includes(contents[i].type)) {
+			// if (AT.textOnly.includes(block.type)) {
+			
+			if (PostData.isTextBlock(block)) {
 
 				let html = ""
 				
-				for (let j = 0; j < contents[i].data.length; j++) {
+				for (let j = 0; j < block.data.length; j++) {
 
-					let text     = contents[i].data[j].data
+					let text     = block.data[j].data
 					let htmlPart = text
-					let style    = contents[i].data[j].style
+					let style    = block.data[j].style
 
 					if (style === "bold") {
 						htmlPart = "<b>" + text + "</b>"
@@ -110,22 +72,22 @@ export default class PVMEditor {
 
 				}
 
-				let node = this.nodeMan.createNode(contents[i].type, {
+				let node = NodeManager.createNode(block.type, {
 					parentType: parentType,
 					html      : html
 				})
 
-				this.nodeMan.appendChild(node)
+				NodeManager.appendChild(node)
 
-			} else if (contents[i].type === "image") {
+			} else if (PostData.isImageBlock(block)) {
 
 				let html = ""
 
-				for (let j = 0; j < contents[i].caption.data.length; j++) {
+				for (let j = 0; j < block.caption.data.length; j++) {
 
-					let text     = contents[i].caption.data[j].data
+					let text     = block.caption.data[j].data
 					let htmlPart = text
-					let style    = contents[i].caption.data[j].style
+					let style    = block.caption.data[j].style
 
 					if (style === "bold") {
 						htmlPart = "<b>" + text + "</b>"
@@ -141,13 +103,13 @@ export default class PVMEditor {
 
 				}
 
-				let node = this.nodeMan.createNode(contents[i].type, {
-					url : contents[i].url,
+				let node = NodeManager.createNode(block.type, {
+					url : block.url,
 					html: html,
-					size: contents[i].size
+					size: block.size
 				})
 
-				this.nodeMan.appendChild(node)
+				NodeManager.appendChild(node)
 
 			}
 

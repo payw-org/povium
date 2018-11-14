@@ -9,25 +9,19 @@ import PVMRange from "./PVMRange"
 
 export default class EventManager {
 
-	nodeMan    : NodeManager
-	undoMan    : UndoManager
-	selMan     : SelectionManager
-	editSession: EditSession
-	popTool    : PopTool
-
-	mouseDownStart       : boolean
-	linkRange            : Range
-	charKeyDownLocked    : boolean
-	multipleSpaceLocked  : boolean
-	selectedAll          : boolean
-	isBackspaceKeyPressed: boolean
-	tempLinkRange        : PVMRange
+	public static mouseDownStart       : boolean
+	private static linkRange            : Range
+	private static charKeyDownLocked    : boolean
+	private static multipleSpaceLocked  : boolean
+	private static selectedAll          : boolean
+	private static isBackspaceKeyPressed: boolean
+	private static tempLinkRange        : PVMRange
 
 	constructor() {
 
 	}
 
-	attachEvents() {
+	public static attachEvents() {
 		// Properties
 		let self = this
 
@@ -52,8 +46,8 @@ export default class EventManager {
 		eventNames = ["mousedown", "touchstart"]
 		eventNames.forEach((eventName) => {
 			window.addEventListener(eventName, e => {
-				if (!e.target.closest("#poptool")) {
-					this.popTool.hidePopTool()
+				if (!(<Element> e.target).closest("#poptool")) {
+					PopTool.hidePopTool()
 					this.mouseDownStart = true
 				}
 			})
@@ -61,7 +55,7 @@ export default class EventManager {
 
 		eventNames = ["mouseup", "touchend"]
 		eventNames.forEach((eventName) => {
-			this.editSession.editorBody.addEventListener(eventName, (e) => {
+			EditSession.editorBody.addEventListener(eventName, (e) => {
 				this.onSelectionChanged()
 			})
 		})
@@ -69,17 +63,17 @@ export default class EventManager {
 		eventNames = ["mouseup", "touchend"]
 		eventNames.forEach(eventName => {
 			window.addEventListener(eventName, (e) => {
-				if (this.mouseDownStart && !e.target.closest("#editor-body")) {
+				if (this.mouseDownStart && !(<Element> e.target).closest("#editor-body")) {
 					this.mouseDownStart = false
 					this.onSelectionChanged()
 				}
 			})
 		})
 
-		this.editSession.editorBody.addEventListener('dragstart', (e) => {
+		EditSession.editorBody.addEventListener('dragstart', (e) => {
 			e.preventDefault()
 		})
-		this.editSession.editorBody.addEventListener('drop', (e) => {
+		EditSession.editorBody.addEventListener('drop', (e) => {
 			e.preventDefault()
 		})
 
@@ -87,15 +81,15 @@ export default class EventManager {
 		this.isBackspaceKeyPressed = false
 
 		window.addEventListener("keydown", (e) => {
-			let currentRange = this.editSession.currentState.range
+			let currentRange = EditSession.currentState.range
 			if (e.keyCode === 8 || e.keyCode === 46) {
-				if (this.editSession.editorBody.querySelector(".image-selected")) {
+				if (EditSession.editorBody.querySelector(".image-selected")) {
 					console.log("image should be deleted")
-					let imageNode = this.nodeMan.getNodeByID(this.nodeMan.getNodeID(this.editSession.editorBody.querySelector(".image-selected")))
+					let imageNode = NodeManager.getNodeByID(NodeManager.getNodeID(EditSession.editorBody.querySelector(".image-selected")))
 					let nextNode  = imageNode.nextSibling
-					this.nodeMan.removeChild(imageNode)
-					this.popTool.hideImageTool()
-					this.undoMan.record({
+					NodeManager.removeChild(imageNode)
+					PopTool.hideImageTool()
+					UndoManager.record({
 						type         : "remove",
 						targetNode   : imageNode,
 						nextNode     : nextNode,
@@ -110,16 +104,16 @@ export default class EventManager {
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
 				if (e.shiftKey) {
 					e.preventDefault()
-					this.undoMan.redo()
+					UndoManager.redo()
 				} else {
 					e.preventDefault()
-					this.undoMan.undo()
+					UndoManager.undo()
 				}
 			}
 		})
 
-		this.editSession.editorBody.addEventListener('keydown', (e) => {
-			this.onKeyDown(e)
+		EditSession.editorBody.addEventListener('keydown', (e) => {
+			EventManager.onKeyDown(e)
 			if (e.which >= 37 && e.which <= 40) {
 				// this.onSelectionChanged()
 			}
@@ -127,13 +121,13 @@ export default class EventManager {
 				this.selectedAll = true
 			}
 			if (!(<Element>(e.target)).closest("#poptool")) {
-				this.popTool.hidePopTool()
+				PopTool.hidePopTool()
 			}
 		})
 
-		this.editSession.editorBody.addEventListener('keyup', (e) => {
+		EditSession.editorBody.addEventListener('keyup', (e) => {
 
-			this.onKeyUp(e)
+			EventManager.onKeyUp(e)
 			this.onSelectionChanged()
 
 			if (this.selectedAll) {
@@ -143,16 +137,8 @@ export default class EventManager {
 
 		})
 
-		this.editSession.editorBody.addEventListener('keypress', (e) => {
-			// this.onKeyPress(e)
-		})
 
-		this.editSession.editorBody.addEventListener("input", (e) => {
-			this.onInput(e)
-		})
-
-
-		this.editSession.editorBody.addEventListener('paste', (e) => {
+		EditSession.editorBody.addEventListener('paste', (e) => {
 			// this.onPaste(e)
 		})
 
@@ -160,14 +146,14 @@ export default class EventManager {
 		// Image click event
 		window.addEventListener('click', (e) => {
 
-			let target = <Element>(e.target)
+			let target = <HTMLElement>(e.target)
 
 			if (target.classList.contains("image-wrapper")) {
 
 				console.log("image clicked")
 				e.preventDefault()
 
-				var selectedFigure = this.editSession.editorBody.querySelector("figure.image-selected")
+				var selectedFigure = EditSession.editorBody.querySelector("figure.image-selected")
 				if (selectedFigure) {
 					selectedFigure.classList.remove("image-selected")
 				}
@@ -175,7 +161,7 @@ export default class EventManager {
 				var figure = target.parentElement
 				figure.classList.remove("caption-selected")
 				figure.classList.add("image-selected")
-				this.popTool.showImageTool(target)
+				PopTool.showImageTool(target)
 
 				if (figure.querySelector("FIGCAPTION").textContent.length === 0) {
 					figure.querySelector("FIGCAPTION").innerHTML = "이미지 주석"
@@ -185,27 +171,27 @@ export default class EventManager {
 
 			} else if (target.id === "full" && target.nodeName === "BUTTON") {
 
-				var selectedFigure = this.editSession.editorBody.querySelector("figure.image-selected")
+				var selectedFigure = EditSession.editorBody.querySelector("figure.image-selected")
 				selectedFigure.classList.add("full")
-				this.popTool.hideImageTool()
+				PopTool.hideImageTool()
 				setTimeout(() => {
-					this.popTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 
 			} else if (target.id === "normal" && target.nodeName === "BUTTON") {
 
-				var selectedFigure = this.editSession.editorBody.querySelector("figure.image-selected")
+				var selectedFigure = EditSession.editorBody.querySelector("figure.image-selected")
 				selectedFigure.classList.remove("full")
-				this.popTool.hideImageTool()
+				PopTool.hideImageTool()
 				setTimeout(() => {
-					this.popTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 
 			} else if (target.nodeName === "FIGCAPTION") {
 
 				target.parentElement.classList.add("caption-selected")
 				target.parentElement.classList.remove("image-selected")
-				this.popTool.hideImageTool()
+				PopTool.hideImageTool()
 				if (!target.parentElement.classList.contains("caption-enabled")) {
 					target.innerHTML = "<br>"
 				}
@@ -216,13 +202,13 @@ export default class EventManager {
 
 			} else {
 
-				var selectedFigure = this.editSession.editorBody.querySelector("figure.image-selected, figure.caption-selected")
+				var selectedFigure = EditSession.editorBody.querySelector("figure.image-selected, figure.caption-selected")
 				if (selectedFigure) {
 					selectedFigure.classList.remove("image-selected")
 					selectedFigure.classList.remove("caption-selected")
 				}
 
-				this.popTool.hideImageTool()
+				PopTool.hideImageTool()
 
 			}
 		})
@@ -245,82 +231,82 @@ export default class EventManager {
 		this.attachPopToolEvents()
 	}
 
-	attachPopToolEvents() {
+	public static attachPopToolEvents() {
 
 		let self = this
 
 		window.addEventListener("mousedown", (e) => {
 			let target = <Element>(e.target)
 			if (!target.classList.contains("operation") && !target.closest("button .operation")) {
-				this.popTool.hidePopTool()
+				PopTool.hidePopTool()
 			}
 		})
 
-		this.editSession.editorBody.addEventListener("mouseup", (e) => {
+		EditSession.editorBody.addEventListener("mouseup", (e) => {
 			setTimeout(() => {
-				this.popTool.togglePopTool()
+				PopTool.togglePopTool()
 			}, 0)
 		})
 
-		this.editSession.editorBody.addEventListener("keyup", (e) => {
+		EditSession.editorBody.addEventListener("keyup", (e) => {
 			let keyCode = e.which
 			if (keyCode === 37 || keyCode === 38 || keyCode === 39 || keyCode === 40) {
-				this.popTool.togglePopTool()
+				PopTool.togglePopTool()
 			}
 		})
 
-		this.popTool.pt.querySelectorAll("button").forEach((elm) => {
+		PopTool.pt.querySelectorAll("button").forEach((elm) => {
 			elm.addEventListener("click", () => {
-				let currentRange = this.selMan.getCurrentRange()
+				let currentRange = SelectionManager.getCurrentRange()
 				if (!currentRange.start.node && !currentRange.end.node) {
-					this.popTool.hidePopTool()
+					PopTool.hidePopTool()
 				}
 			})
 		})
 
-		// this.popTool.pt.querySelector("#pt-p").addEventListener('click', (e) => { this.postEditor.selManager.heading('P') })
-		this.popTool.pt.querySelector("#pt-h1").addEventListener('click', (e) => { this.popTool.transformNodes("h1") })
-		this.popTool.pt.querySelector("#pt-h2").addEventListener('click', (e) => { this.popTool.transformNodes("h2") })
-		this.popTool.pt.querySelector("#pt-h3").addEventListener('click', (e) => { this.popTool.transformNodes("h3") })
-		this.popTool.pt.querySelector("#pt-bold").addEventListener('click', (e) => { this.popTool.changeTextStyle("bold") })
-		this.popTool.pt.querySelector("#pt-italic").addEventListener('click', (e) => { this.popTool.changeTextStyle("italic") })
-		this.popTool.pt.querySelector("#pt-underline").addEventListener('click', (e) => { this.popTool.changeTextStyle("underline") })
-		this.popTool.pt.querySelector("#pt-strike").addEventListener('click', (e) => { this.popTool.changeTextStyle("strikethrough") })
-		this.popTool.pt.querySelector("#pt-alignleft").addEventListener('click', (e) => { this.popTool.align("left") })
-		this.popTool.pt.querySelector("#pt-alignmiddle").addEventListener('click', (e) => { this.popTool.align("center") })
-		this.popTool.pt.querySelector("#pt-alignright").addEventListener('click', (e) => { this.popTool.align("right") })
+		// PopTool.pt.querySelector("#pt-p").addEventListener('click', (e) => { this.postEditor.selManager.heading('P') })
+		PopTool.pt.querySelector("#pt-h1").addEventListener('click', (e) => { PopTool.transformNodes("h1") })
+		PopTool.pt.querySelector("#pt-h2").addEventListener('click', (e) => { PopTool.transformNodes("h2") })
+		PopTool.pt.querySelector("#pt-h3").addEventListener('click', (e) => { PopTool.transformNodes("h3") })
+		PopTool.pt.querySelector("#pt-bold").addEventListener('click', (e) => { PopTool.changeTextStyle("bold") })
+		PopTool.pt.querySelector("#pt-italic").addEventListener('click', (e) => { PopTool.changeTextStyle("italic") })
+		PopTool.pt.querySelector("#pt-underline").addEventListener('click', (e) => { PopTool.changeTextStyle("underline") })
+		PopTool.pt.querySelector("#pt-strike").addEventListener('click', (e) => { PopTool.changeTextStyle("strikethrough") })
+		PopTool.pt.querySelector("#pt-alignleft").addEventListener('click', (e) => { PopTool.align("left") })
+		PopTool.pt.querySelector("#pt-alignmiddle").addEventListener('click', (e) => { PopTool.align("center") })
+		PopTool.pt.querySelector("#pt-alignright").addEventListener('click', (e) => { PopTool.align("right") })
 
-		this.popTool.pt.querySelector("#pt-title-pack").addEventListener('click', (e) => {
+		PopTool.pt.querySelector("#pt-title-pack").addEventListener('click', (e) => {
 
-			this.popTool.pt.querySelector(".top-categories").classList.add("hidden")
-			this.popTool.pt.querySelector(".title-style").classList.remove("hidden")
-			this.popTool.showPopTool()
-
-		})
-
-		this.popTool.pt.querySelector("#pt-textstyle-pack").addEventListener('click', (e) => {
-
-			this.popTool.pt.querySelector(".top-categories").classList.add("hidden")
-			this.popTool.pt.querySelector(".text-style").classList.remove("hidden")
-			this.popTool.showPopTool()
+			PopTool.pt.querySelector(".top-categories").classList.add("hidden")
+			PopTool.pt.querySelector(".title-style").classList.remove("hidden")
+			PopTool.showPopTool()
 
 		})
 
-		this.popTool.pt.querySelector("#pt-align-pack").addEventListener('click', (e) => {
+		PopTool.pt.querySelector("#pt-textstyle-pack").addEventListener('click', (e) => {
 
-			this.popTool.pt.querySelector(".top-categories").classList.add("hidden")
-			this.popTool.pt.querySelector(".align").classList.remove("hidden")
-			this.popTool.showPopTool()
+			PopTool.pt.querySelector(".top-categories").classList.add("hidden")
+			PopTool.pt.querySelector(".text-style").classList.remove("hidden")
+			PopTool.showPopTool()
 
 		})
 
-		this.popTool.pt.querySelector("#pt-link").addEventListener('click', (e) => {
+		PopTool.pt.querySelector("#pt-align-pack").addEventListener('click', (e) => {
 
-			this.popTool.pt.querySelector(".top-categories").classList.add("hidden")
-			this.popTool.pt.querySelector(".input").classList.remove("hidden")
-			this.popTool.showPopTool()
+			PopTool.pt.querySelector(".top-categories").classList.add("hidden")
+			PopTool.pt.querySelector(".align").classList.remove("hidden")
+			PopTool.showPopTool()
 
-			this.tempLinkRange = this.selMan.getCurrentRange()
+		})
+
+		PopTool.pt.querySelector("#pt-link").addEventListener('click', (e) => {
+
+			PopTool.pt.querySelector(".top-categories").classList.add("hidden")
+			PopTool.pt.querySelector(".input").classList.remove("hidden")
+			PopTool.showPopTool()
+
+			this.tempLinkRange = SelectionManager.getCurrentRange()
 
 			setTimeout(() => {
 				(<HTMLElement>(document.querySelector(".pack.input input"))).focus()
@@ -328,10 +314,10 @@ export default class EventManager {
 
 		})
 
-		this.popTool.pt.querySelector(".pack.input input").addEventListener("keydown", function(e: KeyboardEvent) {
+		PopTool.pt.querySelector(".pack.input input").addEventListener("keydown", function(e: KeyboardEvent) {
 			if (e.keyCode === 13) {
 				e.preventDefault()
-				self.popTool.hidePopTool()
+				PopTool.hidePopTool()
 				// self.sel.setRange(self.tempLinkRange)
 				// self.postEditor.selManager.link(this.value)
 				setTimeout(() => {
@@ -341,15 +327,15 @@ export default class EventManager {
 			}
 		})
 
-		this.popTool.pt.querySelector("#pt-blockquote").addEventListener('click', (e) => {
+		PopTool.pt.querySelector("#pt-blockquote").addEventListener('click', (e) => {
 
-			this.popTool.transformNodes("blockquote")
+			PopTool.transformNodes("blockquote")
 
 		})
 
-		this.popTool.pt.querySelectorAll(".pack button").forEach((elm) => {
+		PopTool.pt.querySelectorAll(".pack button").forEach((elm) => {
 			elm.addEventListener('click', () => {
-				this.popTool.showPopTool()
+				PopTool.showPopTool()
 			})
 		})
 
@@ -371,7 +357,7 @@ export default class EventManager {
 	// 		return
 	// 	}
 
-	// 	let pasteArea = this.editSession.editorDOM.querySelector("#paste-area")
+	// 	let pasteArea = EditSession.editorDOM.querySelector("#paste-area")
 	// 	// let pasteArea = document.createElement("div")
 
 	// 	pasteArea.innerHTML = ""
@@ -393,7 +379,7 @@ export default class EventManager {
 	// 		this.postEditor.selManager.removeSelection("start")
 
 	// 		// let originalCurrentNode = this.postEditor.selManager.getNodeInSelection()
-	// 		let originalCurrentNode = this.selMan.getno
+	// 		let originalCurrentNode = SelectionManager.getno
 	// 		let lastPastedNode      = originalCurrentNode
 
 	// 		var node, travelNode, nextNode
@@ -444,7 +430,7 @@ export default class EventManager {
 
 	// 					} else {
 
-	// 						this.editSession.editorBody.insertBefore(clonedTravelNode, lastPastedNode.nextSibling)
+	// 						EditSession.editorBody.insertBefore(clonedTravelNode, lastPastedNode.nextSibling)
 	// 						lastPastedNode = clonedTravelNode
 
 	// 						let range = document.createRange()
@@ -473,9 +459,9 @@ export default class EventManager {
 
 	// 					} else {
 
-	// 						let p           = this.editSession.generateEmptyNode("p")
+	// 						let p           = EditSession.generateEmptyNode("p")
 	// 						    p.innerHTML = travelNode.textContent
-	// 						this.editSession.editorBody.insertBefore(p, lastPastedNode.nextSibling)
+	// 						EditSession.editorBody.insertBefore(p, lastPastedNode.nextSibling)
 
 	// 						let range = document.createRange()
 	// 						range.setStartAfter(p)
@@ -532,18 +518,15 @@ export default class EventManager {
 	// }
 
 	/**
-	*
 	* @param {KeyboardEvent} e
 	*/
-	onKeyDown(e: KeyboardEvent) {
-
-		// console.log("keydown")
+	public static onKeyDown(e: KeyboardEvent) {
 
 		let keyCode     = e.keyCode
 		let physKeyCode = e.code
 
-		let currentRange = this.selMan.getCurrentRange()
-		let currentNode  = this.selMan.getCurrentNode()
+		let currentRange = SelectionManager.getCurrentRange()
+		let currentNode  = SelectionManager.getCurrentNode()
 		if (!currentNode) return
 
 		// This flag determines the availability of
@@ -553,21 +536,43 @@ export default class EventManager {
 		let key = "char"
 		// When press a key where it puts any space inside the editor,
 		// this variable is true.
+		// let validCharKey = 
+		// 	((keyCode > 47 && keyCode < 58) || // number keys
+		// 		keyCode === 32 || // spacebar & return key(s) (if you want to allow carriage returns)
+		// 		(keyCode > 64 && keyCode < 91) || // letter keys
+		// 		(keyCode > 95 && keyCode < 112) || // numpad keys
+		// 		(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+		// 		(keyCode > 218 && keyCode < 223) || // [\]' (in order)
+		// 		(keyCode === 229 && physKeyCode !== "Lang1"))
+		// 	&& !e.ctrlKey && !e.metaKey
+
 		let validCharKey = 
-			((keyCode > 47 && keyCode < 58) || // number keys
-				keyCode === 32 || // spacebar & return key(s) (if you want to allow carriage returns)
-				(keyCode > 64 && keyCode < 91) || // letter keys
-				(keyCode > 95 && keyCode < 112) || // numpad keys
-				(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
-				(keyCode > 218 && keyCode < 223) || // [\]' (in order)
-				(keyCode === 229 && physKeyCode !== "Lang1"))
+			(physKeyCode === "KeyA" || physKeyCode === "KeyB" || physKeyCode === "KeyC" || physKeyCode === "KeyD" ||
+			physKeyCode === "KeyE" || physKeyCode === "KeyF" || physKeyCode === "KeyG" || physKeyCode === "KeyH" ||
+			physKeyCode === "KeyI" || physKeyCode === "KeyJ" || physKeyCode === "KeyK" || physKeyCode === "KeyL" ||
+			physKeyCode === "KeyM" || physKeyCode === "KeyN" || physKeyCode === "KeyO" || physKeyCode === "KeyP" ||
+			physKeyCode === "KeyQ" || physKeyCode === "KeyR" || physKeyCode === "KeyS" || physKeyCode === "KeyT" ||
+			physKeyCode === "KeyU" || physKeyCode === "KeyV" || physKeyCode === "KeyW" || physKeyCode === "KeyX" ||
+			physKeyCode === "KeyY" || physKeyCode === "KeyZ" ||
+			physKeyCode === "Digit0" || physKeyCode === "Digit1" || physKeyCode === "Digit2" || physKeyCode === "Digit3" ||
+			physKeyCode === "Digit4" || physKeyCode === "Digit5" || physKeyCode === "Digit6" || physKeyCode === "Digit7" ||
+			physKeyCode === "Digit8" || physKeyCode === "Digit9" ||
+			physKeyCode === "Numpad0" || physKeyCode === "Numpad1" || physKeyCode === "Numpad2" || physKeyCode === "Numpad3" ||
+			physKeyCode === "Numpad4" || physKeyCode === "Numpad5" || physKeyCode === "Numpad6" || physKeyCode === "Numpad7" ||
+			physKeyCode === "Numpad8" || physKeyCode === "Numpad9" ||
+			physKeyCode === "NumpadDecimal" || physKeyCode === "NumpadDivide" || physKeyCode === "NumpadMultiply" ||
+			physKeyCode === "NumpadSubtract" || physKeyCode === "NumpadAdd" ||
+			physKeyCode === "Backquote" || physKeyCode === "Minus" || physKeyCode === "Equal" || physKeyCode === "Backslash" ||
+			physKeyCode === "BracketLeft" || physKeyCode === "BracketRight" || physKeyCode === "Semicolon" || physKeyCode === "Quote" ||
+			physKeyCode === "Comma" || physKeyCode === "Period" || physKeyCode === "Slash" ||
+			physKeyCode === "Space")
 			&& !e.ctrlKey && !e.metaKey
 
 		// Backspace key (delete on macOS)
 		if (keyCode === 8) {
 
 			setTimeout(() => {
-				this.nodeMan.normalize(currentNode.textElement)
+				NodeManager.normalize(currentNode.textElement)
 				if (currentNode.textElement.textContent.length === 0) {
 					let brs = currentNode.textElement.querySelectorAll("br")
 					if (brs.length > 1) {
@@ -589,7 +594,7 @@ export default class EventManager {
 				key                    = "backspace"
 			} else {
 				enableTextChangeRecord = false
-				this.onPressBackspace(e)
+				EventManager.onPressBackspace(e)
 			}
 
 		} else if (keyCode === 46) { // Delete key (fn + delete on macOS)
@@ -603,14 +608,14 @@ export default class EventManager {
 				key                    = "delete"
 			} else {
 				enableTextChangeRecord = false
-				this.onPressDelete(e)
+				EventManager.onPressDelete(e)
 			}
 
 		} else if (keyCode === 13) { // Enter key (return on macOS)
 
 			// Enter(Return)
 			e.preventDefault()
-			this.onPressEnter(e)
+			EventManager.onPressEnter(e)
 
 		} else if (keyCode === 90 && e.ctrlKey) { // cmd + z (deprecated)
 
@@ -622,39 +627,39 @@ export default class EventManager {
 		if (validCharKey || enableTextChangeRecord) {
 
 			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
-				this.selMan.removeSelection("backspace")
+				SelectionManager.removeSelection("backspace")
 			}
 
 			this.charKeyDownLocked = true
 
-			let originalContents = this.editSession.currentState.textHTML
-			let originalRange    = this.editSession.currentState.range
+			let originalContents = EditSession.currentState.textHTML
+			let originalRange    = EditSession.currentState.range
 			let modifiedContents, newRange
 			setTimeout(() => {
 
 				modifiedContents = currentNode.textElement.innerHTML
-				newRange         = this.selMan.getCurrentRange()
+				newRange         = SelectionManager.getCurrentRange()
 	
-				let latestAction = this.undoMan.getLatestAction()
+				let latestAction = UndoManager.getLatestAction()
 				if (
 					latestAction &&
 					!Array.isArray(latestAction) &&
 					latestAction.type === "textChange" &&
 					latestAction.key === key &&
-					(keyCode !== 32 && physKeyCode !== "Space")
+					physKeyCode !== "Space"
 				) {
 					latestAction.nextHTML  = modifiedContents
 					latestAction.nextRange = newRange
 					console.group("continue record")
-					console.log(modifiedContents)
-					console.log(newRange)
+					// console.log(modifiedContents)
+					// console.log(newRange)
 					console.groupEnd()
 				} else {
 					console.group("new record")
-					console.log(originalContents)
-					console.log(originalRange)
+					// console.log(originalContents)
+					// console.log(originalRange)
 					console.groupEnd()
-					this.undoMan.record({
+					UndoManager.record({
 						type         : "textChange",
 						previousHTML : originalContents,
 						nextHTML     : modifiedContents,
@@ -664,7 +669,7 @@ export default class EventManager {
 						key          : key
 					})
 				}
-			}, 1)
+			}, 4)
 
 		} else {
 
@@ -679,37 +684,28 @@ export default class EventManager {
 					currentNode.element.classList.add("caption-enabled")
 				}
 			}
-		}, 1)
+		}, 4)
 
 
-
-
-	}
-
-	/**
-	 *
-	 * @param {InputEvent} e
-	 */
-	onInput(e) {
 
 
 	}
 
 	/**
 	* Fires when press keyboard inside the editor.
-	* @param {KeyboardEvent} e
 	*/
-	onKeyUp(e) {
+	public static onKeyUp(e: KeyboardEvent)
+	{
 
 		// console.log("keyup")
 
 		let keyCode     = e.keyCode
 		let physKeyCode = e.code
 
-		let currentRange = this.selMan.getCurrentRange()
+		let currentRange = SelectionManager.getCurrentRange()
 
 		if (!currentRange) return
-		let currentNode = this.selMan.getCurrentNode()
+		let currentNode = SelectionManager.getCurrentNode()
 		if (!currentNode) {
 			return
 		}
@@ -739,11 +735,11 @@ export default class EventManager {
 			}
 			let originalType       = currentNode.type
 			let originalParentType = currentNode.parentType
-			this.nodeMan.transformNode(currentNode, "li", parentType)
+			NodeManager.transformNode(currentNode, "li", parentType)
 			currentNode.fixEmptiness()
-			let newRange = this.selMan.createRange(currentNode, 0, currentNode, 0)
-			this.selMan.setRange(newRange)
-			this.undoMan.record({
+			let newRange = SelectionManager.createRange(currentNode, 0, currentNode, 0)
+			SelectionManager.setRange(newRange)
+			UndoManager.record({
 				type              : "transform",
 				targetNode        : currentNode,
 				previousType      : originalType,
@@ -759,15 +755,13 @@ export default class EventManager {
 
 	}
 
-	/**
-	 * @param {KeyboardEvent} e
-	 */
-	onPressEnter(e, finalAction = false) {
+	public static onPressEnter(e: KeyboardEvent, finalAction: boolean = false)
+	{
 
 		e.preventDefault()
 
-		let currentRange = this.selMan.getCurrentRange()
-		let currentNode  = this.selMan.getCurrentNode()
+		let currentRange = SelectionManager.getCurrentRange()
+		let currentNode  = SelectionManager.getCurrentNode()
 
 		let isCollapsed = currentRange.isCollapsed()
 
@@ -779,9 +773,9 @@ export default class EventManager {
 
 			if (state === 1) {
 
-				let newNode = this.nodeMan.createNode(currentNode.type)
-				this.nodeMan.insertChildBefore(newNode, currentNode)
-				this.undoMan.record({
+				let newNode = NodeManager.createNode(currentNode.type)
+				NodeManager.insertChildBefore(newNode, currentNode)
+				UndoManager.record({
 					type         : "insert",
 					targetNode   : newNode,
 					nextNode     : currentNode,
@@ -792,10 +786,10 @@ export default class EventManager {
 
 			} else if (state === 2) {
 
-				let newNode  = this.nodeMan.splitNode()
-				let newRange = this.selMan.createRange(newNode, 0, newNode, 0)
-				this.selMan.setRange(newRange)
-				this.undoMan.record({
+				let newNode  = NodeManager.splitNode()
+				let newRange = SelectionManager.createRange(newNode, 0, newNode, 0)
+				SelectionManager.setRange(newRange)
+				UndoManager.record({
 					type         : "split",
 					debris       : currentNode.textElement.innerHTML,
 					targetNodes  : [currentNode, newNode],
@@ -809,15 +803,15 @@ export default class EventManager {
 				let newNode
 				if (currentNode.type === "li") {
 					if (state === 3) {
-						newNode = this.nodeMan.createNode("LI", {
+						newNode = NodeManager.createNode("LI", {
 							parentType: currentNode.parentType
 						})
 					} else if (state === 4) {
 						let originalType       = currentNode.type
 						let originalParentType = currentNode.parentType
-						this.nodeMan.transformNode(currentNode, "p")
-						this.selMan.setRange(currentRange)
-						this.undoMan.record({
+						NodeManager.transformNode(currentNode, "p")
+						SelectionManager.setRange(currentRange)
+						UndoManager.record({
 							type              : "transform",
 							targetNode        : currentNode,
 							previousType      : originalType,
@@ -833,9 +827,9 @@ export default class EventManager {
 					if (state === 4) {
 						let originalType       = currentNode.type
 						let originalParentType = currentNode.parentType
-						this.nodeMan.transformNode(currentNode, "p")
-						this.selMan.setRange(currentRange)
-						this.undoMan.record({
+						NodeManager.transformNode(currentNode, "p")
+						SelectionManager.setRange(currentRange)
+						UndoManager.record({
 							type              : "transform",
 							targetNode        : currentNode,
 							previousType      : originalType,
@@ -847,16 +841,16 @@ export default class EventManager {
 						})
 						return
 					} else {
-						newNode = this.nodeMan.createNode("p")
+						newNode = NodeManager.createNode("p")
 					}
 				} else {
-					newNode = this.nodeMan.createNode("p")
+					newNode = NodeManager.createNode("p")
 				}
 				let nextNode = currentNode.nextSibling
-				this.nodeMan.insertChildBefore(newNode, nextNode)
-				let newRange = this.selMan.createRange(newNode, 0, newNode, 0)
-				this.selMan.setRange(newRange)
-				this.undoMan.record({
+				NodeManager.insertChildBefore(newNode, nextNode)
+				let newRange = SelectionManager.createRange(newNode, 0, newNode, 0)
+				SelectionManager.setRange(newRange)
+				UndoManager.record({
 					type         : "insert",
 					targetNode   : newNode,
 					nextNode     : nextNode,
@@ -871,19 +865,17 @@ export default class EventManager {
 
 			// Not collapsed
 
-			this.selMan.removeSelection("enter")
+			SelectionManager.removeSelection("enter")
 
 		}
 
 	}
 
-	/**
-	 * @param {KeyboardEvent} e
-	 */
-	onPressBackspace(e, finalAction = false) {
+	public static onPressBackspace(e: KeyboardEvent, finalAction: boolean = false)
+	{
 
-		let currentRange = this.selMan.getCurrentRange()
-		let currentNode  = this.selMan.getCurrentNode()
+		let currentRange = SelectionManager.getCurrentRange()
+		let currentNode  = SelectionManager.getCurrentNode()
 
 		let isCollapsed = currentRange.isCollapsed()
 
@@ -903,9 +895,9 @@ export default class EventManager {
 				if (currentNode.type === "li") {
 					let originalType       = currentNode.type
 					let originalParentType = currentNode.parentType
-					this.nodeMan.transformNode(currentNode, "p")
-					this.selMan.setRange(currentRange)
-					this.undoMan.record({
+					NodeManager.transformNode(currentNode, "p")
+					SelectionManager.setRange(currentRange)
+					UndoManager.record({
 						type              : "transform",
 						targetNode        : currentNode,
 						previousType      : originalType,
@@ -922,8 +914,8 @@ export default class EventManager {
 
 				if (!AT.mergeable.includes(prvs.type)) {
 
-					this.nodeMan.removeChild(prvs)
-					this.undoMan.record({
+					NodeManager.removeChild(prvs)
+					UndoManager.record({
 						type         : "remove",
 						targetNode   : prvs,
 						nextNode     : currentNode,
@@ -935,8 +927,8 @@ export default class EventManager {
 				} else {
 
 					if (prvs && prvs.getTextContent() === "") {
-						this.nodeMan.removeChild(prvs)
-						this.undoMan.record({
+						NodeManager.removeChild(prvs)
+						UndoManager.record({
 							type         : "remove",
 							targetNode   : prvs,
 							nextNode     : currentNode,
@@ -947,10 +939,10 @@ export default class EventManager {
 					} else if (prvs) {
 						let prvsOrgLen       = prvs.textElement.textContent.length
 						let originalContents = prvs.textElement.innerHTML
-						this.nodeMan.mergeNodes(prvs, currentNode)
-						let newRange = this.selMan.createRange(prvs, prvsOrgLen, prvs, prvsOrgLen)
-						this.selMan.setRange(newRange)
-						this.undoMan.record({
+						NodeManager.mergeNodes(prvs, currentNode)
+						let newRange = SelectionManager.createRange(prvs, prvsOrgLen, prvs, prvsOrgLen)
+						SelectionManager.setRange(newRange)
+						UndoManager.record({
 							type         : "merge",
 							targetNodes  : [prvs, currentNode],
 							debris       : originalContents,
@@ -969,9 +961,9 @@ export default class EventManager {
 				if (currentNode.type === "li") {
 					let originalType       = currentNode.type
 					let originalParentType = currentNode.parentType
-					this.nodeMan.transformNode(currentNode, "p")
-					this.selMan.setRange(currentRange)
-					this.undoMan.record({
+					NodeManager.transformNode(currentNode, "p")
+					SelectionManager.setRange(currentRange)
+					UndoManager.record({
 						type              : "transform",
 						targetNode        : currentNode,
 						previousType      : originalType,
@@ -989,10 +981,10 @@ export default class EventManager {
 				if (prvs) {
 
 					let nextNode = currentNode.nextSibling
-					this.nodeMan.removeChild(currentNode)
-					let newRange = this.selMan.createRange(prvs, prvs.textElement.textContent.length, prvs, prvs.textElement.textContent.length)
-					this.selMan.setRange(newRange)
-					this.undoMan.record({
+					NodeManager.removeChild(currentNode)
+					let newRange = SelectionManager.createRange(prvs, prvs.textElement.textContent.length, prvs, prvs.textElement.textContent.length)
+					SelectionManager.setRange(newRange)
+					UndoManager.record({
 						type         : "remove",
 						targetNode   : currentNode,
 						nextNode     : nextNode,
@@ -1010,15 +1002,16 @@ export default class EventManager {
 		} else {
 			// selection is not collapsed
 			e.preventDefault()
-			this.selMan.removeSelection()
+			SelectionManager.removeSelection()
 		}
 
 	}
 
-	onPressDelete(e) {
+	public static onPressDelete(e: KeyboardEvent)
+	{
 
-		let currentRange = this.selMan.getCurrentRange()
-		let currentNode  = this.selMan.getCurrentNode()
+		let currentRange = SelectionManager.getCurrentRange()
+		let currentNode  = SelectionManager.getCurrentNode()
 
 		let isCollapsed = currentRange.isCollapsed()
 
@@ -1040,8 +1033,8 @@ export default class EventManager {
 
 				if (!AT.mergeable.includes(next.type)) {
 
-					this.nodeMan.removeChild(next)
-					this.undoMan.record({
+					NodeManager.removeChild(next)
+					UndoManager.record({
 						type         : "remove",
 						targetNode   : next,
 						nextNode     : nextNext,
@@ -1052,8 +1045,8 @@ export default class EventManager {
 				} else {
 
 					if (next && next.getTextContent() === "") {
-						this.nodeMan.removeChild(next)
-						this.undoMan.record({
+						NodeManager.removeChild(next)
+						UndoManager.record({
 							type         : "remove",
 							targetNode   : next,
 							nextNode     : nextNext,
@@ -1064,9 +1057,9 @@ export default class EventManager {
 	
 						let nextOrgLen       = next.textElement.textContent.length
 						let originalContents = currentNode.textElement.innerHTML
-						this.nodeMan.mergeNodes(currentNode, next)
-						this.selMan.setRange(currentRange)
-						this.undoMan.record({
+						NodeManager.mergeNodes(currentNode, next)
+						SelectionManager.setRange(currentRange)
+						UndoManager.record({
 							type         : "merge",
 							targetNodes  : [currentNode, next],
 							debris       : originalContents,
@@ -1082,10 +1075,10 @@ export default class EventManager {
 
 				let nextNode = currentNode.nextSibling
 				if (nextNode) {
-					this.nodeMan.removeChild(currentNode)
-					let newRange = this.selMan.createRange(nextNode, 0, nextNode, 0)
-					this.selMan.setRange(newRange)
-					this.undoMan.record({
+					NodeManager.removeChild(currentNode)
+					let newRange = SelectionManager.createRange(nextNode, 0, nextNode, 0)
+					SelectionManager.setRange(newRange)
+					UndoManager.record({
 						type         : "remove",
 						targetNode   : currentNode,
 						nextNode     : nextNode,
@@ -1099,12 +1092,12 @@ export default class EventManager {
 		} else {
 			// selection is not collapsed
 			e.preventDefault()
-			this.selMan.removeSelection()
+			SelectionManager.removeSelection()
 		}
 
 	}
 
-	onSelectionChanged() {
+	public static onSelectionChanged() {
 
 		if (window.getSelection().rangeCount === 0) {
 			return
@@ -1230,18 +1223,18 @@ export default class EventManager {
 		// 		pvmRange.setEnd(pvmRange.end.node.previousSibling, pvmRange.end.node.previousSibling.getTextContent().length)
 		// 	}
 		// 	console.log("here")
-		// 	this.selMan.setRange(pvmRange)
+		// 	SelectionManager.setRange(pvmRange)
 		// }
 
-		let currentRange = this.selMan.getCurrentRange()
-		let currentNode  = this.selMan.getCurrentNode()
+		let currentRange = SelectionManager.getCurrentRange()
+		let currentNode  = SelectionManager.getCurrentNode()
 
-		this.popTool.togglePopTool()
+		PopTool.togglePopTool()
 
-		this.editSession.currentState.node  = currentNode
-		this.editSession.currentState.range = currentRange
+		EditSession.currentState.node  = currentNode
+		EditSession.currentState.range = currentRange
 		if (currentNode && currentNode.textElement) {
-			this.editSession.currentState.textHTML = currentNode.textElement.innerHTML
+			EditSession.currentState.textHTML = currentNode.textElement.innerHTML
 		}
 
 	}
