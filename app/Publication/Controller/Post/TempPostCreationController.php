@@ -89,13 +89,6 @@ class TempPostCreationController
 			'id' => null
 		);
 
-		//	If user is not verified
-		if (!$user->isVerified()) {
-			$return['msg'] = $this->config['msg']['is_not_verified_user'];
-
-			return $return;
-		}
-
 		/* Validate temp post components */
 
 		//	If title is set

@@ -53,14 +53,6 @@ class TempPostEditController
 			'err' => true,
 			'msg' => ''
 		);
-
-		//	If user is not verified
-		if (!$user->isVerified()) {
-			$return['msg'] = $this->config['msg']['is_not_verified_user'];
-
-			return $return;
-		}
-
 		
 	}
 }
