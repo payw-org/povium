@@ -90,13 +90,6 @@ class PostEditController
 			'msg' => ''
 		);
 
-		//	If user is not verified
-		if (!$user->isVerified()) {
-			$return['msg'] = $this->config['msg']['is_not_verified_user'];
-
-			return $return;
-		}
-
 		/* Validate post edit request */
 
 		$post = $this->postManager->getPost($post_id);
