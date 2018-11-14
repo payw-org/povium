@@ -524,6 +524,8 @@ export default class EventManager {
 
 		let keyCode     = e.keyCode
 		let physKeyCode = e.code
+		// Prevent Hangul compositionEnd + spacebar
+		if (physKeyCode === "Space" && e.key === "Process") return
 
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode  = SelectionManager.getCurrentNode()
@@ -635,6 +637,7 @@ export default class EventManager {
 			let originalContents = EditSession.currentState.textHTML
 			let originalRange    = EditSession.currentState.range
 			let modifiedContents, newRange
+			
 			setTimeout(() => {
 
 				modifiedContents = currentNode.textElement.innerHTML
