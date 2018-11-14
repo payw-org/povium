@@ -28,6 +28,13 @@ return [
 
 	'\Povium\MailSender\ActivationMailSender' => '\Povium\MailSender\Factory\ActivationMailSenderFactory',
 
+    '\Povium\Middleware\Authentication\LoginMiddleware' => '\Povium\Middleware\Authentication\Factory\LoginMiddlewareFactory',
+    '\Povium\Middleware\Authentication\RegisterMiddleware' => '\Povium\Middleware\Authentication\Factory\RegisterMiddlewareFactory',
+    '\Povium\Middleware\Authentication\RegistrationFormMiddleware' => '\Povium\Middleware\Authentication\Factory\RegistrationFormMiddlewareFactory',
+    '\Povium\Middleware\Authentication\LogoutMiddleware' => '\Povium\Middleware\Authentication\Factory\LogoutMiddlewareFactory',
+    '\Povium\Middleware\Authentication\EmailActivationRequestMiddleware' => '\Povium\Middleware\Authentication\Factory\EmailActivationRequestMiddlewareFactory',
+    '\Povium\Middleware\Authentication\EmailActivationMiddleware' => '\Povium\Middleware\Authentication\Factory\EmailActivationMiddlewareFactory',
+
 	'\Povium\Security\Authentication\Authenticator' => '\Povium\Security\Authentication\Factory\AuthenticatorFactory',
 	'\Povium\Security\Authentication\Controller\LoginController' => '\Povium\Security\Authentication\Factory\LoginControllerFactory',
 	'\Povium\Security\Authentication\Controller\LogoutController' => '\Povium\Security\Authentication\Factory\LogoutControllerFactory',

@@ -15,12 +15,16 @@ use Povium\Base\Http\Exception\GoneHttpException;
  */
 $collection->post(
 	'/login',
-	function () use ($router) {
-		if ($GLOBALS['authority_level'] >= Authorizer::USER) {
-            $router->redirect('/');
+	function () use ($factory, $authenticator) {
+	    if ($GLOBALS['authority'] >= Authorizer::USER) {
+	        return;
         }
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/login.php');
+        $login_middleware = $factory->createInstance(
+            '\Povium\Middleware\Authentication\LoginMiddleware',
+            $authenticator
+        );
+        $login_middleware->login();
 	}
 );
 
@@ -29,26 +33,33 @@ $collection->post(
  */
 $collection->post(
 	'/register',
-	function () use ($router) {
-		if ($GLOBALS['authority_level'] >= Authorizer::USER) {
-		    $router->redirect('/');
+	function () use ($factory, $authenticator) {
+	    if ($GLOBALS['authority'] >= Authorizer::USER) {
+	        return;
         }
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/register.php');
+        $register_middleware = $factory->createInstance(
+            '\Povium\Middleware\Authentication\RegisterMiddleware',
+            $authenticator
+        );
+        $register_middleware->register();
 	}
 );
 
 /**
- * Validate register inputs Ajax
+ * Validate registration form Ajax
  */
 $collection->put(
 	'/register',
-	function () use ($router) {
-        if ($GLOBALS['authority_level'] >= Authorizer::USER) {
-            $router->redirect('/');
+	function () use ($factory) {
+	    if ($GLOBALS['authority'] >= Authorizer::USER) {
+	        return;
         }
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/validateRegisterInputs.php');
+        $registration_form_middleware = $factory->createInstance(
+            '\Povium\Middleware\Authentication\RegistrationFormMiddleware'
+        );
+        $registration_form_middleware->validateRegistrationForm();
 	}
 );
 
@@ -57,12 +68,16 @@ $collection->put(
  */
 $collection->post(
 	'/logout',
-	function () use ($router) {
-		if ($GLOBALS['authority_level'] < Authorizer::USER) {
-		    $router->redirect('/register');
+	function () use ($factory, $authenticator) {
+	    if ($GLOBALS['authority'] == Authorizer::VISITOR) {
+	        return;
         }
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/logout.php');
+        $logout_middleware = $factory->createInstance(
+            '\Povium\Middleware\Authentication\LogoutMiddleware',
+            $authenticator
+        );
+        $logout_middleware->logout();
 	}
 );
 
@@ -73,12 +88,17 @@ $collection->post(
  */
 $collection->get(
 	'/me/settings/email/new-request',
-	function () use ($router) {
-        if ($GLOBALS['authority_level'] < Authorizer::USER) {
-            $router->redirect('/register');
+	function () use ($factory, $authenticator, $router) {
+	    if ($GLOBALS['authority'] == Authorizer::VISITOR) {
+	        return;
         }
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/requestEmailActivation.php');
+        $email_activation_request_middleware = $factory->createInstance(
+            '\Povium\Middleware\Authentication\EmailActivationRequestMiddleware',
+            $router,
+            $authenticator->getCurrentUser()
+        );
+        $email_activation_request_middleware->requestEmailActivation();
 	}
 );
 
@@ -86,16 +106,21 @@ $collection->get(
  * Email activation Link
  *
  * @throws ForbiddenHttpException		If invalid activation request
- * @throws GoneHttpException			If activation request has expired
+ * @throws GoneHttpException			If activation request has already expired
  */
 $collection->get(
 	'/c/email/activation',
-	function () use ($router) {
-		if ($GLOBALS['authority_level'] < Authorizer::USER) {
+	function () use ($factory, $authenticator, $router) {
+		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 		    $router->redirect('/login', true);
         }
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/Authentication/activateEmail.php');
+        $email_activation_middleware = $factory->createInstance(
+            '\Povium\Middleware\Authentication\EmailActivationMiddleware',
+            $router,
+            $authenticator->getCurrentUser()
+        );
+        $email_activation_middleware->activateEmail();
 	},
 	'email_activation'
 );
