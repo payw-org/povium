@@ -53,8 +53,7 @@ confirmButton.addEventListener("click", function() {
         password: passInputDOM.value
 	}
 
-	var ajax = new AJAX()
-	ajax.chirp({
+	AJAX.chirp({
 		type: "post",
 		url: "/login",
 		data: JSON.stringify(inputData),

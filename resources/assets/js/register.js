@@ -72,8 +72,7 @@ function checkValidation () {
 		password: passInputDOM.value
 	}
 
-	var ajax = new AJAX()
-	ajax.chirp({
+	AJAX.chirp({
 		type: "put",
 		url: "/register",
 		data: JSON.stringify(inputData),
@@ -126,8 +125,7 @@ startButton.addEventListener("click", function() {
 		password: passInputDOM.value
 	}
 
-	var ajax = new AJAX()
-	ajax.chirp({
+	AJAX.chirp({
 
 		type: "post",
 		url: "/register",
