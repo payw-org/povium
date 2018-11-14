@@ -47,7 +47,6 @@ $router->setRouteCollection($collection);
 
 //	Dispatch a request
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-
 // use Hashids\Hashids;
 //
 // $hashids = new Hashids('Povium autosaved_post', 12);

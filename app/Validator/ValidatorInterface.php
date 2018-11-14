@@ -1,6 +1,6 @@
 <?php
 /**
-* Interface for Validator.
+* Interface for validator.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop

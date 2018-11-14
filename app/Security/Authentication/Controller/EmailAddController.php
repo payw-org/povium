@@ -99,7 +99,7 @@ class EmailAddController
 			':expn_dt' => date('Y-m-d H:i:s', time() + $this->config['email_activation_expire'])
 		);
 		if (!$stmt->execute($query_params)) {
-			$return['msg'] = $this->config['msg']['activation_email_err'];
+			$return['msg'] = $this->config['msg']['add_record_err'];
 
 			return $return;
 		}

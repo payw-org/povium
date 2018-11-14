@@ -12,6 +12,6 @@ return [
 	'email_activation_expire' => 1800,	//	Email activation expiration term (30 minutes)
 
 	'msg' => [
-		'activation_email_err' => '인증 이메일을 보내는 과정에서 에러가 발생했습니다.'
+		'add_record_err' => '요청이 실패했습니다. 다시 시도해주세요.'
 	]
 ];

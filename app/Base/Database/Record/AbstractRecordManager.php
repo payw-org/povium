@@ -1,6 +1,6 @@
 <?php
 /**
- * Record manager which is reponsible for managing table record.
+ * Record manager which is responsible for managing table record.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop

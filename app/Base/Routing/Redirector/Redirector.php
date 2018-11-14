@@ -16,7 +16,6 @@ class Redirector implements RedirectorInterface
 	public function redirect($uri, $return_to = false, $return_uri = "")
 	{
 		$location = BASE_URI . $uri;
-		$http_response_code = 302;		//	Default value
 
 		if (!$return_to) {				//	Simple redirect
 			$http_response_code = 301;
@@ -38,7 +37,7 @@ class Redirector implements RedirectorInterface
 		header(
 			'Location: ' . $location,
  			true,
- 			$http_response_code
+            $http_response_code
 		);
 
 		exit();
