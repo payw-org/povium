@@ -6,43 +6,44 @@ import {AT} from "./config/AvailableTypes"
 
 export default class EditSession {
 
-	editorDOM   : HTMLElement
-	editorBody  : HTMLElement
-	lastNodeID  : number
-	currentState: {
+	public static nodeList: PVMNode[]
+	static editorDOM       : HTMLElement
+	static editorBody      : HTMLElement
+	static lastNodeID      : number
+	static currentState    : {
 		node    : PVMNode
 		textHTML: string
 		range   : PVMRange
 	}
-	nodeList: PVMNode[]
-	nodeMan : NodeManager
 
-	constructor(editorDOM: HTMLElement) {
+	constructor()
+	{
+		
+	}
 
+	public static init(editorDOM: HTMLElement) {
 		this.editorDOM    = editorDOM
 		this.editorBody   = editorDOM.querySelector("#editor-body")
 		this.lastNodeID   = 0
+		this.nodeList     = []
 		this.currentState = {
 			node    : null,
 			textHTML: null,
 			range   : null
 		}
-		this.nodeList = []
-		this.nodeMan  = null
-
 	}
 
-	getAllNodes() {
-		return this.nodeList
+	public static getAllNodes() {
+		return EditSession.nodeList
 	}
 
-	validateData() {
+	public static validateData() {
 
-		let nodeList = this.nodeList
+		let nodeList = EditSession.nodeList
 		let hasError = false
 
 		nodeList.forEach((node) => {
-			if (node.id !== this.nodeMan.getNodeID(node.element)) {
+			if (node.id !== NodeManager.getNodeID(node.element)) {
 				ErrorManager.showError("msnid")
 				hasError = true
 			}
