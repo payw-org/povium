@@ -17,4 +17,6 @@ export interface Action {
 	previousParentType?: string
 	nextType?          : string
 	nextParentType?    : string
+	previousDir?       : string
+	nextDir?           : string
 }
