@@ -1,7 +1,7 @@
 function showError(errCode: string|number) {
 
 	let errorElm = document.querySelector("#error")
-	errorElm.querySelector(".banner").innerHTML = "An error(" + errCode + ") occurred."
+	errorElm.querySelector(".banner").innerHTML = String(errCode)
 	errorElm.classList.remove("hidden")
 
 }
