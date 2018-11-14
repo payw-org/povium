@@ -44,11 +44,8 @@ class LogoutController
 	*/
 	public function logout()
 	{
-		$this->authenticator->initializeAuthenticationStatus();
 		$this->authenticator->deleteCurrentAccessKey();
 		$this->authenticator->deleteCurrentAccessKeyRecord();
-
-		//	TODO : VISITOR로 권한 재부여
 
 		$this->sessionManager->regenerateSessionID(false, true);
 	}
