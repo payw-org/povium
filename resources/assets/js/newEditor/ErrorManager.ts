@@ -1,4 +1,4 @@
-function showError(errCode) {
+function showError(errCode: string|number) {
 
 	let errorElm = document.querySelector("#error")
 	errorElm.querySelector(".banner").innerHTML = "An error(" + errCode + ") occurred."
