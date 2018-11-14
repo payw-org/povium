@@ -26,7 +26,7 @@ $collection->get(
 $collection->get(
 	'/login',
  	function () use ($router, $template_engine) {
-		if ($GLOBALS['authority_level'] >= Authorizer::USER) {
+		if ($GLOBALS['authority'] >= Authorizer::USER) {
 		    $router->redirect('/');
         }
 
@@ -56,7 +56,7 @@ $collection->get(
 $collection->get(
 	'/register',
  	function () use ($router, $template_engine) {
-        if ($GLOBALS['authority_level'] >= Authorizer::USER) {
+        if ($GLOBALS['authority'] >= Authorizer::USER) {
             $router->redirect('/');
         }
 
@@ -134,7 +134,7 @@ $collection->get(
 $collection->get(
 	'/me/settings/email',
 	function () use ($router, $template_engine) {
-		if ($GLOBALS['authority_level'] < Authorizer::USER) {
+		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 		    $router->redirect('/register', true);
         }
 

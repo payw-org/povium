@@ -29,7 +29,7 @@ class Authorizer
      * @param Authenticator $authenticator
      */
 	public function __construct(
-	  Authenticator $authenticator
+	    Authenticator $authenticator
     ) {
         $this->authenticator = $authenticator;
 	}
@@ -41,7 +41,7 @@ class Authorizer
      */
 	public function authorize()
     {
-        $GLOBALS['authority_level'] = $this->measureAuthorityLevel();
+        $GLOBALS['authority'] = $this->measureAuthorityLevel();
 
         return;
     }
