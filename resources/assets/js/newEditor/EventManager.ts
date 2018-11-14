@@ -4,7 +4,7 @@ import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession"
 import PopTool from "./PopTool"
 import {AT} from "./config/AvailableTypes"
-import {Action} from "./Action"
+import {Action} from "./interfaces/Action"
 import PVMRange from "./PVMRange"
 
 export default class EventManager {

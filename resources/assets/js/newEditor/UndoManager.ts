@@ -2,7 +2,7 @@ import NodeManager from "./NodeManager"
 import EventManager from "./EventManager"
 import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession"
-import { Action } from "./Action"
+import { Action } from "./interfaces/Action"
 
 export default class UndoManager {
 

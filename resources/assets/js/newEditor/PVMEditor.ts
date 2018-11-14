@@ -7,7 +7,7 @@ import PopTool from "./PopTool"
 import AJAX from "../AJAX"
 import {AT} from "./config/AvailableTypes"
 import { Example } from "./examples/example1"
-import * as PostData from "./PostData"
+import * as PostData from "./interfaces/PostData"
 
 export default class PVMEditor {
 
