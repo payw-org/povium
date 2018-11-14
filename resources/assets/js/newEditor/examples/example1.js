@@ -1,5 +1,8 @@
 export const Example = {
-	"title": "Blockchain Is a Semantic WasteLand",
+	"title": {
+		"type": "text",
+		"data": "Blockchain Is a Semantic WasteLand"
+	},
 	"contents": [
 		{
 			"type": "p",
