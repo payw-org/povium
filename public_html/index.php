@@ -13,6 +13,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php');
 
 use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Database\DBBuilder;
+use Philo\Blade\Blade;
 
 $factory = new MasterFactory();
 
@@ -33,13 +34,21 @@ $authenticator = $factory->createInstance('\Povium\Security\Authentication\Authe
 $authorizer = $factory->createInstance('\Povium\Security\Authorization\Authorizer', $authenticator);
 $authorizer->authorize();
 
+/* Template engine */
+
+$template_engine = $factory->createInstance('\Povium\Base\Templating\TemplateEngine');
+
+//  Create blade template engine
+$views = dirname(__FILE__, 2) . '/resources/views';
+$cache = dirname(__FILE__, 2) . '/storage/cache/views';
+$blade = new Blade($views, $cache);
+
 /* Initialize routing system */
 
 $router = $factory->createInstance('\Povium\Base\Routing\Router');
 
 //	Create routes and add to collection.
 $collection = $factory->createInstance('\Povium\Base\Routing\RouteCollection');
-$template_engine = $factory->createInstance('\Povium\Base\Templating\TemplateEngine');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php');
 
@@ -47,6 +56,7 @@ $router->setRouteCollection($collection);
 
 //	Dispatch a request
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+
 // use Hashids\Hashids;
 //
 // $hashids = new Hashids('Povium autosaved_post', 12);

@@ -21,8 +21,6 @@ class TemplateEngine
 	 *
 	 * @param  string  $template_dir  Template file written in phtml.
 	 * @param  array   $config        "name" => value
-	 *
-	 * @return null                   Return nothing
 	 */
 	public function render($template_dir, $config)
 	{
@@ -56,9 +54,7 @@ class TemplateEngine
 	/**
 	 * Include string or a file in directory.
 	 *
-	 * @param  string $str Config name
-	 *
-	 * @return null   Return nothing
+	 * @param  string $config_name
 	 */
 	public function embrace($config_name)
 	{
@@ -100,7 +96,7 @@ class TemplateEngine
 
 		} else {
 
-			false;
+			return false;
 
 		}
 
@@ -126,10 +122,9 @@ class TemplateEngine
 	 *
 	 * @param  string  $config_name  Config Name
 	 * @param  string  $dir          Directory
-	 *
-	 * @return null                  Return Nothing
+     * @param  array   $config
 	 */
-	public function basis($config_name, $dir, $config = [])
+	public function basis($config_name, $dir, $config = array())
 	{
 
 		if (
