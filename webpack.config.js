@@ -1,50 +1,45 @@
 module.exports = {
 
 	entry: {
-
 		main: [
-			'./resources/assets/js/globalscript',
-			'./resources/assets/js/globalnav',
-			'./resources/assets/js/home',
-			'./resources/assets/js/logout'
+			'./resources/assets/js/index'
 		],
-
 		login: [
 			'./resources/assets/js/login'
 		],
-
 		register: [
 			'./resources/assets/js/register'
 		],
-
 		editor: [
 			'./resources/assets/js/editor/main'
+		],
+		"editor.new": [
+			'./resources/assets/js/newEditor/main.ts'
 		]
-
 	},
 
-	mode: 'none',
-
+	mode: 'development',
 	devtool: 'source-map',
-
 	output : {
-
 		path: __dirname + '/public_html/build/js',
 		filename: '[name].built.js'
-		
+	},
+
+	resolve: {
+		extensions: [ '.js', '.ts' ]
 	},
 
 	module: {
 		rules: [
 			{
-				test: /\.js$/,
+				test: [/\.tsx?$/],
 				exclude: /(node_modules|bower_components)/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-					presets: ['env']
-					}
-				}
+				loaders: ['babel-loader', 'ts-loader']
+			},
+			{
+				test: [/\.js$/],
+				exclude: /(node_modules|bower_components)/,
+				loaders: ['babel-loader']
 			}
 		]
 	},

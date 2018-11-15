@@ -8,8 +8,7 @@ if (document.querySelector("#globalnav .sign-out")) {
 
 		e.preventDefault()
 
-		let ajax = new AJAX()
-		ajax.chirp({
+		AJAX.chirp({
 			type: "post",
 			url: "/logout",
 			success: function(response) {

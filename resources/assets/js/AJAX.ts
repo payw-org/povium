@@ -1,29 +1,31 @@
-// ajax.js
 export default class AJAX
 {
 
-	constructor() {
+	private static httpRequest: XMLHttpRequest
 
-		this.httpRequest = new XMLHttpRequest()
-
-		if (window.XMLHttpRequest) { // Firefox, Safari, Chrome
-			this.httpRequest = new XMLHttpRequest()
-		} else if (window.ActiveXObject) { // IE 8 and over
-			this.httpRequest = new ActiveXObject("Microsoft.XMLHTTP")
-		}
-
+	constructor()
+	{
+		AJAX.httpRequest = new XMLHttpRequest()
 	}
 
 	/**
-	 *
 	 * @param {Object} config
+	 * @param {string} config.type get | post
+	 * @param {string} config.url
+	 * @param {string} config.data JSON data
 	 */
-	chirp (config) {
+	public static chirp (config: {
+		type: string
+		url: string
+		data?: string|object|[]
+	}) {
+
+		if (!this.httpRequest) this.httpRequest = new XMLHttpRequest()
+
 		/*
 		send type, url, data, success function, fail function
 		*/
-
-		var type = "post", url = "", data = "", success, fail, done
+		let type = "post", url = "", data: string, success: Function, fail: Function, done: Function
 
 		if ("type" in config) {
 			type = config["type"]
@@ -39,36 +41,23 @@ export default class AJAX
 		}
 
 		if ("data" in config) {
-			data = config["data"]
+			if (typeof config['data'] === 'object') {
+				data = JSON.stringify(config['data'])
+			} else if (typeof config['data'] === 'string') {
+				data = config["data"]
+			}
 		}
 
 		if ("success" in config) {
-
 			success = config["success"]
-
-			if (typeof success !== "function") {
-				console.error(success, "is not a function.")
-				return
-			}
 		}
 
 		if ("fail" in config) {
-
 			fail = config["fail"]
-
-			if (typeof fail !== "function") {
-				console.error(fail, "is not a function.")
-				return
-			}
 		}
 
 		if ("done" in config) {
 			done = config["done"]
-
-			if (typeof done !== "function") {
-				console.error(done, "is not a function.")
-				return
-			}
 		}
 
 
@@ -86,8 +75,9 @@ export default class AJAX
 					}
 
 				} else {
+					let status = this.status
 					if (fail) {
-						fail()
+						fail(status)
 					}
 
 				}

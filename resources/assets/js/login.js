@@ -17,7 +17,10 @@ class SignInInput extends TextInput {
 var identifierInputDOM = document.querySelector('.input-wrapper.identifier input')
 var passInputDOM = document.querySelector('.input-wrapper.password input')
 var confirmButton = document.querySelector('button.confirm')
-var rememberCheckBox = document.querySelector('#auto-chk')
+// var rememberCheckBox
+// if (document.querySelector('#auto-chk')) {
+// 	rememberCheckBox = document.querySelector('#auto-chk')
+// }
 
 if (identifierInputDOM) {
 	var identifierInputObj = new SignInInput(identifierInputDOM)
@@ -47,12 +50,10 @@ confirmButton.addEventListener("click", function() {
 
 	var inputData = {
 		identifier: identifierInputDOM.value,
-        password: passInputDOM.value,
-        remember: rememberCheckBox.checked
+        password: passInputDOM.value
 	}
 
-	var ajax = new AJAX()
-	ajax.chirp({
+	AJAX.chirp({
 		type: "post",
 		url: "/login",
 		data: JSON.stringify(inputData),

@@ -1,11 +1,15 @@
-import SelectionManager from "./SelectionManager"
 import PRange from "./PRange"
+import PostEditor from "./PostEditor";
 
 export default class UndoManager {
 
-	constructor()
+	/**
+	 * 
+	 * @param {PostEditor} postEditor 
+	 */
+	constructor(postEditor)
 	{
-		this.selManager = new SelectionManager(null, this)
+		this.postEditor = postEditor
 		this.actionStack = []
 		this.currentStep = -1
 	}
@@ -128,7 +132,7 @@ export default class UndoManager {
 
 			if (action.previousSibling) {
 				action.newNode.parentNode.removeChild(action.newNode)
-				this.selManager.setCursorAt(action.previousSibling, -1)
+				this.postEditor.selManager.setCursorAt(action.previousSibling, -1)
 			} else if (action.nextSibling) {
 				action.newNode.parentNode.removeChild(action.newNode)
 			}
@@ -161,8 +165,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.previousState.startNode, action.range.previousState.startTextOffset)
 			pRange.setEnd(action.range.previousState.endNode, action.range.previousState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
@@ -172,7 +180,7 @@ export default class UndoManager {
 
 			action.target.innerHTML = action.previousState.content
 
-			this.selManager.setCursorAt(action.target, action.nextState.length)
+			this.postEditor.selManager.setCursorAt(action.target, action.nextState.length)
 
 		} else if (action.type === "change") {
 
@@ -194,8 +202,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.previousState.startNode, action.range.previousState.startTextOffset)
 			pRange.setEnd(action.range.previousState.endNode, action.range.previousState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().addRange(range)
 
 		} else if (action.type === "merge") {
@@ -217,10 +229,39 @@ export default class UndoManager {
 			pRange.setStart(action.range.previousState.startNode, action.range.previousState.startTextOffset)
 			pRange.setEnd(action.range.previousState.endNode, action.range.previousState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
+
+		} else if (action.type === "textChange") {
+
+			// action.targetNode.innerHTML = action.targetNode.innerHTML.slice(0, action.nextDiffStart) + action.prevDiffContent + action.targetNode.innerHTML.slice(action.nextDiffEnd + 1, action.targetNode.innerHTML.length)
+
+			action.targetNode.innerHTML = action.prevContent
+
+			this.postEditor.selManager.setCursorAt(action.targetNode, action.prevTextOffset)
+
+		} else if (action.type === "textStyleChange") {
+
+			let pRange = new PRange()
+			pRange.setStart(action.startNode, action.startTextOffset)
+			pRange.setEnd(action.endNode, action.endTextOffset)
+			let range = document.createRange()
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
+
+			document.execCommand(action.method, false)
 
 		}
 	}
@@ -251,7 +292,7 @@ export default class UndoManager {
 
 			if (action.previousSibling) {
 				action.previousSibling.parentNode.insertBefore(action.newNode, action.previousSibling.nextSibling)
-				this.selManager.setCursorAt(action.newNode, 0)
+				this.postEditor.selManager.setCursorAt(action.newNode, 0)
 			} else if (action.nextSibling) {
 				action.nextSibling.parentNode.insertBefore(action.newNode, action.nextSibling)
 			}
@@ -291,8 +332,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
 			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
 
@@ -302,7 +347,7 @@ export default class UndoManager {
 
 			action.target.innerHTML = action.nextState.content
 
-			this.selManager.setCursorAt(action.nextState.newNode, 0)
+			this.postEditor.selManager.setCursorAt(action.nextState.newNode, 0)
 
 		} else if (action.type === "change") {
 
@@ -324,8 +369,12 @@ export default class UndoManager {
 			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
 			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().addRange(range)
 
 		} else if (action.type === "merge") {
@@ -337,15 +386,44 @@ export default class UndoManager {
 			pRange.setStart(action.range.nextState.startNode, action.range.nextState.startTextOffset)
 			pRange.setEnd(action.range.nextState.endNode, action.range.nextState.endTextOffset)
 			let range = document.createRange()
-			range.setStart(pRange.startContainer, pRange.startOffset)
-			range.setEnd(pRange.endContainer, pRange.endOffset)
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
+
+		} else if (action.type === "textChange") {
+
+			// action.node.innerHTML = action.node.innerHTML.slice(0, action.prevDiffStart) + action.nextDiffContent + action.node.innerHTML.slice(action.prevDiffEnd + 1, action.node.innerHTML.length)
+
+			action.targetNode.innerHTML = action.nextContent
+
+			this.postEditor.selManager.setCursorAt(action.targetNode, action.nextTextOffset)
+
+		} else if (action.type === "textStyleChange") {
+
+			let pRange = new PRange()
+			pRange.setStart(action.startNode, action.startTextOffset)
+			pRange.setEnd(action.endNode, action.endTextOffset)
+			let range = document.createRange()
+			if (pRange.startContainer) {
+				range.setStart(pRange.startContainer, pRange.startOffset)
+			}
+			if (pRange.endContainer) {
+				range.setEnd(pRange.endContainer, pRange.endOffset)
+			}
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
+
+			document.execCommand(action.method, false)
 
 		}
 	}
 
-	getLatestAction()
+	getTheLatestAction()
 	{
 
 		return this.actionStack[this.currentStep]

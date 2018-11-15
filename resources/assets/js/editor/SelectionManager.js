@@ -1,26 +1,26 @@
-import DOMManager from "./DOMManager"
-import UndoManager from "./UndoManager"
 import PRange from "./PRange"
+import PostEditor from "./PostEditor";
 
 export default class SelectionManager
 {
 
 	/**
 	 *
-	 * @param {DOMManager} domManager
-	 * @param {UndoManager} undoManager
+	 * @param {PostEditor} postEditor
 	 */
-	constructor(domManager, undoManager)
+	constructor(postEditor)
 	{
 
-		this.domManager = domManager
-		this.undoManager = undoManager
+		this.postEditor = postEditor
+
+		// this.postEditor.domManager = postEditor.domManager
+		// this.postEditor.undoManager = postEditor.undoManager
+
+		// this.postEditor.eventManager = postEditor.eventManager
 
 	}
 
 	// Events
-
-
 
 	// Methods
 
@@ -74,7 +74,7 @@ export default class SelectionManager
 
 		}
 
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 	}
 
@@ -88,13 +88,18 @@ export default class SelectionManager
 	}
 
 	/**
-	 * Make the selection bold.
+	 * Make the selection style.
 	 */
-	bold()
+	changeTextStyle(method)
 	{
+
 		// console.log(document.execCommand('bold', false))
 		// this.itmotnTT("strong")
-		this.styleText("strong")
+		// this.styleText("strong")
+		document.execCommand(method, false)
+
+		
+
 	}
 
 	/**
@@ -149,14 +154,20 @@ export default class SelectionManager
 			type: "change",
 			targets: [],
 			range: {
-				startNode: this.getNodeOfNode(startNode),
-				endNode: this.getNodeOfNode(endNode),
-				startTextOffset: startTextOffset,
-				endTextOffset: endTextOffset
+				previousState: {
+					startNode: this.getNodeOfNode(startNode),
+					endNode: this.getNodeOfNode(endNode),
+					startTextOffset: startTextOffset,
+					endTextOffset: endTextOffset
+				},
+				nextState: {
+					startTextOffset: startTextOffset,
+					endTextOffset: endTextOffset
+				}
 			}
 		}
 
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 		// Change nodes
 		for (var i = 0; i < chunks.length; i++) {
@@ -170,7 +181,7 @@ export default class SelectionManager
 			}
 
 			if (chunks[i].nodeName === type) {
-				type = "P"
+				type = "p"
 			}
 
 			var changedNode = this.changeNodeName(chunks[i], type, true, false)
@@ -198,13 +209,16 @@ export default class SelectionManager
 		keepRange.setEnd(endNode, endOffset)
 		this.replaceRange(keepRange)
 
+		action.range.nextState.startNode = this.getNodeOfNode(startNode)
+		action.range.nextState.endNode = this.getNodeOfNode(endNode)
+
 	}
 
 	/**
 	 *
 	 * @param {string} type
 	 */
-	list(type)
+	list_old(type)
 	{
 
 		// If one or more lists are
@@ -335,7 +349,7 @@ export default class SelectionManager
 
 				nextNode = itemNode.nextElementSibling
 
-				if (itemNode.nodeName !== "LI") {
+				if (itemNode.nodeName !== "li") {
 					itemNode = itemNode.nextElementSibling
 					continue
 				}
@@ -407,8 +421,8 @@ export default class SelectionManager
 
 			}
 
-			if (this.domManager.editor.contains(listElm)) {
-				this.domManager.editor.removeChild(listElm)
+			if (this.postEditor.domManager.editorBody.contains(listElm)) {
+				this.postEditor.domManager.editorBody.removeChild(listElm)
 			}
 
 		}
@@ -423,21 +437,35 @@ export default class SelectionManager
 
 	}
 
-	link(url)
+	list(type)
 	{
-		var range = this.getRange()
-		if (!range) {
-			return
+		let orgRange = this.getRange()
+		if (!orgRange) { return }
+
+		if (!type) {
+			console.error("The given list type is invalid")
 		}
 
-		// if (range.collapsed) {
-		// 	return
-		// }
+		let listDOM = this.postEditor.domManager.generateEmptyNode(type, false)
+		let currentNode = this.getNodeInSelection()
+		let listItemDOM = this.changeNodeName(currentNode, "li", true, true)
+
+		listItemDOM.parentNode.replaceChild(listDOM, listItemDOM)
+		listDOM.appendChild(listItemDOM)
+		
+	}
+
+	/**
+	 * 
+	 * @param {String} url 
+	 */
+	link(url)
+	{
 
 		document.execCommand('createLink', false, url)
 		document.getSelection().removeAllRanges()
 
-		this.domManager.hidePopTool()
+		this.postEditor.domManager.hidePopTool()
 
 	}
 
@@ -497,7 +525,7 @@ export default class SelectionManager
 
 		for (var i = 0; i < chunks.length; i++) {
 
-			if (chunks[i].nodeName === "BLOCKQUOTE") {
+			if (chunks[i].nodeName === "blockquote") {
 				continue
 			} else {
 				isAllBlockquote = false
@@ -530,14 +558,14 @@ export default class SelectionManager
 		}
 
 		if (changedNodeCount > 0 || isAllBlockquote) {
-			this.undoManager.recordAction(action)
+			this.postEditor.undoManager.recordAction(action)
 		}
 
 		// Selection is all blockquote
 		if (isAllBlockquote) {
 			for (var i = 0; i < chunks.length; i++) {
 
-				var changedNode = this.changeNodeName(chunks[i], "P", false, false)
+				var changedNode = this.changeNodeName(chunks[i], "p", false, false)
 
 				action.targets.push({
 					previousTarget: chunks[i],
@@ -567,7 +595,7 @@ export default class SelectionManager
 	/**
 	 * Backspace implementation
 	 */
-	backspace(e)
+	backspace(e, linkedRecord = false)
 	{
 
 		// Get current available node
@@ -575,9 +603,9 @@ export default class SelectionManager
 
 		var range = this.getRange()
 
-		let linkedAction = false
+		let linkedAction = linkedRecord
 
-		if (!range.collapsed) {
+		if (range && !range.collapsed) {
 			console.log("pressed backspace but the range is not collapsed")
 			e.stopPropagation()
 			e.preventDefault()
@@ -589,6 +617,44 @@ export default class SelectionManager
 			}
 
 			// return
+		} else if (this.postEditor.domManager.editorBody.querySelector(".image-selected")) {
+
+			// Remove selected image block
+
+			let image = this.postEditor.domManager.editorBody.querySelector(".image-selected")
+
+			this.postEditor.undoManager.recordAction({
+				type: "remove",
+				targets: [
+					{
+						previousNode: image.previousElementSibling,
+						removedNode: image,
+						nextNode: image.nextElementSibling,
+						parentNode: image.parentElement
+					}
+				],
+				range: {
+					previousState: {
+						startTextOffset: 0,
+						endTextOffset: 0,
+						startNode: image,
+						endNode: image
+					},
+					nextState: {
+						startTextOffset: 0,
+						endTextOffset: 0,
+						startNode: null,
+						endNode: null
+					}
+				},
+				linked: false
+			})
+
+			
+			let imageBlock = image.closest(".image")
+			imageBlock.parentNode.removeChild(imageBlock)
+			this.postEditor.domManager.hideImageTool()
+
 		}
 
 		currentNode = this.getNodeInSelection()
@@ -657,7 +723,7 @@ export default class SelectionManager
 					this.isAvailableParentNode(currentNode) &&
 					!this.isParagraph(currentNode)
 				) {
-					let changedNode = this.changeNodeName(currentNode, "P")
+					let changedNode = this.changeNodeName(currentNode, "p")
 					this.setCursorAt(changedNode)
 				}
 
@@ -681,7 +747,12 @@ export default class SelectionManager
 
 				var previousNode = this.getPreviousAvailableNode(currentNode)
 
-				if (this.isTextEmptyNode(previousNode)) {
+				if (this.isContentBasedNode(previousNode)) {
+
+					previousNode.querySelector(".image-wrapper").click()
+
+
+				} else if (this.isTextEmptyNode(previousNode)) {
 
 					this.removeNode(previousNode, {
 						previousState: {
@@ -753,7 +824,7 @@ export default class SelectionManager
 
 		let linkedAction = false
 
-		if (!range.collapsed) {
+		if (range && !range.collapsed) {
 			e.stopPropagation()
 			e.preventDefault()
 
@@ -763,6 +834,43 @@ export default class SelectionManager
 				return;
 			}
 			// return
+		} else if (this.postEditor.domManager.editorBody.querySelector(".image-selected")) {
+
+			// Remove selected image block
+			
+			let image = this.postEditor.domManager.editorBody.querySelector(".image-selected")
+
+			this.postEditor.undoManager.recordAction({
+				type: "remove",
+				targets: [
+					{
+						previousNode: image.previousElementSibling,
+						removedNode: image,
+						nextNode: image.nextElementSibling,
+						parentNode: image.parentElement
+					}
+				],
+				range: {
+					previousState: {
+						startTextOffset: 0,
+						endTextOffset: 0,
+						startNode: image,
+						endNode: image
+					},
+					nextState: {
+						startTextOffset: 0,
+						endTextOffset: 0,
+						startNode: null,
+						endNode: null
+					}
+				},
+				linked: false
+			})
+
+			let imageBlock = image.closest(".image")
+			imageBlock.parentNode.removeChild(imageBlock)
+			this.postEditor.domManager.hideImageTool()
+
 		}
 
 		currentNode = this.getNodeInSelection()
@@ -783,7 +891,20 @@ export default class SelectionManager
 
 				console.log("empty child node or parent node")
 
-				this.removeNode(currentNode)
+				this.removeNode(currentNode, {
+					previousState: {
+						startNode: currentNode,
+						startTextOffset: 0,
+						endNode: currentNode,
+						endTextOffset: 0
+					},
+					nextState: {
+						startNode: currentNode,
+						startTextOffset: 0,
+						endNode: currentNode,
+						endTextOffset: 0
+					}
+				}, linkedAction)
 
 				this.setCursorAt(nextNode, 0)
 
@@ -868,6 +989,9 @@ export default class SelectionManager
 
 		var currentNode = this.getNodeInSelection()
 		var range = this.getRange()
+		if (!range) {
+			return
+		}
 		let linkedAction = false
 
 		if (!range.collapsed) {
@@ -915,7 +1039,7 @@ export default class SelectionManager
 		} else if (selPosType === 1) {
 
 			console.info('Press enter: start')
-			var pElm = this.domManager.generateEmptyNode(currentNode.nodeName)
+			var pElm = this.postEditor.domManager.generateEmptyNode(currentNode.nodeName)
 
 			currentNode.parentNode.insertBefore(pElm, currentNode)
 
@@ -926,7 +1050,7 @@ export default class SelectionManager
 				newNode: pElm,
 				linked: linkedAction
 			}
-			this.undoManager.recordAction(action)
+			this.postEditor.undoManager.recordAction(action)
 
 		} else if (selPosType === 3) {
 
@@ -940,7 +1064,7 @@ export default class SelectionManager
 				this.isHeading(currentNode)
 			) {
 
-				newNodeName = "P"
+				newNodeName = "p"
 
 			} else if (this.isListItem(currentNode)) {
 				if (this.isEmptyNode(currentNode)) {
@@ -952,7 +1076,7 @@ export default class SelectionManager
 
 			}
 
-			var pElm = this.domManager.generateEmptyNode(newNodeName)
+			var pElm = this.postEditor.domManager.generateEmptyNode(newNodeName)
 
 			parentNode.insertBefore(pElm, nextNode)
 
@@ -963,7 +1087,7 @@ export default class SelectionManager
 				newNode: pElm,
 				linked: linkedAction
 			}
-			this.undoManager.recordAction(action)
+			this.postEditor.undoManager.recordAction(action)
 
 
 
@@ -1014,6 +1138,8 @@ export default class SelectionManager
 		// if the startContainer or the endContainer are included
 		// in the original node.
 
+		let currentNode = this.getNodeInSelection()
+
 		if (targetNode.nodeType !== 1) {
 			// If the node is not an HTML element do nothing.
 			return
@@ -1035,7 +1161,9 @@ export default class SelectionManager
 
 		// 1. Change node
 		var node
-		var newNode = document.createElement(newNodeName)
+		var newNode = this.postEditor.domManager.generateEmptyNode(newNodeName, false)
+
+		newNode.setAttribute("name", targetNode.getAttribute("name"))
 
 		if (keepStyle) {
 			newNode.style.textAlign = targetNode.style.textAlign
@@ -1049,8 +1177,6 @@ export default class SelectionManager
 		// 3. replace node
 		targetNode.parentNode.replaceChild(newNode, targetNode)
 
-		let currentNode = this.getNodeInSelection()
-
 		if (recordAction) {
 			let action = {
 				type: "change",
@@ -1061,13 +1187,22 @@ export default class SelectionManager
 					}
 				],
 				range: {
-					startNode: currentNode,
-					endNode: currentNode,
-					startTextOffset: startTextOffset,
-					endTextOffset: endTextOffset
+					previousState: {
+						startNode: currentNode,
+						endNode: currentNode,
+						startTextOffset: startTextOffset,
+						endTextOffset: endTextOffset
+
+					},
+					nextState: {
+						startNode: newNode,
+						endNode: newNode,
+						startTextOffset: startTextOffset,
+						endTextOffset: endTextOffset
+					}
 				}
 			}
-			this.undoManager.recordAction(action)
+			this.postEditor.undoManager.recordAction(action)
 		}
 
 		return newNode
@@ -1116,7 +1251,7 @@ export default class SelectionManager
 			var isChanged = false
 
 			// if (startNode.id === 'editor-body') {
-			if (startNode === this.domManager.editor) {
+			if (startNode === this.postEditor.domManager.editorBody) {
 
 				target = startNode.firstElementChild
 
@@ -1141,7 +1276,7 @@ export default class SelectionManager
 
 
 			// if (endNode.id === 'editor-body') {
-			if (endNode === this.domManager.editor) {
+			if (endNode === this.postEditor.domManager.editorBody) {
 
 
 				target = endNode.firstChild
@@ -1248,7 +1383,7 @@ export default class SelectionManager
 				// this.replaceRange(newRange)
 				// console.log(range)
 				console.log("fixed selection")
-				window.getSelection().removeRange(range)
+				window.getSelection().removeAllRanges()
 				window.getSelection().addRange(newRange)
 			}
 
@@ -1414,7 +1549,7 @@ export default class SelectionManager
 			linked: linkedRecord
 		}
 
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 
 	}
@@ -1493,7 +1628,7 @@ export default class SelectionManager
 
 				// this.removeNode(back)
 				let parentNode = back.parentNode
-				if (this.isListItem(back) && parentNode.querySelectorAll("LI").length === 1) {
+				if (this.isListItem(back) && parentNode.querySelectorAll("li").length === 1) {
 
 					removedNode = parentNode
 					removedNodePreviousNode = parentNode.previousSibling
@@ -1529,6 +1664,7 @@ export default class SelectionManager
 
 		//record action
 		let action = {
+			linked: linkedRecord,
 			type: "merge",
 			mergedNode: first,
 			mergedNodeOriginalContent: mergedNodeOriginalContent,
@@ -1542,11 +1678,7 @@ export default class SelectionManager
 			range: recordRangeState
 		}
 
-		if (linkedRecord) {
-			action.linked = true
-		}
-
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 	}
 
@@ -1611,7 +1743,7 @@ export default class SelectionManager
 		var range
 		range = this.getRange()
 
-		let extraKeyPress = false
+		let needExtraKeyPress = false
 
 		var orgRange = range.cloneRange()
 		if (!range) {
@@ -1622,12 +1754,17 @@ export default class SelectionManager
 
 		var startNode = range.startContainer
 		var startOffset = range.startOffset
+		let endNode = range.endContainer
 
-		if (splitResult.startNode !== startNode) {
+		if (splitResult.startNode && splitResult.startNode !== startNode) {
 			startNode = splitResult.startNode
 			startOffset = 0
 		}
-		var endNode = splitResult.endNode
+
+		if (splitResult.endNode) {
+			endNode = splitResult.endNode
+		}
+		
 
 		var deletionDone = false
 		var selectionNode = this.getNodeInSelection()
@@ -1666,7 +1803,7 @@ export default class SelectionManager
 			},
 			linked: linkedRecord
 		}
-		this.undoManager.recordAction(action)
+		this.postEditor.undoManager.recordAction(action)
 
 		while (1) {
 
@@ -1674,17 +1811,37 @@ export default class SelectionManager
 
 				// Remove image block
 
+				// record action
+				action.targets.push({
+					previousNode: currentParentNode.previousElementSibling,
+					removedNode: currentParentNode,
+					nextNode: currentParentNode.nextElementSibling,
+					parentNode: currentParentNode.parentElement
+				})
+
 				currentParentNode.parentNode.removeChild(currentParentNode)
+
+				if (currentParentNode.contains(startNode)) {
+					
+					action.range.previousState.startNode = currentParentNode
+					action.range.previousState.startTextOffset = 0
+
+				} else if (currentParentNode.contains(endNode)) {
+
+					break
+
+				}
 
 			} else if (
 				!currentParentNode.contains(startNode) &&
 				!currentParentNode.contains(endNode)
 			) {
 
-				console.group("nothing contains")
-				console.log(currentParentNode.textContent)
+				if (withKeyPress === "backspace" || withKeyPress === "delete") {
+					needExtraKeyPress = true
+				}
 
-				extraKeyPress = true
+				// console.group("nothing contains")
 
 				let originalContent = currentParentNode.innerHTML
 
@@ -1693,7 +1850,7 @@ export default class SelectionManager
 					console.log("list is detected")
 					var parentNode = currentParentNode.parentNode
 
-					if (this.isListItem(currentParentNode) && parentNode.querySelectorAll("LI").length === 1) {
+					if (this.isListItem(currentParentNode) && parentNode.querySelectorAll("li").length === 1) {
 
 						// record action
 						action.targets.push({
@@ -1740,12 +1897,14 @@ export default class SelectionManager
 				!currentParentNode.contains(endNode)
 			) {
 
+				if (withKeyPress === "backspace" || withKeyPress === "delete") {
+					needExtraKeyPress = true
+				}
+
 				travelNode = startNode
-				console.group("only contains startnode")
+				// console.group("only contains startnode")
 				console.log(currentParentNode.textContent)
 				var metCurrentNode = false
-
-				extraKeyPress = true
 
 				var tempRange = document.createRange()
 				tempRange.setStart(startNode, startOffset)
@@ -1781,12 +1940,13 @@ export default class SelectionManager
 				currentParentNode.contains(endNode)
 			) {
 
+				// console.log("only contains endnode")
+
+				if (withKeyPress === "backspace" || withKeyPress === "delete") {
+					needExtraKeyPress = true
+				}
+
 				travelNode = endNode
-				console.log("only contains endnode")
-				console.log(currentParentNode.textContent)
-
-				extraKeyPress = true
-
 
 				var tempRange = document.createRange()
 				tempRange.setStartBefore(currentParentNode.firstChild)
@@ -1822,7 +1982,11 @@ export default class SelectionManager
 			) {
 
 				// Contains both startnode and endnode
-				console.log("contains both")
+				// console.log("contains both")
+
+				if (withKeyPress === "enter") {
+					needExtraKeyPress = true
+				}
 
 				let originalContent = currentParentNode.innerHTML;
 
@@ -1845,12 +2009,14 @@ export default class SelectionManager
 					modifiedContent: currentParentNode.innerHTML
 				})
 
-				if (withKeyPress === "enter") {
-					this.enter(document.createEvent("KeyboardEvent"))
-				}
+				// if (withKeyPress === "enter") {
+				// 	this.enter(document.createEvent("KeyboardEvent"), linkedRecord)
+				// }
 
 				action.linked = false
-
+				if (withKeyPress === "enter") {
+					action.linked = true
+				}
 
 				break
 
@@ -1871,7 +2037,7 @@ export default class SelectionManager
 		action.range.nextState.startNode = this.getNodeOfNode(afterRange.startContainer)
 		action.range.nextState.endNode = this.getNodeOfNode(afterRange.endContainer)
 
-		return extraKeyPress
+		return needExtraKeyPress
 
 	}
 
@@ -1897,7 +2063,7 @@ export default class SelectionManager
 
 		if (this.isListItem(node)) {
 
-			if (parentNode.querySelectorAll("LI").length === 1) {
+			if (parentNode.querySelectorAll("li").length === 1) {
 
 				// record action
 				if (recordRangeState) {
@@ -1907,7 +2073,7 @@ export default class SelectionManager
 						nextNode: parentNode.nextSibling,
 						parentNode: parentNode.parentNode
 					})
-					this.undoManager.recordAction(action)
+					this.postEditor.undoManager.recordAction(action)
 				}
 
 				parentNode.parentNode.removeChild(parentNode)
@@ -1922,7 +2088,7 @@ export default class SelectionManager
 						nextNode: node.nextSibling,
 						parentNode: node.parentNode
 					})
-					this.undoManager.recordAction(action)
+					this.postEditor.undoManager.recordAction(action)
 				}
 
 				parentNode.removeChild(node)
@@ -1939,7 +2105,7 @@ export default class SelectionManager
 					nextNode: node.nextSibling,
 					parentNode: node.parentNode
 				})
-				this.undoManager.recordAction(action)
+				this.postEditor.undoManager.recordAction(action)
 			}
 
 			parentNode.removeChild(node)
@@ -1998,6 +2164,11 @@ export default class SelectionManager
 
 	isTextEmptyNode(node)
 	{
+
+		if (!node) {
+			return false
+		}
+
 		if (node.nodeType === 3) {
 			return false
 		}
@@ -2193,7 +2364,13 @@ export default class SelectionManager
 	{
 		if (!node) {
 			return false
-		} else if (node.nodeName === 'FIGURE' && node.classList && node.classList.contains('image')) {
+		} else if (
+			node.nodeName === 'FIGURE' &&
+			node.classList &&
+			node.classList.contains('image') &&
+			node.querySelector('img') &&
+			node.querySelector('figcaption')
+		) {
 			return true
 		} else {
 			return false
@@ -2207,6 +2384,14 @@ export default class SelectionManager
 			return true
 		} else {
 			return false
+		}
+	}
+
+	isContentBasedNode(node) {
+		if (!node) {
+			return false
+		} else if (this.isImageBlock(node)) {
+			return true
 		}
 	}
 
@@ -2231,6 +2416,14 @@ export default class SelectionManager
 			this.isListItem(node) ||
 			this.isImageCaption(node)
 		) {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	isAvailableNode(node) {
+		if (this.isAvailableChildNode(node) || this.isAvailableParentNode(node)) {
 			return true
 		} else {
 			return false
@@ -2443,6 +2636,22 @@ export default class SelectionManager
 	}
 
 
+	/**
+	 * @return {Number} TextOffset inside the paragrph
+	 */
+	getTextOffset()
+	{
+		if (window.getSelection().rangeCount === 0) {
+			return 0
+		}
+
+		let range = window.getSelection().getRangeAt(0)
+
+		let pRange = new PRange()
+		return pRange.getTextOffset(this.getNodeOfNode(range.startContainer), range.startContainer, range.startOffset)
+	}
+
+
 
 	// Getters
 
@@ -2524,7 +2733,7 @@ export default class SelectionManager
 			) {
 				// Find the available node
 				if (this.isList(travelNode)) {
-					var itemNodes = travelNode.querySelectorAll("LI")
+					var itemNodes = travelNode.querySelectorAll("li")
 					travelNode = itemNodes[itemNodes.length - 1]
 				}
 				returnNode = travelNode
@@ -2556,7 +2765,7 @@ export default class SelectionManager
 			) {
 				// Find the available node
 				if (this.isList(travelNode)) {
-					travelNode = travelNode.querySelectorAll("LI")[0]
+					travelNode = travelNode.querySelectorAll("li")[0]
 				}
 				returnNode = travelNode
 				break
@@ -2571,9 +2780,13 @@ export default class SelectionManager
 	getNodeInSelection()
 	{
 
+		if (this.postEditor.domManager.editorBody.querySelector(".image-selected")) {
+			return this.postEditor.domManager.editorBody.querySelector(".image-selected")
+		}
+
 		var range = this.getRange()
 		if (!range) {
-			return
+			return null
 		}
 		var travelNode = this.getRange().startContainer
 		if (travelNode === null) {
@@ -2587,7 +2800,14 @@ export default class SelectionManager
 				this.isAvailableParentNode(travelNode) ||
 				this.isAvailableChildNode(travelNode)
 			) {
-				return travelNode
+
+				if (!this.isImageBlock(travelNode)) {
+					return travelNode
+				} else {
+					return null
+				}
+
+				
 			} else {
 				travelNode = travelNode.parentNode
 			}
@@ -2604,7 +2824,7 @@ export default class SelectionManager
 		let tempNode = node
 		let returnNode = null
 		while (1) {
-			if (tempNode.isEqualNode(this.domManager.editor) || tempNode.isEqualNode(document.body) || tempNode === null) {
+			if (tempNode.isEqualNode(this.postEditor.domManager.editorBody) || tempNode.isEqualNode(document.body) || tempNode === null) {
 				break
 			} else if (this.isAvailableChildNode(tempNode) || this.isAvailableParentNode(tempNode)) {
 				returnNode = tempNode

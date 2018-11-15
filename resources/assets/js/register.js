@@ -72,8 +72,7 @@ function checkValidation () {
 		password: passInputDOM.value
 	}
 
-	var ajax = new AJAX()
-	ajax.chirp({
+	AJAX.chirp({
 		type: "put",
 		url: "/register",
 		data: JSON.stringify(inputData),
@@ -110,6 +109,9 @@ function checkValidation () {
 				alert(error + " " + response)
 			}
 
+		},
+		fail: function(error) {
+			console.log(error)
 		}
 	})
 
@@ -124,8 +126,7 @@ startButton.addEventListener("click", function() {
 		password: passInputDOM.value
 	}
 
-	var ajax = new AJAX()
-	ajax.chirp({
+	AJAX.chirp({
 
 		type: "post",
 		url: "/register",
@@ -196,7 +197,7 @@ let passStrengthIndicator = {
 					this.dom.querySelector(".bar-2").classList.remove("active")
 					setTimeout(() => {
 						this.dom.querySelector(".bar-1").classList.remove("active")
-					}, 300);
+					}, 150);
 
 				} else if (this.dom.querySelector(".bar-1").classList.contains("active")) {
 
@@ -226,7 +227,7 @@ let passStrengthIndicator = {
 					this.dom.querySelector(".bar-0").classList.add("active")
 					setTimeout(() => {
 						this.dom.querySelector(".bar-1").classList.add("active")
-					}, 300);
+					}, 150);
 
 				}
 
@@ -245,7 +246,7 @@ let passStrengthIndicator = {
 					this.dom.querySelector(".bar-1").classList.add("active")
 					setTimeout(() => {
 						this.dom.querySelector(".bar-2").classList.add("active")
-					}, 300);
+					}, 150);
 
 				} else {
 
@@ -254,8 +255,8 @@ let passStrengthIndicator = {
 						this.dom.querySelector(".bar-1").classList.add("active")
 						setTimeout(() => {
 							this.dom.querySelector(".bar-2").classList.add("active")
-						}, 300);
-					}, 300);
+						}, 150);
+					}, 150);
 
 				}
 

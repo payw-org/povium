@@ -1,7 +1,4 @@
-import DOMManager from "./DOMManager"
 import PostEditor from "./PostEditor"
-import SelectionManager from "./SelectionManager"
-import UndoManager from "./UndoManager"
 
 export default class EventManager
 {
@@ -9,26 +6,26 @@ export default class EventManager
 	/**
 	 *
 	 * @param {PostEditor} postEditor
-	 * @param {DOMManager} domManager
-	 * @param {SelectionManager} selManager
-	 * @param {UndoManager} undoManager
 	 */
-	constructor(postEditor, domManager, selManager, undoManager)
+	constructor(postEditor)
 	{
 
 		// Properties
 		let self = this
 
-		// Event Listeners
-
 		this.mouseDownStart = false
 
 		this.postEditor = postEditor
-		this.domManager = domManager
-		this.selManager = selManager
-		this.ssManager = undoManager
 
 		this.linkRange = document.createRange()
+
+		this.charKeyDownLocked = false
+
+		this.keyDownLocked = false
+
+		this.multipleSpaceLocked = false
+
+		this.selectedAll = false
 
 
 		// Event Listeners
@@ -42,28 +39,28 @@ export default class EventManager
 		})
 		window.addEventListener('mousedown', (e) => {
 			if (!e.target.closest("#poptool")) {
-				this.domManager.hidePopTool()
+				this.postEditor.domManager.hidePopTool()
 				this.mouseDownStart = true
 			}
 
 		})
 		window.addEventListener('touchstart', (e) => {
 			if (!e.target.closest("#poptool")) {
-				this.domManager.hidePopTool()
+				this.postEditor.domManager.hidePopTool()
 				this.mouseDownStart = true
 			}
 
 		})
-		this.domManager.editor.addEventListener('mouseup', (e) => {
+		this.postEditor.domManager.editorBody.addEventListener('mouseup', (e) => {
 			this.onSelectionChanged()
 		})
-		this.domManager.editor.addEventListener('touchend', (e) => {
+		this.postEditor.domManager.editorBody.addEventListener('touchend', (e) => {
 			this.onSelectionChanged()
 		})
-		this.domManager.editor.addEventListener('dragstart', (e) => {
+		this.postEditor.domManager.editorBody.addEventListener('dragstart', (e) => {
 			e.preventDefault()
 		})
-		this.domManager.editor.addEventListener('drop', (e) => {
+		this.postEditor.domManager.editorBody.addEventListener('drop', (e) => {
 			e.preventDefault()
 		})
 		window.addEventListener('mouseup', (e) => {
@@ -82,78 +79,88 @@ export default class EventManager
 
 		this.isBackspaceKeyPressed = false
 
-		this.domManager.editor.addEventListener('keydown', (e) => {
-			this.onKeyDown(e)
-			this.onSelectionChanged()
-		})
-
 		window.addEventListener('keydown', (e) => {
 
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
+
+
 				if (e.shiftKey) {
 					e.preventDefault()
-					this.ssManager.redo()
+					this.postEditor.undoManager.redo()
 				} else {
 					e.preventDefault()
-					this.ssManager.undo()
+					this.postEditor.undoManager.undo()
 				}
 
+				this.onSelectionChanged()
+
+			} else {
+				this.onKeyDown(e)
+			}
+
+			if (e.which >= 37 && e.which <= 40) {
+				this.onSelectionChanged()
+			}
+
+			if (e.which === 65 && e.ctrlKey) {
+				this.selectedAll = true
+			}
+
+			if (!e.target.closest("#poptool")) {
+				this.postEditor.domManager.hidePopTool()
+			}
+
+
+
+		})
+
+		window.addEventListener('keyup', (e) => {
+
+			this.onKeyUp(e)
+
+			if (this.selectedAll) {
+				this.selectedAll = false
+				this.onSelectionChanged()
 			}
 
 		})
 
-		this.domManager.editor.addEventListener('keyup', (e) => {
-			this.onKeyUp(e)
+		this.postEditor.domManager.editorBody.addEventListener('keypress', (e) => {
 
-			this.onSelectionChanged()
-		})
-
-		this.domManager.editor.addEventListener('keypress', (e) => {
 			this.onKeyPress(e)
+
+		})
+
+		this.postEditor.domManager.editorBody.addEventListener("input", (e) => {
+
+			this.onInput(e)
+
 		})
 
 
-		this.domManager.editor.addEventListener('paste', (e) => { this.onPaste(e) })
+		this.postEditor.domManager.editorBody.addEventListener('paste', (e) => { this.onPaste(e) })
 
-		// Toolbar button events
-		this.domManager.paragraph.addEventListener('click', (e) => { this.selManager.heading('P') })
-		this.domManager.heading1.addEventListener('click', (e) => { this.selManager.heading('H1') })
-		this.domManager.heading2.addEventListener('click', (e) => { this.selManager.heading('H2') })
-		this.domManager.heading3.addEventListener('click', (e) => { this.selManager.heading('H3') })
 
-		this.domManager.boldButton.addEventListener('click', (e) => { this.selManager.bold() })
-		this.domManager.italicButton.addEventListener('click', (e) => { this.selManager.italic() })
-		this.domManager.underlineButton.addEventListener('click', (e) => { this.selManager.underline() })
-		this.domManager.strikeButton.addEventListener('click', (e) => { this.selManager.strike() })
-
-		this.domManager.alignLeft.addEventListener('click', (e) => { this.selManager.align('left') })
-		this.domManager.alignCenter.addEventListener('click', (e) => { this.selManager.align('center') })
-		this.domManager.alignRight.addEventListener('click', (e) => { this.selManager.align('right') })
-
-		this.domManager.orderedList.addEventListener('click', (e) => { this.selManager.list('OL') })
-		this.domManager.unorderedList.addEventListener('click', (e) => { this.selManager.list('UL') })
-		this.domManager.link.addEventListener('click', (e) => { this.selManager.link("naver.com") })
-		this.domManager.blockquote.addEventListener('click', (e) => { this.selManager.blockquote() })
 
 
 		// PopTool
-		// document.querySelector("#pt-p").addEventListener('click', (e) => { this.selManager.heading('P') })
-		document.querySelector("#pt-h1").addEventListener('click', (e) => { this.selManager.heading('H1') })
-		document.querySelector("#pt-h2").addEventListener('click', (e) => { this.selManager.heading('H2') })
-		document.querySelector("#pt-h3").addEventListener('click', (e) => { this.selManager.heading('H3') })
-		document.querySelector("#pt-bold").addEventListener('click', (e) => { this.selManager.bold() })
-		document.querySelector("#pt-italic").addEventListener('click', (e) => { this.selManager.italic() })
-		document.querySelector("#pt-underline").addEventListener('click', (e) => { this.selManager.underline() })
-		document.querySelector("#pt-strike").addEventListener('click', (e) => { this.selManager.strike() })
-		document.querySelector("#pt-alignleft").addEventListener('click', (e) => { this.selManager.align('left') })
-		document.querySelector("#pt-alignmiddle").addEventListener('click', (e) => { this.selManager.align('center') })
-		document.querySelector("#pt-alignright").addEventListener('click', (e) => { this.selManager.align('right') })
+		// document.querySelector("#pt-p").addEventListener('click', (e) => { this.postEditor.selManager.heading('P') })
+		document.querySelector("#pt-h1").addEventListener('click', (e) => { this.postEditor.selManager.heading('H1') })
+		document.querySelector("#pt-h2").addEventListener('click', (e) => { this.postEditor.selManager.heading('H2') })
+		document.querySelector("#pt-h3").addEventListener('click', (e) => { this.postEditor.selManager.heading('H3') })
+		document.querySelector("#pt-bold").addEventListener('click', (e) => { this.postEditor.selManager.changeTextStyle("bold") })
+		document.querySelector("#pt-italic").addEventListener('click', (e) => { this.postEditor.selManager.changeTextStyle("italic") })
+		document.querySelector("#pt-underline").addEventListener('click', (e) => { this.postEditor.selManager.changeTextStyle("underline") })
+		document.querySelector("#pt-strike").addEventListener('click', (e) => { this.postEditor.selManager.changeTextStyle("strikeThrough") })
+		document.querySelector("#pt-alignleft").addEventListener('click', (e) => { this.postEditor.selManager.align('left') })
+		document.querySelector("#pt-alignmiddle").addEventListener('click', (e) => { this.postEditor.selManager.align('center') })
+		document.querySelector("#pt-alignright").addEventListener('click', (e) => { this.postEditor.selManager.align('right') })
 
 		document.querySelector("#pt-title-pack").addEventListener('click', (e) => {
 
 			document.querySelector("#poptool .top-categories").classList.add("hidden")
 			document.querySelector("#poptool .title-style").classList.remove("hidden")
-			this.domManager.showPopTool()
+			this.postEditor.domManager.showPopTool()
 
 		})
 
@@ -161,7 +168,7 @@ export default class EventManager
 
 			document.querySelector("#poptool .top-categories").classList.add("hidden")
 			document.querySelector("#poptool .text-style").classList.remove("hidden")
-			this.domManager.showPopTool()
+			this.postEditor.domManager.showPopTool()
 
 		})
 
@@ -169,7 +176,7 @@ export default class EventManager
 
 			document.querySelector("#poptool .top-categories").classList.add("hidden")
 			document.querySelector("#poptool .align").classList.remove("hidden")
-			this.domManager.showPopTool()
+			this.postEditor.domManager.showPopTool()
 
 		})
 
@@ -177,9 +184,9 @@ export default class EventManager
 
 			document.querySelector("#poptool .top-categories").classList.add("hidden")
 			document.querySelector("#poptool .input").classList.remove("hidden")
-			this.domManager.showPopTool()
+			this.postEditor.domManager.showPopTool()
 
-			this.linkRange = this.selManager.getRange()
+			this.linkRange = this.postEditor.selManager.getRange()
 
 			setTimeout(() => {
 				document.querySelector("#poptool .pack.input input").focus()
@@ -189,13 +196,13 @@ export default class EventManager
 
 		document.querySelector("#pt-blockquote").addEventListener('click', (e) => {
 
-			this.selManager.blockquote()
+			this.postEditor.selManager.blockquote()
 
 		})
 
 		document.querySelectorAll("#poptool .pack button").forEach(function(elm) {
 			elm.addEventListener('click', function() {
-				self.domManager.showPopTool()
+				self.postEditor.domManager.showPopTool()
 			})
 
 		})
@@ -203,9 +210,9 @@ export default class EventManager
 		document.querySelector("#poptool .pack.input input").addEventListener("keydown", function(e) {
 			if (e.which === 13) {
 				e.preventDefault()
-				self.domManager.hidePopTool()
-				self.selManager.replaceRange(self.linkRange)
-				self.selManager.link(this.value)
+				self.postEditor.domManager.hidePopTool()
+				self.postEditor.selManager.replaceRange(self.linkRange)
+				self.postEditor.selManager.link(this.value)
 				setTimeout(() => {
 					this.value = ""
 				}, 200)
@@ -215,18 +222,18 @@ export default class EventManager
 
 
 		// Disable link by click
-		this.domManager.editor.addEventListener('mousedown', function(e) {
+		this.postEditor.domManager.editorBody.addEventListener('mousedown', function(e) {
 			if (e.target.closest("a")) {
-				self.selManager.unlink(e.target.closest("a"))
-				self.domManager.hidePopTool()
+				self.postEditor.selManager.unlink(e.target.closest("a"))
+				self.postEditor.domManager.hidePopTool()
 			}
 		})
-		this.domManager.editor.addEventListener('touchstart', function(e) {
+		this.postEditor.domManager.editorBody.addEventListener('touchstart', function(e) {
 			console.log(e.target)
 			console.log(e.target.closest("a"))
 			if (e.target.closest("a")) {
-				self.selManager.unlink(e.target.closest("a"))
-				self.domManager.hidePopTool()
+				self.postEditor.selManager.unlink(e.target.closest("a"))
+				self.postEditor.domManager.hidePopTool()
 			}
 		})
 
@@ -238,7 +245,7 @@ export default class EventManager
 				console.log("image clicked")
 				e.preventDefault()
 
-				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected")
+				var selectedFigure = this.postEditor.domManager.editorBody.querySelector("figure.image-selected")
 				if (selectedFigure) {
 					selectedFigure.classList.remove("image-selected")
 				}
@@ -246,9 +253,9 @@ export default class EventManager
 				var figure = e.target.parentNode
 				figure.classList.remove("caption-selected")
 				figure.classList.add("image-selected")
-				this.domManager.showImageTool(e.target)
+				this.postEditor.domManager.showImageTool(e.target)
 
-				if (this.selManager.isTextEmptyNode(figure.querySelector("FIGCAPTION"))) {
+				if (this.postEditor.selManager.isTextEmptyNode(figure.querySelector("FIGCAPTION"))) {
 					figure.querySelector("FIGCAPTION").innerHTML = "이미지 주석"
 				}
 
@@ -256,27 +263,27 @@ export default class EventManager
 
 			} else if (e.target.id === "full" && e.target.nodeName === "BUTTON") {
 
-				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected")
+				var selectedFigure = this.postEditor.domManager.editorBody.querySelector("figure.image-selected")
 				selectedFigure.classList.add("full")
-				this.domManager.hideImageTool()
+				this.postEditor.domManager.hideImageTool()
 				setTimeout(() => {
-					this.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+					this.postEditor.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 
 			} else if (e.target.id === "normal" && e.target.nodeName === "BUTTON") {
 
-				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected")
+				var selectedFigure = this.postEditor.domManager.editorBody.querySelector("figure.image-selected")
 				selectedFigure.classList.remove("full")
-				this.domManager.hideImageTool()
+				this.postEditor.domManager.hideImageTool()
 				setTimeout(() => {
-					this.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+					this.postEditor.domManager.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 
 			} else if (e.target.nodeName === "FIGCAPTION") {
 
 				e.target.parentNode.classList.add("caption-selected")
 				e.target.parentNode.classList.remove("image-selected")
-				this.domManager.hideImageTool()
+				this.postEditor.domManager.hideImageTool()
 				if (!e.target.parentNode.classList.contains("caption-enabled")) {
 					e.target.innerHTML = "<br>"
 				}
@@ -287,13 +294,13 @@ export default class EventManager
 
 			} else {
 
-				var selectedFigure = this.domManager.editor.querySelector("figure.image-selected, figure.caption-selected")
+				var selectedFigure = this.postEditor.domManager.editorBody.querySelector("figure.image-selected, figure.caption-selected")
 				if (selectedFigure) {
 					selectedFigure.classList.remove("image-selected")
 					selectedFigure.classList.remove("caption-selected")
 				}
 
-				this.domManager.hideImageTool()
+				this.postEditor.domManager.hideImageTool()
 
 			}
 		})
@@ -323,13 +330,15 @@ export default class EventManager
 	*/
 	onPaste (e) {
 
-		let originalRange = this.selManager.getRange()
+		let originalRange = this.postEditor.selManager.getRange()
 		if (!originalRange) {
 			return
 		}
 
-		let pasteArea = document.querySelector("#paste-area")
+		let pasteArea = this.postEditor.domManager.editorDOM.querySelector("#paste-area")
 		// let pasteArea = document.createElement("div")
+
+		pasteArea.innerHTML = ""
 
 
 		let range = document.createRange()
@@ -339,17 +348,23 @@ export default class EventManager
 		window.getSelection().removeAllRanges()
 		window.getSelection().addRange(range)
 
+
+
 		setTimeout(() => {
 
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(originalRange)
-			this.selManager.removeSelection("start")
+			this.postEditor.selManager.removeSelection("start")
+
+			let originalCurrentNode = this.postEditor.selManager.getNodeInSelection()
+			let lastPastedNode = originalCurrentNode
 
 			var node, travelNode, nextNode
 			node = pasteArea.firstChild
 			travelNode = pasteArea.firstChild
 
 			var metTop = false
+			let firstNode = true
 
 			// Loop all node and analyze
 			while (1) {
@@ -361,11 +376,80 @@ export default class EventManager
 				// }
 				// node = node.nextSibling
 
-				console.log(travelNode)
-
 				if (!travelNode) {
 					break
 				} else {
+
+					// console.log(travelNode)
+
+					let clonedTravelNode = travelNode.cloneNode(true)
+
+					// console.log(lastPastedNode)
+
+					// If the node is available node, paste it into the editor
+					if (
+						this.postEditor.selManager.isParagraph(travelNode) ||
+						this.postEditor.selManager.isHeading(travelNode) ||
+						this.postEditor.selManager.isBlockquote(travelNode) ||
+						this.postEditor.selManager.isList(travelNode)
+					) {
+
+						if (firstNode) {
+
+							firstNode = false
+							let tn = document.createTextNode(clonedTravelNode.textContent)
+							originalRange.insertNode(tn)
+
+							let range = document.createRange()
+							range.setStartAfter(tn)
+							window.getSelection().removeAllRanges()
+							window.getSelection().addRange(range)
+
+						} else {
+
+							this.postEditor.domManager.editorBody.insertBefore(clonedTravelNode, lastPastedNode.nextSibling)
+							lastPastedNode = clonedTravelNode
+
+							let range = document.createRange()
+							range.setStartAfter(clonedTravelNode)
+							window.getSelection().removeAllRanges()
+							window.getSelection().addRange(range)
+
+						}
+
+						// No need to loop through the node
+						travelNode = travelNode.nextSibling
+						continue
+
+					} else if (travelNode.nodeType === 3) { // Reached the textNode in the deepest node
+
+						if (firstNode) {
+
+							firstNode = false
+							let tn = document.createTextNode(clonedTravelNode.textContent)
+							originalRange.insertNode(tn)
+
+							let range = document.createRange()
+							range.setStartAfter(tn)
+							window.getSelection().removeAllRanges()
+							window.getSelection().addRange(range)
+
+						} else {
+
+							let p = this.postEditor.domManager.generateEmptyNode("p")
+							p.innerHTML = travelNode.textContent
+							this.postEditor.domManager.editorBody.insertBefore(p, lastPastedNode.nextSibling)
+
+							let range = document.createRange()
+							range.setStartAfter(p)
+							window.getSelection().removeAllRanges()
+							window.getSelection().addRange(range)
+
+						}
+
+					}
+
+
 
 					if (travelNode.attributes) {
 						for (var i = travelNode.attributes.length - 1; i >= 0; i--){
@@ -411,7 +495,189 @@ export default class EventManager
 	}
 
 
-	onKeyPress (e) {
+	onKeyPress (e)
+	{
+	}
+
+	/**
+	*
+	* @param {KeyboardEvent} e
+	*/
+	onKeyDown (e) {
+
+		this.keyDownLocked = true
+
+		let keyCode = e.which
+		let physKeyCode = e.code
+
+		let currentNode = this.postEditor.selManager.getNodeInSelection()
+
+		let enableTextChangeRecord = false
+
+		let key = "char"
+		let validCharKey
+		validCharKey =
+			((keyCode > 47 && keyCode < 58)  || // number keys
+			keyCode === 32                   || // spacebar & return key(s) (if you want to allow carriage returns)
+			(keyCode > 64 && keyCode < 91)   || // letter keys
+			(keyCode > 95 && keyCode < 112)  || // numpad keys
+			(keyCode > 185 && keyCode < 193) || // ;=,-./` (in order)
+			(keyCode > 218 && keyCode < 223) || // [\]' (in order)
+			keyCode === 229)
+			&& !e.ctrlKey && !e.metaKey
+
+		// validCharKey =
+		// 	(physKeyCode === "KeyA" || physKeyCode === "KeyB" || physKeyCode === "KeyC" || physKeyCode === "KeyD" ||
+		// 	physKeyCode === "KeyE" || physKeyCode === "KeyF" || physKeyCode === "KeyG" || physKeyCode === "KeyH" ||
+		// 	physKeyCode === "KeyI" || physKeyCode === "KeyJ" || physKeyCode === "KeyK" || physKeyCode === "KeyL" ||
+		// 	physKeyCode === "KeyM" || physKeyCode === "KeyN" || physKeyCode === "KeyO" || physKeyCode === "KeyP" ||
+		// 	physKeyCode === "KeyQ" || physKeyCode === "KeyR" || physKeyCode === "KeyS" || physKeyCode === "KeyT" ||
+		// 	physKeyCode === "KeyU" || physKeyCode === "KeyV" || physKeyCode === "KeyW" || physKeyCode === "KeyX" ||
+		// 	physKeyCode === "KeyY" || physKeyCode === "KeyZ" ||
+		// 	physKeyCode === "Digit0" || physKeyCode === "Digit1" || physKeyCode === "Digit2" || physKeyCode === "Digit3" ||
+		// 	physKeyCode === "Digit4" || physKeyCode === "Digit5" || physKeyCode === "Digit6" || physKeyCode === "Digit7" ||
+		// 	physKeyCode === "Digit8" || physKeyCode === "Digit9" ||
+		// 	physKeyCode === "Numpad0" || physKeyCode === "Numpad1" || physKeyCode === "Numpad2" || physKeyCode === "Numpad3" ||
+		// 	physKeyCode === "Numpad4" || physKeyCode === "Numpad5" || physKeyCode === "Numpad6" || physKeyCode === "Numpad7" ||
+		// 	physKeyCode === "Numpad8" || physKeyCode === "Numpad9" ||
+		// 	physKeyCode === "NumpadDecimal" || physKeyCode === "NumpadDivide" || physKeyCode === "NumpadMultiply" ||
+		// 	physKeyCode === "NumpadSubtract" || physKeyCode === "NumpadAdd" ||
+		// 	physKeyCode === "Backquote" || physKeyCode === "Minus" || physKeyCode === "Equal" || physKeyCode === "Backslash" ||
+		// 	physKeyCode === "BracketLeft" || physKeyCode === "BracketRight" || physKeyCode === "Semicolon" || physKeyCode === "Quote" ||
+		// 	physKeyCode === "Comma" || physKeyCode === "Period" || physKeyCode === "Slash" ||
+		// 	physKeyCode === "Space")
+		// 	&& !e.ctrlKey
+
+		var sel = window.getSelection()
+		if (sel.rangeCount > 0) {
+			if (!this.postEditor.domManager.editorBody.contains(sel.getRangeAt(0).startContainer)) {
+				// console.warn("The given range is not in the editor. Editor's features will work only inside the editor.")
+				return
+			}
+		}
+
+
+
+		if (keyCode === 8) {
+
+			if (this.postEditor.selManager.getSelectionPositionInParagraph() !== 1 && !this.postEditor.selManager.isTextEmptyNode(currentNode) && this.postEditor.selManager.getRange() && this.postEditor.selManager.getRange().collapsed) {
+				enableTextChangeRecord = true
+				key = "backspace"
+			}
+
+			// Backspace
+			this.postEditor.selManager.backspace(e)
+
+		} else if (keyCode === 46) {
+
+			if (this.postEditor.selManager.getSelectionPositionInParagraph() !== 3 && !this.postEditor.selManager.isTextEmptyNode(currentNode) && this.postEditor.selManager.getRange() && this.postEditor.selManager.getRange().collapsed) {
+				enableTextChangeRecord = true
+				key = "delete"
+			}
+
+			// Delete
+			this.postEditor.selManager.delete(e)
+
+		} else if (keyCode === 13) {
+
+			// Enter(Return)
+			this.postEditor.selManager.enter(e)
+
+		} else if (keyCode === 90 && e.ctrlKey) {
+
+			// e.preventDefault()
+			// this.ssManager.undo()
+
+		}
+
+		if (validCharKey || enableTextChangeRecord) {
+
+			// press character keys
+			console.log("character", e.which, e.code)
+
+			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
+				this.postEditor.selManager.removeSelection("backspace", true)
+				this.postEditor.selManager.backspace(document.createEvent("KeyboardEvent"), true)
+			}
+
+			this.charKeyDownLocked = true
+
+			let lastAction = this.postEditor.undoManager.getTheLatestAction()
+
+			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode && keyCode !== 32 && lastAction.key === key && !lastAction.locked) {
+
+			} else if (currentNode) {
+
+				this.postEditor.undoManager.recordAction({
+					type: "textChange",
+					targetNode: currentNode,
+					prevContent: currentNode.innerHTML,
+					prevTextOffset: this.postEditor.selManager.getTextOffset(),
+					key: key,
+					locked: false
+				})
+
+			}
+
+		} else {
+
+		}
+
+	}
+
+	/**
+	 *
+	 * @param {InputEvent} e
+	 */
+	onInput (e)
+	{
+
+		// input event only detects printable input
+
+		if (this.keyDownLocked) {
+
+			// Key down is detected
+
+			this.keyDownLocked = false
+
+		} else {
+
+			// Key down is not detected but input is detected
+			// it means the pressed key is Hangul
+			// Keydown is not detected, so implementing keydown event once again from here
+
+			let currentNode = this.postEditor.selManager.getNodeInSelection()
+
+			this.charKeyDownLocked = false
+			let lastAction = this.postEditor.undoManager.getTheLatestAction()
+
+			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode && lastAction.key === "char" && !lastAction.locked) {
+
+				lastAction.nextContent = currentNode.innerHTML
+				lastAction.nextTextOffset = this.postEditor.selManager.getTextOffset()
+
+			} else if (currentNode && e.isComposing) {
+
+				this.postEditor.undoManager.recordAction({
+					type: "textChange",
+					targetNode: currentNode,
+					prevContent: this.postEditor.selManager.currentNodeOrgHTML,
+					prevTextOffset: this.postEditor.selManager.getTextOffset(),
+					key: "char",
+					locked: false
+				})
+
+			}
+
+			// if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode) {
+
+			// 	lastAction.nextContent = currentNode.innerHTML
+			// 	lastAction.nextTextOffset = this.postEditor.selManager.getTextOffset()
+
+			// }
+		}
+
+
 
 	}
 
@@ -419,8 +685,12 @@ export default class EventManager
 	* Fires when press keyboard inside the editor.
 	* @param {KeyboardEvent} e
 	*/
-	onKeyUp (e) {
-		var currentNode = this.selManager.getNodeInSelection()
+	onKeyUp (e)
+	{
+
+		this.keyDownLocked = false
+
+		var currentNode = this.postEditor.selManager.getNodeInSelection()
 		if (currentNode && currentNode.textContent !== "" && currentNode.querySelector("br")) {
 
 			console.log('removed br')
@@ -433,9 +703,9 @@ export default class EventManager
 		}
 
 		// Image block controlling
-		if (this.selManager.isImageCaption(currentNode)) {
+		if (this.postEditor.selManager.isImageCaption(currentNode)) {
 
-			if (this.selManager.isTextEmptyNode(currentNode)) {
+			if (this.postEditor.selManager.isTextEmptyNode(currentNode)) {
 
 				currentNode.parentNode.classList.remove("caption-enabled")
 
@@ -447,104 +717,95 @@ export default class EventManager
 
 		}
 
-		if (currentNode && currentNode.textContent.match(/^- /) && this.selManager.isParagraph(currentNode)) {
+		if (currentNode && currentNode.textContent.match(/^- /) && this.postEditor.selManager.isParagraph(currentNode)) {
+
+			let currentNode = this.postEditor.selManager.getNodeInSelection()
 
 			// console.log(currentNode.textContent.match(/^- /))
 
-			this.selManager.list("ul")
-
-			let currentNode = this.selManager.getNodeInSelection()
 			currentNode.innerHTML = currentNode.innerHTML.replace(/^- /, "")
 
-			if (this.selManager.isTextEmptyNode(currentNode)) {
+			this.postEditor.selManager.list("ul")
+
+
+
+
+			if (this.postEditor.selManager.isTextEmptyNode(currentNode)) {
 				currentNode.innerHTML = "<br>"
 			}
 
-			this.selManager.setCursorAt(currentNode, 0)
+			this.postEditor.selManager.setCursorAt(currentNode, 0)
 
-		} else if (currentNode && currentNode.textContent.match(/^1\. /) && this.selManager.isParagraph(currentNode)) {
+		} else if (currentNode && currentNode.textContent.match(/^1\. /) && this.postEditor.selManager.isParagraph(currentNode)) {
+
+			let currentNode = this.postEditor.selManager.getNodeInSelection()
 
 			// console.log(currentNode.textContent.match(/^- /))
 
-			this.selManager.list("ol")
-
-			let currentNode = this.selManager.getNodeInSelection()
 			currentNode.innerHTML = currentNode.innerHTML.replace(/^1\. /, "")
 
-			if (this.selManager.isTextEmptyNode(currentNode)) {
+			this.postEditor.selManager.list("ol")
+
+
+
+
+			if (this.postEditor.selManager.isTextEmptyNode(currentNode)) {
 				currentNode.innerHTML = "<br>"
 			}
 
-			this.selManager.setCursorAt(currentNode, 0)
+			this.postEditor.selManager.setCursorAt(currentNode, 0)
 
 		}
-		
-	}
 
-	/**
-	 *
-	 * @param {KeyboardEvent} e
-	 */
-	onKeyDown (e) {
+		if (this.charKeyDownLocked) {
 
-		var sel = window.getSelection()
-		if (sel.rangeCount > 0) {
-			if (!this.domManager.editor.contains(sel.getRangeAt(0).startContainer)) {
-				// console.warn("The given range is not in the editor. Editor's features will work only inside the editor.")
-				return
-			}
-		}
+			this.charKeyDownLocked = false
+			let lastAction = this.postEditor.undoManager.getTheLatestAction()
 
-		var keyCode = e.which
+			if (lastAction && lastAction.type === "textChange" && lastAction.targetNode === currentNode) {
 
-		if (keyCode === 8) {
+				lastAction.nextContent = currentNode.innerHTML
+				lastAction.nextTextOffset = this.postEditor.selManager.getTextOffset()
 
-			// Backspace
-			this.selManager.backspace(e)
-
-		} else if (keyCode === 46) {
-
-			// Delete
-			this.selManager.delete(e)
-
-		} else if (keyCode === 13) {
-
-			// Enter(Return)
-			this.selManager.enter(e)
-
-		} else if (keyCode === 90 && e.ctrlKey) {
-
-			// e.preventDefault()
-			// this.ssManager.undo()
-
-		} else if ( // functioning keys
-			keyCode !== 8 && keyCode !== 9 && keyCode !== 13 && keyCode !== 16 && keyCode !== 17 &&
-			keyCode !== 18 && keyCode !== 19 && keyCode !== 20 && keyCode !== 27 && keyCode !== 32 &&
-			keyCode !== 33 && keyCode !== 34 && keyCode !== 35 && keyCode !== 36 && keyCode !== 37 &&
-			keyCode !== 38 && keyCode !== 39 && keyCode !== 40 && keyCode !== 45 && keyCode !== 46 &&
-			keyCode !== 91 && keyCode !== 219 && keyCode !== 92 && keyCode !== 220 && keyCode !== 93 &&
-			keyCode !== 144 && keyCode !== 145 && keyCode !== 112 && keyCode !== 113 && keyCode !== 114 &&
-			keyCode !== 115 && keyCode !== 116 && keyCode !== 117 && keyCode !== 118 && keyCode !== 119 &&
-			keyCode !== 120 && keyCode !== 121 && keyCode !== 122 && keyCode !== 123 && keyCode !== 229 &&
-			 !e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey
-		) {
-			if (window.getSelection().rangeCount > 0 && !window.getSelection().getRangeAt(0).collapsed) {
-				this.selManager.removeSelection("backspace")
-				this.selManager.backspace(document.createEvent("KeyboardEvent"))
 			}
 		}
 
 	}
-
 
 	onSelectionChanged () {
 
+		// console.log("selection changed")
 
-		this.selManager.fixSelection()
+		let lastAction = this.postEditor.undoManager.getTheLatestAction()
+		if (lastAction && lastAction.type === "textChange") {
+			lastAction.locked = true
+		}
+
+		this.postEditor.selManager.fixSelection()
+
+		// update selection manager's currentnode original html
+		if (this.postEditor.selManager.getNodeInSelection()) {
+
+			this.postEditor.selManager.currentNodeOrgHTML = this.postEditor.selManager.getNodeInSelection().innerHTML
+
+		} else {
+
+			this.postEditor.selManager.currentNodeOrgHTML = ""
+
+		}
+
 
 		setTimeout(() => {
-			this.domManager.togglePopTool()
+			this.postEditor.domManager.togglePopTool()
 		}, 0)
+
+
+
+		// Detect lists and merge them
+		let currentNode = this.postEditor.selManager.getNodeInSelection()
+		if (this.postEditor.selManager.isListItem(currentNode)) {
+			console.log("list")
+		}
 
 	}
 
