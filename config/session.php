@@ -10,7 +10,7 @@ return [
 	'session_table' => 'session',
 
 	'gc_maxlifetime' => 259200,		//	60 * 60 * 24 * 3 (3 days)
-	'gc_probability' => 100,
+	'gc_probability' => 10,
 	'gc_divisor' => 1000,
 
 	'cookie_params' => [
@@ -22,5 +22,7 @@ return [
 		'httponly' => true
 	],
 
-	'session_id_length' => 64
+	'session_id_length' => 64,
+
+	'delay_time' => 60				//	Delay time for destroyed session
 ];

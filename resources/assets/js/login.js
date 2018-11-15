@@ -58,13 +58,22 @@ confirmButton.addEventListener("click", function() {
 		url: "/login",
 		data: JSON.stringify(inputData),
 		success: function(response) {
-			var result = JSON.parse(response)
-			console.log(response)
-			if (result['err']) {
-				alert(result['msg'])
-			} else {
-                window.location.replace(result['redirect'])
+            //  @TODO: msg가 비어있을 경우, 출력x AND err 여부와 상관없이 redirect가 설정되어있으면 리디렉션하기
+			try {
+				if (response !== "") {
+                    let result = JSON.parse(response)
+                    console.log(response)
 
+                    if (result['err']) {
+                        alert(result['msg'])
+                    } else {
+                        window.location.replace(result['redirect'])
+
+                    }
+				}
+
+			} catch (e) {
+                alert(e + " " + response)
 			}
 		}
 	})

@@ -11,12 +11,10 @@ namespace Povium\Base\Http\Exception;
 class GoneHttpException extends HttpException
 {
 	/**
-	 * @param string  		$details	Http response details
-	 * @param int 			$code		Exception code
-	 * @param \Throwable 	$previous	Previous exception
+	 * {@inheritdoc}
 	 */
-	public function __construct($details = "", $code = 0, $previous = null)
+	public function __construct($message = "", $code = 0, $previous = null)
  	{
-		parent::__construct(410, $details, $code, $previous);
+		parent::__construct(410, $message, $code, $previous);
 	}
 }

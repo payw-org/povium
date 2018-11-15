@@ -24,14 +24,14 @@
 			</div>
 
 			<?php
-			if ($GLOBALS['auth']->isLoggedIn()) {
+			if ($GLOBALS['authenticator']->isLoggedIn()) {
 			?>
 
 			<div id="gn-loggedin-view">
 				<div class="container">
 					<a href="" class="user-info">
 						<div class="bg"></div>
-						<span><?php echo $GLOBALS['auth']->getCurrentUser()['name']; ?></span>
+						<span><?php echo $GLOBALS['authenticator']->getCurrentUser()->getName(); ?></span>
 					</a>
 					<a href="/logout" class="sign-out">
 						<div class="bg"></div>
@@ -40,7 +40,7 @@
 				</div>
 			</div>
 
-			
+
 
 			<?php
 			} else {

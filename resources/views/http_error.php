@@ -1,11 +1,21 @@
 <?php
-use Povium\Base\TemplateEngine;
+/**
+ * Rendering settings for editor page
+ *
+ * @author 		J.Haemin
+ * @copyright 	2018 DesignAndDevelop
+ */
 
-$te = new TemplateEngine();
-$te->render("/resources/templates/base.phtml", [
-	"title" => "Povium | " . $title,
-	"main" => "/resources/templates/http_error.phtml",
+return [
+	'template_dir' => '/resources/templates/base.phtml',
 
-	"msg" => $msg,
-	"details" => $details
-]);
+	'config' => [
+		"title" => "Povium | " . $title,
+
+		"main" => "/resources/templates/http_error.phtml",
+
+		"heading" => $heading,
+
+		"details" => $details
+	]
+];

@@ -1,16 +1,23 @@
 <?php
-use Povium\Base\TemplateEngine;
+/**
+ * Rendering settings for editor page
+ *
+ * @author 		J.Haemin
+ * @copyright 	2018 DesignAndDevelop
+ */
 
-$te = new TemplateEngine();
-$te->render('/resources/templates/base.phtml', [
+return [
+	'template_dir' => '/resources/templates/base.phtml',
 
-	'title' => 'Editor',
+	'config' => [
+		'title' => 'Editor',
 
-	'main' => '/resources/templates/editor-main.phtml',
+		'main' => '/resources/templates/editor-main.phtml',
 
-	'script' => '<script src="/build/js/editor.new.built.js"></script>',
+		'script' => '<script src="/build/js/editor.new.built.js"></script>',
 
-	'render_globalnav' => false,
-	'globalnav_script' => false,
-	'render_globalfooter' => false
-]);
+		'render_globalnav' => false,
+		'globalnav_script' => false,
+		'render_globalfooter' => false
+	]
+];

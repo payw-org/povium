@@ -19,29 +19,53 @@ class Route
 	 *
 	 * @var string
 	 */
-	public $httpMethod;
+	private $httpMethod;
 
 	/**
 	 * URI pattern with regular expressions.
 	 *
 	 * @var string
 	 */
-	public $pattern;
+	private $pattern;
 
 	/**
-	 * @var callback
+	 * @var \Closure
 	 */
-	public $handler;
+	private $handler;
 
 	/**
 	 * @param	string		$http_method
 	 * @param	string		$pattern
-	 * @param	callback	$handler
+	 * @param	\Closure	$handler
 	 */
-	public function __construct($http_method, $pattern, $handler)
+	public function __construct(string $http_method, string $pattern, \Closure $handler)
 	{
 		$this->httpMethod = strtoupper($http_method);
 		$this->pattern = $pattern;
 		$this->handler = $handler;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getHttpMethod()
+	{
+		return $this->httpMethod;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPattern()
+	{
+		return $this->pattern;
+	}
+
+	/**
+	 * @return \Closure
+	 */
+	public function getHandler()
+	{
+		return $this->handler;
 	}
 }

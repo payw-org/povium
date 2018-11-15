@@ -8,6 +8,6 @@
 
 namespace Povium\Base\Routing\Exception;
 
-class NamedRouteNotFoundException extends \InvalidArgumentException implements RouterExceptionInterface
+class NamedRouteNotFoundException extends \InvalidArgumentException implements ExceptionInterface
 {
 }

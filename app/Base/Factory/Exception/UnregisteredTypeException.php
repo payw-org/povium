@@ -8,6 +8,6 @@
 
 namespace Povium\Base\Factory\Exception;
 
-class UnregisteredTypeException extends \InvalidArgumentException implements FactoryExceptionInterface
+class UnregisteredTypeException extends \InvalidArgumentException implements ExceptionInterface
 {
 }

@@ -8,6 +8,6 @@
 
 namespace Povium\Base\Factory\Exception;
 
-class NonexistentTypeException extends \InvalidArgumentException implements FactoryExceptionInterface
+class NonexistentTypeException extends \InvalidArgumentException implements ExceptionInterface
 {
 }

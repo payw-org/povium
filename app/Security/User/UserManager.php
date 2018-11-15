@@ -1,0 +1,152 @@
+<?php
+/**
+* Manage all user record.
+*
+* @author		H.Chihoon
+* @copyright	2018 DesignAndDevelop
+*/
+
+namespace Povium\Security\User;
+
+use Povium\Base\Database\Record\AbstractRecordManager;
+use Povium\Base\Database\Exception\InvalidParameterNumberException;
+
+class UserManager extends AbstractRecordManager
+{
+	/**
+	 * @var array
+	 */
+	protected $config;
+
+	/**
+	 * @param array $config
+	 * @param \PDO	$conn
+	 */
+	public function __construct(
+		array $config,
+ 		\PDO $conn
+	) {
+		$this->config = $config;
+		$this->conn = $conn;
+
+		$this->table = $this->config['user_table'];
+	}
+
+	/**
+	 * Returns user id from readable id.
+	 *
+	 * @param  string $readable_id
+	 *
+	 * @return int|false
+	 */
+	public function getUserIDFromReadableID($readable_id)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT id FROM {$this->table}
+			WHERE readable_id = ?"
+		);
+		$stmt->execute([$readable_id]);
+
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		return $stmt->fetchColumn();
+	}
+
+	/**
+	 * Returns user id from name.
+	 *
+	 * @param  string $name
+	 *
+	 * @return int|false
+	 */
+	public function getUserIDFromName($name)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT id FROM {$this->table}
+			WHERE name = ?"
+		);
+		$stmt->execute([$name]);
+
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		return $stmt->fetchColumn();
+	}
+
+	/**
+	 * Returns user id from email.
+	 *
+	 * @param  string $email
+	 *
+	 * @return int|false
+	 */
+	public function getUserIDFromEmail($email)
+	{
+		$stmt = $this->conn->prepare(
+			"SELECT id FROM {$this->table}
+			WHERE email = ?"
+		);
+		$stmt->execute([$email]);
+
+		if ($stmt->rowCount() == 0) {
+			return false;
+		}
+
+		return $stmt->fetchColumn();
+	}
+
+	/**
+	* Returns an user instance.
+	*
+	* @param  int	$user_id
+	*
+	* @return User|false
+	*/
+	public function getUser($user_id)
+	{
+		$record = $this->getRecord($user_id);
+
+		$user = new User(...array_values($record));
+
+		return $user;
+	}
+
+	/**
+	* {@inheritdoc}
+	*
+	* @param string 	$readable_id
+	* @param string 	$name
+	* @param string 	$password
+	*/
+	public function addRecord()
+	{
+		if (func_num_args() != 3) {
+			throw new InvalidParameterNumberException('Invalid parameter number for creating "user" record.');
+		}
+
+		$args = func_get_args();
+
+		$readable_id = $args[0];
+		$name = $args[1];
+		$password = $args[2];
+
+		$stmt = $this->conn->prepare(
+			"INSERT INTO {$this->table}
+			(readable_id, name, password)
+			VALUES (:readable_id, :name, :password)"
+		);
+		$query_params = [
+			':readable_id' => $readable_id,
+			':name' => $name,
+			':password' => $password
+		];
+		if (!$stmt->execute($query_params)) {
+			return false;
+		}
+
+		return true;
+	}
+}
