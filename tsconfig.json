@@ -9,5 +9,9 @@
 		"checkJs": false,
 		"types": ["node"],
 		"moduleResolution": "node"
-	}
+	},
+	"exclude": [
+		"node_modules",
+		"vender"
+	]
 }
