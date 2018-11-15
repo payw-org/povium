@@ -14,12 +14,7 @@
 	</head>
 
 	<body>
-		@include('sections.globalnav')
-
 		@yield('content')
-
-		@include('sections.globalfooter')
-
 		@include('global-inclusion.global-script')
 	</body>
 
