@@ -1,15 +1,28 @@
 export default class TextInput {
 
-	/**
-	 *
-	 * @param {HTMLElement} inputDOM
-	 */
-	constructor (inputDOM) {
+	target        : HTMLInputElement
+	wrapperElement: HTMLElement
+
+	constructor (inputDOM: HTMLInputElement) {
+		
 		this.target = inputDOM
 		this.wrapperElement = inputDOM.parentElement
+
+		this.target.addEventListener('focusin', () => {
+			this.wrapperElement.classList.add('focused')
+		})
+
+		this.target.addEventListener('focusout', () => {
+			this.wrapperElement.classList.remove('focused')
+			if (this.target.value !== '') {
+				this.wrapperElement.classList.add('fixed')
+			} else {
+				this.wrapperElement.classList.remove('fixed')
+			}
+		})
 	}
 
-	showMsg (message) {
+	showMsg (message: string) {
 
 		if (message === "") {
 
@@ -43,30 +56,7 @@ export default class TextInput {
 
 }
 
-// input.js
-document.querySelectorAll(".input-wrapper").forEach(function(self, index) {
-
-	self.addEventListener("focusin", function() {
-		this.classList.add("focused")
-	})
-
-	self.addEventListener("focusout", function() {
-		this.classList.remove("focused")
-		if (this.querySelector("input").value !== "") {
-			this.classList.add("fixed")
-		} else {
-			this.classList.remove("fixed")
-		}
-	})
-
-	// self.addEventListener('click', function(e) {
-	// 	console.log(e.target)
-	// 	if (e.target.closest('.input-wrapper'))
-	// })
-
-})
-
-document.querySelectorAll(".input-wrapper input").forEach(function(self, index) {
+document.querySelectorAll(".input-wrapper input").forEach(function(self: HTMLInputElement, index) {
 
 	self.addEventListener("keyup", function() {
 		

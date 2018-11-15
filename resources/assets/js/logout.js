@@ -1,4 +1,4 @@
-import AJAX from "./AJAX"
+import Axios from "axios"
 
 if (document.querySelector("#globalnav .sign-out")) {
 
@@ -8,21 +8,14 @@ if (document.querySelector("#globalnav .sign-out")) {
 
 		e.preventDefault()
 
-		AJAX.chirp({
-			type: "post",
-			url: "/logout",
-			success: function(response) {
-
-				try {
-					if (response !== "") {
-                        let result = JSON.parse(response)
-                        window.location.replace(result['redirect'])
-					}
-
-				} catch(e) {
-					alert(e + " " + response)
-				}
-
+		Axios({
+			method: 'post',
+			url: 'logout'
+		})
+		.then(function(response) {
+			let data = response.data
+			if (data !== '') {
+				location.replace(data['redirect'])
 			}
 		})
 
