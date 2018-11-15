@@ -9,6 +9,8 @@
 */
 
 return [
+	'\Philo\Blade\Blade' => '\Povium\Base\Templating\Factory\BladeFactory',
+
 	'\Povium\Base\Database\DBBuilder' => '\Povium\Base\Database\Factory\DBBuilderFactory',
 
 	'\Povium\Base\Http\Client' => '\Povium\Base\Http\Factory\ClientFactory',

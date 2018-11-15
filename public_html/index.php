@@ -13,7 +13,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/../vendor/autoload.php');
 
 use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Database\DBBuilder;
-use Philo\Blade\Blade;
 
 $factory = new MasterFactory();
 
@@ -38,10 +37,7 @@ $authorizer->authorize();
 
 $template_engine = $factory->createInstance('\Povium\Base\Templating\TemplateEngine');
 
-//  Create blade template engine
-$views = dirname(__FILE__, 2) . '/resources/views';
-$cache = dirname(__FILE__, 2) . '/storage/cache/views';
-$blade = new Blade($views, $cache);
+$blade = $factory->createInstance('\Philo\Blade\Blade');
 
 /* Initialize routing system */
 
