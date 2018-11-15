@@ -17,11 +17,11 @@ $collection->get(
  	function () use ($template_engine, $blade) {
 	    // $config = array(
         //     "title" => "Povium | 좋은 글, 세상을 바꾸는 힘",
-        //
+		//
         //     "post_img_link" => [
         //         "macbookpro2018", "spongebob", "programmer", "1", "2" , "3", "4", "5", "6"
         //     ],
-        //
+		//
         //     "post_title" => [
         //         "2018년 맥북프로는 너무 뜨거워",
         //         "내가 귀여운 이유",
@@ -33,13 +33,13 @@ $collection->get(
         //         "가짜 어른 구별하는 힘을 기르는 방법",
         //         "사진을 시작한 사람들이 앓는다는 '장비병'"
         //     ],
-        //
+		//
         //     "post_writer" => [
         //         "앤소니", "최홍ZUNE", "황장병치훈", "박진둘", "장준끼", "장햄", "청춘나지훈", "조경상병훈", "쿠형"
         //     ]
-        // );
-        //
-	    // echo $blade->view()->make('home', $config)->render();
+		// 	);
+		//
+	    // echo $blade->view()->make('sections.home', $config)->render();
 		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php');
 		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
 	}

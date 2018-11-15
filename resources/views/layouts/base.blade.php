@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
     <head>
@@ -13,11 +14,11 @@
     </head>
 
     <body>
-        @include('layouts.globalnav')
+        @include('sections.globalnav')
 
         @yield('content')
 
-        @include('layouts.globalfooter')
+        @include('sections.globalfooter')
 
         @include('global-inclusion.global-script')
 

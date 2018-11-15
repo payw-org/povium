@@ -23,7 +23,7 @@
                     @endfor
                 </ul>
             </div>
-        </div>
+		</div>
 
     </section>
 
