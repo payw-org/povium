@@ -35,8 +35,6 @@ $authorizer->authorize();
 
 /* Template engine */
 
-$template_engine = $factory->createInstance('\Povium\Base\Templating\TemplateEngine');
-
 $blade = $factory->createInstance('\Philo\Blade\Blade');
 
 /* Initialize routing system */

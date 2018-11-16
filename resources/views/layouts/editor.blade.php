@@ -6,7 +6,7 @@
 
 		@yield('head_meta_sub')
 
-		<title>{{$title}}</title>
+		@yield('title')
 
 		@include('global-inclusion.global-css')
 

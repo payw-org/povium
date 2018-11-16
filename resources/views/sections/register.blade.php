@@ -1,5 +1,9 @@
 @extends('layouts.base')
 
+@section('title')
+	<title>Povium | 회원가입</title>
+@endsection
+
 @section('content')
 
 	<main id="register-main">

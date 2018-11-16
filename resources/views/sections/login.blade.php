@@ -1,7 +1,10 @@
 @extends('layouts.base')
 
-@section('content')
+@section('title')
+	<title>Povium | 로그인</title>
+@endsection
 
+@section('content')
 	<main id="login-main">
 		<div class="header">
 			<img src="/assets/images/key.svg">
@@ -27,5 +30,4 @@
 		</div>
 		<span class="pro">지금 <a href="/register">회원가입</a>하고 한 달 동안 무료로 이용해보세요!</span>
 	</main>
-
 @endsection

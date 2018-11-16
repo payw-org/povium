@@ -1,5 +1,9 @@
 @extends('layouts.editor')
 
+@section('title')
+	<title>Povium | 에디터</title>
+@endsection
+
 @section('content')
 
 	<div id="post-editor">

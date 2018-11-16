@@ -1,27 +1,26 @@
+<!DOCTYPE html>
 <html>
 
-    <head>
-        @include('global-inclusion.global-meta')
+	<head>
+		@include('global-inclusion.global-meta')
 
-        @yield('head_meta_sub')
+		@yield('head_meta_sub')
 
-        <title>{{$title}}</title>
+		@yield('title')
 
-        @include('global-inclusion.global-css')
+		@include('global-inclusion.global-css')
 
-        @yield('css_sub')
-    </head>
+		@yield('css_sub')
+	</head>
 
-    <body>
-        @include('layouts.globalnav')
+	<body>
+		@include('sections.globalnav')
 
-        @yield('content')
+		@yield('content')
 
-        @include('layouts.globalfooter')
+		@include('sections.globalfooter')
 
-        @include('global-inclusion.global-script')
-
-        @yield('script_sub')
-    </body>
+		@include('global-inclusion.global-script')
+	</body>
 
 </html>

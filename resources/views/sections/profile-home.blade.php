@@ -1,7 +1,10 @@
-@extends('base')
+@extends('layouts.base')
+
+@section('title')
+	<title>Povium | {{$readable_id}}</title>
+@endsection
 
 @section('content')
-
 	<main id="profile-main">
 
 		<div id="info">
@@ -75,5 +78,4 @@
 		</div>
 
 	</main>
-
 @endsection

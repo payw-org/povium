@@ -14,34 +14,58 @@ use Povium\Base\Http\Exception\NotFoundHttpException;
  */
 $collection->get(
 	'/',
- 	function () use ($template_engine, $blade) {
+ 	function () use ($blade) {
 		$config = array(
-			"title" => "Povium | 좋은 글, 세상을 바꾸는 힘",
-		
-			"post_img_link" => [
-				"macbookpro2018", "spongebob", "programmer", "1", "2" , "3", "4", "5", "6"
-			],
-		
-			"post_title" => [
-				"2018년 맥북프로는 너무 뜨거워",
-				"내가 귀여운 이유",
-				"프로그래머처럼 생각해야 한다",
-				"장어덮밥을 먹을 수 없게 된다면?",
-				"'동네다움'을 지킬 수 있는 방법",
-				"여행하며 '현금 관리'를 잘 하는 방법",
-				"필름카메라의 번거러움이 좋다",
-				"가짜 어른 구별하는 힘을 기르는 방법",
-				"사진을 시작한 사람들이 앓는다는 '장비병'"
-			],
-		
-			"post_writer" => [
-				"앤소니", "최홍ZUNE", "황장병치훈", "박진둘", "장준끼", "장햄", "청춘나지훈", "조경상병훈", "쿠형"
+			"posts" => [
+				[
+					"img" => "macbookpro2018",
+					"title" => "2018년 맥북프로는 너무 뜨거워",
+					"editor" => "앤소니"
+				],
+				[
+					"img" => "spongebob",
+					"title" => "내가 귀여운 이유",
+					"editor" => "최홍ZUNE"
+				],
+				[
+					"img" => "programmer",
+					"title" => "프로그래머처럼 생각해야 한다",
+					"editor" => "황장병치훈"
+				],
+				[
+					"img" => "1",
+					"title" => "장어덮밥을 먹을 수 없게 된다면?",
+					"editor" => "박진둘"
+				],
+				[
+					"img" => "2",
+					"title" => "'동네다움'을 지킬 수 있는 방법",
+					"editor" => "장준끼"
+				],
+				[
+					"img" => "3",
+					"title" => "여행하며 '현금 관리'를 잘 하는 방법",
+					"editor" => "장햄"
+				],
+				[
+					"img" => "4",
+					"title" => "필름카메라의 번거러움이 좋다",
+					"editor" => "청춘나지훈"
+				],
+				[
+					"img" => "5",
+					"title" => "가짜 어른 구별하는 힘을 기르는 방법",
+					"editor" => "조경상병훈"
+				],
+				[
+					"img" => "6",
+					"title" => "사진을 시작한 사람들이 앓는다는 '장비병'",
+					"editor" => "쿠형"
+				]
 			]
 		);
 		
 		echo $blade->view()->make('sections.home', $config)->render();
-		// $view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php');
-		// $template_engine->render($view_settings['template_dir'], $view_settings['config']);
 	}
 );
 
@@ -50,7 +74,7 @@ $collection->get(
  */
 $collection->get(
 	'/login',
- 	function () use ($router, $template_engine, $blade) {
+ 	function () use ($router, $blade) {
 		if ($GLOBALS['authority'] >= Authorizer::USER) {
 			$router->redirect('/');
 		}
@@ -70,10 +94,7 @@ $collection->get(
 			}
 		}
 
-		// $view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/login.php');
-		// $template_engine->render($view_settings['template_dir'], $view_settings['config']);
 		echo $blade->view()->make('sections.login')->render();
-
 	}
 );
 
@@ -82,7 +103,7 @@ $collection->get(
  */
 $collection->get(
 	'/register',
- 	function () use ($router, $template_engine, $blade) {
+ 	function () use ($router, $blade) {
 		if ($GLOBALS['authority'] >= Authorizer::USER) {
 			$router->redirect('/');
 		}
@@ -101,8 +122,6 @@ $collection->get(
 			}
 		}
 
-		// $view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/register.php');
-		// $template_engine->render($view_settings['template_dir'], $view_settings['config']);
 		echo $blade->view()->make('sections.register')->render();
 	}
 );
@@ -112,9 +131,7 @@ $collection->get(
  */
 $collection->get(
 	'/editor',
- 	function () use ($template_engine, $blade) {
-		// $view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php');
-		// $template_engine->render($view_settings['template_dir'], $view_settings['config']);
+ 	function () use ($blade) {
 		echo $blade->view()->make('sections.pvmeditor')->render();
 	}
 );
@@ -128,12 +145,12 @@ $collection->get(
  */
 $collection->get(
 	'/@{readable_id:.+}',
- 	function ($readable_id) use ($template_engine) {
+ 	function ($readable_id) use ($blade) {
 		$readable_id = strtolower($readable_id);
 
 		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/View/userProfile.php');
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_profile.php');
+		echo $blade->view()->make('sections.profile-home')->render();
 	},
 	'user_profile'
 );
@@ -143,7 +160,7 @@ $collection->get(
  */
 $collection->get(
 	'/@{readable_id:.+}/{post_title:.+}-{post_id:\w+}',
- 	function ($readable_id, $post_title, $post_id) use ($template_engine) {
+ 	function ($readable_id, $post_title, $post_id) use ($blade) {
 		/* Middleware part */
 		//	post_id에 해당하는 포스트가 있는지 체크
 		//	없으면 return false
@@ -162,7 +179,7 @@ $collection->get(
  */
 $collection->get(
 	'/me/settings/email',
-	function () use ($router, $template_engine) {
+	function () use ($router) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			$router->redirect('/register', true);
 		}
@@ -184,11 +201,16 @@ $collection->get(
  */
 $collection->get(
 	'/*',
-	function ($response_code, $title, $heading, $details) use ($template_engine) {
+	function ($response_code, $title, $heading, $details) use ($blade) {
 		http_response_code($response_code);
 
-		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/http_error.php');
-		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
+		$config = array(
+			'title' => $title,
+			'heading' => $heading,
+			'details' => $details
+		);
+
+		echo $blade->view()->make('sections.http-error', $config)->render();
 	},
 	'http_error'
 );
