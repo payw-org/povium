@@ -128,12 +128,14 @@ $collection->get(
  */
 $collection->get(
 	'/@{readable_id:.+}',
- 	function ($readable_id) use ($template_engine) {
+ 	function ($readable_id) use ($template_engine, $blade) {
 		$readable_id = strtolower($readable_id);
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/View/userProfile.php');
+		// require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/View/userProfile.php');
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_profile.php');
+		// require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/user_profile.php');
+
+		echo $blade->view()->make('sections.profile')->render();
 	},
 	'user_profile'
 );
