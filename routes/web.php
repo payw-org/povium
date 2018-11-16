@@ -15,33 +15,33 @@ use Povium\Base\Http\Exception\NotFoundHttpException;
 $collection->get(
 	'/',
  	function () use ($template_engine, $blade) {
-	    // $config = array(
-        //     "title" => "Povium | 좋은 글, 세상을 바꾸는 힘",
-		//
-        //     "post_img_link" => [
-        //         "macbookpro2018", "spongebob", "programmer", "1", "2" , "3", "4", "5", "6"
-        //     ],
-		//
-        //     "post_title" => [
-        //         "2018년 맥북프로는 너무 뜨거워",
-        //         "내가 귀여운 이유",
-        //         "프로그래머처럼 생각해야 한다",
-        //         "장어덮밥을 먹을 수 없게 된다면?",
-        //         "'동네다움'을 지킬 수 있는 방법",
-        //         "여행하며 '현금 관리'를 잘 하는 방법",
-        //         "필름카메라의 번거러움이 좋다",
-        //         "가짜 어른 구별하는 힘을 기르는 방법",
-        //         "사진을 시작한 사람들이 앓는다는 '장비병'"
-        //     ],
-		//
-        //     "post_writer" => [
-        //         "앤소니", "최홍ZUNE", "황장병치훈", "박진둘", "장준끼", "장햄", "청춘나지훈", "조경상병훈", "쿠형"
-        //     ]
-		// 	);
-		//
-	    // echo $blade->view()->make('sections.home', $config)->render();
-		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php');
-		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
+		$config = array(
+			"title" => "Povium | 좋은 글, 세상을 바꾸는 힘",
+		
+			"post_img_link" => [
+				"macbookpro2018", "spongebob", "programmer", "1", "2" , "3", "4", "5", "6"
+			],
+		
+			"post_title" => [
+				"2018년 맥북프로는 너무 뜨거워",
+				"내가 귀여운 이유",
+				"프로그래머처럼 생각해야 한다",
+				"장어덮밥을 먹을 수 없게 된다면?",
+				"'동네다움'을 지킬 수 있는 방법",
+				"여행하며 '현금 관리'를 잘 하는 방법",
+				"필름카메라의 번거러움이 좋다",
+				"가짜 어른 구별하는 힘을 기르는 방법",
+				"사진을 시작한 사람들이 앓는다는 '장비병'"
+			],
+		
+			"post_writer" => [
+				"앤소니", "최홍ZUNE", "황장병치훈", "박진둘", "장준끼", "장햄", "청춘나지훈", "조경상병훈", "쿠형"
+			]
+		);
+		
+		echo $blade->view()->make('sections.home', $config)->render();
+		// $view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/home.php');
+		// $template_engine->render($view_settings['template_dir'], $view_settings['config']);
 	}
 );
 
@@ -50,10 +50,10 @@ $collection->get(
  */
 $collection->get(
 	'/login',
- 	function () use ($router, $template_engine) {
+ 	function () use ($router, $template_engine, $blade) {
 		if ($GLOBALS['authority'] >= Authorizer::USER) {
-		    $router->redirect('/');
-        }
+			$router->redirect('/');
+		}
 
 		//	If referer is register page
 		if (
@@ -70,8 +70,10 @@ $collection->get(
 			}
 		}
 
-		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/login.php');
-		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
+		// $view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/login.php');
+		// $template_engine->render($view_settings['template_dir'], $view_settings['config']);
+		echo $blade->view()->make('sections.login')->render();
+
 	}
 );
 
@@ -80,10 +82,10 @@ $collection->get(
  */
 $collection->get(
 	'/register',
- 	function () use ($router, $template_engine) {
-        if ($GLOBALS['authority'] >= Authorizer::USER) {
-            $router->redirect('/');
-        }
+ 	function () use ($router, $template_engine, $blade) {
+		if ($GLOBALS['authority'] >= Authorizer::USER) {
+			$router->redirect('/');
+		}
 
 		//	If referer is login page
 		if (
@@ -99,8 +101,9 @@ $collection->get(
 			}
 		}
 
-		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/register.php');
-		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
+		// $view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/register.php');
+		// $template_engine->render($view_settings['template_dir'], $view_settings['config']);
+		echo $blade->view()->make('sections.register')->render();
 	}
 );
 
@@ -109,9 +112,10 @@ $collection->get(
  */
 $collection->get(
 	'/editor',
- 	function () use ($template_engine) {
-		$view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php');
-		$template_engine->render($view_settings['template_dir'], $view_settings['config']);
+ 	function () use ($template_engine, $blade) {
+		// $view_settings = require($_SERVER['DOCUMENT_ROOT'] . '/../resources/views/editor.php');
+		// $template_engine->render($view_settings['template_dir'], $view_settings['config']);
+		echo $blade->view()->make('sections.pvmeditor')->render();
 	}
 );
 
@@ -160,8 +164,8 @@ $collection->get(
 	'/me/settings/email',
 	function () use ($router, $template_engine) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
-		    $router->redirect('/register', true);
-        }
+			$router->redirect('/register', true);
+		}
 
 		//	Render page
 	}

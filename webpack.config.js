@@ -1,17 +1,8 @@
 module.exports = {
 
 	entry: {
-		main: [
+		povium: [
 			'./resources/assets/js/index'
-		],
-		login: [
-			'./resources/assets/js/login'
-		],
-		register: [
-			'./resources/assets/js/register'
-		],
-		editor: [
-			'./resources/assets/js/editor/main'
 		],
 		"editor.new": [
 			'./resources/assets/js/newEditor/main.ts'
