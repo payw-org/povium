@@ -19,8 +19,6 @@ interface RedirectorInterface
 	 * @param  string  $uri			URI to redirect
 	 * @param  boolean $return_to	Redirect back after?
 	 * @param  string  $return_uri	URI to redirect back after
-	 *
-	 * @return void
 	 */
 	public function redirect($uri, $return_to = false, $return_uri = "");
 }

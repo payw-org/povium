@@ -8,9 +8,9 @@
 
 namespace Povium\Base\Routing;
 
-use Povium\Base\Routing\Matcher\RequestMatcherInterface;
-use Povium\Base\Routing\Generator\URIGeneratorInterface;
-use Povium\Base\Routing\Redirector\RedirectorInterface;
+use Povium\Base\Routing\Matcher\RequestMatcher;
+use Povium\Base\Routing\Generator\URIGenerator;
+use Povium\Base\Routing\Redirector\Redirector;
 use Povium\Base\Routing\Exception\RouteNotFoundException;
 use Povium\Base\Routing\Exception\MethodNotAllowedException;
 use Povium\Base\Routing\Exception\NullPropertyException;
@@ -26,36 +26,36 @@ class Router implements RouterInterface
 	private $httpResponseConfig;
 
 	/**
+	 * @var RequestMatcher
+	 */
+	private $matcher;
+
+	/**
+	 * @var URIGenerator
+	 */
+	private $generator;
+
+	/**
+	 * @var Redirector
+	 */
+	private $redirector;
+
+	/**
 	 * @var RouteCollection
 	 */
 	private $routeCollection;
 
 	/**
-	 * @var RequestMatcherInterface
-	 */
-	private $matcher;
-
-	/**
-	 * @var URIGeneratorInterface
-	 */
-	private $generator;
-
-	/**
-	 * @var RedirectorInterface
-	 */
-	private $redirector;
-
-	/**
-	 * @param array                   $http_response_config
-	 * @param RequestMatcherInterface $matcher
-	 * @param URIGeneratorInterface   $generator
-	 * @param RedirectorInterface     $redirector
+	 * @param array          $http_response_config
+	 * @param RequestMatcher $matcher
+	 * @param URIGenerator   $generator
+	 * @param Redirector     $redirector
 	 */
 	public function __construct(
 		array $http_response_config,
-		RequestMatcherInterface $matcher,
-		URIGeneratorInterface $generator,
-		RedirectorInterface $redirector
+		RequestMatcher $matcher,
+		URIGenerator $generator,
+		Redirector $redirector
 	) {
 		$this->httpResponseConfig = $http_response_config;
 		$this->matcher = $matcher;
@@ -94,7 +94,7 @@ class Router implements RouterInterface
 	 */
 	public function redirect($uri, $return_to = false, $return_uri = "")
 	{
-		return $this->redirector->redirect($uri, $return_to, $return_uri);
+		$this->redirector->redirect($uri, $return_to, $return_uri);
 	}
 
 	/**
