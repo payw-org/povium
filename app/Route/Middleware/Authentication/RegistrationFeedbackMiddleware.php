@@ -6,14 +6,14 @@
  * @copyright	2018 DesignAndDevelop
  */
 
-namespace Povium\Middleware\Authentication;
+namespace Povium\Route\Middleware\Authentication;
 
-use Povium\Middleware\AbstractAjaxMiddleware;
+use Povium\Route\Middleware\AbstractAjaxMiddleware;
 use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 use Povium\Security\Validator\UserInfo\NameValidator;
 use Povium\Security\Validator\UserInfo\PasswordValidator;
 
-class RegistrationFormMiddleware extends AbstractAjaxMiddleware
+class RegistrationFeedbackMiddleware extends AbstractAjaxMiddleware
 {
     /**
      * @var ReadableIDValidator

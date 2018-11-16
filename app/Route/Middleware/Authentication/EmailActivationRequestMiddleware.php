@@ -6,10 +6,10 @@
  * @copyright	2018 DesignAndDevelop
  */
 
-namespace Povium\Middleware\Authentication;
+namespace Povium\Route\Middleware\Authentication;
 
-use Povium\Middleware\AbstractAjaxMiddleware;
 use Povium\Generator\RandomStringGenerator;
+use Povium\Route\Middleware\AbstractAjaxMiddleware;
 use Povium\Security\Authentication\Controller\EmailAddController;
 use Povium\MailSender\ActivationMailSender;
 use Povium\Base\Routing\Router;

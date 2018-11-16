@@ -1,17 +1,17 @@
 <?php
 /**
- * This factory is responsible for creating "RegistrationFormMiddleware" instance.
+ * This factory is responsible for creating "RegistrationFeedbackMiddleware" instance.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
  */
 
-namespace Povium\Middleware\Authentication\Factory;
+namespace Povium\Route\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
 
-class RegistrationFormMiddlewareFactory extends AbstractChildFactory
+class RegistrationFeedbackMiddlewareFactory extends AbstractChildFactory
 {
     /**
      * {@inheritdoc}

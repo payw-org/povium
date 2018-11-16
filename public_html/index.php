@@ -44,7 +44,6 @@ $router = $factory->createInstance('\Povium\Base\Routing\Router');
 //	Create routes and add to collection.
 $collection = $factory->createInstance('\Povium\Base\Routing\RouteCollection');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/../routes/middleware.php');
 
 $router->setRouteCollection($collection);
 

@@ -1,6 +1,6 @@
 <?php
 /**
-* Set routes for web page.
+* Set routes for web.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
@@ -8,9 +8,11 @@
 
 use Povium\Security\Authorization\Authorizer;
 use Povium\Base\Http\Exception\NotFoundHttpException;
+use Povium\Base\Http\Exception\ForbiddenHttpException;
+use Povium\Base\Http\Exception\GoneHttpException;
 
 /**
- * Home Page
+ * Show home page.
  */
 $collection->get(
 	'/',
@@ -70,7 +72,7 @@ $collection->get(
 );
 
 /**
- * Login Page
+ * Show login form page.
  */
 $collection->get(
 	'/login',
@@ -99,7 +101,25 @@ $collection->get(
 );
 
 /**
- * Register Page
+ * Login.
+ */
+$collection->post(
+	'/login',
+	function () use ($factory, $authenticator) {
+		if ($GLOBALS['authority'] >= Authorizer::USER) {
+			return;
+		}
+
+		$login_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\LoginMiddleware',
+			$authenticator
+		);
+		$login_middleware->login();
+	}
+);
+
+/**
+ * Show register form page.
  */
 $collection->get(
 	'/register',
@@ -127,7 +147,118 @@ $collection->get(
 );
 
 /**
- * Editor test page
+ * Register.
+ */
+$collection->post(
+	'/register',
+	function () use ($factory, $authenticator) {
+		if ($GLOBALS['authority'] >= Authorizer::USER) {
+			return;
+		}
+
+		$register_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\RegisterMiddleware',
+			$authenticator
+		);
+		$register_middleware->register();
+	}
+);
+
+/**
+ * Validate registration form and give some feedback.
+ */
+$collection->put(
+	'/register',
+	function () use ($factory) {
+		if ($GLOBALS['authority'] >= Authorizer::USER) {
+			return;
+		}
+
+		$registration_feedback_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\RegistrationFeedbackMiddleware'
+		);
+		$registration_feedback_middleware->validateRegistrationForm();
+	}
+);
+
+/**
+ * Logout.
+ */
+$collection->post(
+	'/logout',
+	function () use ($factory, $authenticator) {
+		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
+			return;
+		}
+
+		$logout_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\LogoutMiddleware',
+			$authenticator
+		);
+		$logout_middleware->logout();
+	}
+);
+
+/**
+ * (Test) Show email setting page.
+ */
+$collection->get(
+	'/me/settings/email',
+	function () use ($router) {
+		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
+			$router->redirect('/register', true);
+		}
+
+		//	Render page
+	}
+);
+
+/**
+ * (Test) Request email activation.
+ *
+ * "Get" is Test mode. Original is "post".
+ */
+$collection->get(
+	'/me/settings/email/new-request',
+	function () use ($factory, $authenticator, $router) {
+		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
+			return;
+		}
+
+		$email_activation_request_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\EmailActivationRequestMiddleware',
+			$router,
+			$authenticator->getCurrentUser()
+		);
+		$email_activation_request_middleware->requestEmailActivation();
+	}
+);
+
+/**
+ * Activate email address.
+ *
+ * @throws ForbiddenHttpException		If invalid activation request
+ * @throws GoneHttpException			If activation request has already expired
+ */
+$collection->get(
+	'/c/email/activation',
+	function () use ($factory, $authenticator, $router) {
+		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
+			$router->redirect('/login', true);
+		}
+
+		$email_activation_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware',
+			$router,
+			$authenticator->getCurrentUser()
+		);
+		$email_activation_middleware->activateEmail();
+	},
+	'email_activation'
+);
+
+/**
+ * (Test) Show editor page.
  */
 $collection->get(
 	'/editor',
@@ -137,18 +268,18 @@ $collection->get(
 );
 
 /**
- * User Profile Page
+ * (Test) Show profile page.
  *
  * @param string $readable_id
  *
- * @throws NotFoundHttpException If nonexistent readable id
+ * @throws NotFoundHttpException 	If nonexistent readable id
  */
 $collection->get(
 	'/@{readable_id:.+}',
  	function ($readable_id) use ($blade) {
 		$readable_id = strtolower($readable_id);
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Middleware/View/userProfile.php');
+		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Route/Middleware/User/userProfile.php');
 
 		echo $blade->view()->make('sections.profile-home')->render();
 	},
@@ -156,7 +287,7 @@ $collection->get(
 );
 
 /**
- * Post Page
+ * (Test) Show post page.
  */
 $collection->get(
 	'/@{readable_id:.+}/{post_title:.+}-{post_id:\w+}',
@@ -175,21 +306,7 @@ $collection->get(
 );
 
 /**
- * Email Setting Page(Tab)
- */
-$collection->get(
-	'/me/settings/email',
-	function () use ($router) {
-		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
-			$router->redirect('/register', true);
-		}
-
-		//	Render page
-	}
-);
-
-/**
- * Http Status Page
+ * Show http status page.
  *
  * User cannot directly access this route.
  * DO NOT GENERATE URI FOR THIS ROUTE.

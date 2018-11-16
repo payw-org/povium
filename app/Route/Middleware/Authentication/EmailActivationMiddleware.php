@@ -6,7 +6,7 @@
  * @copyright	2018 DesignAndDevelop
  */
 
-namespace Povium\Middleware\Authentication;
+namespace Povium\Route\Middleware\Authentication;
 
 use Povium\Security\Authentication\Controller\EmailActivationController;
 use Povium\Base\Routing\Router;

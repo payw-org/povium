@@ -30,12 +30,12 @@ return [
 
 	'\Povium\MailSender\ActivationMailSender' => '\Povium\MailSender\Factory\ActivationMailSenderFactory',
 
-    '\Povium\Middleware\Authentication\LoginMiddleware' => '\Povium\Middleware\Authentication\Factory\LoginMiddlewareFactory',
-    '\Povium\Middleware\Authentication\RegisterMiddleware' => '\Povium\Middleware\Authentication\Factory\RegisterMiddlewareFactory',
-    '\Povium\Middleware\Authentication\RegistrationFormMiddleware' => '\Povium\Middleware\Authentication\Factory\RegistrationFormMiddlewareFactory',
-    '\Povium\Middleware\Authentication\LogoutMiddleware' => '\Povium\Middleware\Authentication\Factory\LogoutMiddlewareFactory',
-    '\Povium\Middleware\Authentication\EmailActivationRequestMiddleware' => '\Povium\Middleware\Authentication\Factory\EmailActivationRequestMiddlewareFactory',
-    '\Povium\Middleware\Authentication\EmailActivationMiddleware' => '\Povium\Middleware\Authentication\Factory\EmailActivationMiddlewareFactory',
+    '\Povium\Route\Middleware\Authentication\LoginMiddleware' => '\Povium\Route\Middleware\Factory\LoginMiddlewareFactory',
+	'\Povium\Route\Middleware\Authentication\RegisterMiddleware' => '\Povium\Route\Middleware\Factory\RegisterMiddlewareFactory',
+	'\Povium\Route\Middleware\Authentication\RegistrationFeedbackMiddleware' => '\Povium\Route\Middleware\Factory\RegistrationFeedbackMiddlewareFactory',
+	'\Povium\Route\Middleware\Authentication\LogoutMiddleware' => '\Povium\Route\Middleware\Factory\LogoutMiddlewareFactory',
+	'\Povium\Route\Middleware\Authentication\EmailActivationRequestMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationRequestMiddlewareFactory',
+	'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationMiddlewareFactory',
 
 	'\Povium\Security\Authentication\Authenticator' => '\Povium\Security\Authentication\Factory\AuthenticatorFactory',
 	'\Povium\Security\Authentication\Controller\LoginController' => '\Povium\Security\Authentication\Factory\LoginControllerFactory',

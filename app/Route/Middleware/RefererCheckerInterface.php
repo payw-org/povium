@@ -6,7 +6,7 @@
  * @copyright	2018 DesignAndDevelop
  */
 
-namespace Povium\Middleware;
+namespace Povium\Route\Middleware;
 
 interface RefererCheckerInterface
 {

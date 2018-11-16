@@ -6,7 +6,7 @@
  * @copyright	2018 DesignAndDevelop
  */
 
-namespace Povium\Middleware\Authentication\Factory;
+namespace Povium\Route\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
