@@ -6,7 +6,7 @@
  * @copyright	2018 DesignAndDevelop
  */
 
-namespace Povium\Route\Middleware\Authentication;
+namespace Povium\Route\Middleware\Setting;
 
 use Povium\Generator\RandomStringGenerator;
 use Povium\Route\Middleware\AbstractAjaxMiddleware;

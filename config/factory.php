@@ -34,8 +34,8 @@ return [
 	'\Povium\Route\Middleware\Authentication\RegisterMiddleware' => '\Povium\Route\Middleware\Factory\RegisterMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\RegistrationFeedbackMiddleware' => '\Povium\Route\Middleware\Factory\RegistrationFeedbackMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\LogoutMiddleware' => '\Povium\Route\Middleware\Factory\LogoutMiddlewareFactory',
-	'\Povium\Route\Middleware\Authentication\EmailActivationRequestMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationRequestMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationMiddlewareFactory',
+	'\Povium\Route\Middleware\Setting\EmailActivationRequestMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationRequestMiddlewareFactory',
 
 	'\Povium\Security\Authentication\Authenticator' => '\Povium\Security\Authentication\Factory\AuthenticatorFactory',
 	'\Povium\Security\Authentication\Controller\LoginController' => '\Povium\Security\Authentication\Factory\LoginControllerFactory',

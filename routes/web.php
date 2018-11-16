@@ -72,7 +72,7 @@ $collection->get(
 );
 
 /**
- * Show login form page.
+ * Show login page.
  */
 $collection->get(
 	'/login',
@@ -119,7 +119,7 @@ $collection->post(
 );
 
 /**
- * Show register form page.
+ * Show register page.
  */
 $collection->get(
 	'/register',
@@ -200,6 +200,29 @@ $collection->post(
 );
 
 /**
+ * Activate email address.
+ *
+ * @throws ForbiddenHttpException		If invalid activation request
+ * @throws GoneHttpException			If activation request has already expired
+ */
+$collection->get(
+	'/c/email/activation',
+	function () use ($factory, $authenticator, $router) {
+		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
+			$router->redirect('/login', true);
+		}
+
+		$email_activation_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware',
+			$router,
+			$authenticator->getCurrentUser()
+		);
+		$email_activation_middleware->activateEmail();
+	},
+	'email_activation'
+);
+
+/**
  * (Test) Show email setting page.
  */
 $collection->get(
@@ -226,35 +249,12 @@ $collection->get(
 		}
 
 		$email_activation_request_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\EmailActivationRequestMiddleware',
+			'\Povium\Route\Middleware\Setting\EmailActivationRequestMiddleware',
 			$router,
 			$authenticator->getCurrentUser()
 		);
 		$email_activation_request_middleware->requestEmailActivation();
 	}
-);
-
-/**
- * Activate email address.
- *
- * @throws ForbiddenHttpException		If invalid activation request
- * @throws GoneHttpException			If activation request has already expired
- */
-$collection->get(
-	'/c/email/activation',
-	function () use ($factory, $authenticator, $router) {
-		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
-			$router->redirect('/login', true);
-		}
-
-		$email_activation_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware',
-			$router,
-			$authenticator->getCurrentUser()
-		);
-		$email_activation_middleware->activateEmail();
-	},
-	'email_activation'
 );
 
 /**
