@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface for authority checker.
+ * Interface for checking authority.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop

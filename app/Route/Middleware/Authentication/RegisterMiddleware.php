@@ -9,11 +9,12 @@
 namespace Povium\Route\Middleware\Authentication;
 
 use Povium\Route\Middleware\AbstractAjaxMiddleware;
+use Povium\Route\Middleware\RefererCheckerInterface;
 use Povium\Security\Authentication\Controller\RegisterController;
 use Povium\Security\Authentication\Controller\LoginController;
 use Povium\Base\Routing\Validator\RedirectURIValidator;
 
-class RegisterMiddleware extends AbstractAjaxMiddleware
+class RegisterMiddleware extends AbstractAjaxMiddleware implements RefererCheckerInterface
 {
     /**
      * @var RegisterController
@@ -65,12 +66,6 @@ class RegisterMiddleware extends AbstractAjaxMiddleware
 
         /* Process register and set redirect uri */
 
-        //	Get querystring of referer
-        $querystring = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
-        if (isset($querystring)) {
-            parse_str($querystring, $query_params);
-        }
-
         $register_return = $this->registerController->register($readable_id, $name, $password);
         $return['err'] = $register_return['err'];
         $return['msg'] = $register_return['msg'];
@@ -80,19 +75,44 @@ class RegisterMiddleware extends AbstractAjaxMiddleware
         } else {			 	//	Register success
             $this->loginController->login($readable_id, $password);
 
-            $return['redirect'] = '/';
+			//	Check referer and get redirect uri
+			$redirect = $this->checkReferer();
 
-            //  If redirect uri in query is valid
-            if (
-                isset($query_params['redirect']) &&
-                $this->redirectURIValidator->validate($query_params['redirect'])
-            ) {
-                $return['redirect'] = $query_params['redirect'];
-            }
+			if ($redirect === false) {
+				$return['redirect'] = '/';
+			} else {
+				$return['redirect'] = $redirect;
+			}
         }
 
         $this->sendAjaxData($return);
 
         return;
     }
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return string|false		If valid redirect uri in referer query, return it.
+	 */
+	public function checkReferer()
+	{
+		$referer_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
+
+		if (!isset($referer_query)) {
+			return false;
+		}
+
+		parse_str($referer_query, $query_data);
+
+		if (!isset($query_data['redirect'])) {
+			return false;
+		}
+
+		if (!$this->redirectURIValidator->validate($query_data['redirect'])) {
+			return false;
+		}
+
+		return $query_data['redirect'];
+	}
 }

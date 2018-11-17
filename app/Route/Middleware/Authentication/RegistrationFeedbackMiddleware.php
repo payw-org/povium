@@ -1,6 +1,6 @@
 <?php
 /**
- * Middleware for validating registration form.
+ * Middleware for registration feedback.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
