@@ -10,7 +10,7 @@ if (document.querySelector("#globalnav .sign-out")) {
 
 		Axios({
 			method: 'post',
-			url: 'logout'
+			url: '/logout'
 		})
 		.then(function(response) {
 			let data = response.data
