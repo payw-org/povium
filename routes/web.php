@@ -257,7 +257,7 @@ $collection->get(
 );
 
 /**
- * Show http status view.
+ * Show http error view.
  *
  * User cannot directly access this route.
  * DO NOT GENERATE URI FOR THIS ROUTE.
@@ -269,16 +269,16 @@ $collection->get(
  */
 $collection->get(
 	'/*',
-	function ($response_code, $title, $heading, $details) use ($blade) {
-		http_response_code($response_code);
-
-		$config = array(
-			'title' => $title,
-			'heading' => $heading,
-			'details' => $details
+	function ($response_code, $title, $heading, $details) use ($factory, $blade) {
+		$http_error_view_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Error\HttpErrorViewMiddleware'
 		);
+		$http_error_view_middleware->verifyViewRequest($response_code, $title, $heading, $details);
 
-		echo $blade->view()->make('sections.http-error', $config)->render();
+		echo $blade->view()->make(
+			'sections.http-error',
+			$http_error_view_middleware->getViewConfig()
+		)->render();
 	},
 	'http_error'
 );

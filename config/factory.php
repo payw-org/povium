@@ -40,6 +40,7 @@ return [
 	'\Povium\Route\Middleware\Authentication\LoginViewMiddleware' => '\Povium\Route\Middleware\Factory\LoginViewMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\RegisterViewMiddleware' => '\Povium\Route\Middleware\Factory\RegisterViewMiddlewareFactory',
 	'\Povium\Route\Middleware\User\ProfileViewMiddleware' => '\Povium\Route\Middleware\Factory\ProfileViewMiddlewareFactory',
+	'\Povium\Route\Middleware\Error\HttpErrorViewMiddleware' => '\Povium\Route\Middleware\Factory\HttpErrorViewMiddlewareFactory',
 
 	'\Povium\Security\Authentication\Authenticator' => '\Povium\Security\Authentication\Factory\AuthenticatorFactory',
 	'\Povium\Security\Authentication\Controller\LoginController' => '\Povium\Security\Authentication\Factory\LoginControllerFactory',
