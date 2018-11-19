@@ -1,20 +1,15 @@
-import UndoManager from "./UndoManager"
-import NodeManager from "./NodeManager"
-import EventManager from "./EventManager"
-import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession"
-import PopTool from "./PopTool"
-import {AT} from "./config/AvailableTypes"
+import EventManager from "./EventManager"
 import { Example } from "./examples/example1"
 import * as PostData from "./interfaces/PostData"
+import NodeManager from "./NodeManager"
+import PopTool from "./PopTool"
 
 export default class PVMEditor {
-
 	/**
 	 * @param editorDOM id = "post-editor"
 	 */
 	constructor(editorDOM: HTMLElement) {
-
 		EditSession.init(editorDOM)
 		PopTool.init()
 
@@ -23,11 +18,9 @@ export default class PVMEditor {
 		this.loadData()
 
 		EditSession.validateData()
-
 	}
 
 	loadData() {
-
 		EditSession.editorBody.innerHTML = ""
 
 		let data: PostData.Frame = Example
@@ -37,7 +30,6 @@ export default class PVMEditor {
 		let firstChild
 
 		for (let i = 0; i < contents.length; i++) {
-
 			let block = contents[i]
 
 			let parentType = null
@@ -46,16 +38,14 @@ export default class PVMEditor {
 			}
 
 			// if (AT.textOnly.includes(block.type)) {
-			
+
 			if (PostData.isTextBlock(block)) {
-
 				let html = ""
-				
-				for (let j = 0; j < block.data.length; j++) {
 
-					let text     = block.data[j].data
+				for (let j = 0; j < block.data.length; j++) {
+					let text = block.data[j].data
 					let htmlPart = text
-					let style    = block.data[j].style
+					let style = block.data[j].style
 
 					if (style === "bold") {
 						htmlPart = "<b>" + text + "</b>"
@@ -68,25 +58,21 @@ export default class PVMEditor {
 					}
 
 					html += htmlPart
-
 				}
 
 				let node = NodeManager.createNode(block.type, {
 					parentType: parentType,
-					html      : html
+					html: html
 				})
 
 				NodeManager.appendChild(node)
-
 			} else if (PostData.isImageBlock(block)) {
-
 				let html = ""
 
 				for (let j = 0; j < block.caption.data.length; j++) {
-
-					let text     = block.caption.data[j].data
+					let text = block.caption.data[j].data
 					let htmlPart = text
-					let style    = block.caption.data[j].style
+					let style = block.caption.data[j].style
 
 					if (style === "bold") {
 						htmlPart = "<b>" + text + "</b>"
@@ -99,21 +85,16 @@ export default class PVMEditor {
 					}
 
 					html += htmlPart
-
 				}
 
 				let node = NodeManager.createNode(block.type, {
-					url : block.url,
+					url: block.url,
 					html: html,
 					size: block.size
 				})
 
 				NodeManager.appendChild(node)
-
 			}
-
 		}
-
 	}
-
 }

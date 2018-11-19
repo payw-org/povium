@@ -2,31 +2,33 @@ import PVMNode from "./PVMNode"
 import SelectionManager from "./SelectionManager"
 
 interface RangePoint {
-	node  : PVMNode
+	node: PVMNode
 	offset: number
-	state : number
+	state: number
 }
 
 export default class PVMRange {
-
 	start: RangePoint = {
 		node: undefined,
 		offset: undefined,
 		state: 2
 	}
-	end  : RangePoint = {
+	end: RangePoint = {
 		node: undefined,
 		offset: undefined,
 		state: 2
 	}
 
-	constructor(startNode: PVMNode, startOffset: number, endNode: PVMNode, endOffset: number) {
-
+	constructor(
+		startNode: PVMNode,
+		startOffset: number,
+		endNode: PVMNode,
+		endOffset: number
+	) {
 		// Properties
 
 		this.setStart(startNode, startOffset)
 		this.setEnd(endNode, endOffset)
-
 	}
 
 	// Methods
@@ -39,7 +41,10 @@ export default class PVMRange {
 
 	isCollapsed() {
 		if (this.start.node && this.end.node) {
-			return this.start.node.id === this.end.node.id && this.start.offset === this.end.offset
+			return (
+				this.start.node.id === this.end.node.id &&
+				this.start.offset === this.end.offset
+			)
 		} else {
 			return false
 		}
@@ -48,7 +53,7 @@ export default class PVMRange {
 	// Setters
 
 	setStart(startNode: PVMNode, startOffset: number) {
-		this.start.node   = startNode
+		this.start.node = startNode
 		this.start.offset = startOffset
 		if (!startNode) {
 			return
@@ -67,7 +72,7 @@ export default class PVMRange {
 	}
 
 	setEnd(endNode: PVMNode, endOffset: number) {
-		this.end.node   = endNode
+		this.end.node = endNode
 		this.end.offset = endOffset
 		if (!endNode) {
 			return
@@ -85,23 +90,22 @@ export default class PVMRange {
 		}
 	}
 
-	setState() {
-
-	}
-
+	setState() {}
 
 	// Getters
 
-	getState() {
-
-	}
+	getState() {}
 
 	clone() {
-		let sel   = new SelectionManager()
-		let range = SelectionManager.createRange(this.start.node, this.start.offset, this.end.node, this.end.offset)
+		let sel = new SelectionManager()
+		let range = SelectionManager.createRange(
+			this.start.node,
+			this.start.offset,
+			this.end.node,
+			this.end.offset
+		)
 		return range
 	}
 
 	// Actions
-
 }

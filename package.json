@@ -10,6 +10,7 @@
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
     "detect-browser": "^3.0.1",
+    "gsap": "^2.0.2",
     "less": "^3.8.0",
     "node-notifier": "^5.2.1",
     "nodemon": "^1.18.3",

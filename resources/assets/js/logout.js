@@ -14,8 +14,8 @@ if (document.querySelector("#globalnav .sign-out")) {
 		})
 		.then(function(response) {
 			let data = response.data
-			if (data !== '') {
-				location.replace(data['redirect'])
+			if (data !== "") {
+				location.replace(data["redirect"])
 			}
 		})
 

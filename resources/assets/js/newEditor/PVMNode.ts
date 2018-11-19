@@ -1,19 +1,16 @@
-import {AT} from "./config/AvailableTypes"
+import { AT } from "./config/AvailableTypes"
 
 export default class PVMNode {
-
-	id             : number
-	type           : string
-	parentType     : string
-	nextSibling    : PVMNode
+	id: number
+	type: string
+	parentType: string
+	nextSibling: PVMNode
 	previousSibling: PVMNode
-	isConnected    : boolean = false
-	element        : HTMLElement
-	textElement    : HTMLElement
+	isConnected: boolean = false
+	element: HTMLElement
+	textElement: HTMLElement
 
-	constructor() {
-
-	}
+	constructor() {}
 
 	setInnerHTML(html: string) {
 		if (html === "") {
@@ -46,5 +43,4 @@ export default class PVMNode {
 			return null
 		}
 	}
-
 }

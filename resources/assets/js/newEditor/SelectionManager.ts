@@ -1,75 +1,57 @@
-import UndoManager from "./UndoManager"
+import { AT } from "./config/AvailableTypes"
 import EventManager from "./EventManager"
 import NodeManager from "./NodeManager"
-import EditSession from "./EditSession"
-import PVMRange from "./PVMRange"
 import PVMNode from "./PVMNode"
-import {AT} from "./config/AvailableTypes"
+import PVMRange from "./PVMRange"
+import UndoManager from "./UndoManager"
 
 export default class SelectionManager {
-
-	constructor() {
-
-	}
+	constructor() {}
 
 	// Setters
 
 	public static setRange(pvmRange: PVMRange) {
-
 		if (!pvmRange) return
 
-		let range = document.createRange()  // JS Range
+		let range = document.createRange() // JS Range
 		let rangeStartContainer, rangeStartOffset, rangeEndContainer, rangeEndOffset
-		let startNodePVMN   = pvmRange.start.node
-		let startNodeDOM    = startNodePVMN.textElement
+		let startNodePVMN = pvmRange.start.node
+		let startNodeDOM = startNodePVMN.textElement
 		let startNodeOffset = pvmRange.start.offset
 
 		// Calculate start
 		let travelNode: Node = startNodeDOM.firstChild
-		let length           = 0
-		let loopDone         = false
+		let length = 0
+		let loopDone = false
 
 		rangeStartContainer = startNodeDOM
-		rangeStartOffset    = 0
+		rangeStartOffset = 0
 
 		// if (startNodeOffset === -1) {
 		// 	startNodeOffset = startNodeDOM.textContent.length
 		// }
 
 		while (1) {
-
 			if (!travelNode) break
 
 			if (travelNode.nodeType === 3) {
-
 				if (length + travelNode.textContent.length >= startNodeOffset) {
-
 					rangeStartContainer = travelNode
-					rangeStartOffset    = startNodeOffset - length
+					rangeStartOffset = startNodeOffset - length
 					break
-
 				} else {
-
 					length += travelNode.textContent.length
-
 				}
-
 			}
 
 			if (travelNode.firstChild) {
-
 				travelNode = travelNode.firstChild
-
 			} else if (travelNode.nextSibling) {
-
 				travelNode = travelNode.nextSibling
-
 			} else {
-
 				travelNode = travelNode.parentNode
 
 				while (1) {
-
 					if (travelNode.isEqualNode(startNodeDOM)) {
 						loopDone = true
 						break
@@ -79,69 +61,53 @@ export default class SelectionManager {
 					} else {
 						travelNode = travelNode.parentNode
 					}
-
 				}
-
 			}
 
 			if (loopDone) {
 				break
 			}
-
 		}
 
 		range.setStart(rangeStartContainer, rangeStartOffset)
 
-		let endNodePVMN   = pvmRange.end.node
-		let endNodeDOM    = endNodePVMN.textElement
+		let endNodePVMN = pvmRange.end.node
+		let endNodeDOM = endNodePVMN.textElement
 		let endNodeOffset = pvmRange.end.offset
 
 		// Calculate end
 		travelNode = endNodeDOM.firstChild
-		length     = 0
-		loopDone   = false
+		length = 0
+		loopDone = false
 
 		rangeEndContainer = endNodeDOM
-		rangeEndOffset    = 0
+		rangeEndOffset = 0
 
 		// if (endNodeOffset === -1) {
 		// 	endNodeOffset = endNodeDOM.textContent.length
 		// }
 
 		while (1) {
-
 			if (!travelNode) break
 
 			if (travelNode.nodeType === 3) {
-
 				if (length + travelNode.textContent.length >= endNodeOffset) {
-
 					rangeEndContainer = travelNode
-					rangeEndOffset    = endNodeOffset - length
+					rangeEndOffset = endNodeOffset - length
 					break
-
 				} else {
-
 					length += travelNode.textContent.length
-
 				}
-
 			}
 
 			if (travelNode.firstChild) {
-
 				travelNode = travelNode.firstChild
-
 			} else if (travelNode.nextSibling) {
-
 				travelNode = travelNode.nextSibling
-
 			} else {
-
 				travelNode = travelNode.parentNode
 
 				while (1) {
-
 					if (travelNode.isEqualNode(endNodeDOM)) {
 						loopDone = true
 						break
@@ -151,15 +117,12 @@ export default class SelectionManager {
 					} else {
 						travelNode = travelNode.parentNode
 					}
-
 				}
-
 			}
 
 			if (loopDone) {
 				break
 			}
-
 		}
 
 		range.setEnd(rangeEndContainer, rangeEndOffset)
@@ -168,11 +131,9 @@ export default class SelectionManager {
 		window.getSelection().addRange(range)
 
 		EventManager.onSelectionChanged()
-
 	}
 
 	public static getCurrentRange() {
-
 		if (document.getSelection().rangeCount === 0) {
 			return null
 		}
@@ -181,12 +142,12 @@ export default class SelectionManager {
 		let closestTarget: Element
 
 		let startNode, endNode
-		let startOffset = 0, endOffset = 0
+		let startOffset = 0,
+			endOffset = 0
 
 		for (let i = 0; i < AT.topTags.length; i++) {
-
 			if (range.startContainer.nodeType !== 3) {
-				closestTarget = <Element>(range.startContainer)
+				closestTarget = <Element>range.startContainer
 			} else {
 				closestTarget = range.startContainer.parentElement
 			}
@@ -194,8 +155,14 @@ export default class SelectionManager {
 			if (closestTarget.closest(AT.topTags[i])) {
 				let startElm = closestTarget.closest(AT.topTags[i])
 				startNode = NodeManager.getNodeByID(NodeManager.getNodeID(startElm))
-				let n, walk = document.createTreeWalker(startElm, NodeFilter.SHOW_TEXT, null, false)
-				while (n = walk.nextNode()) {
+				let n,
+					walk = document.createTreeWalker(
+						startElm,
+						NodeFilter.SHOW_TEXT,
+						null,
+						false
+					)
+				while ((n = walk.nextNode())) {
 					if (n.isSameNode(range.startContainer)) {
 						startOffset += range.startOffset
 						break
@@ -204,26 +171,29 @@ export default class SelectionManager {
 				}
 				break
 			}
-
 		}
 
 		if (range.collapsed) {
-			endNode = startNode, endOffset = startOffset
+			;(endNode = startNode), (endOffset = startOffset)
 		} else {
-
 			for (let i = 0; i < AT.topTags.length; i++) {
-
 				if (range.endContainer.nodeType !== 3) {
-					closestTarget = <Element>(range.endContainer)
+					closestTarget = <Element>range.endContainer
 				} else {
 					closestTarget = range.endContainer.parentElement
 				}
-	
+
 				if (closestTarget.closest(AT.topTags[i])) {
-					let endElm  = closestTarget.closest(AT.topTags[i])
+					let endElm = closestTarget.closest(AT.topTags[i])
 					endNode = NodeManager.getNodeByID(NodeManager.getNodeID(endElm))
-					let n, walk = document.createTreeWalker(endElm, NodeFilter.SHOW_TEXT, null, false)
-					while (n = walk.nextNode()) {
+					let n,
+						walk = document.createTreeWalker(
+							endElm,
+							NodeFilter.SHOW_TEXT,
+							null,
+							false
+						)
+					while ((n = walk.nextNode())) {
 						if (n.isSameNode(range.endContainer)) {
 							endOffset += range.endOffset
 							break
@@ -232,31 +202,26 @@ export default class SelectionManager {
 					}
 					break
 				}
-	
 			}
 
 			if (range.endContainer.nodeType !== 3) {
 				endOffset = range.endOffset
 			}
-
 		}
 
 		return new PVMRange(startNode, startOffset, endNode, endOffset)
-
 	}
 
 	public static getCurrentNode(): PVMNode {
-
 		let sel = window.getSelection()
 		if (sel.rangeCount === 0) return null
 
-		let range     = sel.getRangeAt(0)
+		let range = sel.getRangeAt(0)
 		let startNode = range.startContainer
 
 		let node: Element = null
 
 		for (let i = 0; i < AT.topTags.length; i++) {
-
 			if (startNode.nodeType === 3) {
 				node = startNode.parentElement.closest(AT.topTags[i])
 			} else {
@@ -264,7 +229,6 @@ export default class SelectionManager {
 			}
 
 			if (node) break
-
 		}
 
 		if (!node) {
@@ -276,15 +240,12 @@ export default class SelectionManager {
 		let pvmNode = NodeManager.getNodeByID(nodeID)
 
 		return pvmNode
-
 	}
 
-
 	public static getAllNodesInSelection(type?: string): PVMNode[] {
-
 		let currentRange = this.getCurrentRange()
-		let startNode    = currentRange.start.node
-		let endNode      = currentRange.end.node
+		let startNode = currentRange.start.node
+		let endNode = currentRange.end.node
 
 		let nodes = []
 
@@ -292,7 +253,6 @@ export default class SelectionManager {
 		let nextNode
 
 		while (1) {
-
 			if (type) {
 				if (type === "textContained") {
 					if (AT.textContained.includes(travelNode.type)) {
@@ -306,7 +266,6 @@ export default class SelectionManager {
 			} else {
 				nodes.push(travelNode)
 			}
-			
 
 			if (travelNode.isSameAs(endNode)) break
 
@@ -315,19 +274,16 @@ export default class SelectionManager {
 			if (!nextNode) break
 
 			travelNode = nextNode
-
 		}
 
 		return nodes
-
-
 	}
 
 	public static getAllNodesInEditor() {
 		let travelNode = NodeManager.getFirstChild()
-		let allNodes   = []
+		let allNodes = []
 		allNodes.push(travelNode)
-		while (travelNode = travelNode.nextSibling) {
+		while ((travelNode = travelNode.nextSibling)) {
 			allNodes.push(travelNode)
 		}
 
@@ -338,48 +294,35 @@ export default class SelectionManager {
 	 * Returns current cursor state.
 	 * 1. |hello, 2. he|llo, 3. hello|
 	 */
-	public static getCursorState() {
+	public static getCursorState() {}
 
-	}
-
-	public static getTextOffset(node: Node, container: Node, rangeOffset: number): number
-	{
-
-		let travelNode: Node    = node.firstChild
-		let length    : number  = 0
-		let loopDone  : boolean = false
+	public static getTextOffset(
+		node: Node,
+		container: Node,
+		rangeOffset: number
+	): number {
+		let travelNode: Node = node.firstChild
+		let length: number = 0
+		let loopDone: boolean = false
 
 		while (1) {
-
 			if (travelNode.nodeType === 3) {
-
 				if (travelNode.isEqualNode(container)) {
-
 					length += rangeOffset
 					break
-
 				} else {
-
 					length += travelNode.textContent.length
-
 				}
-
 			}
 
 			if (travelNode.firstChild) {
-
 				travelNode = travelNode.firstChild
-
 			} else if (travelNode.nextSibling) {
-
 				travelNode = travelNode.nextSibling
-
 			} else {
-
 				travelNode = travelNode.parentNode
 
 				while (1) {
-
 					if (travelNode.isEqualNode(node)) {
 						loopDone = true
 						break
@@ -389,15 +332,12 @@ export default class SelectionManager {
 					} else {
 						travelNode = travelNode.parentNode
 					}
-
 				}
-
 			}
 
 			if (loopDone) {
 				break
 			}
-
 		}
 
 		return length
@@ -405,31 +345,30 @@ export default class SelectionManager {
 
 	// Actions
 
-
-	public static createRange(startNode: PVMNode, startOffset: number, endNode: PVMNode, endOffset: number)
-	{
+	public static createRange(
+		startNode: PVMNode,
+		startOffset: number,
+		endNode: PVMNode,
+		endOffset: number
+	) {
 		let range = new PVMRange(startNode, startOffset, endNode, endOffset)
 		return range
 	}
 
-
-	public static focusAt(node: PVMNode, offset: number)
-	{
-
-	}
+	public static focusAt(node: PVMNode, offset: number) {}
 
 	/**
 	 * Remove uncollapsed selection.
 	 */
-	public static removeSelection(withKey: string = "backspace")
-	{
-		let jsSel    = window.getSelection()
-		let jsRange  = window.getSelection().getRangeAt(0)
+	public static removeSelection(withKey: string = "backspace") {
+		let jsSel = window.getSelection()
+		let jsRange = window.getSelection().getRangeAt(0)
 		let pvmRange = this.getCurrentRange()
-		let nodes    = this.getAllNodesInSelection()
+		let nodes = this.getAllNodesInSelection()
 
-		let extraBackspace = true, extraEnter = false
-		
+		let extraBackspace = true,
+			extraEnter = false
+
 		// console.log(pvmRange)
 		// console.log(jsRange)
 
@@ -440,9 +379,9 @@ export default class SelectionManager {
 				nodes[i].element.contains(jsRange.startContainer) &&
 				nodes[i].element.contains(jsRange.endContainer)
 			) {
-				                extraBackspace   = false
-				                extraEnter       = true
-				            let originalContents = nodes[i].textElement.innerHTML
+				extraBackspace = false
+				extraEnter = true
+				let originalContents = nodes[i].textElement.innerHTML
 				jsRange.deleteContents()
 				if (!nodes[i].element.querySelector("br")) {
 					nodes[i].element.appendChild(document.createElement("br"))
@@ -451,12 +390,12 @@ export default class SelectionManager {
 				newRange.setEnd(pvmRange.start.node, pvmRange.start.offset)
 				this.setRange(newRange)
 				actions.push({
-					type         : "textChange",
-					targetNode   : nodes[i],
-					previousHTML : originalContents,
-					nextHTML     : nodes[i].textElement.innerHTML,
+					type: "textChange",
+					targetNode: nodes[i],
+					previousHTML: originalContents,
+					nextHTML: nodes[i].textElement.innerHTML,
 					previousRange: pvmRange,
-					nextRange    : newRange
+					nextRange: newRange
 				})
 			} else if (
 				nodes[i].element.contains(jsRange.startContainer) &&
@@ -465,21 +404,24 @@ export default class SelectionManager {
 				if (!nodes[i].element.querySelector("br")) {
 					nodes[i].element.appendChild(document.createElement("br"))
 				}
-				let newRange         = pvmRange.clone()
+				let newRange = pvmRange.clone()
 				let originalContents = nodes[i].textElement.innerHTML
 				newRange.setEnd(nodes[i], nodes[i].textElement.textContent.length)
 				this.setRange(newRange)
-				window.getSelection().getRangeAt(0).deleteContents()
+				window
+					.getSelection()
+					.getRangeAt(0)
+					.deleteContents()
 				newRange.setStart(nodes[i], nodes[i].getTextContent().length)
 				newRange.setEnd(nodes[i], nodes[i].getTextContent().length)
 				this.setRange(newRange)
 				actions.push({
-					type         : "textChange",
-					targetNode   : nodes[i],
-					previousHTML : originalContents,
-					nextHTML     : nodes[i].textElement.innerHTML,
+					type: "textChange",
+					targetNode: nodes[i],
+					previousHTML: originalContents,
+					nextHTML: nodes[i].textElement.innerHTML,
 					previousRange: pvmRange,
-					nextRange    : newRange
+					nextRange: newRange
 				})
 			} else if (
 				!nodes[i].element.contains(jsRange.startContainer) &&
@@ -488,21 +430,24 @@ export default class SelectionManager {
 				if (!nodes[i].element.querySelector("br")) {
 					nodes[i].element.appendChild(document.createElement("br"))
 				}
-				let newRange         = pvmRange.clone()
+				let newRange = pvmRange.clone()
 				let originalContents = nodes[i].textElement.innerHTML
 				newRange.setStart(nodes[i], 0)
 				this.setRange(newRange)
-				window.getSelection().getRangeAt(0).deleteContents()
+				window
+					.getSelection()
+					.getRangeAt(0)
+					.deleteContents()
 				newRange.setStart(nodes[i], 0)
 				newRange.setEnd(nodes[i], 0)
 				this.setRange(newRange)
 				actions.push({
-					type         : "textChange",
-					targetNode   : nodes[i],
-					previousHTML : originalContents,
-					nextHTML     : nodes[i].textElement.innerHTML,
+					type: "textChange",
+					targetNode: nodes[i],
+					previousHTML: originalContents,
+					nextHTML: nodes[i].textElement.innerHTML,
 					previousRange: pvmRange,
-					nextRange    : newRange
+					nextRange: newRange
 				})
 			} else if (
 				!nodes[i].element.contains(jsRange.startContainer) &&
@@ -511,11 +456,11 @@ export default class SelectionManager {
 				let nextNode = nodes[i].nextSibling
 				NodeManager.removeChild(nodes[i])
 				actions.push({
-					type         : "remove",
-					targetNode   : nodes[i],
-					nextNode     : nextNode,
+					type: "remove",
+					targetNode: nodes[i],
+					nextNode: nextNode,
 					previousRange: pvmRange,
-					nextRange    : pvmRange
+					nextRange: pvmRange
 				})
 			}
 		}
@@ -538,7 +483,5 @@ export default class SelectionManager {
 			// 	EventManager.onPressEnter(ke, true)
 			// }, 0)
 		}
-
 	}
-
 }

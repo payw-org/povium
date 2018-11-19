@@ -1,7 +1,7 @@
-import {globalscript} from './globalscript'
-import {globalnav} from './globalnav'
-import {home} from './home'
-import {logout} from './logout'
-import {profile} from './profile/profile-home'
-import {login} from './login'
-import {register} from './register'
+import { globalscript } from "./globalscript"
+import { globalnav } from "./globalnav"
+import { home } from "./home"
+import { logout } from "./logout"
+import { profile } from "./profile/profile-home"
+import { login } from "./login"
+import { register } from "./register"

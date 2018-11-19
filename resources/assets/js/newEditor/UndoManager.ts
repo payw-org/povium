@@ -1,23 +1,14 @@
-import NodeManager from "./NodeManager"
-import EventManager from "./EventManager"
-import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession"
+import EventManager from "./EventManager"
 import { Action } from "./interfaces/Action"
+import NodeManager from "./NodeManager"
+import SelectionManager from "./SelectionManager"
 
 export default class UndoManager {
-
-	nodeMan                   : NodeManager
-	eventMan                  : EventManager
-	selMan                    : SelectionManager
-	editSession               : EditSession
 	private static actionStack: Array<Action | Array<Action>> = []
 	private static currentStep: number = -1
 
-	constructor() {
-
-		
-
-	}
+	constructor() {}
 
 	/**
 	 * Returns the latest undo action.
@@ -102,7 +93,10 @@ export default class UndoManager {
 		}
 
 		if (action.type === "merge") {
-			NodeManager.insertChildBefore(action.targetNodes[1], action.targetNodes[0].nextSibling)
+			NodeManager.insertChildBefore(
+				action.targetNodes[1],
+				action.targetNodes[0].nextSibling
+			)
 			action.targetNodes[0].textElement.innerHTML = action.debris
 		}
 
@@ -111,7 +105,11 @@ export default class UndoManager {
 		}
 
 		if (action.type === "transform") {
-			NodeManager.transformNode(action.targetNode, action.previousType, action.previousParentType)
+			NodeManager.transformNode(
+				action.targetNode,
+				action.previousType,
+				action.previousParentType
+			)
 		}
 
 		if (action.type === "textAlign") {
@@ -132,7 +130,10 @@ export default class UndoManager {
 
 		if (action.type === "split") {
 			action.targetNodes[0].textElement.innerHTML = action.debris
-			NodeManager.insertChildBefore(action.targetNodes[1], action.targetNodes[0].nextSibling)
+			NodeManager.insertChildBefore(
+				action.targetNodes[1],
+				action.targetNodes[0].nextSibling
+			)
 		}
 
 		if (action.type === "merge") {
@@ -144,7 +145,11 @@ export default class UndoManager {
 		}
 
 		if (action.type === "transform") {
-			NodeManager.transformNode(action.targetNode, action.nextType, action.nextParentType)
+			NodeManager.transformNode(
+				action.targetNode,
+				action.nextType,
+				action.nextParentType
+			)
 		}
 
 		if (action.type === "textAlign") {
@@ -153,5 +158,4 @@ export default class UndoManager {
 
 		SelectionManager.setRange(action.nextRange)
 	}
-
 }

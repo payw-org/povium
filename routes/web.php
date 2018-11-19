@@ -16,7 +16,7 @@ use Povium\Base\Http\Exception\GoneHttpException;
  */
 $collection->get(
 	'/',
- 	function () use ($factory, $blade) {
+	function () use ($factory, $blade) {
 		$home_view_middleware = $factory->createInstance(
 			'\Povium\Route\Middleware\Home\HomeViewMiddleware'
 		);
@@ -223,7 +223,7 @@ $collection->get(
  */
 $collection->get(
 	'/@{readable_id:.+}',
- 	function ($readable_id) use ($factory, $blade) {
+	function ($readable_id) use ($factory, $blade) {
 		$profile_view_middleware = $factory->createInstance(
 			'\Povium\Route\Middleware\User\ProfileViewMiddleware'
 		);

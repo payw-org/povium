@@ -1,44 +1,49 @@
 class GlobalNavView {
 	constructor() {
 		// Elements
-		this.gnDOM = document.querySelector('#globalnav')
-		this.gnInputDOM = document.querySelector('#gn-search-input')
+		this.gnDOM = document.querySelector("#globalnav")
+		this.gnInputDOM = document.querySelector("#gn-search-input")
 
 		// Attatch event listeners
-		window.addEventListener('mousedown', e => this.handleWindowClickEvent(e))
-		window.addEventListener('touchstart', e => this.handleWindowClickEvent(e))
+		window.addEventListener("mousedown", e => this.handleWindowClickEvent(e))
+		window.addEventListener("touchstart", e => this.handleWindowClickEvent(e))
 
-		document.querySelector('#globalnav .magnifier').addEventListener('click', (e) => {
-			this.handleMagnifierEvent()
-		})
+		document
+			.querySelector("#globalnav .magnifier")
+			.addEventListener("click", e => {
+				this.handleMagnifierEvent()
+			})
 
-		document.querySelector('#gn-search-input').addEventListener('keyup', (e) => {
+		document.querySelector("#gn-search-input").addEventListener("keyup", e => {
 			if (e.which === 27) {
 				this.foldSearchInput()
 			}
 		})
 
-		document.querySelector('#globalnav .mobile-btn').addEventListener('click', function () {
-			document.querySelector('#globalnav').classList.toggle('mobile-menu-active')
-		})
-
+		document
+			.querySelector("#globalnav .mobile-btn")
+			.addEventListener("click", function() {
+				document
+					.querySelector("#globalnav")
+					.classList.toggle("mobile-menu-active")
+			})
 	}
 
 	// Methods
 	expandSearchInput() {
-		this.gnDOM.classList.add('search-active')
+		this.gnDOM.classList.add("search-active")
 		this.gnInputDOM.focus()
 	}
 
 	foldSearchInput() {
-		this.gnDOM.classList.remove('search-active')
+		this.gnDOM.classList.remove("search-active")
 		this.gnInputDOM.blur()
 	}
 
 	// Determine which action should be run
 	// when click magnifier icon in global navigation
 	handleMagnifierEvent() {
-		if (this.gnDOM.classList.contains('search-active')) {
+		if (this.gnDOM.classList.contains("search-active")) {
 			// Start searching (nothing happens)
 		} else {
 			this.expandSearchInput()
@@ -46,8 +51,9 @@ class GlobalNavView {
 	}
 
 	handleWindowClickEvent(e) {
-		if (!document.querySelector('#gn-search-ui').contains(e.target) &&
-		    !document.querySelector('#gn-search-result-view').contains(e.target)
+		if (
+			!document.querySelector("#gn-search-ui").contains(e.target) &&
+			!document.querySelector("#gn-search-result-view").contains(e.target)
 		) {
 			this.foldSearchInput()
 		}
@@ -61,7 +67,7 @@ class GlobalNavController {
 }
 
 window.onload = function() {
-	if (document.querySelector('#globalnav')) {
+	if (document.querySelector("#globalnav")) {
 		var globalNavController = new GlobalNavController()
 	}
 }
