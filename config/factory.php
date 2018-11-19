@@ -1,6 +1,6 @@
 <?php
 /**
-* Mapping class type to responsible factory
+* Mapping class type to responsible factory.
 * $key : Fully qualified class name
 * $value : Fully qualified factory name
 *
@@ -36,6 +36,10 @@ return [
 	'\Povium\Route\Middleware\Authentication\LogoutMiddleware' => '\Povium\Route\Middleware\Factory\LogoutMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationMiddlewareFactory',
 	'\Povium\Route\Middleware\Setting\EmailActivationRequestMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationRequestMiddlewareFactory',
+	'\Povium\Route\Middleware\Home\HomeViewMiddleware' => '\Povium\Route\Middleware\Factory\HomeViewMiddlewareFactory',
+	'\Povium\Route\Middleware\Authentication\LoginViewMiddleware' => '\Povium\Route\Middleware\Factory\LoginViewMiddlewareFactory',
+	'\Povium\Route\Middleware\Authentication\RegisterViewMiddleware' => '\Povium\Route\Middleware\Factory\RegisterViewMiddlewareFactory',
+	'\Povium\Route\Middleware\User\ProfileViewMiddleware' => '\Povium\Route\Middleware\Factory\ProfileViewMiddlewareFactory',
 
 	'\Povium\Security\Authentication\Authenticator' => '\Povium\Security\Authentication\Factory\AuthenticatorFactory',
 	'\Povium\Security\Authentication\Controller\LoginController' => '\Povium\Security\Authentication\Factory\LoginControllerFactory',

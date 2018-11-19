@@ -97,6 +97,10 @@ class RegisterMiddleware extends AbstractAjaxMiddleware implements RefererChecke
 	 */
 	public function checkReferer()
 	{
+		if (!isset($_SERVER['HTTP_REFERER'])) {
+			return false;
+		}
+
 		$referer_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
 
 		if (!isset($referer_query)) {

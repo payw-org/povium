@@ -12,91 +12,43 @@ use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
 
 /**
- * Show home page.
+ * Show home view.
  */
 $collection->get(
 	'/',
- 	function () use ($blade) {
-		$config = array(
-			"posts" => [
-				[
-					"img" => "macbookpro2018",
-					"title" => "2018년 맥북프로는 너무 뜨거워",
-					"editor" => "앤소니"
-				],
-				[
-					"img" => "spongebob",
-					"title" => "내가 귀여운 이유",
-					"editor" => "최홍ZUNE"
-				],
-				[
-					"img" => "programmer",
-					"title" => "프로그래머처럼 생각해야 한다",
-					"editor" => "황장병치훈"
-				],
-				[
-					"img" => "1",
-					"title" => "장어덮밥을 먹을 수 없게 된다면?",
-					"editor" => "박진둘"
-				],
-				[
-					"img" => "2",
-					"title" => "'동네다움'을 지킬 수 있는 방법",
-					"editor" => "장준끼"
-				],
-				[
-					"img" => "3",
-					"title" => "여행하며 '현금 관리'를 잘 하는 방법",
-					"editor" => "장햄"
-				],
-				[
-					"img" => "4",
-					"title" => "필름카메라의 번거러움이 좋다",
-					"editor" => "청춘나지훈"
-				],
-				[
-					"img" => "5",
-					"title" => "가짜 어른 구별하는 힘을 기르는 방법",
-					"editor" => "조경상병훈"
-				],
-				[
-					"img" => "6",
-					"title" => "사진을 시작한 사람들이 앓는다는 '장비병'",
-					"editor" => "쿠형"
-				]
-			]
+ 	function () use ($factory, $blade) {
+		$home_view_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Home\HomeViewMiddleware'
 		);
-		
-		echo $blade->view()->make('sections.home', $config)->render();
+		$home_view_middleware->verifyViewRequest();
+
+		echo $blade->view()->make(
+			'sections.home',
+			$home_view_middleware->getViewConfig()
+		)->render();
 	}
 );
 
 /**
- * Show login page.
+ * Show login view.
  */
 $collection->get(
 	'/login',
- 	function () use ($router, $blade) {
+ 	function () use ($router, $factory, $blade) {
 		if ($GLOBALS['authority'] >= Authorizer::USER) {
 			$router->redirect('/');
 		}
 
-		//	If referer is register page
-		if (
-			isset($_SERVER['HTTP_REFERER']) &&
- 			'/register' == parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)
-		) {
-			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
-			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+		$login_view_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\LoginViewMiddleware',
+			$router
+		);
+		$login_view_middleware->verifyViewRequest();
 
-			if (isset($prev_query) && !isset($curr_query)) {
-				//	Concatenate referer's query to current uri.
-				//	Then redirect.
-				$router->redirect('/login' . '?' . $prev_query);
-			}
-		}
-
-		echo $blade->view()->make('sections.login')->render();
+		echo $blade->view()->make(
+			'sections.login',
+			$login_view_middleware->getViewConfig()
+		)->render();
 	}
 );
 
@@ -119,30 +71,25 @@ $collection->post(
 );
 
 /**
- * Show register page.
+ * Show register view.
  */
 $collection->get(
 	'/register',
- 	function () use ($router, $blade) {
+ 	function () use ($router, $factory, $blade) {
 		if ($GLOBALS['authority'] >= Authorizer::USER) {
 			$router->redirect('/');
 		}
 
-		//	If referer is login page
-		if (
-			isset($_SERVER['HTTP_REFERER']) &&
- 			'/login' == parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH)
-		) {
-			$prev_query = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_QUERY);
-			$curr_query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-			if (isset($prev_query) && !isset($curr_query)) {
-				//	Concatenate referer's query to current uri.
-				//	Then redirect.
-				$router->redirect('/register' . '?' . $prev_query);
-			}
-		}
+		$register_view_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\RegisterViewMiddleware',
+			$router
+		);
+		$register_view_middleware->verifyViewRequest();
 
-		echo $blade->view()->make('sections.register')->render();
+		echo $blade->view()->make(
+			'sections.register',
+			$register_view_middleware->getViewConfig()
+		)->render();
 	}
 );
 
@@ -223,7 +170,7 @@ $collection->get(
 );
 
 /**
- * (Test) Show email setting page.
+ * (Temp) Show email setting view.
  */
 $collection->get(
 	'/me/settings/email',
@@ -232,12 +179,12 @@ $collection->get(
 			$router->redirect('/register', true);
 		}
 
-		//	Render page
+		//	@TODO: Render view
 	}
 );
 
 /**
- * (Test) Request email activation.
+ * (Temp) Request email activation.
  *
  * "Get" is Test mode. Original is "post".
  */
@@ -258,7 +205,7 @@ $collection->get(
 );
 
 /**
- * (Test) Show editor page.
+ * (Temp) Show editor view.
  */
 $collection->get(
 	'/editor',
@@ -268,7 +215,7 @@ $collection->get(
 );
 
 /**
- * (Test) Show profile page.
+ * (Temp) Show profile view.
  *
  * @param string $readable_id
  *
@@ -276,18 +223,22 @@ $collection->get(
  */
 $collection->get(
 	'/@{readable_id:.+}',
- 	function ($readable_id) use ($blade) {
-		$readable_id = strtolower($readable_id);
+ 	function ($readable_id) use ($factory, $blade) {
+		$profile_view_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\User\ProfileViewMiddleware'
+		);
+		$profile_view_middleware->verifyViewRequest($readable_id);
 
-		require($_SERVER['DOCUMENT_ROOT'] . '/../app/Route/Middleware/User/userProfile.php');
-
-		echo $blade->view()->make('sections.profile-home')->render();
+		echo $blade->view()->make(
+			'sections.profile-home',
+			$profile_view_middleware->getViewConfig()
+		)->render();
 	},
-	'user_profile'
+	'profile'
 );
 
 /**
- * (Test) Show post page.
+ * (Temp) Show post view.
  */
 $collection->get(
 	'/@{readable_id:.+}/{post_title:.+}-{post_id:\w+}',
@@ -306,7 +257,7 @@ $collection->get(
 );
 
 /**
- * Show http status page.
+ * Show http status view.
  *
  * User cannot directly access this route.
  * DO NOT GENERATE URI FOR THIS ROUTE.

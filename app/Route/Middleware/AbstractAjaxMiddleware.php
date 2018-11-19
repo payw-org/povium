@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract form of middleware which communicating with ajax.
+ * Abstract form for middleware which communicating with ajax.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
