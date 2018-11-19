@@ -230,7 +230,7 @@ $collection->get(
 		$profile_view_middleware->verifyViewRequest($readable_id);
 
 		echo $blade->view()->make(
-			'sections.profile-home',
+			'sections.profile',
 			$profile_view_middleware->getViewConfig()
 		)->render();
 	},
