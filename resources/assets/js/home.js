@@ -1,6 +1,17 @@
+import {
+	TweenMax,
+	Power0,
+	Power1,
+	Power2,
+	Power3,
+	Power4,
+	Expo
+} from "gsap/TweenMax"
+
 class HomeView {
 	constructor() {
 		// DOM elements
+		this.postView = document.querySelector("#popular .post-view")
 		this.popPostContainer = document.querySelector("#popular .post-container")
 		this.popPostWrappers = document.querySelectorAll("#popular .post-wrapper")
 
@@ -16,11 +27,17 @@ class HomeView {
 		this.lockVerticalScrolling = false
 		this.lockHorizontalScrolling = false
 
-		// Initializing post view
-		// TweenMax.to(".guided-view", 3, {
-		// 	x:0,
-		// 	ease: Power4.easeInOut
-		// })
+		window.addEventListener("resize", e => {
+			this.stopAutoFlick()
+			let width = document
+				.querySelector("#popular .post-container")
+				.getBoundingClientRect().width
+			let index = this.popPostContainer.getAttribute("data-post-pos")
+			TweenMax.to(this.popPostContainer, 0, {
+				ease: Power0,
+				transform: "translateX(" + -(width * index) + "px)"
+			})
+		})
 
 		// setTimeout(() => {
 		this.autoFlick()
@@ -63,12 +80,20 @@ class HomeView {
 				) {
 					this.distX = this.distX / 5
 				}
-				this.popPostContainer.style.transform =
-					"translate3d(calc(" +
-					-Number(this.popPostContainer.getAttribute("data-post-pos")) * 100 +
-					"% + " +
-					this.distX +
-					"px),0,10px)"
+				TweenMax.to(this.popPostContainer, 0.7, {
+					transform:
+						"translate3d(calc(" +
+						-Number(this.popPostContainer.getAttribute("data-post-pos")) * 100 +
+						"% + " +
+						this.distX +
+						"px),0,10px)"
+				})
+				// this.popPostContainer.style.transform =
+				// 	"translate3d(calc(" +
+				// 	-Number(this.popPostContainer.getAttribute("data-post-pos")) * 100 +
+				// 	"% + " +
+				// 	this.distX +
+				// 	"px),0,10px)"
 			} else if (mi >= 2) {
 				this.lockHorizontalScrolling = true
 			}
@@ -85,7 +110,6 @@ class HomeView {
 				} else if (this.distX > 0 && postPos > 0) {
 					postPos -= 1
 				}
-				this.popPostContainer.classList.add("ease")
 				this.popPostContainer.classList.remove("moving")
 				this.flickPostTo(postPos)
 				setTimeout(() => {
@@ -106,11 +130,11 @@ class HomeView {
 		// Mouse pointer events on popular posts
 		this.mouseFlag = 0
 
-		this.popPostContainer.addEventListener("mouseover", e => {
+		this.postView.addEventListener("mouseover", e => {
 			this.stopAutoFlick()
 		})
 
-		this.popPostContainer.addEventListener("mouseout", e => {
+		this.postView.addEventListener("mouseout", e => {
 			this.autoFlick()
 		})
 
@@ -125,6 +149,14 @@ class HomeView {
 			this.distX = 0
 			this.mouseFlag = true
 			this.orgPageX = e.pageX
+			let style = window.getComputedStyle(this.popPostContainer)
+			let matrix = new WebKitCSSMatrix(style.webkitTransform)
+			this.orgM41 = matrix.m41
+
+			TweenMax.to(this.popPostContainer, 0, {
+				ease: Power0,
+				transform: "translateX(" + (this.orgM41 + this.distX) + "px" + ")"
+			})
 		})
 
 		// Fire event when mouse move on popular posts
@@ -142,12 +174,12 @@ class HomeView {
 			) {
 				this.distX = this.distX / 5
 			}
-			this.popPostContainer.style.transform =
-				"translate3d(calc(" +
-				-Number(this.popPostContainer.getAttribute("data-post-pos")) * 100 +
-				"% + " +
-				this.distX +
-				"px),0,10px)"
+			// this.popPostContainer.style.transform =
+			// 	"translateX(" + (this.orgM41 + this.distX) + "px" + ")"
+			TweenMax.to(this.popPostContainer, 0, {
+				ease: Power0,
+				transform: "translateX(" + (this.orgM41 + this.distX) + "px" + ")"
+			})
 		})
 
 		// Fire event when mouse up on popular posts
@@ -160,15 +192,17 @@ class HomeView {
 			} else if (this.distX > 0 && postPos > 0) {
 				postPos -= 1
 			}
-			this.popPostContainer.classList.add("ease")
 			this.popPostContainer.classList.remove("moving")
-			this.flickPostTo(postPos)
+			this.flickPostTo(postPos, "linear")
 			setTimeout(() => {
 				this.autoFlick()
 			}, 300)
 
 			if (!this.isDragged && e.which === 1) {
-				e.target.querySelector(".post-link").click()
+				e.target
+					.closest(".post")
+					.querySelector(".post-link")
+					.click()
 			} else {
 				this.isDragged = false
 			}
@@ -186,14 +220,28 @@ class HomeView {
 		// console.log('Initialize home UI')
 	}
 
-	flickPostTo(index) {
-		this.popPostContainer.style.transform =
-			"translate3d(" + -(index * 100) + "%,0,10px)"
+	flickPostTo(index, ease) {
+		let width = document
+			.querySelector("#popular .post-container")
+			.getBoundingClientRect().width
+		if (ease === "linear") {
+			TweenMax.to(this.popPostContainer, 0.6, {
+				ease: Power4.easeOut,
+				transform: "translateX(" + -(index * width) + "px)"
+			})
+		} else {
+			TweenMax.to(this.popPostContainer, 1.2, {
+				ease: Power4.easeInOut,
+				transform: "translateX(" + -(index * width) + "px)"
+			})
+		}
+
+		// this.popPostContainer.style.transform =
+		// 	"translate3d(" + -(index * 100) + "%,0,10px)"
 		this.popPostContainer.setAttribute("data-post-pos", index)
 	}
 
 	autoFlick() {
-		this.popPostContainer.classList.remove("ease")
 		if (this.isAutoFlicking) {
 			return
 		} else {
