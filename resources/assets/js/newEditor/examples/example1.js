@@ -39,6 +39,12 @@ export const Example = {
 			]
 		},
 		{
+			type: "image",
+			size: "",
+			url: "/assets/images/post-test-img-4.jpg",
+			caption: null
+		},
+		{
 			type: "p",
 			data: [
 				{
