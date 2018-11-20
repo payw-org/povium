@@ -18,6 +18,10 @@ export default class TextInput {
 				this.wrapperElement.classList.remove("fixed")
 			}
 		})
+
+        this.target.addEventListener("input", e => {
+            this.wrapperElement.classList.add("focused")
+        })
 	}
 
 	showMsg(message: string) {
