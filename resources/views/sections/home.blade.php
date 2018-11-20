@@ -8,7 +8,8 @@
 	<main id="home-main">
 
 		<section id="popular" class="post-section">
-
+			<button class="scroll-btn left"></button>
+			<button class="scroll-btn right"></button>
 			<div class="post-view">
 				<div class="guided-view">
 					<ul class="post-container" data-post-pos="0">
