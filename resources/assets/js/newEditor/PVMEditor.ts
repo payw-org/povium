@@ -39,7 +39,7 @@ export default class PVMEditor {
 
 			// if (AT.textOnly.includes(block.type)) {
 
-			if (PostData.isTextBlock(block)) {
+			if (PostData.isTextOnlyBlock(block)) {
 				let html = ""
 
 				for (let j = 0; j < block.data.length; j++) {
@@ -69,22 +69,24 @@ export default class PVMEditor {
 			} else if (PostData.isImageBlock(block)) {
 				let html = ""
 
-				for (let j = 0; j < block.caption.data.length; j++) {
-					let text = block.caption.data[j].data
-					let htmlPart = text
-					let style = block.caption.data[j].style
+				if (block.caption) {
+					for (let j = 0; j < block.caption.data.length; j++) {
+						let text = block.caption.data[j].data
+						let htmlPart = text
+						let style = block.caption.data[j].style
 
-					if (style === "bold") {
-						htmlPart = "<b>" + text + "</b>"
-					} else if (style === "italic") {
-						htmlPart = "<i>" + text + "</i>"
-					} else if (style === "strikethrough") {
-						htmlPart = "<strikethrough>" + text + "</strikethrough>"
-					} else if (style === "underline") {
-						htmlPart = "<u>" + text + "</u>"
+						if (style === "bold") {
+							htmlPart = "<b>" + text + "</b>"
+						} else if (style === "italic") {
+							htmlPart = "<i>" + text + "</i>"
+						} else if (style === "strikethrough") {
+							htmlPart = "<strikethrough>" + text + "</strikethrough>"
+						} else if (style === "underline") {
+							htmlPart = "<u>" + text + "</u>"
+						}
+
+						html += htmlPart
 					}
-
-					html += htmlPart
 				}
 
 				let node = NodeManager.createNode(block.type, {
