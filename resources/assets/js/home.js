@@ -11,9 +11,15 @@ import {
 class HomeView {
 	constructor() {
 		// DOM elements
+		this.popularSect = document.querySelector("#popular")
 		this.postView = document.querySelector("#popular .post-view")
 		this.popPostContainer = document.querySelector("#popular .post-container")
 		this.popPostWrappers = document.querySelectorAll("#popular .post-wrapper")
+
+		this.currentPostIndex = 1
+		this.maxPostCount = this.postView.querySelectorAll(".post").length
+
+		this.setSizeInfo()
 
 		// Class variables
 		this.orgPageX = 0
@@ -29,13 +35,20 @@ class HomeView {
 
 		window.addEventListener("resize", e => {
 			this.stopAutoFlick()
+			this.setSizeInfo()
 			let width = document
 				.querySelector("#popular .post-container")
 				.getBoundingClientRect().width
-			let index = this.popPostContainer.getAttribute("data-post-pos")
+			// let index = this.popPostContainer.getAttribute("data-post-pos")
+			let index = this.currentPostIndex
+			if (index > this.maxPostCount - (this.visiblePostCount - 1)) {
+				index =
+					index - (this.visiblePostCount - 1 - (this.maxPostCount - index))
+			}
+			this.currentPostIndex = index
 			TweenMax.to(this.popPostContainer, 0, {
 				ease: Power0,
-				transform: "translateX(" + -(width * index) + "px)"
+				transform: "translateX(" + -(width * (index - 1)) + "px)"
 			})
 		})
 
@@ -72,18 +85,15 @@ class HomeView {
 				e.preventDefault()
 
 				if (
-					(Number(this.popPostContainer.getAttribute("data-post-pos")) === 0 &&
-						this.distX > 0) ||
-					(Number(this.popPostContainer.getAttribute("data-post-pos")) ===
-						this.postMax - 1 &&
-						this.distX < 0)
+					(this.currentPostIndex === 0 && this.distX > 0) ||
+					(this.currentPostIndex === this.postMax - 1 && this.distX < 0)
 				) {
 					this.distX = this.distX / 5
 				}
 				TweenMax.to(this.popPostContainer, 0.7, {
 					transform:
 						"translate3d(calc(" +
-						-Number(this.popPostContainer.getAttribute("data-post-pos")) * 100 +
+						-this.currentPostIndex * 100 +
 						"% + " +
 						this.distX +
 						"px),0,10px)"
@@ -102,9 +112,7 @@ class HomeView {
 		this.popPostContainer.addEventListener("touchend", e => {
 			if (this.lockHorizontalScrolling) {
 			} else {
-				let postPos = Number(
-					this.popPostContainer.getAttribute("data-post-pos")
-				)
+				let postPos = this.currentPostIndex
 				if (this.distX < 0 && postPos < this.postMax - 1) {
 					postPos += 1
 				} else if (this.distX > 0 && postPos > 0) {
@@ -130,11 +138,11 @@ class HomeView {
 		// Mouse pointer events on popular posts
 		this.mouseFlag = 0
 
-		this.postView.addEventListener("mouseover", e => {
+		this.popularSect.addEventListener("mouseover", e => {
 			this.stopAutoFlick()
 		})
 
-		this.postView.addEventListener("mouseout", e => {
+		this.popularSect.addEventListener("mouseout", e => {
 			this.autoFlick()
 		})
 
@@ -166,10 +174,9 @@ class HomeView {
 			this.isDragged = true
 			this.distX = e.pageX - this.orgPageX
 			if (
-				(Number(this.popPostContainer.getAttribute("data-post-pos")) === 0 &&
-					this.distX > 0) ||
-				(Number(this.popPostContainer.getAttribute("data-post-pos")) ===
-					this.postMax - 1 &&
+				(this.currentPostIndex === 1 && this.distX > 0) ||
+				((this.currentPostIndex >=
+					this.maxPostCount - this.visiblePostCount + 1) &&
 					this.distX < 0)
 			) {
 				this.distX = this.distX / 5
@@ -186,10 +193,10 @@ class HomeView {
 		window.addEventListener("mouseup", e => {
 			if (!this.mouseFlag) return
 			this.mouseFlag = 0
-			let postPos = Number(this.popPostContainer.getAttribute("data-post-pos"))
-			if (this.distX < 0 && postPos < this.postMax - 1) {
+			let postPos = this.currentPostIndex
+			if (this.distX < 0 && postPos < this.postMax) {
 				postPos += 1
-			} else if (this.distX > 0 && postPos > 0) {
+			} else if (this.distX > 0 && postPos > 1) {
 				postPos -= 1
 			}
 			this.popPostContainer.classList.remove("moving")
@@ -198,7 +205,12 @@ class HomeView {
 				this.autoFlick()
 			}, 300)
 
-			if (!this.isDragged && e.which === 1) {
+			if (
+				e.target.closest &&
+				e.target.closest(".post") &&
+				!this.isDragged &&
+				e.which === 1
+			) {
 				e.target
 					.closest(".post")
 					.querySelector(".post-link")
@@ -208,10 +220,24 @@ class HomeView {
 			}
 		})
 
-		// this.popPostContainer.addEventListener('mouseover', (e) => {
-		// 	console.log('mouseover on popular posts')
-		//
-		// })
+		// Popular scroll buttons
+		this.popularSect
+			.querySelector(".scroll-btn.left")
+			.addEventListener("click", e => {
+				console.log("click")
+				this.flickPostTo(
+					this.currentPostIndex - this.visiblePostCount,
+					"linear"
+				)
+			})
+		this.popularSect
+			.querySelector(".scroll-btn.right", "linear")
+			.addEventListener("click", e => {
+				this.flickPostTo(
+					this.currentPostIndex + this.visiblePostCount,
+					"linear"
+				)
+			})
 	}
 
 	// Methods
@@ -220,25 +246,55 @@ class HomeView {
 		// console.log('Initialize home UI')
 	}
 
-	flickPostTo(index, ease) {
-		let width = document
+	setSizeInfo() {
+		let postWidth = document
 			.querySelector("#popular .post-container")
 			.getBoundingClientRect().width
+
+		this.remainPostCount = this.maxPostCount - this.currentPostIndex
+		let screenWidth = window.innerWidth
+		this.visiblePostCount = parseInt((screenWidth - 20) / postWidth)
+	}
+
+	flickPostTo(index, ease) {
+		let postWidth = document
+			.querySelector("#popular .post-container")
+			.getBoundingClientRect().width
+
+		let remainPostCount = this.maxPostCount - index
+		let screenWidth = window.innerWidth
+
+		let visiblePostCount = parseInt(screenWidth / postWidth)
+
+		if (index > this.maxPostCount - (this.visiblePostCount - 1)) {
+			if (index > this.maxPostCount) {
+				index = 1
+			} else {
+				index =
+					index - (this.visiblePostCount - 1 - (this.maxPostCount - index))
+			}
+		} else if (index < 1) {
+			if (this.currentPostIndex === 1) {
+				index = this.maxPostCount - this.visiblePostCount + 1
+			} else {
+				index = 1
+			}
+		}
+
+		// Scroll animation
 		if (ease === "linear") {
-			TweenMax.to(this.popPostContainer, 0.6, {
+			TweenMax.to(this.popPostContainer, 0.5, {
 				ease: Power4.easeOut,
-				transform: "translateX(" + -(index * width) + "px)"
+				transform: "translateX(" + -((index - 1) * postWidth) + "px)"
 			})
 		} else {
-			TweenMax.to(this.popPostContainer, 1.2, {
+			TweenMax.to(this.popPostContainer, 1.4, {
 				ease: Power4.easeInOut,
-				transform: "translateX(" + -(index * width) + "px)"
+				transform: "translateX(" + -((index - 1) * postWidth) + "px)"
 			})
 		}
 
-		// this.popPostContainer.style.transform =
-		// 	"translate3d(" + -(index * 100) + "%,0,10px)"
-		this.popPostContainer.setAttribute("data-post-pos", index)
+		this.currentPostIndex = index
 	}
 
 	autoFlick() {
@@ -247,14 +303,9 @@ class HomeView {
 		} else {
 			this.isAutoFlicking = 1
 		}
-		let start = Number(this.popPostContainer.getAttribute("data-post-pos"))
 		this.autoFlickInterval = setInterval(() => {
-			start += 1
-			if (start === this.postMax) {
-				start = 0
-			}
-			this.flickPostTo(start)
-		}, 3000)
+			this.flickPostTo(this.currentPostIndex + this.visiblePostCount)
+		}, 4000)
 	}
 
 	// For testing
