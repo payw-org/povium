@@ -32,8 +32,8 @@ export interface Frame {
 	contents: Block[]
 }
 
-export function isTextBlock(block: Block): block is TextBlock {
-	if (AT.textOnly.includes((<TextBlock>block).type)) {
+export function isTextOnlyBlock(block: Block): block is TextBlock {
+	if (AT.textOnly.includes((<TextBlock> block).type)) {
 		return true
 	}
 }
