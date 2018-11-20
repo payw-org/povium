@@ -1,6 +1,6 @@
 <?php
 /**
-* Control login.
+* Controller for login.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop

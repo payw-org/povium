@@ -124,7 +124,7 @@ $collection->put(
 		$registration_feedback_middleware = $factory->createInstance(
 			'\Povium\Route\Middleware\Authentication\RegistrationFeedbackMiddleware'
 		);
-		$registration_feedback_middleware->validateRegistrationForm();
+		$registration_feedback_middleware->giveFeedback();
 	}
 );
 
@@ -210,7 +210,9 @@ $collection->get(
 $collection->get(
 	'/editor',
  	function () use ($blade) {
-		echo $blade->view()->make('sections.pvmeditor')->render();
+		echo $blade->view()->make(
+			'sections.pvmeditor'
+		)->render();
 	}
 );
 

@@ -1,6 +1,6 @@
 <?php
 /**
-* Control add new email.
+* Controller for adding new email.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop

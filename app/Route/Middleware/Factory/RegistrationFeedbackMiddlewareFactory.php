@@ -20,14 +20,12 @@ class RegistrationFeedbackMiddlewareFactory extends AbstractChildFactory
     {
         $master_factory = new MasterFactory();
 
-        $readable_id_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
-        $name_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\NameValidator');
-        $password_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+        $registration_form_validation_controller = $master_factory->createInstance(
+        	'\Povium\Security\Authentication\Controller\RegistrationFormValidationController'
+		);
 
         $this->args = array(
-            $readable_id_validator,
-            $name_validator,
-            $password_validator
+            $registration_form_validation_controller
         );
     }
 }

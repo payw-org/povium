@@ -48,6 +48,7 @@ return [
 	'\Povium\Security\Authentication\Controller\RegisterController' => '\Povium\Security\Authentication\Factory\RegisterControllerFactory',
 	'\Povium\Security\Authentication\Controller\EmailAddController' => '\Povium\Security\Authentication\Factory\EmailAddControllerFactory',
 	'\Povium\Security\Authentication\Controller\EmailActivationController' => '\Povium\Security\Authentication\Factory\EmailActivationControllerFactory',
+	'\Povium\Security\Authentication\Controller\RegistrationFormValidationController' => '\Povium\Security\Authentication\Factory\RegistrationFormValidationControllerFactory',
 
     '\Povium\Security\Authorization\Authorizer' => '\Povium\Security\Authorization\Factory\AuthorizerFactory',
 

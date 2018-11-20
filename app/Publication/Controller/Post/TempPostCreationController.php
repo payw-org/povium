@@ -55,7 +55,6 @@ class TempPostCreationController
 
 	public function __construct()
 	{
-
 	}
 
 	/**
@@ -91,28 +90,22 @@ class TempPostCreationController
 
 		/* Validate temp post components */
 
-		//	If title is set
-		if (!empty($title)) {
-			$validate_title = $this->titleValidator->validate($title);
+		$validate_title = $this->titleValidator->validate($title);
 
-			//	If invalid title
-			if ($validate_title['err']) {
-				$return['msg'] = $validate_title['msg'];
+		//	If invalid title
+		if ($validate_title['err']) {
+			$return['msg'] = $validate_title['msg'];
 
-				return $return;
-			}
+			return $return;
 		}
 
-		//	If body is set
-		if (!empty($body)) {
-			$validate_body = $this->bodyValidator->validate($body);
+		$validate_body = $this->bodyValidator->validate($body);
 
-			//	If invalid body
-			if ($validate_body['err']) {
-				$return['msg'] = $validate_body['msg'];
+		//	If invalid body
+		if ($validate_body['err']) {
+			$return['msg'] = $validate_body['msg'];
 
-				return $return;
-			}
+			return $return;
 		}
 
 		$validate_contents = $this->contentsValidator->validate($contents);

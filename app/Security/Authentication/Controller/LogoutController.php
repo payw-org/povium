@@ -1,6 +1,6 @@
 <?php
 /**
-* Control logout.
+* Controller for logout.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop

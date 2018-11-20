@@ -1,6 +1,6 @@
 <?php
 /**
-* Control register.
+* Controller for register.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop

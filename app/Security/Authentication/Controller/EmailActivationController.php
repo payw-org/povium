@@ -1,6 +1,6 @@
 <?php
 /**
-* Control email activation.
+* Controller for email activation.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop
