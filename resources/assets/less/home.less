@@ -9,11 +9,52 @@
 		margin-top: 2rem;
 		overflow: hidden;
 
+		&:hover .scroll-btn {
+			opacity: 0.7;
+			visibility: visible;
+		}
+
+		.scroll-btn {
+			cursor: pointer;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 3.4rem;
+			height: 3.4rem;
+			position: absolute;
+			opacity: 0.7;
+			border-radius: 50%;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity .2s ease, visibility .2s ease, background-color .2s ease, filter .2s ease;
+			background-repeat: no-repeat;
+			background-size: 100%;
+			background-position: center;
+
+			&:active {
+				filter: brightness(1.3);
+			}
+
+			&:hover {
+				background-color: @white-blue;
+				opacity: 1;
+			}
+
+			&.left {
+				background-image: url("/assets/images/povium/home/left.svg");
+				left: 2rem;
+				.responsive({left: 1rem},{});
+			}
+			&.right {
+				background-image: url("/assets/images/povium/home/right.svg");
+				right: 2rem;
+				.responsive({right: 1rem},{});
+			}
+		}
+
 		.post-view {
 			width: 100%;
-			// height: 40vw;
-			// max-height: 25rem;
-			// min-height: 200px;
 
 			.guided-view {
 				// height: 100%;
@@ -24,10 +65,21 @@
 				// transform: translateX(-700%);
 				will-change: transform;
 
-				@media only screen and (min-width: 1000px) {
+				@media only screen and (min-width: 768px) {
 					width: 40vw;
 					height: 20vw;
 					margin-left: 2rem;
+				}
+
+				@media only screen and (min-width: 1100px) {
+					width: 30vw;
+					height: 15vw;
+					margin-left: 2rem;
+				}
+
+				@media only screen and (min-width: 1541px) {
+					width: 23vw;
+					height: 11.5vw;
 				}
 
 				.post-container {
@@ -212,9 +264,7 @@
 		margin-top: 4rem;
 
 		.responsive({width: calc(100% - 2rem) ;}, {});
-		.on-mobile({
-			width: 100%;
-		});
+		.on-mobile({width: 100%;});
 
 		.subject {
 			.subject-title-wrapper {
@@ -267,9 +317,7 @@
 						margin: 0;
 					}
 
-					.on-mobile({
-						border-radius: 0;
-					});
+					.on-mobile({border-radius: 0;});
 
 					.thumb {
 						object-fit: cover;
@@ -293,9 +341,7 @@
 						background-color: rgba(0, 0, 0, 0.7);
 						// backdrop-filter: blur(25px);
 
-						.on-mobile({
-							padding: 2rem 1rem;
-						});
+						.on-mobile({padding: 2rem 1rem;});
 
 						.header {
 							display: flex;
@@ -351,9 +397,7 @@
 						margin: 1rem 0 0;
 					}
 
-					.on-mobile({
-						border-radius: 0;
-					});
+					.on-mobile({border-radius: 0;});
 
 					.item {
 						position: relative;
@@ -384,12 +428,9 @@
 							background-size: cover;
 							background-position: center;
 
-							.on-mobile({
-								min-width: 6rem;
-								max-width: 6rem;
-								height: 6rem;
-								align-self: center;
-							});
+							.on-mobile(
+								{min-width: 6rem; max-width: 6rem; height: 6rem; align-self: center;}
+							);
 						}
 
 						.contents {
