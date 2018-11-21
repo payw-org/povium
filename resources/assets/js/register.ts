@@ -58,7 +58,7 @@ if (document.querySelector("#register-main")) {
 		})
 	})
 
-	function checkValidation() {
+	function checkValidation(exceptEmpty: boolean = true) {
 		var inputData = {
 			readable_id: readableIDInputDOM.value,
 			name: nameInputDOM.value,
@@ -72,33 +72,29 @@ if (document.querySelector("#register-main")) {
 		})
 			.then(function(response) {
 				let data = response.data
-				try {
-					if (data !== "") {
-						if (data["readable_id_return"]["err"]) {
-							readableIDInputObj.showMsg(data["readable_id_return"]["msg"])
-						} else {
-							readableIDInputObj.hideMsg()
-						}
 
-						if (data["name_return"]["err"]) {
-							nameInputObj.showMsg(data["name_return"]["msg"])
-						} else {
-							nameInputObj.hideMsg()
-						}
-
-						if (data["password_return"]["err"]) {
-							passInputObj.showMsg(data["password_return"]["msg"])
-							passStrengthIndicator.hide()
-						} else {
-							passInputObj.hideMsg()
-							passStrengthIndicator.setStrength(
-								data["password_return"]["strength"]
-							)
-						}
-					}
-				} catch (error) {
-					console.log(error)
+				if (data["readable_id_return"]["err"]) {
+					readableIDInputObj.showMsg(data["readable_id_return"]["msg"], exceptEmpty)
+				} else {
+					readableIDInputObj.hideMsg()
 				}
+
+				if (data["name_return"]["err"]) {
+					nameInputObj.showMsg(data["name_return"]["msg"], exceptEmpty)
+				} else {
+					nameInputObj.hideMsg()
+				}
+
+				if (data["password_return"]["err"]) {
+					passInputObj.showMsg(data["password_return"]["msg"], exceptEmpty)
+					passStrengthIndicator.hide()
+				} else {
+					passInputObj.hideMsg()
+					passStrengthIndicator.setStrength(
+						data["password_return"]["strength"]
+					)
+				}
+
 			})
 			.catch(function(error) {
 				console.log(error)
@@ -124,6 +120,8 @@ if (document.querySelector("#register-main")) {
 				console.log(data)
 				if (data !== "") {
 					if (data["err"]) {
+						console.log("error")
+						checkValidation(false)
 						alert(data['msg'])
 					} else {
 						location.replace(data["redirect"])
