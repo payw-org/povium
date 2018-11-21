@@ -32,7 +32,7 @@
 			<div class="input-wrapper password">
 				<figure class="icon"></figure>
 				<label class="placeholder">암호</label>
-				<input class="password input-basic reg-input" type="password" autocomplete="off" spellcheck="false">
+				<input class="password input-basic reg-input" type="password" autocomplete="new-password" spellcheck="false">
 				<button class="view"></button>
 			</div>
 			<div class="strength hidden">
