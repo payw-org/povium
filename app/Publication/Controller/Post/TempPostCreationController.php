@@ -8,11 +8,6 @@
 
 namespace Povium\Publication\Controller\Post;
 
-use Povium\Publication\Validator\PostInfo\TitleValidator;
-use Povium\Publication\Validator\PostInfo\BodyValidator;
-use Povium\Publication\Validator\PostInfo\ContentsValidator;
-use Povium\Publication\Validator\PostInfo\SubtitleValidator;
-use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
 use Povium\Publication\Post\AutosavedPostManager;
 use Povium\Security\User\User;
 
@@ -21,40 +16,31 @@ class TempPostCreationController
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
-	 * @var TitleValidator
+	 * @var PostFormValidationController
 	 */
-	protected $titleValidator;
-
-	/**
-	 * @var BodyValidator
-	 */
-	protected $bodyValidator;
-
-	/**
-	 * @var ContentsValidator
-	 */
-	protected $contentsValidator;
-
-	/**
-	 * @var SubtitleValidator
-	 */
-	protected $subtitleValidator;
-
-	/**
-	 * @var ThumbnailValidator
-	 */
-	protected $thumbnailValidator;
+	protected $postFormValidationController;
 
 	/**
 	 * @var AutosavedPostManager
 	 */
 	protected $autosavedPostManager;
 
-	public function __construct()
-	{
+	/**
+	 * @param array 						$config
+	 * @param PostFormValidationController 	$post_form_validation_controller
+	 * @param AutosavedPostManager 			$autosaved_post_manager
+	 */
+	public function __construct(
+		array $config,
+		PostFormValidationController $post_form_validation_controller,
+		AutosavedPostManager $autosaved_post_manager
+	){
+		$this->config = $config;
+		$this->postFormValidationController = $post_form_validation_controller;
+		$this->autosavedPostManager = $autosaved_post_manager;
 	}
 
 	/**
@@ -70,9 +56,9 @@ class TempPostCreationController
 	 * @param  string|null	$subtitle
 	 * @param  string|null  $thumbnail
 	 *
-	 * @return array 	Error flag, message and id of the created record.
+	 * @return array 	Error flag, message and id of the created record
 	 */
-	public function createTempPost(
+	public function create(
 		$user,
 		$title,
 		$body,
@@ -88,70 +74,25 @@ class TempPostCreationController
 			'id' => null
 		);
 
-		/* Validate temp post components */
+		/* Validation check for fields of post */
 
-		$validate_title = $this->titleValidator->validate($title);
-
-		//	If invalid title
-		if ($validate_title['err']) {
-			$return['msg'] = $validate_title['msg'];
-
-			return $return;
-		}
-
-		$validate_body = $this->bodyValidator->validate($body);
-
-		//	If invalid body
-		if ($validate_body['err']) {
-			$return['msg'] = $validate_body['msg'];
+		if (!$this->postFormValidationController->isValid(
+			$user,
+			$title,
+			$body,
+			$contents,
+			$is_premium,
+			$series_id,
+			$subtitle,
+			$thumbnail,
+			true
+		)) {
+			$return['msg'] = $this->config['msg']['incorrect_form'];
 
 			return $return;
 		}
 
-		$validate_contents = $this->contentsValidator->validate($contents);
-
-		//	If invalid contents
-		if ($validate_contents['err']) {
-			$return['msg'] = $validate_contents['msg'];
-
-			return $return;
-		}
-
-		//	If subtitle is set
-		if ($subtitle !== null) {
-			$validate_subtitle = $this->subtitleValidator->validate($subtitle);
-
-			//	If invalid subtitle
-			if ($validate_subtitle['err']) {
-				$return['msg'] = $validate_subtitle['msg'];
-
-				return $return;
-			}
-		}
-
-		//	If thumbnail is set
-		if ($thumbnail !== null) {
-			$validate_thumbnail = $this->thumbnailValidator->validate($thumbnail);
-
-			//	If invalid thumbnail
-			if ($validate_thumbnail['err']) {
-				$return['msg'] = $validate_thumbnail['msg'];
-
-				return $return;
-			}
-		}
-
-		//	If want to publish as premium
-		if ($is_premium) {
-			// @TODO	Check if the user is possible to publish premium post
-		}
-
-		//	If series is set
-		if ($series_id !== null) {
-			// @TODO	Check if the user's series
-		}
-
-		/* Create an autosaved_post record */
+		/* Create a temp post record */
 
 		if (!$this->autosavedPostManager->addRecord(
 			$user->getID(),
@@ -164,7 +105,7 @@ class TempPostCreationController
 			$subtitle,
 			$thumbnail
 		)) {
-			$return['msg'] = $this->config['msg']['temp_post_creation_err'];
+			$return['msg'] = $this->config['msg']['save_err'];
 
 			return $return;
 		}
