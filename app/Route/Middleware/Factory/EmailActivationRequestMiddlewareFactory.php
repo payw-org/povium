@@ -11,7 +11,6 @@ namespace Povium\Route\Middleware\Factory;
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Routing\Router;
-use Povium\Security\User\User;
 
 class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
 {
@@ -19,7 +18,6 @@ class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
      * {@inheritdoc}
      *
      * @param Router
-     * @param User
      */
     protected function prepareArgs()
     {
@@ -31,15 +29,13 @@ class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
         $email_add_controller = $master_factory->createInstance('\Povium\Security\Authentication\Controller\EmailAddController');
         $activation_mail_sender = $master_factory->createInstance('\Povium\MailSender\ActivationMailSender');
         $router = $materials[0];
-        $user = $materials[1];
 
         $this->args = array(
             $config,
             $random_string_generator,
             $email_add_controller,
             $activation_mail_sender,
-            $router,
-            $user
+            $router
         );
     }
 }

@@ -43,40 +43,32 @@ class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
     protected $router;
 
     /**
-     * User who requested activation
-     *
-     * @var User
-     */
-    protected $user;
-
-    /**
      * @param array                 $config
      * @param RandomStringGenerator $random_string_generator
      * @param EmailAddController    $email_add_controller
      * @param ActivationMailSender  $activation_mail_sender
      * @param Router                $router
-     * @param User                  $user
      */
     public function __construct(
         array $config,
         RandomStringGenerator $random_string_generator,
         EmailAddController $email_add_controller,
         ActivationMailSender $activation_mail_sender,
-        Router $router,
-        User $user
+        Router $router
     ) {
         $this->config = $config;
         $this->randomStringGenerator = $random_string_generator;
         $this->emailAddController = $email_add_controller;
         $this->activationMailSender = $activation_mail_sender;
         $this->router = $router;
-        $this->user = $user;
     }
 
     /**
      * Receive email address and request activation.
+	 *
+	 * @param User	$user	User who requested activation
      */
-    public function requestEmailActivation()
+    public function requestEmailActivation(User $user)
     {
         $return = array(
             'err' => true,
@@ -93,7 +85,7 @@ class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
 
         $token = $this->randomStringGenerator->generateUUIDV4();
 
-        $email_add_return = $this->emailAddController->addEmail($email, $this->user, $token);
+        $email_add_return = $this->emailAddController->addEmail($email, $user, $token);
         $return['err'] = $email_add_return['err'];
         $return['msg'] = $email_add_return['msg'];
 

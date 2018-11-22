@@ -161,10 +161,9 @@ $collection->get(
 
 		$email_activation_middleware = $factory->createInstance(
 			'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware',
-			$router,
-			$authenticator->getCurrentUser()
+			$router
 		);
-		$email_activation_middleware->activateEmail();
+		$email_activation_middleware->activateEmail($authenticator->getCurrentUser());
 	},
 	'email_activation'
 );
@@ -197,10 +196,9 @@ $collection->get(
 
 		$email_activation_request_middleware = $factory->createInstance(
 			'\Povium\Route\Middleware\Setting\EmailActivationRequestMiddleware',
-			$router,
-			$authenticator->getCurrentUser()
+			$router
 		);
-		$email_activation_request_middleware->requestEmailActivation();
+		$email_activation_request_middleware->requestEmailActivation($authenticator->getCurrentUser());
 	}
 );
 

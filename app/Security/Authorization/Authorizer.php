@@ -65,17 +65,18 @@ class Authorizer
 
         return self::VERIFIED_USER;
 
-        //  @TODO: Check if client is MEMBER or PRO_EDITOR or HYPER_EDITOR.
-        // $is_member = false;
-        // $is_pro_editor = false;
-        //
+        //  @TODO: Check if client is MEMBER or PRO_EDITOR or HYPER_EDITOR
         // if (MEMBER) {
         //     $is_member = true;
-        // }
+        // } else {
+        // 	$is_member = false;
+		// }
         //
         // if (PRO_EDITOR) {
         //     $is_pro_editor = true;
-        // }
+        // } else {
+        // 	$is_pro_editor = false;
+		// }
         //
         // if (($is_member == false) && ($is_pro_editor == false)) {
         //     return self::VERIFIED_USER;

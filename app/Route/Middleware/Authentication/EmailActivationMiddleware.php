@@ -27,35 +27,27 @@ class EmailActivationMiddleware
     protected $router;
 
     /**
-     * User who requested activation
-     *
-     * @var User
-     */
-    protected $user;
-
-    /**
      * @param EmailActivationController $email_activation_controller
      * @param Router                    $router
-     * @param User                      $user
      */
     public function __construct(
         EmailActivationController $email_activation_controller,
-        Router $router,
-        User $user
+        Router $router
     ) {
         $this->emailActivationController = $email_activation_controller;
         $this->router = $router;
-        $this->user = $user;
     }
 
     /**
      * Verify activation link.
      * Then activate the email address.
+	 *
+	 * @param User	$user	User who requested activation
      *
      * @throws ForbiddenHttpException   If invalid activation request
      * @throws GoneHttpException        If activation request has already expired
      */
-    public function activateEmail()
+    public function activateEmail(User $user)
     {
         /* Get token from query */
 
@@ -65,7 +57,7 @@ class EmailActivationMiddleware
             $token = $_GET['token'];
         }
 
-        $email_activation_return = $this->emailActivationController->activateEmail($this->user, $token);
+        $email_activation_return = $this->emailActivationController->activateEmail($user, $token);
 
         if ($email_activation_return['err']) {
             switch ($email_activation_return['code']) {
