@@ -12,6 +12,8 @@ class NameValidator extends UserInfoDuplicateValidator
 {
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $name
 	 */
 	public function validate($name, $duplicate_check = false)
 	{
@@ -71,6 +73,8 @@ class NameValidator extends UserInfoDuplicateValidator
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $name
 	 */
 	public function isAlreadyTaken($name)
 	{

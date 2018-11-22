@@ -28,6 +28,8 @@ class ThumbnailValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
+	 * @param string $thumbnail
+	 *
 	 * @return array 	Error flag and message
 	 */
 	public function validate($thumbnail)

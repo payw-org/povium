@@ -36,6 +36,8 @@ class PasswordValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
+	 * @param string $password
+	 *
 	 * @return array 	Error flag and message
 	 */
 	public function validate($password)

@@ -28,6 +28,8 @@ class BodyValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
+	 * @param string $body
+	 *
 	 * @return array 	Error flag and message
 	 */
 	public function validate($body)

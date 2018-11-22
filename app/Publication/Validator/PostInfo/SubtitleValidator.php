@@ -28,6 +28,8 @@ class SubtitleValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
+	 * @param string $subtitle
+	 *
 	 * @return array 	Error flag and message
 	 */
 	public function validate($subtitle)

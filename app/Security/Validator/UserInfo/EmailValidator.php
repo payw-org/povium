@@ -12,6 +12,8 @@ class EmailValidator extends UserInfoDuplicateValidator
 {
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $email
 	 */
 	public function validate($email, $duplicate_check = false)
 	{
@@ -59,6 +61,8 @@ class EmailValidator extends UserInfoDuplicateValidator
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $email
 	 */
 	public function isAlreadyTaken($email)
 	{

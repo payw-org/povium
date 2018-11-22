@@ -28,6 +28,8 @@ class TitleValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
+	 * @param string $title
+	 *
 	 * @return array 	Error flag and message
 	 */
 	public function validate($title)

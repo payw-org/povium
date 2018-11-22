@@ -28,6 +28,8 @@ class ContentsValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
+	 * @param string $contents
+	 *
 	 * @return array 	Error flag and message
 	 */
 	public function validate($contents)
