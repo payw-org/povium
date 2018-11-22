@@ -45,11 +45,11 @@ class RegistrationFormValidationController
 	}
 
 	/**
-	 * Validate all inputs of registration form.
+	 * Validate all fields of registration form.
 	 *
-	 * @param $readable_id
-	 * @param $name
-	 * @param $password
+	 * @param string $readable_id
+	 * @param string $name
+	 * @param string $password
 	 *
 	 * @return array	Validation results
 	 */

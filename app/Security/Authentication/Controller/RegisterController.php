@@ -93,7 +93,7 @@ class RegisterController
 
 		//	Invalid readable id
 		if ($validate_readable_id['err']) {
-			$return['msg'] = $validate_readable_id['msg'];
+			$return['msg'] = $this->config['msg']['incorrect_form'];
 
 			return $return;
 		}
@@ -102,7 +102,7 @@ class RegisterController
 
 		//	Invalid name
 		if ($validate_name['err']) {
-			$return['msg'] = $validate_name['msg'];
+			$return['msg'] = $this->config['msg']['incorrect_form'];
 
 			return $return;
 		}
@@ -111,7 +111,7 @@ class RegisterController
 
 		//	Invalid password
 		if ($validate_password['err']) {
-			$return['msg'] = $validate_password['msg'];
+			$return['msg'] = $this->config['msg']['incorrect_form'];
 
 			return $return;
 		}
