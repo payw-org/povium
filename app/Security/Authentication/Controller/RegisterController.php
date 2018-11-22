@@ -8,9 +8,6 @@
 
 namespace Povium\Security\Authentication\Controller;
 
-use Povium\Security\Validator\UserInfo\ReadableIDValidator;
-use Povium\Security\Validator\UserInfo\NameValidator;
-use Povium\Security\Validator\UserInfo\PasswordValidator;
 use Povium\Security\Encoder\PasswordEncoder;
 use Povium\Security\User\UserManager;
 
@@ -19,22 +16,12 @@ class RegisterController
 	/**
 	* @var array
 	*/
-	protected $config;
+	private $config;
 
 	/**
-	 * @var ReadableIDValidator
+	 * @var RegistrationFormValidationController
 	 */
-	protected $readableIDValidator;
-
-	/**
-	 * @var NameValidator
-	 */
-	protected $nameValidator;
-
-	/**
-	 * @var PasswordValidator
-	 */
-	protected $passwordValidator;
+	protected $registrationFormValidationController;
 
 	/**
 	 * @var PasswordEncoder
@@ -47,25 +34,19 @@ class RegisterController
 	protected $userManager;
 
 	/**
-	 * @param array               $config
-	 * @param ReadableIDValidator $readable_id_validator
-	 * @param NameValidator       $name_validator
-	 * @param PasswordValidator   $password_validator
-	 * @param PasswordEncoder	  $password_encoder
-	 * @param UserManager		  $user_manager
+	 * @param array 								$config
+	 * @param RegistrationFormValidationController 	$registration_form_validation_controller
+	 * @param PasswordEncoder 						$password_encoder
+	 * @param UserManager 							$user_manager
 	 */
 	public function __construct(
 		array $config,
-		ReadableIDValidator $readable_id_validator,
-		NameValidator $name_validator,
-		PasswordValidator $password_validator,
+		RegistrationFormValidationController $registration_form_validation_controller,
 		PasswordEncoder $password_encoder,
 		UserManager $user_manager
 	) {
 		$this->config = $config;
-		$this->readableIDValidator = $readable_id_validator;
-		$this->nameValidator = $name_validator;
-		$this->passwordValidator = $password_validator;
+		$this->registrationFormValidationController = $registration_form_validation_controller;
 		$this->passwordEncoder = $password_encoder;
 		$this->userManager = $user_manager;
 	}
@@ -87,30 +68,13 @@ class RegisterController
 			'msg' => ''
 		);
 
-		/* Validate inputs */
+		/* Validation check for fields of post */
 
-		$validate_readable_id = $this->readableIDValidator->validate($readable_id, true);
-
-		//	Invalid readable id
-		if ($validate_readable_id['err']) {
-			$return['msg'] = $this->config['msg']['incorrect_form'];
-
-			return $return;
-		}
-
-		$validate_name = $this->nameValidator->validate($name, true);
-
-		//	Invalid name
-		if ($validate_name['err']) {
-			$return['msg'] = $this->config['msg']['incorrect_form'];
-
-			return $return;
-		}
-
-		$validate_password = $this->passwordValidator->validate($password);
-
-		//	Invalid password
-		if ($validate_password['err']) {
+		if (!$this->registrationFormValidationController->isValid(
+			$readable_id,
+			$name,
+			$password
+		)) {
 			$return['msg'] = $this->config['msg']['incorrect_form'];
 
 			return $return;
@@ -120,14 +84,17 @@ class RegisterController
 
 		$encoded_password = $this->passwordEncoder->encode($password);
 
-		//	If failed to add user to database
-		if (!$this->userManager->addRecord($readable_id, $name, $encoded_password)) {
+		if (!$this->userManager->addRecord(
+			$readable_id,
+			$name,
+			$encoded_password
+		)) {
 			$return['msg'] = $this->config['msg']['registration_err'];
 
 			return $return;
 		}
 
-		//	Register success
+		//	Successfully registered
 		$return['err'] = false;
 
 		return $return;

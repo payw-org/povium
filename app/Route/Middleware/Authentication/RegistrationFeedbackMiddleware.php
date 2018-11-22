@@ -41,7 +41,7 @@ class RegistrationFeedbackMiddleware extends AbstractAjaxMiddleware
 
         /* Validate inputs of registration form */
 
-        $return = $this->registrationFormValidationController->validateRegistrationForm(
+        $return = $this->registrationFormValidationController->validateAllFields(
         	$readable_id,
 			$name,
 			$password

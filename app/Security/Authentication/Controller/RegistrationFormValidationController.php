@@ -45,6 +45,44 @@ class RegistrationFormValidationController
 	}
 
 	/**
+	 * Check if fields of registration form are valid.
+	 *
+	 * @param $readable_id
+	 * @param $name
+	 * @param $password
+	 *
+	 * @return bool
+	 */
+	public function isValid(
+		$readable_id,
+		$name,
+		$password
+	) {
+		$validate_readable_id = $this->readableIDValidator->validate($readable_id, true);
+
+		//	If invalid readable id
+		if ($validate_readable_id['err']) {
+			return false;
+		}
+
+		$validate_name = $this->nameValidator->validate($name, true);
+
+		//	Invalid name
+		if ($validate_name['err']) {
+			return false;
+		}
+
+		$validate_password = $this->passwordValidator->validate($password);
+
+		//	Invalid password
+		if ($validate_password['err']) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Validate all fields of registration form.
 	 *
 	 * @param string $readable_id
@@ -53,8 +91,11 @@ class RegistrationFormValidationController
 	 *
 	 * @return array	Validation results
 	 */
-	public function validateRegistrationForm($readable_id, $name, $password)
-	{
+	public function validateAllFields(
+		$readable_id,
+		$name,
+		$password
+	) {
 		$return = array(
 			'readable_id_return' => [
 				'err' => true,

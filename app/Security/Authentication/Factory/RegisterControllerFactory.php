@@ -21,17 +21,13 @@ class RegisterControllerFactory extends AbstractChildFactory
 		$master_factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/register_controller.php');
-		$readable_id_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
-		$name_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\NameValidator');
-		$password_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+		$registration_form_validation_controller = $master_factory->createInstance('\Povium\Security\Authentication\Controller\RegistrationFormValidationController');
 		$password_encoder = $master_factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
 		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
 
 		$this->args = array(
 			$config,
-			$readable_id_validator,
-			$name_validator,
-			$password_validator,
+			$registration_form_validation_controller,
 			$password_encoder,
 			$user_manager
 		);
