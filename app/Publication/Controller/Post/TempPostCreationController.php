@@ -74,7 +74,7 @@ class TempPostCreationController
 			'id' => null
 		);
 
-		/* Validation check for fields of post */
+		/* Validation check for fields of post form */
 
 		if (!$this->postFormValidationController->isValid(
 			$user,

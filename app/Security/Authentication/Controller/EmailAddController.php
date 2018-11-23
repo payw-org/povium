@@ -46,14 +46,6 @@ class EmailAddController
 	}
 
 	/**
-	 * @return array
-	 */
-	public function getConfig()
-	{
-		return $this->config;
-	}
-
-	/**
 	 * Add new email address that waiting for activation.
 	 * User cannot add multiple new email address at once.
 	 *

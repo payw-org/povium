@@ -71,6 +71,23 @@ $collection->post(
 );
 
 /**
+ * Validate login form and give some feedback.
+ */
+$collection->put(
+	'/login',
+	function() use ($factory) {
+		if ($GLOBALS['authority'] >= Authorizer::USER) {
+			return;
+		}
+
+		$login_feedback_middleware = $factory->createInstance(
+			'\Povium\Route\Middleware\Authentication\LoginFeedbackMiddleware'
+		);
+		$login_feedback_middleware->giveFeedback();
+	}
+);
+
+/**
  * Show register view.
  */
 $collection->get(

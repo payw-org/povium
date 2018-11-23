@@ -68,7 +68,7 @@ class RegisterController
 			'msg' => ''
 		);
 
-		/* Validation check for fields of post */
+		/* Validation check for fields of registration form */
 
 		if (!$this->registrationFormValidationController->isValid(
 			$readable_id,

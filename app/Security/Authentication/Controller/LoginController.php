@@ -8,9 +8,6 @@
 
 namespace Povium\Security\Authentication\Controller;
 
-use Povium\Security\Validator\UserInfo\ReadableIDValidator;
-use Povium\Security\Validator\UserInfo\EmailValidator;
-use Povium\Security\Validator\UserInfo\PasswordValidator;
 use Povium\Security\Encoder\PasswordEncoder;
 use Povium\Security\User\UserManager;
 use Povium\Base\Http\Session\SessionManager;
@@ -24,19 +21,9 @@ class LoginController
 	protected $config;
 
 	/**
-	 * @var ReadableIDValidator
+	 * @var LoginFormValidationController
 	 */
-	protected $readableIDValidator;
-
-	/**
-	 * @var EmailValidator
-	 */
-	protected $emailValidator;
-
-	/**
-	 * @var PasswordValidator
-	 */
-	protected $passwordValidator;
+	protected $loginFormValidationController;
 
 	/**
 	 * @var PasswordEncoder
@@ -59,29 +46,23 @@ class LoginController
 	protected $authenticator;
 
 	/**
-	 * @param array               $config
-	 * @param ReadableIDValidator $readable_id_validator
-	 * @param EmailValidator      $email_validator
-	 * @param PasswordValidator   $password_validator
-	 * @param PasswordEncoder	  $password_encoder
-	 * @param UserManager		  $user_manager
-	 * @param SessionManager	  $session_manager
-	 * @param Authenticator       $authenticator
+	 * @param array               			$config
+	 * @param LoginFormValidationController $login_form_validation_controller
+	 * @param PasswordEncoder	  			$password_encoder
+	 * @param UserManager		  			$user_manager
+	 * @param SessionManager	  			$session_manager
+	 * @param Authenticator       			$authenticator
 	 */
 	public function __construct(
 		array $config,
-		ReadableIDValidator $readable_id_validator,
-		EmailValidator $email_validator,
-		PasswordValidator $password_validator,
+		LoginFormValidationController $login_form_validation_controller,
 		PasswordEncoder $password_encoder,
 		UserManager $user_manager,
 		SessionManager $session_manager,
 		Authenticator $authenticator
 	) {
 		$this->config = $config;
-		$this->readableIDValidator = $readable_id_validator;
-		$this->emailValidator = $email_validator;
-		$this->passwordValidator = $password_validator;
+		$this->loginFormValidationController = $login_form_validation_controller;
 		$this->passwordEncoder = $password_encoder;
 		$this->userManager = $user_manager;
 		$this->sessionManager = $session_manager;
@@ -112,27 +93,13 @@ class LoginController
 			'msg' => ''
 		);
 
-		/* Validate inputs */
+		/* Validation check for fields of login form */
 
-		$validate_readable_id = $this->readableIDValidator->validate($identifier);
-
-		//	Invalid readable id
-		if ($validate_readable_id['err']) {
-			$validate_email = $this->emailValidator->validate($identifier);
-
-			//	Invalid email
-			if ($validate_email['err']) {
-				$return['msg'] = $this->config['msg']['account_incorrect'];
-
-				return $return;
-			}
-		}
-
-		$validate_password = $this->passwordValidator->validate($password);
-
-		//	Invalid password
-		if ($validate_password['err']) {
-			$return['msg'] = $this->config['msg']['account_incorrect'];
+		if (!$this->loginFormValidationController->isValid(
+			$identifier,
+			$password
+		)) {
+			$return['msg'] = $this->config['msg']['incorrect_form'];
 
 			return $return;
 		}
@@ -172,7 +139,7 @@ class LoginController
 			$this->userManager->updateRecord($user_id, $params);
 		}
 
-		/* Check if valid account */
+		/* Check if account is active */
 
 		//	Inactive account
 		if (!$user->isActive()) {
@@ -192,7 +159,7 @@ class LoginController
 			return $return;
 		}
 
-		//	Login success
+		//	Successfully logged in
 		$return['err'] = false;
 
 		//	Update last login date

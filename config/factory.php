@@ -35,10 +35,11 @@ return [
 	'\Povium\Route\Middleware\Authentication\RegistrationFeedbackMiddleware' => '\Povium\Route\Middleware\Factory\RegistrationFeedbackMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\LogoutMiddleware' => '\Povium\Route\Middleware\Factory\LogoutMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationMiddlewareFactory',
-	'\Povium\Route\Middleware\Setting\EmailActivationRequestMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationRequestMiddlewareFactory',
-	'\Povium\Route\Middleware\Home\HomeViewMiddleware' => '\Povium\Route\Middleware\Factory\HomeViewMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\LoginViewMiddleware' => '\Povium\Route\Middleware\Factory\LoginViewMiddlewareFactory',
 	'\Povium\Route\Middleware\Authentication\RegisterViewMiddleware' => '\Povium\Route\Middleware\Factory\RegisterViewMiddlewareFactory',
+	'\Povium\Route\Middleware\Authentication\LoginFeedbackMiddleware' => '\Povium\Route\Middleware\Factory\LoginFeedbackMiddlewareFactory',
+	'\Povium\Route\Middleware\Setting\EmailActivationRequestMiddleware' => '\Povium\Route\Middleware\Factory\EmailActivationRequestMiddlewareFactory',
+	'\Povium\Route\Middleware\Home\HomeViewMiddleware' => '\Povium\Route\Middleware\Factory\HomeViewMiddlewareFactory',
 	'\Povium\Route\Middleware\User\ProfileViewMiddleware' => '\Povium\Route\Middleware\Factory\ProfileViewMiddlewareFactory',
 	'\Povium\Route\Middleware\Error\HttpErrorViewMiddleware' => '\Povium\Route\Middleware\Factory\HttpErrorViewMiddlewareFactory',
 
@@ -49,6 +50,7 @@ return [
 	'\Povium\Security\Authentication\Controller\EmailAddController' => '\Povium\Security\Authentication\Factory\EmailAddControllerFactory',
 	'\Povium\Security\Authentication\Controller\EmailActivationController' => '\Povium\Security\Authentication\Factory\EmailActivationControllerFactory',
 	'\Povium\Security\Authentication\Controller\RegistrationFormValidationController' => '\Povium\Security\Authentication\Factory\RegistrationFormValidationControllerFactory',
+	'\Povium\Security\Authentication\Controller\LoginFormValidationController' => '\Povium\Security\Authentication\Factory\LoginFormValidationControllerFactory',
 
     '\Povium\Security\Authorization\Authorizer' => '\Povium\Security\Authorization\Factory\AuthorizerFactory',
 

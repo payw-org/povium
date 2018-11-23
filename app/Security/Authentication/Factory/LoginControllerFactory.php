@@ -25,9 +25,7 @@ class LoginControllerFactory extends AbstractChildFactory
 		$master_factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_controller.php');
-		$readable_id_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
-		$email_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
-		$password_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+		$login_form_validation_controller = $master_factory->createInstance('\Povium\Security\Authentication\Controller\LoginFormValidationController');
 		$password_encoder = $master_factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
 		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
 		$session_manager = $master_factory->createInstance('\Povium\Base\Http\Session\SessionManager');
@@ -35,9 +33,7 @@ class LoginControllerFactory extends AbstractChildFactory
 
 		$this->args = array(
 			$config,
-			$readable_id_validator,
-			$email_validator,
-			$password_validator,
+			$login_form_validation_controller,
 			$password_encoder,
 			$user_manager,
 			$session_manager,

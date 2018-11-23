@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for validating post.
+ * Controller for validating post form.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop

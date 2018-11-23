@@ -32,14 +32,14 @@ class RegistrationFeedbackMiddleware extends AbstractAjaxMiddleware
      */
     public function giveFeedback()
     {
-        /* Receive inputs of registration form */
+        /* Receive fields */
 
         $registration_form = $this->receiveAjaxData();
         $readable_id = $registration_form['readable_id'];
         $name = $registration_form['name'];
         $password = $registration_form['password'];
 
-        /* Validate inputs of registration form */
+        /* Validate fields */
 
         $return = $this->registrationFormValidationController->validateAllFields(
         	$readable_id,
