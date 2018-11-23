@@ -110,7 +110,7 @@ class LoginController
 		if (false === $user_id = $this->userManager->getUserIDFromReadableID($identifier)) {
 			//	Unregistered email
 			if (false === $user_id = $this->userManager->getUserIDFromEmail($identifier)) {
-				$return['msg'] = $this->config['msg']['account_incorrect'];
+				$return['msg'] = $this->config['msg']['incorrect_form'];
 
 				return $return;
 			}
@@ -126,7 +126,7 @@ class LoginController
 
 		//	Password does not match
 		if (!$verify_password['is_verified']) {
-			$return['msg'] = $this->config['msg']['account_incorrect'];
+			$return['msg'] = $this->config['msg']['incorrect_form'];
 
 			return $return;
 		}
