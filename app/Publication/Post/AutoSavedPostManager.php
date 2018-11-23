@@ -1,6 +1,6 @@
 <?php
 /**
- * Manage all autosaved post records.
+ * Manage all auto saved post records.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -11,7 +11,7 @@ namespace Povium\Publication\Post;
 use Povium\Base\Database\Record\AbstractRecordManager;
 use Povium\Base\Database\Exception\InvalidParameterNumberException;
 
-class AutosavedPostManager extends AbstractRecordManager
+class AutoSavedPostManager extends AbstractRecordManager
 {
 	/**
 	 * @var array
@@ -27,33 +27,33 @@ class AutosavedPostManager extends AbstractRecordManager
 		$this->config = $config;
 		$this->conn = $conn;
 
-		$this->table = $this->config['autosaved_post_table'];
+		$this->table = $this->config['auto_saved_post_table'];
 	}
 
 	/**
-	 * Returns an autosaved post instance.
+	 * Returns an auto saved post instance.
 	 *
-	 * @param  int	$autosaved_post_id
+	 * @param  int	$auto_saved_post_id
 	 *
-	 * @return AutosavedPost|false
+	 * @return AutoSavedPost|false
 	 */
-	public function getAutosavedPost($autosaved_post_id)
+	public function getAutoSavedPost($auto_saved_post_id)
 	{
-		$record = $this->getRecord($autosaved_post_id);
+		$record = $this->getRecord($auto_saved_post_id);
 
-		$autosaved_post = new AutosavedPost(...array_values($record));
+		$auto_saved_post = new AutoSavedPost(...array_values($record));
 
-		return $autosaved_post;
+		return $auto_saved_post;
 	}
 
 	/**
-	 * Returns an autosaved post instance from original post id.
+	 * Returns an auto saved post instance from original post id.
 	 *
 	 * @param  int	$post_id	Original post id
 	 *
-	 * @return AutosavedPost|false
+	 * @return AutoSavedPost|false
 	 */
-	public function getAutosavedPostFromPostID($post_id)
+	public function getAutoSavedPostFromPostID($post_id)
 	{
 		$stmt = $this->conn->prepare(
 			"SELECT * FROM {$this->table}
@@ -67,9 +67,9 @@ class AutosavedPostManager extends AbstractRecordManager
 
 		$record = $stmt->fetch();
 
-		$autosaved_post = new AutosavedPost(...array_values($record));
+		$auto_saved_post = new AutoSavedPost(...array_values($record));
 
-		return $autosaved_post;
+		return $auto_saved_post;
 	}
 
 	/**
@@ -88,7 +88,7 @@ class AutosavedPostManager extends AbstractRecordManager
 	public function addRecord()
 	{
 		if (func_num_args() != 9) {
-			throw new InvalidParameterNumberException('Invalid parameter number for creating "autosaved_post" record.');
+			throw new InvalidParameterNumberException('Invalid parameter number for creating "auto_saved_post" record.');
 		}
 
 		$args = func_get_args();

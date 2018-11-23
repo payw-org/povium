@@ -1,6 +1,6 @@
 <?php
 /**
- * AutosavedPost class store autosaved post info.
+ * AutoSavedPost class store auto saved post info.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -8,7 +8,7 @@
 
 namespace Povium\Publication\Post;
 
-class AutosavedPost extends PostFrame
+class AutoSavedPost extends PostFrame
 {
 	/**
 	 * @var string	Datetime

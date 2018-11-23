@@ -1,6 +1,6 @@
 <?php
 /**
-* Config array for TempPostEditController.
+* Config array for TempPostAutoSavingController.
 *
 * @author 		H.Chihoon
 * @copyright 	2018 DesignAndDevelop

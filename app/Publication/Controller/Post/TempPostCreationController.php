@@ -1,6 +1,6 @@
 <?php
 /**
- * Manage temp post creation.
+ * Controller for creating temp post.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -8,7 +8,7 @@
 
 namespace Povium\Publication\Controller\Post;
 
-use Povium\Publication\Post\AutosavedPostManager;
+use Povium\Publication\Post\AutoSavedPostManager;
 use Povium\Security\User\User;
 
 class TempPostCreationController
@@ -24,28 +24,28 @@ class TempPostCreationController
 	protected $postFormValidationController;
 
 	/**
-	 * @var AutosavedPostManager
+	 * @var AutoSavedPostManager
 	 */
-	protected $autosavedPostManager;
+	protected $autoSavedPostManager;
 
 	/**
 	 * @param array 						$config
 	 * @param PostFormValidationController 	$post_form_validation_controller
-	 * @param AutosavedPostManager 			$autosaved_post_manager
+	 * @param AutoSavedPostManager 			$auto_saved_post_manager
 	 */
 	public function __construct(
 		array $config,
 		PostFormValidationController $post_form_validation_controller,
-		AutosavedPostManager $autosaved_post_manager
+		AutoSavedPostManager $auto_saved_post_manager
 	){
 		$this->config = $config;
 		$this->postFormValidationController = $post_form_validation_controller;
-		$this->autosavedPostManager = $autosaved_post_manager;
+		$this->autoSavedPostManager = $auto_saved_post_manager;
 	}
 
 	/**
 	 * Validate temp post components.
-	 * Then create an autosaved_post record.
+	 * Then create an auto saved post record.
 	 *
 	 * @param  User			$user		User who wrote the temp post
 	 * @param  string  		$title
@@ -94,7 +94,7 @@ class TempPostCreationController
 
 		/* Create a temp post record */
 
-		if (!$this->autosavedPostManager->addRecord(
+		if (!$this->autoSavedPostManager->addRecord(
 			$user->getID(),
 			$title,
 			$body,
@@ -112,7 +112,7 @@ class TempPostCreationController
 
 		//	Successfully created
 		$return['err'] = false;
-		$return['id'] = $this->autosavedPostManager->getLastInsertID();
+		$return['id'] = $this->autoSavedPostManager->getLastInsertID();
 
 		return $return;
 	}
