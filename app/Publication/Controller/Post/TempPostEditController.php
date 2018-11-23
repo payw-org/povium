@@ -15,7 +15,7 @@ class TempPostEditController
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	public function __construct()
 	{

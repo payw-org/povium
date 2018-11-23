@@ -20,7 +20,7 @@ class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
     /**
      * @var array
      */
-    protected $config;
+    private $config;
 
     /**
      * @var RandomStringGenerator

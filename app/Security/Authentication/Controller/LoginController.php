@@ -18,7 +18,7 @@ class LoginController
 	/**
 	* @var array
 	*/
-	protected $config;
+	private $config;
 
 	/**
 	 * @var LoginFormValidationController

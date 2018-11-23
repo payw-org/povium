@@ -16,7 +16,7 @@ class EmailAddController
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	* Database connection (PDO)

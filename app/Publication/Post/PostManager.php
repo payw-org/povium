@@ -16,7 +16,7 @@ class PostManager extends AbstractRecordManager
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @param array 	$config

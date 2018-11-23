@@ -12,14 +12,12 @@ use Povium\Traits\SingletonTrait;
 
 class DBConnection
 {
-	/* Apply singleton pattern */
+	/**
+	 * Apply singleton pattern
+	 */
 	use SingletonTrait;
 
 	/**
-	* Configuration parameters
-	* Array('driver' => '', 'host' => '', 'dbname' => '', 'username' => '',
-	* 'password' => '', 'opt' => '')
-	*
 	* @var array
 	*/
 	private $config;
@@ -29,7 +27,7 @@ class DBConnection
 	*
 	* @var \PDO
 	*/
-	private $conn;
+	protected $conn;
 
 	/**
 	* Opens the database connection using PDO

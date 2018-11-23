@@ -17,7 +17,7 @@ class URIGenerator implements URIGeneratorInterface
 	/**
 	 * @var RouteCollection
 	 */
-	private $routeCollection;
+	protected $routeCollection;
 
 	/**
 	 * @param RouteCollection $collection

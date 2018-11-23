@@ -21,7 +21,7 @@ class PostPublicationController
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @var TitleValidator

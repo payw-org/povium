@@ -16,7 +16,7 @@ class AutosavedPostManager extends AbstractRecordManager
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @param array 	$config

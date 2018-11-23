@@ -15,7 +15,7 @@ class ThumbnailValidator implements ValidatorInterface
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @param array $config

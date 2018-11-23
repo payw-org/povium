@@ -28,22 +28,22 @@ class Router implements RouterInterface
 	/**
 	 * @var RequestMatcher
 	 */
-	private $matcher;
+	protected $matcher;
 
 	/**
 	 * @var URIGenerator
 	 */
-	private $generator;
+	protected $generator;
 
 	/**
 	 * @var Redirector
 	 */
-	private $redirector;
+	protected $redirector;
 
 	/**
 	 * @var RouteCollection
 	 */
-	private $routeCollection;
+	protected $routeCollection;
 
 	/**
 	 * @param array          $http_response_config

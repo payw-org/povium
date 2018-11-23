@@ -18,7 +18,7 @@ class RequestMatcher implements RequestMatcherInterface
 	/**
 	 * @var RouteCollection
 	 */
-	private $routeCollection;
+	protected $routeCollection;
 
 	/**
 	 * @param RouteCollection $collection

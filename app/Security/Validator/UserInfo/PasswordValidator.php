@@ -16,7 +16,7 @@ class PasswordValidator implements ValidatorInterface
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @var Zxcvbn

@@ -20,7 +20,7 @@ class Authenticator
 	/**
 	* @var array
 	*/
-	protected $config;
+	private $config;
 
 	/**
 	* Database connection (PDO)
@@ -37,7 +37,7 @@ class Authenticator
 	/**
 	 * @var Client
 	 */
-	protected $client;
+	private $client;
 
 	/**
 	 * @var UserManager
@@ -54,14 +54,14 @@ class Authenticator
 	 *
 	 * @var bool
 	 */
-	protected $isLoggedIn = false;
+	private $isLoggedIn = false;
 
 	/**
 	 * Currently logged in user
 	 *
 	 * @var User|null
 	 */
-	protected $currentUser = null;
+	private $currentUser = null;
 
 	/**
 	 * @param array          		$config

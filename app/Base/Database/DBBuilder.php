@@ -25,7 +25,7 @@ class DBBuilder
 	 *
 	 * @var \PDO
 	 */
-	private $conn;
+	protected $conn;
 
 	/**
 	 * @param array $config
