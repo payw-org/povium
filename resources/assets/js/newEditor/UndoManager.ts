@@ -7,6 +7,7 @@ import SelectionManager from "./SelectionManager"
 export default class UndoManager {
 	private static actionStack: Array<Action | Array<Action>> = []
 	private static currentStep: number = -1
+	private static maxLen: number = 1000
 
 	constructor() {}
 
@@ -31,21 +32,25 @@ export default class UndoManager {
 				}
 			}
 		}
-		UndoManager.actionStack.length = UndoManager.currentStep + 1
-		UndoManager.actionStack.push(action)
-		UndoManager.currentStep = UndoManager.actionStack.length - 1
+		if (this.actionStack.length >= this.maxLen) {
+			this.actionStack.shift()
+			this.currentStep--
+		}
+		this.actionStack.length = this.currentStep + 1
+		this.actionStack.push(action)
+		this.currentStep = this.actionStack.length - 1
 		// console.log(this.actionStack.slice(0))
 	}
 
 	public static undo() {
-		if (UndoManager.currentStep < 0) {
+		if (this.currentStep < 0) {
 			// console.info("No more action records to undo.")
 			return
 		} else {
 			// console.group("undo")
 		}
 
-		let actions = UndoManager.actionStack[UndoManager.currentStep--]
+		let actions = this.actionStack[this.currentStep--]
 
 		if (Array.isArray(actions)) {
 			for (let i = actions.length - 1; i >= 0; i--) {
@@ -59,14 +64,14 @@ export default class UndoManager {
 	}
 
 	public static redo() {
-		if (UndoManager.currentStep >= UndoManager.actionStack.length - 1) {
+		if (this.currentStep >= this.actionStack.length - 1) {
 			// console.info('No more actions to recover')
 			return
 		} else {
 			// console.group('redo')
 		}
 
-		let actions = UndoManager.actionStack[++UndoManager.currentStep]
+		let actions = this.actionStack[++this.currentStep]
 
 		if (Array.isArray(actions)) {
 			for (let i = 0; i < actions.length; i++) {
