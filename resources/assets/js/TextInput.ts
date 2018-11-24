@@ -24,12 +24,12 @@ export default class TextInput {
 		})
 	}
 
-	showMsg(message: string, exceptEmpty: boolean = true) {
+	showMsg(message: string, allowEmpty: boolean = true) {
 		if (message === "") {
 			this.hideMsg()
 
 			return
-		} else if (this.target.value === "" && exceptEmpty) {
+		} else if (this.target.value === "" && allowEmpty) {
 			return
 		} else if (this.wrapperElement.querySelector(".expanded-box")) {
 			this.wrapperElement.querySelector(".expanded-box").innerHTML = message
