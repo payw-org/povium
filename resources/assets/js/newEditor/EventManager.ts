@@ -154,7 +154,7 @@ export default class EventManager {
 				PopTool.showImageTool(target)
 
 				if (figure.querySelector("FIGCAPTION").textContent.length === 0) {
-					figure.querySelector("FIGCAPTION").innerHTML = "이미지 주석"
+					figure.querySelector("FIGCAPTION").innerHTML = "이미지 설명"
 				}
 
 				window.getSelection().removeAllRanges()
@@ -250,6 +250,11 @@ export default class EventManager {
 			) {
 				PopTool.hidePopTool()
 			}
+		})
+
+		window.addEventListener("resize", e => {
+			PopTool.showImageTool(document.querySelector(".image.image-selected img"))
+			PopTool.showPopTool()
 		})
 
 		EditSession.editorBody.addEventListener("mouseup", e => {
