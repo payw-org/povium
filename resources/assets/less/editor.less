@@ -278,8 +278,16 @@
 			background-image: url('/assets/images/editor/image-full.svg');
 		}
 
-		&#normal {
+		&#large {
+			background-image: url('/assets/images/editor/image-large.svg');
+		}
+
+		&#fit {
 			background-image: url('/assets/images/editor/image-narrow.svg');
+		}
+
+		&#float-left {
+			background-image: url('/assets/images/editor/image-float-left.svg');
 		}
 
 		&:hover {
@@ -459,6 +467,18 @@
 			img {
 				width: 100%;
 			}
+		}
+
+		&.large {
+			margin-left: calc(50% - 40vw);
+			margin-right: calc(50% - 40vw);
+		}
+
+		&.float-left {
+			margin-left: calc(50% - 50vw);
+			margin-right: 3rem;
+			width: 40rem;
+			float: left;
 		}
 
 		&:hover {
