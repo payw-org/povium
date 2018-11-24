@@ -41,6 +41,8 @@
 				<div class="bar bar-2"></div>
 			</div>
 
+			<div class="error-message hidden"></div>
+
 			<button class="start btn-violet">시작하기</button>
 		</div>
 		<span class="already">이미 가입하셨나요? <a href="/login">로그인</a>하세요!</span>
