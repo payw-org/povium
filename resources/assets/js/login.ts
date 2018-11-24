@@ -59,11 +59,23 @@ if (document.querySelector("#login-main")) {
 
 			if (data !== "") {
 				if (data["err"]) {
-					alert(data["msg"])
+					// alert(data["msg"])
+					setErrorMsg(data["msg"])
 				} else {
 					location.replace(data["redirect"])
 				}
 			}
 		})
 	})
+
+	function setErrorMsg(str: string) {
+		let msgBox = document.querySelector("#login-main .error-message")
+		if (str.length === 0) {
+			msgBox.innerHTML = ""
+			msgBox.classList.add("hidden")
+		} else {
+			msgBox.innerHTML = str
+			msgBox.classList.remove("hidden")
+		}
+	}
 }

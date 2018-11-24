@@ -34,13 +34,13 @@ if (document.querySelector("#register-main")) {
 	}
 
 	let readableIDInputDOM: HTMLInputElement = document.querySelector(
-		".input-wrapper.readable-id input"
+		"#register-main .input-wrapper.readable-id input"
 	)
 	let nameInputDOM: HTMLInputElement = document.querySelector(
-		".input-wrapper.name input"
+		"#register-main .input-wrapper.name input"
 	)
 	let passInputDOM: HTMLInputElement = document.querySelector(
-		".input-wrapper.password input"
+		"#register-main .input-wrapper.password input"
 	)
 	let startButton: HTMLButtonElement = document.querySelector("button.start")
 
@@ -58,7 +58,7 @@ if (document.querySelector("#register-main")) {
 		})
 	})
 
-	function checkValidation(exceptEmpty: boolean = true) {
+	function checkValidation(allowEmpty: boolean = true) {
 		var inputData = {
 			readable_id: readableIDInputDOM.value,
 			name: nameInputDOM.value,
@@ -74,19 +74,19 @@ if (document.querySelector("#register-main")) {
 				let data = response.data
 
 				if (data["readable_id_return"]["err"]) {
-					readableIDInputObj.showMsg(data["readable_id_return"]["msg"], exceptEmpty)
+					readableIDInputObj.showMsg(data["readable_id_return"]["msg"], allowEmpty)
 				} else {
 					readableIDInputObj.hideMsg()
 				}
 
 				if (data["name_return"]["err"]) {
-					nameInputObj.showMsg(data["name_return"]["msg"], exceptEmpty)
+					nameInputObj.showMsg(data["name_return"]["msg"], allowEmpty)
 				} else {
 					nameInputObj.hideMsg()
 				}
 
 				if (data["password_return"]["err"]) {
-					passInputObj.showMsg(data["password_return"]["msg"], exceptEmpty)
+					passInputObj.showMsg(data["password_return"]["msg"], allowEmpty)
 					passStrengthIndicator.hide()
 				} else {
 					passInputObj.hideMsg()
@@ -122,7 +122,8 @@ if (document.querySelector("#register-main")) {
 					if (data["err"]) {
 						console.log("error")
 						checkValidation(false)
-						alert(data['msg'])
+						// alert(data['msg'])
+						setErrorMsg(data["msg"])
 					} else {
 						location.replace(data["redirect"])
 					}
@@ -143,6 +144,17 @@ if (document.querySelector("#register-main")) {
 			passInputObj.target.type = "text"
 		} else {
 			passInputObj.target.type = "password"
+		}
+	}
+
+	function setErrorMsg(str: string) {
+		let msgBox = document.querySelector("#register-main .error-message")
+		if (str.length === 0) {
+			msgBox.innerHTML = ""
+			msgBox.classList.add("hidden")
+		} else {
+			msgBox.innerHTML = str
+			msgBox.classList.remove("hidden")
 		}
 	}
 
