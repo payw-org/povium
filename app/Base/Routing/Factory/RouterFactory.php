@@ -20,13 +20,11 @@ class RouterFactory extends AbstractChildFactory
 	{
 		$master_factory = new MasterFactory();
 
-		$http_response_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
 		$matcher = $master_factory->createInstance('\Povium\Base\Routing\Matcher\RequestMatcher');
 		$generator = $master_factory->createInstance('\Povium\Base\Routing\Generator\URIGenerator');
 		$redirector = $master_factory->createInstance('\Povium\Base\Routing\Redirector\Redirector');
 
 		$this->args = array(
-			$http_response_config,
 			$matcher,
 			$generator,
 			$redirector

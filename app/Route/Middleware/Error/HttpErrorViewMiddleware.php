@@ -8,12 +8,24 @@
 
 namespace Povium\Route\Middleware\Error;
 
+use Povium\Base\Http\Exception\HttpException;
 use Povium\Route\Middleware\AbstractViewMiddleware;
 
 class HttpErrorViewMiddleware extends AbstractViewMiddleware
 {
-	public function __construct()
-	{
+	/**
+	 * @var array
+	 */
+	protected $httpResponseConfig;
+
+	/**
+	 * @param array $http_response_config
+	 */
+	public function __construct(
+		array $http_response_config
+	) {
+		$this->httpResponseConfig = $http_response_config;
+
 		$this->viewConfig = array(
 			'title'	=> null,
 			'heading' => null,
@@ -24,20 +36,19 @@ class HttpErrorViewMiddleware extends AbstractViewMiddleware
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @param	int		$response_code	Http response code
-	 * @param	string	$title 			Http response title
-	 * @param	string	$heading		Http response heading
-	 * @param	string	$details		Http response details
+	 * @param	HttpException	$http_exception
 	 */
-	public function verifyViewRequest()
+	public function requestView()
 	{
 		$args = func_get_args();
-		$response_code = $args[0];
-		$title = $args[1];
-		$heading = $args[2];
-		$details = $args[3];
+		$http_exception = $args[0];
 
+		$response_code = $http_exception->getResponseCode();
 		http_response_code($response_code);
+
+		$title = $this->httpResponseConfig[$response_code]['title'];
+		$heading = $this->httpResponseConfig[$response_code]['heading'];
+		$details = $http_exception->getMessage();
 
 		$this->viewConfig['title'] = $title;
 		$this->viewConfig['heading'] = $heading;

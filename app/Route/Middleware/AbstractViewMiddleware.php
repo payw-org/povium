@@ -16,11 +16,11 @@ abstract class AbstractViewMiddleware
 	protected $viewConfig = array();
 
 	/**
-	 * Verify view request and prepare view config.
+	 * Verify view request and load view config.
 	 *
 	 * @param 	mixed	URI data
 	 */
-	abstract public function verifyViewRequest();
+	abstract public function requestView();
 
 	/**
 	 * @return array

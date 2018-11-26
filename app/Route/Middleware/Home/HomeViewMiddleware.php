@@ -22,7 +22,7 @@ class HomeViewMiddleware extends AbstractViewMiddleware
 	/**
 	 * {@inheritdoc}
 	 */
-	public function verifyViewRequest()
+	public function requestView()
 	{
 		$this->viewConfig['posts'] = array(
 			[

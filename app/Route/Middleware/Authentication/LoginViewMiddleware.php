@@ -30,7 +30,7 @@ class LoginViewMiddleware extends AbstractViewMiddleware implements RefererCheck
 	/**
 	 * {@inheritdoc}
 	 */
-	public function verifyViewRequest()
+	public function requestView()
 	{
 		$referer_query = $this->checkReferer();
 

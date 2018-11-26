@@ -7,6 +7,7 @@
 */
 
 use Povium\Security\Authorization\Authorizer;
+use Povium\Base\Http\Exception\HttpException;
 use Povium\Base\Http\Exception\NotFoundHttpException;
 use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
@@ -20,7 +21,7 @@ $collection->get(
 		$home_view_middleware = $factory->createInstance(
 			'\Povium\Route\Middleware\Home\HomeViewMiddleware'
 		);
-		$home_view_middleware->verifyViewRequest();
+		$home_view_middleware->requestView();
 
 		echo $blade->view()->make(
 			'sections.home',
@@ -43,7 +44,7 @@ $collection->get(
 			'\Povium\Route\Middleware\Authentication\LoginViewMiddleware',
 			$router
 		);
-		$login_view_middleware->verifyViewRequest();
+		$login_view_middleware->requestView();
 
 		echo $blade->view()->make(
 			'sections.login',
@@ -101,7 +102,7 @@ $collection->get(
 			'\Povium\Route\Middleware\Authentication\RegisterViewMiddleware',
 			$router
 		);
-		$register_view_middleware->verifyViewRequest();
+		$register_view_middleware->requestView();
 
 		echo $blade->view()->make(
 			'sections.register',
@@ -244,7 +245,7 @@ $collection->get(
 		$profile_view_middleware = $factory->createInstance(
 			'\Povium\Route\Middleware\User\ProfileViewMiddleware'
 		);
-		$profile_view_middleware->verifyViewRequest($readable_id);
+		$profile_view_middleware->requestView($readable_id);
 
 		echo $blade->view()->make(
 			'sections.profile',
@@ -279,18 +280,15 @@ $collection->get(
  * User cannot directly access this route.
  * DO NOT GENERATE URI FOR THIS ROUTE.
  *
- * @param	int		$response_code	Http response code
- * @param	string	$title 			Http response title
- * @param	string	$heading		Http response heading
- * @param	string	$details		Http response details
+ * @param	HttpException	$http_exception
  */
 $collection->get(
 	'/*',
-	function ($response_code, $title, $heading, $details) use ($factory, $blade) {
+	function ($http_exception) use ($factory, $blade) {
 		$http_error_view_middleware = $factory->createInstance(
 			'\Povium\Route\Middleware\Error\HttpErrorViewMiddleware'
 		);
-		$http_error_view_middleware->verifyViewRequest($response_code, $title, $heading, $details);
+		$http_error_view_middleware->requestView($http_exception);
 
 		echo $blade->view()->make(
 			'sections.http-error',

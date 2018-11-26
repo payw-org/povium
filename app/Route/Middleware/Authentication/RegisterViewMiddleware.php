@@ -30,7 +30,7 @@ class RegisterViewMiddleware extends AbstractViewMiddleware implements RefererCh
 	/**
 	 * {@inheritdoc}
 	 */
-	public function verifyViewRequest()
+	public function requestView()
 	{
 		$referer_query = $this->checkReferer();
 

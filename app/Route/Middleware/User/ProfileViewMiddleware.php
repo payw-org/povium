@@ -36,7 +36,7 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 	 *
 	 * @param string $readable_id
 	 */
-	public function verifyViewRequest()
+	public function requestView()
 	{
 		$args = func_get_args();
 		$readable_id = $args[0];
@@ -57,6 +57,6 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 			'bio' => $user->getBio()
 		);
 
-		//	@TODO: Prepare view config
+		//	@TODO: Load view config
 	}
 }

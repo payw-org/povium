@@ -17,5 +17,10 @@ class HttpErrorViewMiddlewareFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
+
+		$this->args = array(
+			$config
+		);
 	}
 }
