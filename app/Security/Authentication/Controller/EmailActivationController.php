@@ -8,16 +8,14 @@
 
 namespace Povium\Security\Authentication\Controller;
 
+use Povium\Security\Authentication\Exception\RequestExpiredException;
+use Povium\Security\Authentication\Exception\RequestNotFoundException;
+use Povium\Security\Authentication\Exception\TokenNotMatchedException;
 use Povium\Security\User\UserManager;
 use Povium\Security\User\User;
 
 class EmailActivationController
 {
-	/* Error codes */
-	const USER_NOT_FOUND = 0x01;
-	const TOKEN_NOT_MATCH = 0x02;
-	const REQUEST_EXPIRED = 0x03;
-
 	/**
 	 * @var array
 	 */
@@ -57,13 +55,12 @@ class EmailActivationController
 	 * @param  User	  $user		User who requested activation
 	 * @param  string $token	Authentication token
 	 *
-	 * @return array 	Error flag, code and message
+	 * @return array 	Error flag and message
 	 */
 	public function activateEmail($user, $token)
 	{
 		$return = array(
 			'err' => true,
-			'code' => 0,
 			'msg' => ''
 		);
 
@@ -75,22 +72,16 @@ class EmailActivationController
 		);
 		$stmt->execute([$user->getID()]);
 
-		//	User not found
+		//	Request not found
 		if ($stmt->rowCount() == 0) {
-			$return['code'] = self::USER_NOT_FOUND;
-			$return['msg'] = $this->config['msg']['user_not_found'];
-
-			return $return;
+			throw new RequestNotFoundException($this->config['msg']['request_not_found']);
 		}
 
 		$record = $stmt->fetch();
 
-		//	Token not match
+		//	Token not matched
 		if (!hash_equals($record['token'], $token)) {
-			$return['code'] = self::TOKEN_NOT_MATCH;
-			$return['msg'] = $this->config['msg']['token_not_match'];
-
-			return $return;
+			throw new TokenNotMatchedException($this->config['msg']['token_not_matched']);
 		}
 
 		//	Request expired
@@ -101,10 +92,7 @@ class EmailActivationController
 			);
 			$stmt->execute([$record['id']]);
 
-			$return['code'] = self::REQUEST_EXPIRED;
-			$return['msg'] = $this->config['msg']['request_expired'];
-
-			return $return;
+			throw new RequestExpiredException($this->config['msg']['request_expired']);
 		}
 
 		/* Activate email */

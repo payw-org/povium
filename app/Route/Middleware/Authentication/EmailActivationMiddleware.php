@@ -10,6 +10,9 @@ namespace Povium\Route\Middleware\Authentication;
 
 use Povium\Security\Authentication\Controller\EmailActivationController;
 use Povium\Base\Routing\Router;
+use Povium\Security\Authentication\Exception\RequestExpiredException;
+use Povium\Security\Authentication\Exception\RequestNotFoundException;
+use Povium\Security\Authentication\Exception\TokenNotMatchedException;
 use Povium\Security\User\User;
 use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
@@ -57,25 +60,30 @@ class EmailActivationMiddleware
             $token = $_GET['token'];
         }
 
-        $email_activation_return = $this->emailActivationController->activateEmail($user, $token);
+        try {
+			$email_activation_return = $this->emailActivationController->activateEmail($user, $token);
 
-        if ($email_activation_return['err']) {
-            switch ($email_activation_return['code']) {
-                case EmailActivationController::USER_NOT_FOUND:
-                    throw new GoneHttpException($email_activation_return['msg']);
-
-                    break;
-                case EmailActivationController::TOKEN_NOT_MATCH:
-                    throw new ForbiddenHttpException($email_activation_return['msg']);
-
-                    break;
-                case EmailActivationController::REQUEST_EXPIRED:
-                    throw new GoneHttpException($email_activation_return['msg']);
-
-                    break;
-            }
-        } else {
-            $this->router->redirect('/');	// @TODO: 홈에서 인증완료됨을 알리는 modal이 뜨도록 query 추가하기
-        }
+			if (!$email_activation_return['err']) {
+				$this->router->redirect('/');	// @TODO: 홈에서 인증완료됨을 알리는 modal이 뜨도록 query 추가하기
+			}
+		} catch (RequestNotFoundException $e) {
+			throw new GoneHttpException(
+				$e->getMessage(),
+				$e->getCode(),
+				$e
+			);
+		} catch (TokenNotMatchedException $e) {
+			throw new ForbiddenHttpException(
+				$e->getMessage(),
+				$e->getCode(),
+				$e
+			);
+		} catch (RequestExpiredException $e) {
+			throw new GoneHttpException(
+				$e->getMessage(),
+				$e->getCode(),
+				$e
+			);
+		}
     }
 }
