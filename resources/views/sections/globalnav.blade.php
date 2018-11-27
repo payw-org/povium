@@ -23,22 +23,7 @@
                 <a id="gn-home-link" href="/"></a>
             </div>
 
-            @if ($GLOBALS['authenticator']->isLoggedIn())
-
-            <div id="gn-loggedin-view">
-                <div class="container">
-                    <a href="" class="user-info">
-                        <div class="bg"></div>
-                        <span>{{$GLOBALS['authenticator']->getCurrentUser()->getName()}}</span>
-                    </a>
-                    <a href="/logout" class="sign-out">
-                        <div class="bg"></div>
-                        <span>로그아웃</span>
-                    </a>
-                </div>
-            </div>
-
-            @else
+            @if ($current_user === false)
 
             <div id="gn-sign-register">
                 <div class="container">
@@ -49,6 +34,21 @@
                     <a href="/register" class="register">
                         <div class="bg"></div>
                         <span>회원가입</span>
+                    </a>
+                </div>
+            </div>
+
+            @else
+
+            <div id="gn-loggedin-view">
+                <div class="container">
+                    <a href="" class="user-info">
+                        <div class="bg"></div>
+                        <span>{{$current_user->getName()}}</span>
+                    </a>
+                    <a href="/logout" class="sign-out">
+                        <div class="bg"></div>
+                        <span>로그아웃</span>
                     </a>
                 </div>
             </div>

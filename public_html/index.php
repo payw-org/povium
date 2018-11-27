@@ -36,6 +36,7 @@ $authorizer->authorize();
 /* Template engine */
 
 $blade = $factory->createInstance('\Philo\Blade\Blade');
+$blade->view()->share('current_user', $authenticator->getCurrentUser());
 
 /* Initialize routing system */
 
