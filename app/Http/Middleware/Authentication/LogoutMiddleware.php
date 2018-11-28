@@ -45,7 +45,5 @@ class LogoutMiddleware extends AbstractAjaxMiddleware
         $return['redirect'] = '/';
 
         $this->sendAjaxData($return);
-
-        return;
     }
 }

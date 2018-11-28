@@ -46,7 +46,5 @@ class LoginFeedbackMiddleware extends AbstractAjaxMiddleware
 		);
 
 		$this->sendAjaxData($return);
-
-		return;
 	}
 }

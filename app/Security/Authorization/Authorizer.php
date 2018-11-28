@@ -36,14 +36,10 @@ class Authorizer
 
     /**
      * Authorize current client to access.
-     *
-     * @return null
      */
 	public function authorize()
     {
         $GLOBALS['authority'] = $this->measureAuthorityLevel();
-
-        return;
     }
 
     /**

@@ -104,7 +104,5 @@ class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
         }
 
         $this->sendAjaxData($return);
-
-        return;
     }
 }

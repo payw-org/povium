@@ -41,8 +41,6 @@ class SessionManager
 
 	/**
 	 * Set custom session config.
-	 *
-	 * @return null
 	 */
 	public function setSessionConfig()
 	{
@@ -66,8 +64,6 @@ class SessionManager
 	 * Customized 'session_start'.
 	 * If old session id is invalid, set new one.
 	 * Then start session.
-	 *
-	 * @return null
 	 */
 	public function startSession()
 	{
@@ -90,8 +86,6 @@ class SessionManager
 	 *
 	 * @param  boolean $keep_session_data	If false, initialize session data.
 	 * @param  boolean $delete_old_session	If true, delete old session immediately.
-	 *
-	 * @return null
 	 */
 	public function regenerateSessionID($keep_session_data = true, $delete_old_session = false)
 	{

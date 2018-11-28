@@ -99,15 +99,11 @@ class Authenticator
 
 	/**
 	 * Initialize authentication status of the current client.
-	 *
-	 * @return null
 	 */
 	public function initializeAuthenticationStatus()
 	{
 		$this->isLoggedIn = false;
 		$this->currentUser = null;
-
-		return;
 	}
 
 	/**
@@ -386,15 +382,11 @@ class Authenticator
 
 	/**
 	 * Delete current access key cookie.
-	 *
-	 * @return null
 	 */
 	public function deleteCurrentAccessKey()
 	{
 		setcookie($this->config['cookie']['access_key']['name'], null, -1, '/');
 		unset($_COOKIE[$this->config['cookie']['access_key']['name']]);
-
-		return;
 	}
 
 	/**

@@ -86,8 +86,6 @@ class RegisterMiddleware extends AbstractAjaxMiddleware implements RefererChecke
         }
 
         $this->sendAjaxData($return);
-
-        return;
     }
 
 	/**

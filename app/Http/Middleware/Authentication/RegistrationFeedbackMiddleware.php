@@ -48,7 +48,5 @@ class RegistrationFeedbackMiddleware extends AbstractAjaxMiddleware
 		);
 
         $this->sendAjaxData($return);
-
-        return;
     }
 }

@@ -41,8 +41,6 @@ abstract class AbstractChildFactory implements FactoryInterface
 	* Prepare arguments
 	*
 	* @param	mixed	materials
-	*
-	* @return void
 	*/
 	abstract protected function prepareArgs();
 
