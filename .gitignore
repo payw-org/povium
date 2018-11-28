@@ -2,7 +2,7 @@
 /node_modules
 /public_html/build
 /.idea
-/storage/cache
+/storage/framework/blade
 
 package-lock.json
 composer.lock

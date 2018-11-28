@@ -8,5 +8,5 @@
 
 return [
 	'views' => dirname($_SERVER['DOCUMENT_ROOT']) . '/resources/views',
-	'cache' => dirname($_SERVER['DOCUMENT_ROOT']) . '/storage/cache/views'
+	'cache' => dirname($_SERVER['DOCUMENT_ROOT']) . '/storage/framework/blade'
 ];

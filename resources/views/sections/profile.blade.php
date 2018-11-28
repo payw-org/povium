@@ -9,7 +9,7 @@
 
 		<div id="info">
 			<div class="profile-image">
-				<img src="{{$user['profile_image']}}" alt="">
+				<img src="{{$user['profile_image']}}" alt="" onerror="this.src='/assets/images/profile/user-profile-default.svg'">
 			</div>
 			<h1 class="name">{{$user['name']}}</h1>
 			<p class="manifesto">{{$user['bio']}}</p>

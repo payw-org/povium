@@ -24,7 +24,7 @@ class CreateUserTable
 			is_active BOOLEAN NOT NULL DEFAULT TRUE,
 			registration_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			last_login_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			profile_image VARCHAR(512) NOT NULL DEFAULT 'C:/example/default_image.png',
+			profile_image VARCHAR(512) NOT NULL DEFAULT '/assets/images/profile/user-profile-default.svg',
 			email VARCHAR(254) UNIQUE,
 			bio VARCHAR(200)
 
