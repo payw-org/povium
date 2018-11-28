@@ -8,6 +8,6 @@
 
 namespace Povium\Http\Controller\Exception;
 
-class RequestExpiredException extends \RuntimeException implements ExceptionInterface
+class RequestExpiredException extends \UnexpectedValueException implements ExceptionInterface
 {
 }

@@ -8,6 +8,6 @@
 
 namespace Povium\Http\Controller\Exception;
 
-class RequestNotFoundException extends \RuntimeException implements ExceptionInterface
+class RequestNotFoundException extends \UnexpectedValueException implements ExceptionInterface
 {
 }

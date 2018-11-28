@@ -12,10 +12,6 @@ use Povium\Http\Middleware\AbstractViewMiddleware;
 
 class HomeViewMiddleware extends AbstractViewMiddleware
 {
-	public function __construct()
-	{
-	}
-
 	/**
 	 * {@inheritdoc}
 	 */
