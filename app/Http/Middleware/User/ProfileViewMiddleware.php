@@ -9,26 +9,23 @@
 namespace Povium\Http\Middleware\User;
 
 use Povium\Base\Http\Exception\NotFoundHttpException;
+use Povium\Http\Controller\Exception\UserNotFoundException;
+use Povium\Http\Controller\User\ProfileViewController;
 use Povium\Http\Middleware\AbstractViewMiddleware;
-use Povium\Security\User\UserManager;
 
 class ProfileViewMiddleware extends AbstractViewMiddleware
 {
 	/**
-	 * @var UserManager
+	 * @var ProfileViewController
 	 */
-	protected $userManager;
+	protected $profileViewController;
 
 	/**
-	 * @param UserManager $user_manager
+	 * @param ProfileViewController $profile_view_controller
 	 */
-	public function __construct(UserManager $user_manager)
+	public function __construct(ProfileViewController $profile_view_controller)
 	{
-		$this->userManager = $user_manager;
-
-		$this->viewConfig = array(
-			'user' => null
-		);
+		$this->profileViewController = $profile_view_controller;
 	}
 
 	/**
@@ -43,20 +40,16 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 
 		$readable_id = strtolower($readable_id);
 
-		$user_id = $this->userManager->getUserIDFromReadableID($readable_id);
+		try {
+			$view_config = $this->profileViewController->loadViewConfig($readable_id);
 
-		if ($user_id === false) {
-			throw new NotFoundHttpException();
+			$this->viewConfig = $view_config;
+		} catch (UserNotFoundException $e) {
+			throw new NotFoundHttpException(
+				$e->getMessage(),
+				$e->getCode(),
+				$e
+			);
 		}
-
-		$user = $this->userManager->getUser($user_id);
-
-		$this->viewConfig['user'] = array(
-			'name' => $user->getName(),
-			'profile_image' => $user->getProfileImage(),
-			'bio' => $user->getBio()
-		);
-
-		//	@TODO: Load view config
 	}
 }

@@ -21,16 +21,9 @@ class HttpErrorViewMiddleware extends AbstractViewMiddleware
 	/**
 	 * @param array $http_response_config
 	 */
-	public function __construct(
-		array $http_response_config
-	) {
+	public function __construct(array $http_response_config)
+	{
 		$this->httpResponseConfig = $http_response_config;
-
-		$this->viewConfig = array(
-			'title'	=> null,
-			'heading' => null,
-			'details' => null
-		);
 	}
 
 	/**

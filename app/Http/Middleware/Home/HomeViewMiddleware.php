@@ -14,9 +14,6 @@ class HomeViewMiddleware extends AbstractViewMiddleware
 {
 	public function __construct()
 	{
-		$this->viewConfig = array(
-			'posts' => null
-		);
 	}
 
 	/**

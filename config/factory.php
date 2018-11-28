@@ -31,10 +31,11 @@ return [
 	'\Povium\Http\Controller\Authentication\LoginController' => '\Povium\Http\Controller\Factory\LoginControllerFactory',
 	'\Povium\Http\Controller\Authentication\LogoutController' => '\Povium\Http\Controller\Factory\LogoutControllerFactory',
 	'\Povium\Http\Controller\Authentication\RegisterController' => '\Povium\Http\Controller\Factory\RegisterControllerFactory',
-	'\Povium\Http\Controller\Setting\EmailAddController' => '\Povium\Http\Controller\Factory\EmailAddControllerFactory',
 	'\Povium\Http\Controller\Authentication\EmailActivationController' => '\Povium\Http\Controller\Factory\EmailActivationControllerFactory',
 	'\Povium\Http\Controller\Authentication\RegistrationFormValidationController' => '\Povium\Http\Controller\Factory\RegistrationFormValidationControllerFactory',
 	'\Povium\Http\Controller\Authentication\LoginFormValidationController' => '\Povium\Http\Controller\Factory\LoginFormValidationControllerFactory',
+	'\Povium\Http\Controller\Setting\EmailAddController' => '\Povium\Http\Controller\Factory\EmailAddControllerFactory',
+	'\Povium\Http\Controller\User\ProfileViewController' => '\Povium\Http\Controller\Factory\ProfileViewControllerFactory',
 
     '\Povium\Http\Middleware\Authentication\LoginMiddleware' => '\Povium\Http\Middleware\Factory\LoginMiddlewareFactory',
 	'\Povium\Http\Middleware\Authentication\RegisterMiddleware' => '\Povium\Http\Middleware\Factory\RegisterMiddlewareFactory',

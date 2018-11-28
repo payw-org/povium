@@ -20,10 +20,10 @@ class ProfileViewMiddlewareFactory extends AbstractChildFactory
 	{
 		$master_factory = new MasterFactory();
 
-		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
+		$profile_view_controller = $master_factory->createInstance('\Povium\Http\Controller\User\ProfileViewController');
 
 		$this->args = array(
-			$user_manager
+			$profile_view_controller
 		);
 	}
 }
