@@ -52,6 +52,11 @@ return [
 
 	'\Povium\MailSender\ActivationMailSender' => '\Povium\MailSender\Factory\ActivationMailSenderFactory',
 
+	'\Povium\Provider\AuthServiceProvider' => '\Povium\Provider\Factory\AuthServiceProviderFactory',
+	'\Povium\Provider\DBServiceProvider' => '\Povium\Provider\Factory\DBServiceProviderFactory',
+	'\Povium\Provider\RouteServiceProvider' => '\Povium\Provider\Factory\RouteServiceProviderFactory',
+	'\Povium\Provider\SessionServiceProvider' => '\Povium\Provider\Factory\SessionServiceProviderFactory',
+	'\Povium\Provider\TemplateServiceProvider' => '\Povium\Provider\Factory\TemplateServiceProviderFactory',
 
 	'\Povium\Security\Auth\Authenticator' => '\Povium\Security\Auth\Factory\AuthenticatorFactory',
 
