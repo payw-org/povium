@@ -22,11 +22,11 @@ class LoginMiddlewareFactory extends AbstractChildFactory
     protected function prepareArgs()
     {
         $materials = func_get_args();
-        $master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
         $authenticator = $materials[0];
-        $login_controller = $master_factory->createInstance('\Povium\Http\Controller\Authentication\LoginController', $authenticator);
-        $redirect_uri_validator = $master_factory->createInstance('\Povium\Base\Routing\Validator\RedirectURIValidator');
+        $login_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\LoginController', $authenticator);
+        $redirect_uri_validator = $factory->createInstance('\Povium\Base\Routing\Validator\RedirectURIValidator');
 
         $this->args = array(
             $login_controller,

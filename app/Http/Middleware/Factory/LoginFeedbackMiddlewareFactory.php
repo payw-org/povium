@@ -18,9 +18,9 @@ class LoginFeedbackMiddlewareFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
-		$login_form_validation_controller = $master_factory->createInstance(
+		$login_form_validation_controller = $factory->createInstance(
 			'\Povium\Http\Controller\Authentication\LoginFormValidationController'
 		);
 

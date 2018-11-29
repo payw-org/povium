@@ -19,11 +19,11 @@ class EmailActivationControllerFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_controller.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
+		$user_manager = $factory->createInstance('\Povium\Security\User\UserManager');
 
 		$this->args = array(
 			$config,

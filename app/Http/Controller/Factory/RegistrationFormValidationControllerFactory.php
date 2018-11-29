@@ -18,11 +18,11 @@ class RegistrationFormValidationControllerFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
-		$readable_id_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
-		$name_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\NameValidator');
-		$password_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+		$readable_id_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
+		$name_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\NameValidator');
+		$password_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
 
 		$this->args = array(
 			$readable_id_validator,

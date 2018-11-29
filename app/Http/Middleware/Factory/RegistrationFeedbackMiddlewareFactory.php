@@ -18,9 +18,9 @@ class RegistrationFeedbackMiddlewareFactory extends AbstractChildFactory
      */
     protected function prepareArgs()
     {
-        $master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
-        $registration_form_validation_controller = $master_factory->createInstance(
+        $registration_form_validation_controller = $factory->createInstance(
         	'\Povium\Http\Controller\Authentication\RegistrationFormValidationController'
 		);
 

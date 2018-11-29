@@ -22,12 +22,12 @@ class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
     protected function prepareArgs()
     {
         $materials = func_get_args();
-        $master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
         $config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_request_middleware.php');
-        $random_string_generator = $master_factory->createInstance('\Povium\Generator\RandomStringGenerator');
-        $email_add_controller = $master_factory->createInstance('\Povium\Http\Controller\Setting\EmailAddController');
-        $activation_mail_sender = $master_factory->createInstance('\Povium\MailSender\ActivationMailSender');
+        $random_string_generator = $factory->createInstance('\Povium\Generator\RandomStringGenerator');
+        $email_add_controller = $factory->createInstance('\Povium\Http\Controller\Setting\EmailAddController');
+        $activation_mail_sender = $factory->createInstance('\Povium\MailSender\ActivationMailSender');
         $router = $materials[0];
 
         $this->args = array(

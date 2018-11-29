@@ -19,14 +19,14 @@ class AuthenticatorFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/authenticator.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$random_string_generator = $master_factory->createInstance('\Povium\Generator\RandomStringGenerator');
-		$client = $master_factory->createInstance('\Povium\Base\Http\Client');
-		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
-		$session_manager = $master_factory->createInstance('\Povium\Base\Http\Session\SessionManager');
+		$random_string_generator = $factory->createInstance('\Povium\Generator\RandomStringGenerator');
+		$client = $factory->createInstance('\Povium\Base\Http\Client');
+		$user_manager = $factory->createInstance('\Povium\Security\User\UserManager');
+		$session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
 
 		$this->args = array(
 			$config,

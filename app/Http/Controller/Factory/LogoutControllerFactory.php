@@ -22,9 +22,9 @@ class LogoutControllerFactory extends AbstractChildFactory
 	protected function prepareArgs()
 	{
 		$materials = func_get_args();
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
-		$session_manager = $master_factory->createInstance('\Povium\Base\Http\Session\SessionManager');
+		$session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
 		$authenticator = $materials[0];
 
 		$this->args = array(

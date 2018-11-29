@@ -18,9 +18,9 @@ class ProfileViewMiddlewareFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
-		$profile_view_controller = $master_factory->createInstance('\Povium\Http\Controller\User\ProfileViewController');
+		$profile_view_controller = $factory->createInstance('\Povium\Http\Controller\User\ProfileViewController');
 
 		$this->args = array(
 			$profile_view_controller

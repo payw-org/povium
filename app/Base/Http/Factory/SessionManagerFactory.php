@@ -19,11 +19,11 @@ class SessionManagerFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$session_handler = $master_factory->createInstance('\Povium\Base\Http\Session\PDOSessionHandler');
+		$session_handler = $factory->createInstance('\Povium\Base\Http\Session\PDOSessionHandler');
 
 		$this->args = array(
 			$config,

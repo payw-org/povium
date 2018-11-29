@@ -18,12 +18,12 @@ class LoginFormValidationControllerFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_form_validation_controller.php');
-		$readable_id_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
-		$email_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
-		$password_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+		$readable_id_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
+		$email_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
+		$password_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
 
 		$this->args = array(
 			$config,

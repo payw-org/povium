@@ -18,11 +18,11 @@ class RouterFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
-		$matcher = $master_factory->createInstance('\Povium\Base\Routing\Matcher\RequestMatcher');
-		$generator = $master_factory->createInstance('\Povium\Base\Routing\Generator\URIGenerator');
-		$redirector = $master_factory->createInstance('\Povium\Base\Routing\Redirector\Redirector');
+		$matcher = $factory->createInstance('\Povium\Base\Routing\Matcher\RequestMatcher');
+		$generator = $factory->createInstance('\Povium\Base\Routing\Generator\URIGenerator');
+		$redirector = $factory->createInstance('\Povium\Base\Routing\Redirector\Redirector');
 
 		$this->args = array(
 			$matcher,

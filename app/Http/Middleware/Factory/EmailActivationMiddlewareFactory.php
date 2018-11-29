@@ -22,9 +22,9 @@ class EmailActivationMiddlewareFactory extends AbstractChildFactory
     protected function prepareArgs()
     {
         $materials = func_get_args();
-        $master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
-        $email_activation_controller = $master_factory->createInstance('\Povium\Http\Controller\Authentication\EmailActivationController');
+        $email_activation_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\EmailActivationController');
         $router = $materials[0];
 
         $this->args = array(

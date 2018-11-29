@@ -22,10 +22,10 @@ class LogoutMiddlewareFactory extends AbstractChildFactory
     protected function prepareArgs()
     {
         $materials = func_get_args();
-        $master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
         $authenticator = $materials[0];
-        $logout_controller = $master_factory->createInstance('\Povium\Http\Controller\Authentication\LogoutController', $authenticator);
+        $logout_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\LogoutController', $authenticator);
 
         $this->args = array(
             $logout_controller

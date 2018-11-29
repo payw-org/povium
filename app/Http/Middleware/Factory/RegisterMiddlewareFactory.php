@@ -22,12 +22,12 @@ class RegisterMiddlewareFactory extends AbstractChildFactory
     protected function prepareArgs()
     {
         $materials = func_get_args();
-        $master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
         $authenticator = $materials[0];
-        $register_controller = $master_factory->createInstance('\Povium\Http\Controller\Authentication\RegisterController');
-        $login_controller = $master_factory->createInstance('\Povium\Http\Controller\Authentication\LoginController', $authenticator);
-        $redirect_uri_validator = $master_factory->createInstance('\Povium\Base\Routing\Validator\RedirectURIValidator');
+        $register_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\RegisterController');
+        $login_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\LoginController', $authenticator);
+        $redirect_uri_validator = $factory->createInstance('\Povium\Base\Routing\Validator\RedirectURIValidator');
 
         $this->args = array(
             $register_controller,

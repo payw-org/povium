@@ -22,13 +22,13 @@ class LoginControllerFactory extends AbstractChildFactory
 	protected function prepareArgs()
 	{
 		$materials = func_get_args();
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_controller.php');
-		$login_form_validation_controller = $master_factory->createInstance('\Povium\Http\Controller\Authentication\LoginFormValidationController');
-		$password_encoder = $master_factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
-		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
-		$session_manager = $master_factory->createInstance('\Povium\Base\Http\Session\SessionManager');
+		$login_form_validation_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\LoginFormValidationController');
+		$password_encoder = $factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
+		$user_manager = $factory->createInstance('\Povium\Security\User\UserManager');
+		$session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
 		$authenticator = $materials[0];
 
 		$this->args = array(

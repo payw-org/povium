@@ -19,11 +19,11 @@ class EmailAddControllerFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_add_controller.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$email_validator = $master_factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
+		$email_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
 
 		$this->args = array(
 			$config,
