@@ -11,6 +11,10 @@ namespace Povium\Security\Auth\Factory;
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Database\DBConnection;
+use Povium\Base\Http\Client;
+use Povium\Base\Http\Session\SessionManager;
+use Povium\Generator\RandomStringGenerator;
+use Povium\Security\User\UserManager;
 
 class AuthenticatorFactory extends AbstractChildFactory
 {
@@ -23,10 +27,10 @@ class AuthenticatorFactory extends AbstractChildFactory
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/authenticator.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$random_string_generator = $factory->createInstance('\Povium\Generator\RandomStringGenerator');
-		$client = $factory->createInstance('\Povium\Base\Http\Client');
-		$user_manager = $factory->createInstance('\Povium\Security\User\UserManager');
-		$session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
+		$random_string_generator = $factory->createInstance(RandomStringGenerator::class);
+		$client = $factory->createInstance(Client::class);
+		$user_manager = $factory->createInstance(UserManager::class);
+		$session_manager = $factory->createInstance(SessionManager::class);
 
 		$this->args = array(
 			$config,

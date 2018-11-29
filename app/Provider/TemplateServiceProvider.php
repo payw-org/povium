@@ -8,6 +8,7 @@
 
 namespace Povium\Provider;
 
+use Philo\Blade\Blade;
 use Povium\Base\Factory\MasterFactory;
 use Povium\Security\User\User;
 
@@ -40,7 +41,7 @@ class TemplateServiceProvider implements ServiceProviderInterface
 	 */
 	public function boot()
 	{
-		$blade = $this->factory->createInstance('\Philo\Blade\Blade');
+		$blade = $this->factory->createInstance(Blade::class);
 		$blade->view()->share('current_user', $this->currentUser);
 
 		return $blade;

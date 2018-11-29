@@ -10,7 +10,11 @@ namespace Povium\Http\Controller\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Http\Session\SessionManager;
+use Povium\Http\Controller\Authentication\LoginFormValidationController;
 use Povium\Security\Auth\Authenticator;
+use Povium\Security\Encoder\PasswordEncoder;
+use Povium\Security\User\UserManager;
 
 class LoginControllerFactory extends AbstractChildFactory
 {
@@ -25,10 +29,10 @@ class LoginControllerFactory extends AbstractChildFactory
 		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_controller.php');
-		$login_form_validation_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\LoginFormValidationController');
-		$password_encoder = $factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
-		$user_manager = $factory->createInstance('\Povium\Security\User\UserManager');
-		$session_manager = $factory->createInstance('\Povium\Base\Http\Session\SessionManager');
+		$login_form_validation_controller = $factory->createInstance(LoginFormValidationController::class);
+		$password_encoder = $factory->createInstance(PasswordEncoder::class);
+		$user_manager = $factory->createInstance(UserManager::class);
+		$session_manager = $factory->createInstance(SessionManager::class);
 		$authenticator = $materials[0];
 
 		$this->args = array(

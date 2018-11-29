@@ -10,6 +10,8 @@ namespace Povium\Provider;
 
 use Philo\Blade\Blade;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Routing\RouteCollection;
+use Povium\Base\Routing\Router;
 use Povium\Security\Auth\Authenticator;
 
 class RouteServiceProvider implements ServiceProviderInterface
@@ -49,9 +51,9 @@ class RouteServiceProvider implements ServiceProviderInterface
 	 */
 	public function boot()
 	{
-		$collection = $this->factory->createInstance('\Povium\Base\Routing\RouteCollection');
+		$collection = $this->factory->createInstance(RouteCollection::class);
 
-		$router = $this->factory->createInstance('\Povium\Base\Routing\Router');
+		$router = $this->factory->createInstance(Router::class);
 		$factory = $this->factory;
 		$authenticator = $this->authenticator;
 		$blade = $this->blade;

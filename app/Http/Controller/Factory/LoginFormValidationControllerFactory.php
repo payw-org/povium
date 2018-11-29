@@ -10,6 +10,9 @@ namespace Povium\Http\Controller\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Security\Validator\UserInfo\EmailValidator;
+use Povium\Security\Validator\UserInfo\PasswordValidator;
+use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 
 class LoginFormValidationControllerFactory extends AbstractChildFactory
 {
@@ -21,9 +24,9 @@ class LoginFormValidationControllerFactory extends AbstractChildFactory
 		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_form_validation_controller.php');
-		$readable_id_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\ReadableIDValidator');
-		$email_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
-		$password_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\PasswordValidator');
+		$readable_id_validator = $factory->createInstance(ReadableIDValidator::class);
+		$email_validator = $factory->createInstance(EmailValidator::class);
+		$password_validator = $factory->createInstance(PasswordValidator::class);
 
 		$this->args = array(
 			$config,

@@ -10,6 +10,7 @@ namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\User\ProfileViewController;
 
 class ProfileViewMiddlewareFactory extends AbstractChildFactory
 {
@@ -20,7 +21,7 @@ class ProfileViewMiddlewareFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$profile_view_controller = $factory->createInstance('\Povium\Http\Controller\User\ProfileViewController');
+		$profile_view_controller = $factory->createInstance(ProfileViewController::class);
 
 		$this->args = array(
 			$profile_view_controller

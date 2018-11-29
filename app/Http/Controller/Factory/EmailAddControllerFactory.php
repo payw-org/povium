@@ -11,6 +11,7 @@ namespace Povium\Http\Controller\Factory;
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Database\DBConnection;
+use Povium\Security\Validator\UserInfo\EmailValidator;
 
 class EmailAddControllerFactory extends AbstractChildFactory
 {
@@ -23,7 +24,7 @@ class EmailAddControllerFactory extends AbstractChildFactory
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_add_controller.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$email_validator = $factory->createInstance('\Povium\Security\Validator\UserInfo\EmailValidator');
+		$email_validator = $factory->createInstance(EmailValidator::class);
 
 		$this->args = array(
 			$config,

@@ -9,6 +9,7 @@
 namespace Povium\Provider;
 
 use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Http\Session\SessionManager;
 
 class SessionServiceProvider implements ServiceProviderInterface
 {
@@ -30,7 +31,7 @@ class SessionServiceProvider implements ServiceProviderInterface
 	 */
 	public function boot()
 	{
-		$session_manager = $this->factory->createInstance('\Povium\Base\Http\Session\SessionManager');
+		$session_manager = $this->factory->createInstance(SessionManager::class);
 		$session_manager->setSessionConfig();
 		$session_manager->startSession();
 

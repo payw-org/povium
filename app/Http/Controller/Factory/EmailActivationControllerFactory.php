@@ -11,6 +11,7 @@ namespace Povium\Http\Controller\Factory;
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Database\DBConnection;
+use Povium\Security\User\UserManager;
 
 class EmailActivationControllerFactory extends AbstractChildFactory
 {
@@ -23,7 +24,7 @@ class EmailActivationControllerFactory extends AbstractChildFactory
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_controller.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$user_manager = $factory->createInstance('\Povium\Security\User\UserManager');
+		$user_manager = $factory->createInstance(UserManager::class);
 
 		$this->args = array(
 			$config,

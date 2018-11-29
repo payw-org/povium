@@ -10,6 +10,7 @@ namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\Authentication\LoginFormValidationController;
 
 class LoginFeedbackMiddlewareFactory extends AbstractChildFactory
 {
@@ -20,9 +21,7 @@ class LoginFeedbackMiddlewareFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$login_form_validation_controller = $factory->createInstance(
-			'\Povium\Http\Controller\Authentication\LoginFormValidationController'
-		);
+		$login_form_validation_controller = $factory->createInstance(LoginFormValidationController::class);
 
 		$this->args = array(
 			$login_form_validation_controller

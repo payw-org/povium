@@ -36,7 +36,7 @@ class DBServiceProvider implements ServiceProviderInterface
 		DBConnection::getInstance();
 
 		//	Build a database
-		$db_builder = $this->factory->createInstance('\Povium\Base\Database\DBBuilder');
+		$db_builder = $this->factory->createInstance(DBBuilder::class);
 		$db_builder->build(DBBuilder::NOT_BUILD);
 
 		return $db_builder;

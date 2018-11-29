@@ -10,6 +10,8 @@ namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Routing\Validator\RedirectURIValidator;
+use Povium\Http\Controller\Authentication\LoginController;
 use Povium\Security\Auth\Authenticator;
 
 class LoginMiddlewareFactory extends AbstractChildFactory
@@ -25,8 +27,8 @@ class LoginMiddlewareFactory extends AbstractChildFactory
 		$factory = new MasterFactory();
 
         $authenticator = $materials[0];
-        $login_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\LoginController', $authenticator);
-        $redirect_uri_validator = $factory->createInstance('\Povium\Base\Routing\Validator\RedirectURIValidator');
+        $login_controller = $factory->createInstance(LoginController::class, $authenticator);
+        $redirect_uri_validator = $factory->createInstance(RedirectURIValidator::class);
 
         $this->args = array(
             $login_controller,

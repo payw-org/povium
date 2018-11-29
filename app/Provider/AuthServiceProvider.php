@@ -9,6 +9,8 @@
 namespace Povium\Provider;
 
 use Povium\Base\Factory\MasterFactory;
+use Povium\Security\Auth\Authenticator;
+use Povium\Security\Auth\Authorizer;
 
 class AuthServiceProvider implements ServiceProviderInterface
 {
@@ -30,9 +32,9 @@ class AuthServiceProvider implements ServiceProviderInterface
 	 */
 	public function boot()
 	{
-		$authenticator = $this->factory->createInstance('\Povium\Security\Auth\Authenticator');
+		$authenticator = $this->factory->createInstance(Authenticator::class);
 
-		$authorizer = $this->factory->createInstance('\Povium\Security\Auth\Authorizer', $authenticator);
+		$authorizer = $this->factory->createInstance(Authorizer::class, $authenticator);
 		$authorizer->authorize();
 
 		return $authenticator;

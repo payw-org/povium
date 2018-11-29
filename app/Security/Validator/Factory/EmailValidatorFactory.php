@@ -10,6 +10,7 @@ namespace Povium\Security\Validator\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Security\User\UserManager;
 
 class EmailValidatorFactory extends AbstractChildFactory
 {
@@ -21,7 +22,7 @@ class EmailValidatorFactory extends AbstractChildFactory
 		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_validator.php');
-		$user_manager = $factory->createInstance('\Povium\Security\User\UserManager');
+		$user_manager = $factory->createInstance(UserManager::class);
 
 		$this->args = array(
 			$config,

@@ -10,6 +10,9 @@ namespace Povium\Http\Controller\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\Authentication\RegistrationFormValidationController;
+use Povium\Security\Encoder\PasswordEncoder;
+use Povium\Security\User\UserManager;
 
 class RegisterControllerFactory extends AbstractChildFactory
 {
@@ -21,9 +24,9 @@ class RegisterControllerFactory extends AbstractChildFactory
 		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/register_controller.php');
-		$registration_form_validation_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\RegistrationFormValidationController');
-		$password_encoder = $factory->createInstance('\Povium\Security\Encoder\PasswordEncoder');
-		$user_manager = $factory->createInstance('\Povium\Security\User\UserManager');
+		$registration_form_validation_controller = $factory->createInstance(RegistrationFormValidationController::class);
+		$password_encoder = $factory->createInstance(PasswordEncoder::class);
+		$user_manager = $factory->createInstance(UserManager::class);
 
 		$this->args = array(
 			$config,

@@ -10,6 +10,7 @@ namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\Authentication\RegistrationFormValidationController;
 
 class RegistrationFeedbackMiddlewareFactory extends AbstractChildFactory
 {
@@ -20,9 +21,7 @@ class RegistrationFeedbackMiddlewareFactory extends AbstractChildFactory
     {
 		$factory = new MasterFactory();
 
-        $registration_form_validation_controller = $factory->createInstance(
-        	'\Povium\Http\Controller\Authentication\RegistrationFormValidationController'
-		);
+        $registration_form_validation_controller = $factory->createInstance(RegistrationFormValidationController::class);
 
         $this->args = array(
             $registration_form_validation_controller

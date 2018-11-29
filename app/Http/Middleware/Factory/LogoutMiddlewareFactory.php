@@ -10,6 +10,7 @@ namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\Authentication\LogoutController;
 use Povium\Security\Auth\Authenticator;
 
 class LogoutMiddlewareFactory extends AbstractChildFactory
@@ -25,7 +26,7 @@ class LogoutMiddlewareFactory extends AbstractChildFactory
 		$factory = new MasterFactory();
 
         $authenticator = $materials[0];
-        $logout_controller = $factory->createInstance('\Povium\Http\Controller\Authentication\LogoutController', $authenticator);
+        $logout_controller = $factory->createInstance(LogoutController::class, $authenticator);
 
         $this->args = array(
             $logout_controller
