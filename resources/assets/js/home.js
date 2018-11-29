@@ -72,7 +72,7 @@ class HomeView {
 			let style = window.getComputedStyle(this.popPostContainer)
 			let matrix = new WebKitCSSMatrix(style.webkitTransform)
 			this.orgM41 = matrix.m41
-			
+
 			TweenMax.to(this.popPostContainer, 0, {
 				ease: Power0,
 				transform: "translateX(" + (this.orgM41 + this.distX) + "px" + ")"
@@ -250,10 +250,17 @@ class HomeView {
 				)
 			})
 		
+
+		window.addEventListener("keydown", e => {
+			console.log(e.key)
+		})
+
 		let amount = 0
 		let s = new WheelEvent(this.postView, (e) => {
 			e.preventDefault()
-			amount += e.deltaX
+			amount += e.deltaY
+			// console.log(window.event)
+			console.log(amount)
 			if (amount < 0) {
 				amount = 0
 			}
@@ -282,7 +289,7 @@ class HomeView {
 		// 			amount = i * this.postWidth
 		// 		}
 		// 	}
-			
+
 		// 	TweenMax.to(this.popPostContainer, 0.4, {
 		// 		ease: Power2.easeOut,
 		// 		transform: "translateX(" + -(amount) + "px)"
