@@ -6,9 +6,7 @@
  * @copyright 	2018 DesignAndDevelop
  */
 
-namespace Povium\Security\Authorization;
-
-use Povium\Security\Authentication\Authenticator;
+namespace Povium\Security\Auth;
 
 class Authorizer
 {

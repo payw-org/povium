@@ -52,9 +52,10 @@ return [
 
 	'\Povium\MailSender\ActivationMailSender' => '\Povium\MailSender\Factory\ActivationMailSenderFactory',
 
-	'\Povium\Security\Authentication\Authenticator' => '\Povium\Security\Authentication\Factory\AuthenticatorFactory',
 
-    '\Povium\Security\Authorization\Authorizer' => '\Povium\Security\Authorization\Factory\AuthorizerFactory',
+	'\Povium\Security\Auth\Authenticator' => '\Povium\Security\Auth\Factory\AuthenticatorFactory',
+
+    '\Povium\Security\Auth\Authorizer' => '\Povium\Security\Auth\Factory\AuthorizerFactory',
 
 	'\Povium\Security\Encoder\PasswordEncoder' => '\Povium\Security\Encoder\Factory\PasswordEncoderFactory',
 

@@ -9,7 +9,7 @@
 namespace Povium\Http\Controller\Authentication;
 
 use Povium\Base\Http\Session\SessionManager;
-use Povium\Security\Authentication\Authenticator;
+use Povium\Security\Auth\Authenticator;
 
 class LogoutController
 {

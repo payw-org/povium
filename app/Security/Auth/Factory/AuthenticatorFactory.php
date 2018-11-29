@@ -6,7 +6,7 @@
 * @copyright	2018 DesignAndDevelop
 */
 
-namespace Povium\Security\Authentication\Factory;
+namespace Povium\Security\Auth\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;

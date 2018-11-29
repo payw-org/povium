@@ -6,7 +6,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-use Povium\Security\Authorization\Authorizer;
+use Povium\Security\Auth\Authorizer;
 use Povium\Base\Http\Exception\HttpException;
 use Povium\Base\Http\Exception\NotFoundHttpException;
 use Povium\Base\Http\Exception\ForbiddenHttpException;

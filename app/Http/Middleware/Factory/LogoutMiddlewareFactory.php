@@ -10,7 +10,7 @@ namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
-use Povium\Security\Authentication\Authenticator;
+use Povium\Security\Auth\Authenticator;
 
 class LogoutMiddlewareFactory extends AbstractChildFactory
 {

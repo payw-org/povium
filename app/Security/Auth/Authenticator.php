@@ -7,7 +7,7 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-namespace Povium\Security\Authentication;
+namespace Povium\Security\Auth;
 
 use Povium\Generator\RandomStringGenerator;
 use Povium\Base\Http\Client;

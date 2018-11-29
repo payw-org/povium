@@ -8,7 +8,7 @@
 
 namespace Povium\Publication\Validator\PostInfo;
 
-use Povium\Security\Authorization\Authorizer;
+use Povium\Security\Auth\Authorizer;
 use Povium\Validator\ValidatorInterface;
 
 class IsPremiumValidator implements ValidatorInterface
