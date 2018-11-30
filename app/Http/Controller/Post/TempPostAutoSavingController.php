@@ -19,20 +19,35 @@ class TempPostAutoSavingController
 	private $config;
 
 	/**
+	 * @var PostFormValidationController
+	 */
+	protected $postFormValidationController;
+
+	/**
 	 * @var AutoSavedPostManager
 	 */
 	protected $autoSavedPostManager;
 
-	public function __construct()
-	{
-
+	/**
+	 * @param array 						$config
+	 * @param PostFormValidationController 	$post_form_validation_controller
+	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 */
+	public function __construct(
+		array $config,
+		PostFormValidationController $post_form_validation_controller,
+		AutoSavedPostManager $auto_saved_post_manager
+	) {
+		$this->config = $config;
+		$this->postFormValidationController = $post_form_validation_controller;
+		$this->autoSavedPostManager = $auto_saved_post_manager;
 	}
 
 	/**
 	 * Validate and update the auto saved post record.
 	 *
-	 * @param  User			$user				User who requested
 	 * @param  int  		$auto_saved_post_id	ID of the temp post to auto save
+	 * @param  User			$user				User who requested
 	 * @param  string  		$title
 	 * @param  string  		$body
 	 * @param  string  		$contents			Json string
@@ -44,8 +59,8 @@ class TempPostAutoSavingController
 	 * @return array 	Error flag and message
 	 */
 	public function autoSave(
-		$user,
 		$auto_saved_post_id,
+		$user,
 		$title,
 		$body,
 		$contents,
@@ -56,28 +71,65 @@ class TempPostAutoSavingController
 	) {
 		$return = array(
 			'err' => true,
-			'code' => 0,
 			'msg' => ''
 		);
 
-		/* Check if requesting user is matched with editor */
-
 		$auto_saved_post = $this->autoSavedPostManager->getAutoSavedPost($auto_saved_post_id);
 
+		//	If the auto saved post is not exist
 		if ($auto_saved_post === false) {
-			$return['msg'] = $this->config['msg']['nonexistent_temp_post'];
+			$return['msg'] = $this->config['msg']['nonexistent_auto_saved_post'];
 
 			return $return;
 		}
 
+		//	If the user isn't editor of the auto saved post
 		if ($user->getID() != $auto_saved_post->getUserID()) {
-			$return['msg'] = $this->config['msg'][''];
+			$return['msg'] = $this->config['msg']['wrong_approach'];
 
 			return $return;
 		}
 
-		/* Validation check for fields of post form */
+		/* Validation check for fields */
 
+		if (!$this->postFormValidationController->isValid(
+			$user,
+			$title,
+			$body,
+			$contents,
+			$is_premium,
+			$series_id,
+			$subtitle,
+			$thumbnail,
+			true
+		)) {
+			$return['msg'] = $this->config['msg']['incorrect_form'];
 
+			return $return;
+		}
+
+		/* Auto saving */
+
+		$params = array(
+			'title' => $title,
+			'body' => $body,
+			'contents' => $contents,
+			'is_premium' => $is_premium,
+			'last_edited_dt' => date('Y-m-d H:i:s'),
+			'series_id' => $series_id,
+			'subtitle' => $subtitle,
+			'thumbnail' => $thumbnail
+		);
+
+		if (!$this->autoSavedPostManager->updateRecord($auto_saved_post_id, $params)) {
+			$return['msg'] = $this->config['msg']['auto_saving_err'];
+
+			return $return;
+		}
+
+		//	Successfully auto saved
+		$return['err'] = false;
+
+		return $return;
 	}
 }

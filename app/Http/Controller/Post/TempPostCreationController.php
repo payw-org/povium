@@ -37,7 +37,7 @@ class TempPostCreationController
 		array $config,
 		PostFormValidationController $post_form_validation_controller,
 		AutoSavedPostManager $auto_saved_post_manager
-	){
+	) {
 		$this->config = $config;
 		$this->postFormValidationController = $post_form_validation_controller;
 		$this->autoSavedPostManager = $auto_saved_post_manager;
@@ -73,7 +73,7 @@ class TempPostCreationController
 			'id' => null
 		);
 
-		/* Validation check for fields of post form */
+		/* Validation check for fields */
 
 		if (!$this->postFormValidationController->isValid(
 			$user,
