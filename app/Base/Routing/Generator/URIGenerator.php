@@ -100,7 +100,7 @@ class URIGenerator implements URIGeneratorInterface
 						$sub_uri .= '@' . $param;
 					} else {	//	Encode param.
 						//	Convert all special chars(include whitespace) to '-'.
-						//	After convert, param is suitible form for uri.
+						//	After convert, param is suitable form for uri.
 						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
 
 						//	Concatenate prefix and param that encoded to uri form.
