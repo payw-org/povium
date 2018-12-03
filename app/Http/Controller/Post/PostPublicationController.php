@@ -1,6 +1,6 @@
 <?php
 /**
- * Manage post publication.
+ * Controller for publishing post.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -8,11 +8,7 @@
 
 namespace Povium\Http\Controller\Post;
 
-use Povium\Publication\Validator\PostInfo\TitleValidator;
-use Povium\Publication\Validator\PostInfo\BodyValidator;
-use Povium\Publication\Validator\PostInfo\ContentsValidator;
-use Povium\Publication\Validator\PostInfo\SubtitleValidator;
-use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
+use Povium\Publication\Post\AutoSavedPostManager;
 use Povium\Publication\Post\PostManager;
 use Povium\Security\User\User;
 
@@ -24,153 +20,145 @@ class PostPublicationController
 	private $config;
 
 	/**
-	 * @var TitleValidator
+	 * Database connection (PDO)
+	 *
+	 * @var \PDO
 	 */
-	protected $titleValidator;
+	protected $conn;
 
 	/**
-	 * @var BodyValidator
+	 * @var PostFormValidationController
 	 */
-	protected $bodyValidator;
+	protected $postFormValidationController;
 
 	/**
-	 * @var ContentsValidator
+	 * @var AutoSavedPostManager
 	 */
-	protected $contentsValidator;
-
-	/**
-	 * @var SubtitleValidator
-	 */
-	protected $subtitleValidator;
-
-	/**
-	 * @var ThumbnailValidator
-	 */
-	protected $thumbnailValidator;
+	protected $autoSavedPostManager;
 
 	/**
 	 * @var PostManager
 	 */
 	protected $postManager;
 
-	public function __construct()
-	{
-
+	/**
+	 * @param array 						$config
+	 * @param \PDO 							$conn
+	 * @param PostFormValidationController 	$post_form_validation_controller
+	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 * @param PostManager 					$post_manager
+	 */
+	public function __construct(
+		array $config,
+		\PDO $conn,
+		PostFormValidationController $post_form_validation_controller,
+		AutoSavedPostManager $auto_saved_post_manager,
+		PostManager $post_manager
+	) {
+		$this->config = $config;
+		$this->conn = $conn;
+		$this->postFormValidationController = $post_form_validation_controller;
+		$this->autoSavedPostManager = $auto_saved_post_manager;
+		$this->postManager = $post_manager;
 	}
 
 	/**
-	 * Validate post components.
-	 * Then create a post record.
+	 * Validate post fields and create an post record.
+	 * And delete the auto saved post record which is already published.
 	 *
-	 * @param  User			$user		User who wrote the post
-	 * @param  string  		$title
-	 * @param  string		$body
-	 * @param  string  		$contents   Json string
-	 * @param  bool 		$is_premium
-	 * @param  int|null  	$series_id
-	 * @param  string|null  $subtitle
-	 * @param  string|null  $thumbnail
+	 * @param int 			$auto_saved_post_id	ID of the temp post to publish
+	 * @param User 			$user				User who requested
+	 * @param string 		$title
+	 * @param string 		$body
+	 * @param string 		$contents			Json string
+	 * @param bool 			$is_premium
+	 * @param int|null 		$series_id
+	 * @param string|null 	$subtitle
+	 * @param string|null 	$thumbnail
 	 *
-	 * @return array 	Error flag and message
+	 * @return array	Error flag, message and id of the published post
 	 */
-	public function publishPost(
+	public function publish(
+		$auto_saved_post_id,
 		$user,
 		$title,
 		$body,
- 		$contents,
- 		$is_premium,
- 		$series_id = null,
+		$contents,
+		$is_premium,
+		$series_id = null,
 		$subtitle = null,
- 		$thumbnail = null
+		$thumbnail = null
 	) {
 		$return = array(
 			'err' => true,
-			'msg' => ''
+			'msg' => '',
+			'id' => null
 		);
 
-		/* Validate post components */
+		$auto_saved_post = $this->autoSavedPostManager->getAutoSavedPost($auto_saved_post_id);
 
-		$validate_title = $this->titleValidator->validate($title);
-
-		//	If invalid title
-		if ($validate_title['err']) {
-			$return['msg'] = $validate_title['msg'];
+		//	If the auto saved post is not exist
+		if ($auto_saved_post === false) {
+			$return['msg'] = $this->config['msg']['nonexistent_auto_saved_post'];
 
 			return $return;
 		}
 
-		$validate_body = $this->bodyValidator->validate($body);
-
-		//	If invalid body
-		if ($validate_body['err']) {
-			$return['msg'] = $validate_body['msg'];
+		//	If the user isn't editor of the auto saved post
+		if ($user->getID() != $auto_saved_post->getUserID()) {
+			$return['msg'] = $this->config['msg']['wrong_approach'];
 
 			return $return;
 		}
 
-		$validate_contents = $this->contentsValidator->validate($contents);
+		/* Validation check for fields */
 
-		//	If invalid contents
-		if ($validate_contents['err']) {
-			$return['msg'] = $validate_contents['msg'];
-
-			return $return;
-		}
-
-		//	If subtitle is set
-		if ($subtitle !== null) {
-			$validate_subtitle = $this->subtitleValidator->validate($subtitle);
-
-			//	If invalid subtitle
-			if ($validate_subtitle['err']) {
-				$return['msg'] = $validate_subtitle['msg'];
-
-				return $return;
-			}
-		}
-
-		//	If thumbnail is set
-		if ($thumbnail !== null) {
-			$validate_thumbnail = $this->thumbnailValidator->validate($thumbnail);
-
-			//	If invalid thumbnail
-			if ($validate_thumbnail['err']) {
-				$return['msg'] = $validate_thumbnail['msg'];
-
-				return $return;
-			}
-		}
-
-		//	If want to publish as premium
-		if ($is_premium) {
-			// @TODO	Check if the user is possible to publish premium post
-		}
-
-		//	If series is set
-		if ($series_id !== null) {
-			// @TODO	Check if the user's series
-		}
-
-		/* Publication processing */
-
-		//	If failed to add post record
-		if (!$this->postManager->addRecord(
-			$user->getID(),
- 			$title,
+		if (!$this->postFormValidationController->isValid(
+			$user,
+			$title,
 			$body,
- 			$contents,
- 			$is_premium,
- 			$series_id,
+			$contents,
+			$is_premium,
+			$series_id,
 			$subtitle,
- 			$thumbnail
+			$thumbnail
 		)) {
-			$return['msg'] = $this->config['msg']['post_publication_err'];
+			$return['msg'] = $this->config['msg']['incorrect_form'];
+
+			return $return;
+		}
+
+		/* Publish */
+
+		try {
+			$this->conn->beginTransaction();
+
+			$this->postManager->addRecord(
+				$user->getID(),
+				$title,
+				$body,
+				$contents,
+				$is_premium,
+				$series_id,
+				$subtitle,
+				$thumbnail
+			);
+			$published_post_id = $this->postManager->getLastInsertID();
+
+			$this->autoSavedPostManager->deleteRecord($auto_saved_post_id);
+
+			$this->conn->commit();
+		} catch (\PDOException $e) {
+			$this->conn->rollBack();
+
+			$return['msg'] = $this->config['msg']['publication_err'];
 
 			return $return;
 		}
 
 		//	Successfully published
 		$return['err'] = false;
+		$return['id'] = $published_post_id;
 
 		return $return;
 	}

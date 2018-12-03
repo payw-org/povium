@@ -55,7 +55,7 @@ class TempPostCreationController
 	 * @param  string|null	$subtitle
 	 * @param  string|null  $thumbnail
 	 *
-	 * @return array 	Error flag, message and id of the created record
+	 * @return array 	Error flag, message and id of the created temp post
 	 */
 	public function create(
 		$user,
@@ -91,7 +91,7 @@ class TempPostCreationController
 			return $return;
 		}
 
-		/* Create an auto saved post record */
+		/* Create */
 
 		if (!$this->autoSavedPostManager->addRecord(
 			$user->getID(),

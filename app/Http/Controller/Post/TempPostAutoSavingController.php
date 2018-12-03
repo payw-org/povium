@@ -108,7 +108,7 @@ class TempPostAutoSavingController
 			return $return;
 		}
 
-		/* Auto saving */
+		/* Auto save */
 
 		$params = array(
 			'title' => $title,
@@ -122,7 +122,7 @@ class TempPostAutoSavingController
 		);
 
 		if (!$this->autoSavedPostManager->updateRecord($auto_saved_post_id, $params)) {
-			$return['msg'] = $this->config['msg']['auto_saving_err'];
+			$return['msg'] = $this->config['msg']['auto_save_err'];
 
 			return $return;
 		}

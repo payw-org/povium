@@ -111,4 +111,14 @@ abstract class AbstractRecordManager
 
 		return $stmt->rowCount() == 1;
 	}
+
+	/**
+	 * Returns the ID of the last inserted table record.
+	 *
+	 * @return int|string	Table record id
+	 */
+	public function getLastInsertID()
+	{
+		return $this->conn->lastInsertId();
+	}
 }

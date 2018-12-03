@@ -125,14 +125,4 @@ class AutoSavedPostManager extends AbstractRecordManager
 
 		return true;
 	}
-
-	/**
-	 * Returns the ID of the last inserted record.
-	 *
-	 * @return int
-	 */
-	public function getLastInsertID()
-	{
-		return $this->conn->lastInsertId();
-	}
 }
