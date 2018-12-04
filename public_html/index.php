@@ -25,9 +25,9 @@ $app['router']->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 // use Hashids\Hashids;
 //
-// $hashids = new Hashids('Povium auto_saved_post', 12);
+// $hashids = new Hashids('Povium auto_saved_post', 12, 'abcdefghijklmnopqrstuvwxyz1234567890');
 //
-// $hash = $hashids->encode(5);
+// $hash = $hashids->encode(90);
 // echo $hash;
 // echo "<br>";
 // echo strlen($hash);
