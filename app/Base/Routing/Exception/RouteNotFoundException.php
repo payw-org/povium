@@ -9,6 +9,6 @@
 
 namespace Povium\Base\Routing\Exception;
 
-class RouteNotFoundException extends \UnexpectedValueException implements ExceptionInterface
+class RouteNotFoundException extends \RuntimeException implements ExceptionInterface
 {
 }

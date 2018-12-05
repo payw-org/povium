@@ -8,6 +8,6 @@
 
 namespace Povium\Http\Controller\Exception;
 
-class TokenNotMatchedException extends \UnexpectedValueException implements ExceptionInterface
+class TokenNotMatchedException extends \RuntimeException implements ExceptionInterface
 {
 }
