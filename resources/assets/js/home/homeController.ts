@@ -1,3 +1,7 @@
-import Popular from "./popular";
+import Popular from "./popularScroll"
+import HomeView from "./popularTransform"
 
-let popular = new Popular()
+if (document.querySelector("#popular .post-container")) {
+	// const homeView = new HomeView()
+	const popular = new Popular(document.querySelector("#popular"))
+}
