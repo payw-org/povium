@@ -41,6 +41,8 @@ class ProfileViewController
 	 * @param string $readable_id
 	 *
 	 * @return array
+	 *
+	 * @throws UserNotFoundException	If user is not found
 	 */
 	public function loadViewConfig($readable_id)
 	{

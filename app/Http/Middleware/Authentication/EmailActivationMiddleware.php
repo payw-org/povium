@@ -48,7 +48,7 @@ class EmailActivationMiddleware
 	 * @param User	$user	User who requested activation
      *
      * @throws ForbiddenHttpException   If invalid activation request
-     * @throws GoneHttpException        If activation request has already expired
+     * @throws GoneHttpException		If activation request has already expired
      */
     public function activateEmail(User $user)
     {

@@ -32,6 +32,8 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 	 * {@inheritdoc}
 	 *
 	 * @param string $readable_id
+	 *
+	 * @throws NotFoundHttpException	If the readable id of user is not found
 	 */
 	public function requestView()
 	{

@@ -56,6 +56,10 @@ class EmailActivationController
 	 * @param  string $token	Authentication token
 	 *
 	 * @return array 	Error flag and message
+	 *
+	 * @throws RequestNotFoundException	If email activation request is not found
+	 * @throws TokenNotMatchedException If token for authentication is not matched
+	 * @throws RequestExpiredException	If email activation request is expired
 	 */
 	public function activateEmail($user, $token)
 	{

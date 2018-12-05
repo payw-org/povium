@@ -79,6 +79,9 @@ class PostPublicationController
 	 * @param string|null 	$thumbnail
 	 *
 	 * @return array	Error flag, message and id of the published post
+	 *
+	 * @throws PostNotFoundException	If temp post to publish is not found
+	 * @throws InvalidAccessException	If the requested user isn't the editor of the temp post
 	 */
 	public function publish(
 		$auto_saved_post_id,

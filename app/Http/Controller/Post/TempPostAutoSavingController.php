@@ -59,6 +59,9 @@ class TempPostAutoSavingController
 	 * @param  string|null	$thumbnail
 	 *
 	 * @return array 	Error flag and message
+	 *
+	 * @throws PostNotFoundException	If temp post to auto save is not found
+	 * @throws InvalidAccessException	If the requested user isn't the editor of the temp post
 	 */
 	public function autoSave(
 		$auto_saved_post_id,
