@@ -50,7 +50,7 @@ class EmailActivationMiddleware
      * @throws ForbiddenHttpException   If invalid activation request
      * @throws GoneHttpException		If activation request has already expired
      */
-    public function activateEmail(User $user)
+    public function activateEmail($user)
     {
         /* Get token from query */
 

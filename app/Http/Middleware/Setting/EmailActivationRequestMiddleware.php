@@ -68,7 +68,7 @@ class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
 	 *
 	 * @param User	$user	User who requested activation
      */
-    public function requestEmailActivation(User $user)
+    public function requestEmailActivation($user)
     {
         $return = array(
             'err' => true,
