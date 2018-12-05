@@ -8,6 +8,8 @@
 
 namespace Povium\Http\Controller\Post;
 
+use Povium\Http\Controller\Exception\InvalidAccessException;
+use Povium\Http\Controller\Exception\PostNotFoundException;
 use Povium\Publication\Post\AutoSavedPostManager;
 use Povium\Security\User\User;
 
@@ -76,18 +78,14 @@ class TempPostAutoSavingController
 
 		$auto_saved_post = $this->autoSavedPostManager->getAutoSavedPost($auto_saved_post_id);
 
-		//	If the auto saved post is not exist
+		//	If the auto saved post is not found
 		if ($auto_saved_post === false) {
-			$return['msg'] = $this->config['msg']['nonexistent_auto_saved_post'];
-
-			return $return;
+			throw new PostNotFoundException($this->config['msg']['auto_saved_post_not_found']);
 		}
 
-		//	If the user isn't editor of the auto saved post
+		//	If the user isn't the editor of the auto saved post
 		if ($user->getID() != $auto_saved_post->getUserID()) {
-			$return['msg'] = $this->config['msg']['wrong_approach'];
-
-			return $return;
+			throw new InvalidAccessException($this->config['msg']['invalid_access']);
 		}
 
 		/* Validation check for fields */
