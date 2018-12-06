@@ -87,7 +87,7 @@ class PostFormValidationController
 	 * @param User			$user			User who wrote the post
 	 * @param string		$title
 	 * @param string 		$body
-	 * @param string 		$contents		Json string
+	 * @param string 		$contents
 	 * @param bool 			$is_premium
 	 * @param int|null 		$series_id
 	 * @param string|null 	$subtitle
@@ -175,7 +175,7 @@ class PostFormValidationController
 	 * @param User			$user			User who wrote the post
 	 * @param string		$title
 	 * @param string 		$body
-	 * @param string 		$contents		Json string
+	 * @param string 		$contents
 	 * @param bool 			$is_premium
 	 * @param int|null 		$series_id
 	 * @param string|null 	$subtitle

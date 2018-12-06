@@ -66,7 +66,7 @@ class PostEditController
 	 * @param  int  		$post_id	ID of the post to edit
 	 * @param  string  		$title
 	 * @param  string		$body
-	 * @param  string  		$contents   Json string
+	 * @param  string  		$contents
 	 * @param  bool			$is_premium
 	 * @param  int|null		$series_id
 	 * @param  string|null	$subtitle

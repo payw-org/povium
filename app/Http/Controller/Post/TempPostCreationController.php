@@ -44,18 +44,19 @@ class TempPostCreationController
 	}
 
 	/**
-	 * Validate and create an auto saved post record.
+	 * Validate post fields.
+	 * And create an auto saved record for temp post.
 	 *
 	 * @param  User			$user		User who requested
 	 * @param  string  		$title
 	 * @param  string  		$body
-	 * @param  string  		$contents	Json string
+	 * @param  string  		$contents
 	 * @param  bool 		$is_premium
 	 * @param  int|null		$series_id
 	 * @param  string|null	$subtitle
 	 * @param  string|null  $thumbnail
 	 *
-	 * @return array 	Error flag, message and id of the created temp post
+	 * @return array 	Error flag, message and auto saved record id
 	 */
 	public function create(
 		$user,

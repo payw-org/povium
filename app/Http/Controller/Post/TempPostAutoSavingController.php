@@ -21,38 +21,39 @@ class TempPostAutoSavingController
 	private $config;
 
 	/**
-	 * @var PostFormValidationController
-	 */
-	protected $postFormValidationController;
-
-	/**
 	 * @var AutoSavedPostManager
 	 */
 	protected $autoSavedPostManager;
 
 	/**
+	 * @var PostFormValidationController
+	 */
+	protected $postFormValidationController;
+
+	/**
 	 * @param array 						$config
-	 * @param PostFormValidationController 	$post_form_validation_controller
 	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 * @param PostFormValidationController 	$post_form_validation_controller
 	 */
 	public function __construct(
 		array $config,
-		PostFormValidationController $post_form_validation_controller,
-		AutoSavedPostManager $auto_saved_post_manager
+		AutoSavedPostManager $auto_saved_post_manager,
+		PostFormValidationController $post_form_validation_controller
 	) {
 		$this->config = $config;
-		$this->postFormValidationController = $post_form_validation_controller;
 		$this->autoSavedPostManager = $auto_saved_post_manager;
+		$this->postFormValidationController = $post_form_validation_controller;
 	}
 
 	/**
-	 * Validate and update the auto saved post record.
+	 * Validate post fields.
+	 * And update the auto saved record for temp post.
 	 *
-	 * @param  int  		$auto_saved_post_id	ID of the temp post to auto save
+	 * @param  int  		$auto_saved_post_id
 	 * @param  User			$user				User who requested
 	 * @param  string  		$title
 	 * @param  string  		$body
-	 * @param  string  		$contents			Json string
+	 * @param  string  		$contents
 	 * @param  bool 		$is_premium
 	 * @param  int|null  	$series_id
 	 * @param  string|null	$subtitle
@@ -60,7 +61,7 @@ class TempPostAutoSavingController
 	 *
 	 * @return array 	Error flag and message
 	 *
-	 * @throws PostNotFoundException	If temp post to auto save is not found
+	 * @throws PostNotFoundException	If the temp post is not found
 	 * @throws InvalidAccessException	If the requested user isn't the editor of the temp post
 	 */
 	public function autoSave(
@@ -81,12 +82,10 @@ class TempPostAutoSavingController
 
 		$auto_saved_post = $this->autoSavedPostManager->getAutoSavedPost($auto_saved_post_id);
 
-		//	If the auto saved post is not found
 		if ($auto_saved_post === false) {
 			throw new PostNotFoundException($this->config['msg']['auto_saved_post_not_found']);
 		}
 
-		//	If the user isn't the editor of the auto saved post
 		if ($user->getID() != $auto_saved_post->getUserID()) {
 			throw new InvalidAccessException($this->config['msg']['invalid_access']);
 		}

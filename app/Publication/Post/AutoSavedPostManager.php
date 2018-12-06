@@ -78,7 +78,7 @@ class AutoSavedPostManager extends AbstractRecordManager
 	 * @param int	 		$user_id
 	 * @param string  		$title
 	 * @param string  		$body
-	 * @param string  		$contents   Json string
+	 * @param string  		$contents
 	 * @param bool 			$is_premium
 	 * @param int|null  	$post_id
 	 * @param int|null  	$series_id

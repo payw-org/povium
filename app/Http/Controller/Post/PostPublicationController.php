@@ -29,14 +29,14 @@ class PostPublicationController
 	protected $conn;
 
 	/**
-	 * @var PostFormValidationController
-	 */
-	protected $postFormValidationController;
-
-	/**
 	 * @var AutoSavedPostManager
 	 */
 	protected $autoSavedPostManager;
+
+	/**
+	 * @var PostFormValidationController
+	 */
+	protected $postFormValidationController;
 
 	/**
 	 * @var PostManager
@@ -46,41 +46,41 @@ class PostPublicationController
 	/**
 	 * @param array 						$config
 	 * @param \PDO 							$conn
-	 * @param PostFormValidationController 	$post_form_validation_controller
 	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 * @param PostFormValidationController 	$post_form_validation_controller
 	 * @param PostManager 					$post_manager
 	 */
 	public function __construct(
 		array $config,
 		\PDO $conn,
-		PostFormValidationController $post_form_validation_controller,
 		AutoSavedPostManager $auto_saved_post_manager,
+		PostFormValidationController $post_form_validation_controller,
 		PostManager $post_manager
 	) {
 		$this->config = $config;
 		$this->conn = $conn;
-		$this->postFormValidationController = $post_form_validation_controller;
 		$this->autoSavedPostManager = $auto_saved_post_manager;
+		$this->postFormValidationController = $post_form_validation_controller;
 		$this->postManager = $post_manager;
 	}
 
 	/**
 	 * Validate post fields and create an post record.
-	 * And delete the auto saved post record which is already published.
+	 * And delete the auto saved record for temp post which is published.
 	 *
-	 * @param int 			$auto_saved_post_id	ID of the temp post to publish
+	 * @param int 			$auto_saved_post_id
 	 * @param User 			$user				User who requested
 	 * @param string 		$title
 	 * @param string 		$body
-	 * @param string 		$contents			Json string
+	 * @param string 		$contents
 	 * @param bool 			$is_premium
 	 * @param int|null 		$series_id
 	 * @param string|null 	$subtitle
 	 * @param string|null 	$thumbnail
 	 *
-	 * @return array	Error flag, message and id of the published post
+	 * @return array	Error flag, message and published post id
 	 *
-	 * @throws PostNotFoundException	If temp post to publish is not found
+	 * @throws PostNotFoundException	If the temp post is not found
 	 * @throws InvalidAccessException	If the requested user isn't the editor of the temp post
 	 */
 	public function publish(
@@ -102,12 +102,10 @@ class PostPublicationController
 
 		$auto_saved_post = $this->autoSavedPostManager->getAutoSavedPost($auto_saved_post_id);
 
-		//	If the auto saved post is not found
 		if ($auto_saved_post === false) {
 			throw new PostNotFoundException($this->config['msg']['auto_saved_post_not_found']);
 		}
 
-		//	If the user isn't the editor of the auto saved post
 		if ($user->getID() != $auto_saved_post->getUserID()) {
 			throw new InvalidAccessException($this->config['msg']['invalid_access']);
 		}
