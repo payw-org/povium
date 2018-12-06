@@ -36,8 +36,22 @@ class PostAutoSavingController
 	 */
 	protected $autoSavedPostManager;
 
-	public function __construct()
-	{
+	/**
+	 * @param array 						$config
+	 * @param PostManager 					$post_manager
+	 * @param PostFormValidationController 	$post_form_validation_controller
+	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 */
+	public function __construct(
+		array $config,
+		PostManager $post_manager,
+		PostFormValidationController $post_form_validation_controller,
+		AutoSavedPostManager $auto_saved_post_manager
+	) {
+		$this->config = $config;
+		$this->postManager = $post_manager;
+		$this-> postFormValidationController = $post_form_validation_controller;
+		$this->autoSavedPostManager = $auto_saved_post_manager;
 	}
 
 	/**
