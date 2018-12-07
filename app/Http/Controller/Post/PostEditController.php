@@ -1,6 +1,6 @@
 <?php
 /**
- * Manage post edit.
+ * Controller for editing post.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -8,11 +8,9 @@
 
 namespace Povium\Http\Controller\Post;
 
-use Povium\Publication\Validator\PostInfo\TitleValidator;
-use Povium\Publication\Validator\PostInfo\BodyValidator;
-use Povium\Publication\Validator\PostInfo\ContentsValidator;
-use Povium\Publication\Validator\PostInfo\SubtitleValidator;
-use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
+use Povium\Http\Controller\Exception\InvalidAccessException;
+use Povium\Http\Controller\Exception\PostNotFoundException;
+use Povium\Publication\Post\AutoSavedPostManager;
 use Povium\Publication\Post\PostManager;
 use Povium\Security\User\User;
 
@@ -24,185 +22,135 @@ class PostEditController
 	private $config;
 
 	/**
-	 * @var TitleValidator
+	 * Database connection (PDO)
+	 *
+	 * @var \PDO
 	 */
-	protected $titleValidator;
-
-	/**
-	 * @var BodyValidator
-	 */
-	protected $bodyValidator;
-
-	/**
-	 * @var ContentsValidator
-	 */
-	protected $contentsValidator;
-
-	/**
-	 * @var SubtitleValidator
-	 */
-	protected $subtitleValidator;
-
-	/**
-	 * @var ThumbnailValidator
-	 */
-	protected $thumbnailValidator;
+	protected $conn;
 
 	/**
 	 * @var PostManager
 	 */
 	protected $postManager;
 
-	public function __construct()
-	{
+	/**
+	 * @var PostFormValidationController
+	 */
+	protected $postFormValidationController;
 
+	/**
+	 * @var AutoSavedPostManager
+	 */
+	protected $autoSavedPostManager;
+
+	/**
+	 * @param array 						$config
+	 * @param \PDO 							$conn
+	 * @param PostManager 					$post_manager
+	 * @param PostFormValidationController 	$post_form_validation_controller
+	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 */
+	public function __construct(
+		array $config,
+		\PDO $conn,
+		PostManager $post_manager,
+		PostFormValidationController $post_form_validation_controller,
+		AutoSavedPostManager $auto_saved_post_manager
+	) {
+		$this->config = $config;
+		$this->conn = $conn;
+		$this->postManager = $post_manager;
+		$this->postFormValidationController = $post_form_validation_controller;
+		$this->autoSavedPostManager = $auto_saved_post_manager;
 	}
 
 	/**
-	 * Validate components to update.
-	 * Then edit the post record.
+	 * Validate post fields and update the post record.
+	 * And delete the auto saved record for post.
 	 *
-	 * @param  User			$user		User who edited the post
-	 * @param  int  		$post_id	ID of the post to edit
-	 * @param  string  		$title
-	 * @param  string		$body
-	 * @param  string  		$contents
-	 * @param  bool			$is_premium
-	 * @param  int|null		$series_id
-	 * @param  string|null	$subtitle
-	 * @param  string|null	$thumbnail
+	 * @param int			$post_id
+	 * @param User 			$user		User who requested
+	 * @param string 		$title
+	 * @param string 		$body
+	 * @param string 		$contents
+	 * @param bool 			$is_premium
+	 * @param int|null 		$series_id
+	 * @param string|null 	$subtitle
+	 * @param string|null 	$thumbnail
 	 *
-	 * @return array 	Error flag and message
+	 * @return array	Error flag and message
+	 *
+	 * @throws PostNotFoundException	If the post is not found
+	 * @throws InvalidAccessException	If the requested user isn't the editor of the post
 	 */
-	public function editPost(
-		$user,
+	public function edit(
 		$post_id,
- 		$title,
+		$user,
+		$title,
 		$body,
- 		$contents,
- 		$is_premium,
- 		$series_id = null,
+		$contents,
+		$is_premium,
+		$series_id = null,
 		$subtitle = null,
- 		$thumbnail = null
+		$thumbnail = null
 	) {
 		$return = array(
 			'err' => true,
 			'msg' => ''
 		);
 
-		/* Validate post edit request */
-
 		$post = $this->postManager->getPost($post_id);
 
-		//	Nonexistent post
 		if ($post === false) {
-			$return['msg'] = $this->config['msg']['post_id_invalid'];
-
-			return $return;
+			throw new PostNotFoundException($this->config['msg']['post_not_found']);
 		}
 
-		//	User is not the writer of the post
 		if ($user->getID() != $post->getUserID()) {
-			$return['msg'] = $this->config['msg']['post_id_invalid'];
+			throw new InvalidAccessException($this->config['msg']['invalid_access']);
+		}
+
+		/* Validation check for fields */
+
+		if (!$this->postFormValidationController->isValid(
+			$user,
+			$title,
+			$body,
+			$contents,
+			$is_premium,
+			$series_id,
+			$subtitle,
+			$thumbnail
+		)) {
+			$return['msg'] = $this->config['msg']['incorrect_form'];
 
 			return $return;
 		}
 
-		/* Check and validate components to update */
+		/* Edit */
 
-		$components_to_update = array();
+		try {
+			$this->conn->beginTransaction();
 
-		$validate_title = $this->titleValidator->validate($title);
+			$params = array(
+				'title' => $title,
+				'body' => $body,
+				'contents' => $contents,
+				'is_premium' => $is_premium,
+				'last_edited_dt' => date('Y-m-d H:i:s'),
+				'series_id' => $series_id,
+				'subtitle' => $subtitle,
+				'thumbnail' => $thumbnail
+			);
+			$this->postManager->updateRecord($post_id, $params);
 
-		//	If invalid title
-		if ($validate_title['err']) {
-			$return['msg'] = $validate_title['msg'];
+			$auto_saved_post_id = $this->autoSavedPostManager->getAutoSavedPostFromPostID($post_id)->getID();
+			$this->autoSavedPostManager->deleteRecord($auto_saved_post_id);
 
-			return $return;
-		}
+			$this->conn->commit();
+		} catch (\PDOException $e) {
+			$this->conn->rollBack();
 
-		$components_to_update['title'] = $title;
-
-		$validate_body = $this->bodyValidator->validate($body);
-
-		//	If invalid body
-		if ($validate_body['err']) {
-			$return['msg'] = $validate_body['msg'];
-
-			return $return;
-		}
-
-		$components_to_update['body'] = $body;
-
-		$validate_contents = $this->contentsValidator->validate($contents);
-
-		//	If invalid contents
-		if ($validate_contents['err']) {
-			$return['msg'] = $validate_contents['msg'];
-
-			return $return;
-		}
-
-		$components_to_update['contents'] = $contents;
-
-		//	Subtitle is set
-		if ($subtitle !== null) {
-			$validate_subtitle = $this->subtitleValidator->validate($subtitle);
-
-			//	If invalid subtitle
-			if ($validate_subtitle['err']) {
-				$return['msg'] = $validate_subtitle['msg'];
-
-				return $return;
-			}
-		}
-
-		$components_to_update['subtitle'] = $subtitle;
-
-		//	Thumbnail is changed
-		if ($thumbnail != $post->getThumbnail()) {
-			//	Thumbnail is set
-			if ($thumbnail !== null) {
-				$validate_thumbnail = $this->thumbnailValidator->validate($thumbnail);
-
-				//	If invalid thumbnail
-				if ($validate_thumbnail['err']) {
-					$return['msg'] = $validate_thumbnail['msg'];
-
-					return $return;
-				}
-			}
-
-			$components_to_update['thumbnail'] = $thumbnail;
-		}
-
-		//	Premium setting is changed
-		if ($is_premium != $post->isPremium()) {
-			//	If want to publish as premium
-			if ($is_premium) {
-				// @TODO	Check if the user is possible to publish premium post
-			}
-
-			$components_to_update['is_premium'] = $is_premium;
-		}
-
-		//	Series setting is changed
-		if ($series_id != $post->getSeriesID()) {
-			//	Series is set
-			if ($series_id !== null) {
-				// @TODO	Check if the user's series
-			}
-
-			$components_to_update['series_id'] = $series_id;
-		}
-
-		/* Edit processing */
-
-		$components_to_update['last_edited_dt'] = date('Y-m-d H:i:s');
-
-		//	If failed to update post record
-		if (!$this->postManager->updateRecord($post_id, $components_to_update)) {
-			$return['msg'] = $this->config['msg']['post_edit_err'];
+			$return['msg'] = $this->config['msg']['edit_err'];
 
 			return $return;
 		}

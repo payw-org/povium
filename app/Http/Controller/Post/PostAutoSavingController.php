@@ -56,7 +56,7 @@ class PostAutoSavingController
 
 	/**
 	 * Validate post fields.
-	 * And create/update the auto saved record for published post.
+	 * And create/update the auto saved record for post.
 	 *
 	 * @param int 			$post_id
 	 * @param User 			$user		User who requested

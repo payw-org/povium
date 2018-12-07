@@ -66,7 +66,7 @@ class PostPublicationController
 
 	/**
 	 * Validate post fields and create an post record.
-	 * And delete the auto saved record for temp post which is published.
+	 * And delete the auto saved record for temp post.
 	 *
 	 * @param int 			$auto_saved_post_id
 	 * @param User 			$user				User who requested
