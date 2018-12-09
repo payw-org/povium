@@ -11,7 +11,7 @@ import Pjax from "pjax"
 let pjax = new Pjax({
 	elements: "a",
 	selectors: [
-		"title", "main"
+		"title", "body"
 	],
 	cacheBust: false,
 	// currentUrlFullReload: true

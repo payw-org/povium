@@ -7,7 +7,6 @@ import {
 	Power4,
 	Expo
 } from "gsap/TweenMax"
-import WheelEvent from "../WheelEvent"
 
 export default class HomeView {
 	constructor() {
@@ -253,28 +252,6 @@ export default class HomeView {
 
 		window.addEventListener("keydown", e => {
 			console.log(e.key)
-		})
-
-		let amount = 0
-		let s = new WheelEvent(this.postView, (e) => {
-			e.preventDefault()
-			amount += e.deltaY
-			// console.log(window.event)
-			console.log(amount)
-			if (amount < 0) {
-				amount = 0
-			}
-			let nearestDistance = Infinity
-			for (let i = 0; i < this.maxPostCount; i++) {
-				if (i * this.postWidth < nearestDistance) {
-					nearestDistance = i * this.postWidth
-				}
-			}
-			// window.scrollTo(0, window.scrollY + e.deltaY)
-			TweenMax.to(this.popPostContainer, 0.3, {
-				ease: Power4.easeOut,
-				transform: "translateX(" + -(amount) + "px)"
-			})
 		})
 	}
 
