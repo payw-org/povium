@@ -21,10 +21,9 @@
 			@yield('content')
 
 			@include('sections.globalfooter')
-
-			@include('global-inclusion.global-script')
 		</povium-app>
 
+		@include('global-inclusion.global-script')
 	</body>
 
 </html>
