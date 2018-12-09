@@ -29,8 +29,6 @@ export default class TextInput {
 			this.hideMsg()
 
 			return
-		} else if (this.target.value === "") {
-			return
 		} else if (this.wrapperElement.querySelector(".expanded-box")) {
 			this.wrapperElement.querySelector(".expanded-box").innerHTML = message
 		} else {

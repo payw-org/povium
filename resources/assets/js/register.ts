@@ -58,7 +58,7 @@ if (document.querySelector("#register-main")) {
 		})
 	})
 
-	function checkValidation() {
+	function checkValidation(except_empty: boolean = true) {
 		var inputData = {
 			readable_id: readableIDInputDOM.value,
 			name: nameInputDOM.value,
@@ -75,19 +75,32 @@ if (document.querySelector("#register-main")) {
 				try {
 					if (data !== "") {
 						if (data["readable_id_return"]["err"]) {
-							readableIDInputObj.showMsg(data["readable_id_return"]["msg"])
+							if (inputData.readable_id === "" && except_empty) {
+
+							} else {
+                                readableIDInputObj.showMsg(data["readable_id_return"]["msg"])
+							}
 						} else {
 							readableIDInputObj.hideMsg()
 						}
 
 						if (data["name_return"]["err"]) {
-							nameInputObj.showMsg(data["name_return"]["msg"])
+                            if (inputData.name === "" && except_empty) {
+
+                            } else {
+                                nameInputObj.showMsg(data["name_return"]["msg"])
+                            }
 						} else {
 							nameInputObj.hideMsg()
 						}
 
 						if (data["password_return"]["err"]) {
-							passInputObj.showMsg(data["password_return"]["msg"])
+                            if (inputData.password === "" && except_empty) {
+
+                            } else {
+                                passInputObj.showMsg(data["password_return"]["msg"])
+                            }
+
 							passStrengthIndicator.hide()
 						} else {
 							passInputObj.hideMsg()
@@ -124,7 +137,8 @@ if (document.querySelector("#register-main")) {
 				console.log(data)
 				if (data !== "") {
 					if (data["err"]) {
-						alert(data['msg'])
+						checkValidation(false)
+                        alert(data['msg'])
 					} else {
 						location.replace(data["redirect"])
 					}

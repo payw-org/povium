@@ -22,10 +22,8 @@ class UserManager extends AbstractRecordManager
 	 * @param array $config
 	 * @param \PDO	$conn
 	 */
-	public function __construct(
-		array $config,
- 		\PDO $conn
-	) {
+	public function __construct(array $config, \PDO $conn)
+	{
 		$this->config = $config;
 		$this->conn = $conn;
 
