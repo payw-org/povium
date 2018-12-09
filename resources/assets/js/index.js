@@ -6,3 +6,13 @@ import { logout } from "./logout"
 import { profile } from "./profile/profile-home"
 import { login } from "./login"
 import { register } from "./register"
+import Pjax from "pjax"
+
+let pjax = new Pjax({
+	elements: "a",
+	selectors: [
+		"title", "main"
+	],
+	cacheBust: false,
+	// currentUrlFullReload: true
+})
