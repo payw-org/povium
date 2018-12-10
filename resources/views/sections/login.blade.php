@@ -24,7 +24,7 @@
 
 			<div class="error-message hidden"></div>
 
-			<button class="confirm btn-aqua">로그인</button>
+			<button class="pvm-btn btn-aqua confirm">로그인</button>
 			<!-- <div class="auto-login">
 				<input id="auto-chk" type="checkbox" class="checkbox-violet">
 				<label for="auto-chk">날 기억해줘!</label>
