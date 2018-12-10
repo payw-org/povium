@@ -7,12 +7,21 @@ import { profile } from "./profile/profile-home"
 import { login } from "./login"
 import { register } from "./register"
 import Pjax from "pjax"
+import topbar from "./topbar"
 
 let pjax = new Pjax({
 	elements: "a",
 	selectors: [
-		"title", "main"
+		"title", "povium-app"
 	],
-	cacheBust: false,
-	// currentUrlFullReload: true
+	cacheBust: false
 })
+topbar.config({
+	barColors: {
+		"0": "#5f42ff",
+		"1": "#5f42ff"
+	},
+	shadowColor: "rgba(0,0,0,0)"
+})
+document.addEventListener('pjax:send', topbar.show)
+document.addEventListener('pjax:complete', topbar.hide)

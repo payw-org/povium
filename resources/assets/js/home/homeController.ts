@@ -1,7 +1,11 @@
 import Popular from "./popularScroll"
 import HomeView from "./popularTransform"
 
-if (document.querySelector("#popular .post-container")) {
-	// const homeView = new HomeView()
-	const popular = new Popular(document.querySelector("#popular"))
-}
+;["load", "pjax:complete"].forEach(eventName => {
+	document.addEventListener(eventName, e => {
+		if (document.querySelector("#popular .post-container")) {
+			// const homeView = new HomeView()
+			const popular = new Popular(document.querySelector("#popular"))
+		}
+	})
+})

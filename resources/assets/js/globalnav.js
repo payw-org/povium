@@ -66,8 +66,10 @@ class GlobalNavController {
 	}
 }
 
-window.onload = function() {
-	if (document.querySelector("#globalnav")) {
-		var globalNavController = new GlobalNavController()
-	}
-}
+;["load", "pjax:complete"].forEach(eventName => {
+	document.addEventListener(eventName, e => {
+		if (document.querySelector("#globalnav")) {
+			var globalNavController = new GlobalNavController()
+		}
+	})
+})

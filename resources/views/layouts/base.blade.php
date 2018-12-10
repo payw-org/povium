@@ -14,11 +14,14 @@
 	</head>
 
 	<body>
-		@include('sections.globalnav')
 
-		@yield('content')
+		<povium-app>
+			@include('sections.globalnav')
 
-		@include('sections.globalfooter')
+			@yield('content')
+
+			@include('sections.globalfooter')
+		</povium-app>
 
 		@include('global-inclusion.global-script')
 	</body>
