@@ -46,7 +46,7 @@
                         <div class="bg"></div>
                         <span>{{$current_user->getName()}}</span>
                     </a>
-                    <a href="/logout" class="sign-out">
+                    <a href="/logout" class="sign-out full-load">
                         <div class="bg"></div>
                         <span>로그아웃</span>
                     </a>

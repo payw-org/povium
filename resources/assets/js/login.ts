@@ -83,5 +83,5 @@ import TextInput from "./TextInput"
 			}
 		}
 
-})
+	})
 })
