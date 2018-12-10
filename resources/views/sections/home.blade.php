@@ -34,7 +34,7 @@
 		</section> --}}
 
 		<section id="popular">
-			<div class="post-container snapping">
+			<div class="post-container">
 				@foreach ($posts as $post)
 				<div class="scroll-item">
 					<div class="post">
