@@ -1,7 +1,7 @@
 import Axios from "axios"
 
 ;["load", "pjax:complete"].forEach(eventName => {
-	document.addEventListener(eventName, e => {
+	window.addEventListener(eventName, e => {
 
 		if (document.querySelector("#globalnav .sign-out")) {
 

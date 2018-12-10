@@ -2,7 +2,7 @@ import Axios from "axios"
 import TextInput from "./TextInput"
 
 ;["load", "pjax:complete"].forEach(eventName => {
-	document.addEventListener(eventName, e => {
+	window.addEventListener(eventName, e => {
 
 		if (document.querySelector("#register-main")) {
 			class RegInput extends TextInput {
