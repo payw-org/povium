@@ -1,8 +1,7 @@
 export const Example = {
-	title: {
-		type: "text",
-		data: "Blockchain Is a Semantic WasteLand"
-	},
+	title: "Blockchain Is a Semantic WasteLand",
+	subtitle: "this is subtitle",
+	body: "",
 	contents: [
 		{
 			type: "p",
@@ -37,6 +36,12 @@ export const Example = {
 					style: "bold"
 				}
 			]
+		},
+		{
+			type: "image",
+			size: "",
+			url: "/assets/images/post-test-img-4.jpg",
+			caption: null
 		},
 		{
 			type: "p",
@@ -105,5 +110,6 @@ export const Example = {
 			],
 			mode: "default"
 		}
-	]
+	],
+	isPremium: true
 }

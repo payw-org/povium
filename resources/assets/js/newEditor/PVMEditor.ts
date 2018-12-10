@@ -4,6 +4,7 @@ import { Example } from "./examples/example1"
 import * as PostData from "./interfaces/PostData"
 import NodeManager from "./NodeManager"
 import PopTool from "./PopTool"
+import Converter from "./Converter";
 
 export default class PVMEditor {
 	/**
@@ -23,78 +24,11 @@ export default class PVMEditor {
 	loadData() {
 		EditSession.editorBody.innerHTML = ""
 
-		let data: PostData.Frame = Example
+		let pvmNodes = Converter.parse(Example)
+		console.log(pvmNodes)
 
-		let contents = data.contents
-
-		let firstChild
-
-		for (let i = 0; i < contents.length; i++) {
-			let block = contents[i]
-
-			let parentType = null
-			if ((<PostData.TextBlock>block).parentType) {
-				parentType = (<PostData.TextBlock>block).parentType
-			}
-
-			// if (AT.textOnly.includes(block.type)) {
-
-			if (PostData.isTextBlock(block)) {
-				let html = ""
-
-				for (let j = 0; j < block.data.length; j++) {
-					let text = block.data[j].data
-					let htmlPart = text
-					let style = block.data[j].style
-
-					if (style === "bold") {
-						htmlPart = "<b>" + text + "</b>"
-					} else if (style === "italic") {
-						htmlPart = "<i>" + text + "</i>"
-					} else if (style === "strikethrough") {
-						htmlPart = "<strikethrough>" + text + "</strikethrough>"
-					} else if (style === "underline") {
-						htmlPart = "<u>" + text + "</u>"
-					}
-
-					html += htmlPart
-				}
-
-				let node = NodeManager.createNode(block.type, {
-					parentType: parentType,
-					html: html
-				})
-
-				NodeManager.appendChild(node)
-			} else if (PostData.isImageBlock(block)) {
-				let html = ""
-
-				for (let j = 0; j < block.caption.data.length; j++) {
-					let text = block.caption.data[j].data
-					let htmlPart = text
-					let style = block.caption.data[j].style
-
-					if (style === "bold") {
-						htmlPart = "<b>" + text + "</b>"
-					} else if (style === "italic") {
-						htmlPart = "<i>" + text + "</i>"
-					} else if (style === "strikethrough") {
-						htmlPart = "<strikethrough>" + text + "</strikethrough>"
-					} else if (style === "underline") {
-						htmlPart = "<u>" + text + "</u>"
-					}
-
-					html += htmlPart
-				}
-
-				let node = NodeManager.createNode(block.type, {
-					url: block.url,
-					html: html,
-					size: block.size
-				})
-
-				NodeManager.appendChild(node)
-			}
-		}
+		pvmNodes.forEach(node => {
+			NodeManager.appendChild(node)
+		})
 	}
 }

@@ -7,8 +7,9 @@
 @section('content')
 	<main id="home-main">
 
-		<section id="popular" class="post-section">
-
+		{{-- <section id="popular" class="post-section">
+			<button class="scroll-btn left"></button>
+			<button class="scroll-btn right"></button>
 			<div class="post-view">
 				<div class="guided-view">
 					<ul class="post-container" data-post-pos="0">
@@ -30,6 +31,20 @@
 				</div>
 			</div>
 
+		</section> --}}
+
+		<section id="popular">
+			<div class="post-container snapping">
+				@foreach ($posts as $post)
+				<div class="scroll-item">
+					<div class="post">
+						<div class="thumb">
+							<img src="/assets/images/sets/{{$post['img']}}.jpg" alt="">
+						</div>
+					</div>
+				</div>
+				@endforeach
+			</div>
 		</section>
 
 		<div class="subjects-bar-wrapper">

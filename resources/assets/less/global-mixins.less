@@ -13,6 +13,18 @@
 	}
 }
 
+.when-smaller-than(@width, @rules) {
+	@media only screen and (max-width: @width) {
+		@rules();
+	} 
+}
+
+.when-larger-than(@width, @rules) {
+	@media only screen and (min-width: @width) {
+		@rules();
+	}
+}
+
 // Graphic Styles
 .no-tap-highlight-color {
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
@@ -83,9 +95,4 @@
 	@media only screen and (max-width: @mobile-width-threshold) {
 		@rules();
 	}
-}
-
-// Minimal 3d effect
-.minimal-3d(@background, @position: top) {
-	// box-shadow: inset 0 0px 0 1px rgba(0,0,0,.1), inset 0 1px 0px 0px @background, inset 0 2px 0px 0px rgba(255,255,255,.8);
 }

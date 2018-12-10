@@ -28,12 +28,17 @@ export interface ImageBlock extends Block {
 }
 
 export interface Frame {
-	title: TextFragment
+	title: string
+	subtitle: string
+	body: string
 	contents: Block[]
+	isPremium: boolean
+	seriesID?: number
+	thumbnail?: any
 }
 
-export function isTextBlock(block: Block): block is TextBlock {
-	if (AT.textOnly.includes((<TextBlock>block).type)) {
+export function isTextOnlyBlock(block: Block): block is TextBlock {
+	if (AT.textOnly.includes((<TextBlock> block).type)) {
 		return true
 	}
 }

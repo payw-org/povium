@@ -34,13 +34,13 @@ if (document.querySelector("#register-main")) {
 	}
 
 	let readableIDInputDOM: HTMLInputElement = document.querySelector(
-		".input-wrapper.readable-id input"
+		"#register-main .input-wrapper.readable-id input"
 	)
 	let nameInputDOM: HTMLInputElement = document.querySelector(
-		".input-wrapper.name input"
+		"#register-main .input-wrapper.name input"
 	)
 	let passInputDOM: HTMLInputElement = document.querySelector(
-		".input-wrapper.password input"
+		"#register-main .input-wrapper.password input"
 	)
 	let startButton: HTMLButtonElement = document.querySelector("button.start")
 
@@ -58,7 +58,7 @@ if (document.querySelector("#register-main")) {
 		})
 	})
 
-	function checkValidation(except_empty: boolean = true) {
+	function checkValidation(allowEmpty: boolean = true) {
 		var inputData = {
 			readable_id: readableIDInputDOM.value,
 			name: nameInputDOM.value,
@@ -72,46 +72,29 @@ if (document.querySelector("#register-main")) {
 		})
 			.then(function(response) {
 				let data = response.data
-				try {
-					if (data !== "") {
-						if (data["readable_id_return"]["err"]) {
-							if (inputData.readable_id === "" && except_empty) {
 
-							} else {
-                                readableIDInputObj.showMsg(data["readable_id_return"]["msg"])
-							}
-						} else {
-							readableIDInputObj.hideMsg()
-						}
-
-						if (data["name_return"]["err"]) {
-                            if (inputData.name === "" && except_empty) {
-
-                            } else {
-                                nameInputObj.showMsg(data["name_return"]["msg"])
-                            }
-						} else {
-							nameInputObj.hideMsg()
-						}
-
-						if (data["password_return"]["err"]) {
-                            if (inputData.password === "" && except_empty) {
-
-                            } else {
-                                passInputObj.showMsg(data["password_return"]["msg"])
-                            }
-
-							passStrengthIndicator.hide()
-						} else {
-							passInputObj.hideMsg()
-							passStrengthIndicator.setStrength(
-								data["password_return"]["strength"]
-							)
-						}
-					}
-				} catch (error) {
-					console.log(error)
+				if (data["readable_id_return"]["err"]) {
+					readableIDInputObj.showMsg(data["readable_id_return"]["msg"], allowEmpty)
+				} else {
+					readableIDInputObj.hideMsg()
 				}
+
+				if (data["name_return"]["err"]) {
+					nameInputObj.showMsg(data["name_return"]["msg"], allowEmpty)
+				} else {
+					nameInputObj.hideMsg()
+				}
+
+				if (data["password_return"]["err"]) {
+					passInputObj.showMsg(data["password_return"]["msg"], allowEmpty)
+					passStrengthIndicator.hide()
+				} else {
+					passInputObj.hideMsg()
+					passStrengthIndicator.setStrength(
+						data["password_return"]["strength"]
+					)
+				}
+
 			})
 			.catch(function(error) {
 				console.log(error)
@@ -137,8 +120,10 @@ if (document.querySelector("#register-main")) {
 				console.log(data)
 				if (data !== "") {
 					if (data["err"]) {
+						console.log("error")
 						checkValidation(false)
-                        alert(data['msg'])
+						// alert(data['msg'])
+						setErrorMsg(data["msg"])
 					} else {
 						location.replace(data["redirect"])
 					}
@@ -159,6 +144,17 @@ if (document.querySelector("#register-main")) {
 			passInputObj.target.type = "text"
 		} else {
 			passInputObj.target.type = "password"
+		}
+	}
+
+	function setErrorMsg(str: string) {
+		let msgBox = document.querySelector("#register-main .error-message")
+		if (str.length === 0) {
+			msgBox.innerHTML = ""
+			msgBox.classList.add("hidden")
+		} else {
+			msgBox.innerHTML = str
+			msgBox.classList.remove("hidden")
 		}
 	}
 

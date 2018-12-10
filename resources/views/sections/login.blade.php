@@ -21,6 +21,9 @@
 				<input class="input-basic" type="password" autocomplete="off" spellcheck="false">
 				<span class="placeholder">암호</span>
 			</div>
+
+			<div class="error-message hidden"></div>
+
 			<button class="confirm btn-aqua">로그인</button>
 			<!-- <div class="auto-login">
 				<input id="auto-chk" type="checkbox" class="checkbox-violet">

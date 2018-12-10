@@ -19,15 +19,17 @@ export default class TextInput {
 			}
 		})
 
-        this.target.addEventListener("input", e => {
-            this.wrapperElement.classList.add("focused")
-        })
+		this.target.addEventListener("input", e => {
+			this.wrapperElement.classList.add("focused")
+		})
 	}
 
-	showMsg(message: string) {
+	showMsg(message: string, allowEmpty: boolean = true) {
 		if (message === "") {
 			this.hideMsg()
 
+			return
+		} else if (this.target.value === "" && allowEmpty) {
 			return
 		} else if (this.wrapperElement.querySelector(".expanded-box")) {
 			this.wrapperElement.querySelector(".expanded-box").innerHTML = message

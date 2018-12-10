@@ -154,24 +154,45 @@ export default class EventManager {
 				PopTool.showImageTool(target)
 
 				if (figure.querySelector("FIGCAPTION").textContent.length === 0) {
-					figure.querySelector("FIGCAPTION").innerHTML = "이미지 주석"
+					figure.querySelector("FIGCAPTION").innerHTML = "이미지 설명"
 				}
 
 				window.getSelection().removeAllRanges()
 			} else if (target.id === "full" && target.nodeName === "BUTTON") {
-				var selectedFigure = EditSession.editorBody.querySelector(
+				let selectedFigure = EditSession.editorBody.querySelector(
 					"figure.image-selected"
 				)
+				selectedFigure.className = "image image-selected"
 				selectedFigure.classList.add("full")
 				PopTool.hideImageTool()
 				setTimeout(() => {
 					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
-			} else if (target.id === "normal" && target.nodeName === "BUTTON") {
+			} else if (target.id === "fit" && target.nodeName === "BUTTON") {
 				var selectedFigure = EditSession.editorBody.querySelector(
 					"figure.image-selected"
 				)
-				selectedFigure.classList.remove("full")
+				selectedFigure.className = "image image-selected"
+				PopTool.hideImageTool()
+				setTimeout(() => {
+					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+				}, 500)
+			} else if (target.id === "large" && target.nodeName === "BUTTON") {
+				let selectedFigure = EditSession.editorBody.querySelector(
+					"figure.image-selected"
+				)
+				selectedFigure.className = "image image-selected"
+				selectedFigure.classList.add("large")
+				PopTool.hideImageTool()
+				setTimeout(() => {
+					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+				}, 500)
+			} else if (target.id === "float-left" && target.nodeName === "BUTTON") {
+				let selectedFigure = EditSession.editorBody.querySelector(
+					"figure.image-selected"
+				)
+				selectedFigure.className = "image image-selected"
+				selectedFigure.classList.add("float-left")
 				PopTool.hideImageTool()
 				setTimeout(() => {
 					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
@@ -229,6 +250,11 @@ export default class EventManager {
 			) {
 				PopTool.hidePopTool()
 			}
+		})
+
+		window.addEventListener("resize", e => {
+			PopTool.showImageTool(document.querySelector(".image.image-selected img"))
+			PopTool.showPopTool()
 		})
 
 		EditSession.editorBody.addEventListener("mouseup", e => {

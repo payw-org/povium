@@ -39,7 +39,7 @@ export default class PopTool {
 		let currentRange = SelectionManager.getCurrentRange()
 		var currentNode = SelectionManager.getCurrentNode()
 
-		if (!currentNode) {
+		if (!currentNode || currentRange.isCollapsed()) {
 			this.hidePopTool()
 			return
 		}
@@ -330,6 +330,10 @@ export default class PopTool {
 	}
 
 	public static showImageTool(imageBlock: HTMLElement) {
+		if (!imageBlock) {
+			this.hideImageTool()
+			return
+		}
 		let editorBody = EditSession.editorBody
 
 		PopTool.imageTool.classList.add("active")
