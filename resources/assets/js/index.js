@@ -14,10 +14,8 @@ let pjax = new Pjax({
 	selectors: [
 		"title", "povium-app"
 	],
-	cacheBust: false,
-	// currentUrlFullReload: true
+	cacheBust: false
 })
-
 topbar.config({
 	barColors: {
 		"0": "#5f42ff",
