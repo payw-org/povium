@@ -7,6 +7,10 @@ export default class PVMButton {
 		this.initValue = btnElem.value
 	}
 
+	setText(text: string) {
+		this.btnElem.value = text
+	}
+
 	showErr(message: string) {
 		this.btnElem.value = message
 		this.btnElem.classList.add("error")
