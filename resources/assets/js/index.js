@@ -10,7 +10,7 @@ import Pjax from "pjax"
 import topbar from "./topbar"
 
 let pjax = new Pjax({
-	elements: "a",
+	elements: "a:not(.full-load)",
 	selectors: [
 		"title", "povium-app"
 	],
