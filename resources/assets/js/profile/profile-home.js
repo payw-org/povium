@@ -9,7 +9,7 @@ import {
 } from "gsap/TweenMax"
 
 ;["load", "pjax:complete"].forEach(eventName => {
-	document.addEventListener(eventName, e => {
+	window.addEventListener(eventName, e => {
 
 		if (document.querySelector("#profile-main")) {
 			window.addEventListener("scroll", function() {
