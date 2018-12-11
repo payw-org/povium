@@ -23,7 +23,22 @@
                 <a id="gn-home-link" href="/"></a>
             </div>
 
-            @if ($current_user === false)
+            @if ($is_logged_in)
+
+            <div id="gn-loggedin-view">
+                <div class="container">
+                    <a href="" class="user-info">
+                        <div class="bg"></div>
+                        <span>{{$current_user['name']}}</span>
+                    </a>
+                    <a href="/logout" class="sign-out full-load">
+                        <div class="bg"></div>
+                        <span>로그아웃</span>
+                    </a>
+                </div>
+            </div>
+
+            @else
 
             <div id="gn-sign-register">
                 <div class="container">
@@ -34,21 +49,6 @@
                     <a href="/register" class="register">
                         <div class="bg"></div>
                         <span>회원가입</span>
-                    </a>
-                </div>
-            </div>
-
-            @else
-
-            <div id="gn-loggedin-view">
-                <div class="container">
-                    <a href="" class="user-info">
-                        <div class="bg"></div>
-                        <span>{{$current_user->getName()}}</span>
-                    </a>
-                    <a href="/logout" class="sign-out full-load">
-                        <div class="bg"></div>
-                        <span>로그아웃</span>
                     </a>
                 </div>
             </div>
