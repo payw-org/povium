@@ -10,7 +10,6 @@ namespace Povium\Provider;
 
 use Philo\Blade\Blade;
 use Povium\Base\Factory\MasterFactory;
-use Povium\Security\User\User;
 
 class TemplateServiceProvider implements ServiceProviderInterface
 {
@@ -20,20 +19,12 @@ class TemplateServiceProvider implements ServiceProviderInterface
 	protected $factory;
 
 	/**
-	 * @var User|false
-	 */
-	protected $currentUser;
-
-	/**
 	 * @param MasterFactory $factory
-	 * @param User|false 	$current_user
 	 */
 	public function __construct(
-		MasterFactory $factory,
-		$current_user
+		MasterFactory $factory
 	) {
 		$this->factory = $factory;
-		$this->currentUser = $current_user;
 	}
 
 	/**
@@ -42,7 +33,6 @@ class TemplateServiceProvider implements ServiceProviderInterface
 	public function boot()
 	{
 		$blade = $this->factory->createInstance(Blade::class);
-		$blade->view()->share('current_user', $this->currentUser);
 
 		return $blade;
 	}

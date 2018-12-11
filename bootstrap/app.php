@@ -25,8 +25,7 @@ $app['authenticator'] = $factory->createInstance(
 )->boot();
 
 $app['blade'] = $factory->createInstance(
-	\Povium\Provider\TemplateServiceProvider::class,
-	$app['authenticator']->getCurrentUser()
+	\Povium\Provider\TemplateServiceProvider::class
 )->boot();
 
 $app['router'] = $factory->createInstance(

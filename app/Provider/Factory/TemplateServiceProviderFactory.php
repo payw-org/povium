@@ -10,25 +10,18 @@ namespace Povium\Provider\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
-use Povium\Security\User\User;
 
 class TemplateServiceProviderFactory extends AbstractChildFactory
 {
 	/**
 	 * {@inheritdoc}
-	 *
-	 * @param User|false
 	 */
 	protected function prepareArgs()
 	{
-		$materials = func_get_args();
-
 		$factory = new MasterFactory();
-		$current_user = $materials[0];
 
 		$this->args = array(
-			$factory,
-			$current_user
+			$factory
 		);
 	}
 }
