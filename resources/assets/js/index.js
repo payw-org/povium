@@ -5,7 +5,7 @@ import { homeController } from "./home/homeController"
 import { logout } from "./logout"
 import { profile } from "./profile/profile-home"
 import { login } from "./login"
-import { register } from "./register"
+import { register } from "./register/register"
 import Pjax from "pjax"
 import topbar from "./topbar"
 

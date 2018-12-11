@@ -16,7 +16,7 @@ export default class Popular {
 		this.maxPostCount = this.scrollItems.length
 		this.scrollUnitWidth = this.scrollItems[0].getBoundingClientRect().width
 
-		this.startAutoScroll()
+		// this.startAutoScroll()
 
 		const scrollButton = class ScrollButton {
 
@@ -27,20 +27,20 @@ export default class Popular {
 			this.scrollUnitWidth = this.scrollItems[0].getBoundingClientRect().width
 		})
 
-		;["mouseenter", "mouseover", "touchstart"].forEach(event => {
-			this.popularElem.addEventListener(event, e => {
-				this.stopAutoScroll()
-			})
-		})
+		// ;["mouseenter", "mouseover", "touchstart"].forEach(event => {
+		// 	this.popularElem.addEventListener(event, e => {
+		// 		this.stopAutoScroll()
+		// 	})
+		// })
 
-		;["mouseleave", "touchend"].forEach(event => {
-			this.popularElem.addEventListener(event, e => {
-				console.log(event)
-				setTimeout(() => {
-					this.startAutoScroll()
-				}, 2000)
-			})
-		})
+		// ;["mouseleave", "touchend"].forEach(event => {
+		// 	this.popularElem.addEventListener(event, e => {
+		// 		console.log(event)
+		// 		setTimeout(() => {
+		// 			this.startAutoScroll()
+		// 		}, 2000)
+		// 	})
+		// })
 
 		this.scrollContainer.addEventListener("wheel", e => {
 			if (this.scrollContainer.scrollLeft === 0 && e.deltaX < 0) {

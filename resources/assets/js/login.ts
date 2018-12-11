@@ -5,14 +5,29 @@
 
 import Axios from "axios"
 import TextInput from "./TextInput"
+import PVMButton from "./PVMButton"
+import Pjax from "pjax"
+import PVMPjax from "./PVMPjax";
 
 ;["load", "pjax:complete"].forEach(eventName => {
 	window.addEventListener(eventName, e => {
 
 		if (document.querySelector("#login-main")) {
+
+			let confirmButton: HTMLButtonElement = document.querySelector(
+				"button.confirm"
+			)
+			let PVMConfirmButton = new PVMButton(confirmButton)
+
 			class SignInInput extends TextInput {
 				constructor(inputDOM: HTMLInputElement) {
 					super(inputDOM)
+
+					;["focus", "input"].forEach(eventName => {
+						this.target.addEventListener(eventName, e => {
+							PVMConfirmButton.init()
+						})
+					})
 				}
 			}
 
@@ -21,9 +36,6 @@ import TextInput from "./TextInput"
 			)
 			let passInputDOM: HTMLInputElement = document.querySelector(
 				".input-wrapper.password input"
-			)
-			let confirmButton: HTMLButtonElement = document.querySelector(
-				"button.confirm"
 			)
 
 			let identifierInputObj = new SignInInput(identifierInputDOM)
@@ -53,6 +65,8 @@ import TextInput from "./TextInput"
 					password: passInputDOM.value
 				}
 
+				PVMConfirmButton.startSpinner()
+
 				Axios({
 					method: "post",
 					url: "/login",
@@ -63,9 +77,14 @@ import TextInput from "./TextInput"
 					if (data !== "") {
 						if (data["err"]) {
 							// alert(data["msg"])
-							setErrorMsg(data["msg"])
+							// setErrorMsg(data["msg"])
+							setTimeout(() => {
+								PVMConfirmButton.stopSpinner()
+								PVMConfirmButton.showErr(data["msg"])
+							}, 1000)
 						} else {
-							location.replace(data["redirect"])
+							// location.replace(data["redirect"])
+							PVMPjax.loadUrl(data["redirect"])
 						}
 					}
 				})

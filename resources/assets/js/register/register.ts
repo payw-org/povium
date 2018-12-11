@@ -1,10 +1,14 @@
 import Axios from "axios"
-import TextInput from "./TextInput"
+import TextInput from "../TextInput"
+import PVMButton from "../PVMButton"
 
 ;["load", "pjax:complete"].forEach(eventName => {
 	window.addEventListener(eventName, e => {
 
 		if (document.querySelector("#register-main")) {
+			let startButton: HTMLButtonElement = document.querySelector("button.start")
+			let PVMStartButton = new PVMButton(startButton)
+
 			class RegInput extends TextInput {
 				constructor(inputDOM: HTMLInputElement) {
 					super(inputDOM)
@@ -30,6 +34,12 @@ import TextInput from "./TextInput"
 						}, 300)
 					})
 
+					;["focus", "input"].forEach(eventName => {
+						this.target.addEventListener(eventName, e => {
+							PVMStartButton.init()
+						})
+					})
+
 					this.target.addEventListener("focusout", function() {
 						// console.log('focused out')
 					})
@@ -45,7 +55,6 @@ import TextInput from "./TextInput"
 			let passInputDOM: HTMLInputElement = document.querySelector(
 				"#register-main .input-wrapper.password input"
 			)
-			let startButton: HTMLButtonElement = document.querySelector("button.start")
 
 			let readableIDInputObj = new RegInput(readableIDInputDOM)
 			let nameInputObj = new RegInput(nameInputDOM)
@@ -73,74 +82,75 @@ import TextInput from "./TextInput"
 					url: "/register",
 					data: inputData
 				})
-					.then(function(response) {
-						let data = response.data
-
-						if (data["readable_id_return"]["err"]) {
-							readableIDInputObj.showMsg(data["readable_id_return"]["msg"], allowEmpty)
-						} else {
-							readableIDInputObj.hideMsg()
-						}
-
-						if (data["name_return"]["err"]) {
-							nameInputObj.showMsg(data["name_return"]["msg"], allowEmpty)
-						} else {
-							nameInputObj.hideMsg()
-						}
-
-						if (data["password_return"]["err"]) {
-							passInputObj.showMsg(data["password_return"]["msg"], allowEmpty)
-							passStrengthIndicator.hide()
-						} else {
-							passInputObj.hideMsg()
-							passStrengthIndicator.setStrength(
-								data["password_return"]["strength"]
-							)
-						}
-
-					})
-					.catch(function(error) {
-						console.log(error)
-					})
+				.then(function(response) {
+					let data = response.data
+				 
+					if (data["readable_id_return"]["err"]) {
+						readableIDInputObj.showMsg(data["readable_id_return"]["msg"], allowEmpty)
+					} else {
+						readableIDInputObj.hideMsg()
+					}
+				 
+					if (data["name_return"]["err"]) {
+						nameInputObj.showMsg(data["name_return"]["msg"], allowEmpty)
+					} else {
+						nameInputObj.hideMsg()
+					}
+				 
+					if (data["password_return"]["err"]) {
+						passInputObj.showMsg(data["password_return"]["msg"], allowEmpty)
+						passStrengthIndicator.hide()
+					} else {
+						passInputObj.hideMsg()
+						passStrengthIndicator.setStrength(
+							data["password_return"]["strength"]
+						)
+					}
+				 
+				})
+				.catch(function(error) {
+					console.log(error)
+				})				
 			}
 
-			startButton = document.querySelector("button.start")
+			startButton.addEventListener("click", function() {
+				var inputData = {
+					readable_id: readableIDInputDOM.value,
+					name: nameInputDOM.value,
+					password: passInputDOM.value
+				}
 
-			if (startButton) {
-				startButton.addEventListener("click", function() {
-					var inputData = {
-						readable_id: readableIDInputDOM.value,
-						name: nameInputDOM.value,
-						password: passInputDOM.value
-					}
+				PVMStartButton.startSpinner()
 
-					Axios({
-						method: "post",
-						url: "/register",
-						data: inputData
-					}).then(function(response) {
-						let data = response.data
-						console.log(data)
-						if (data !== "") {
-							if (data["err"]) {
-								console.log("error")
+				Axios({
+					method: "post",
+					url: "/register",
+					data: inputData
+				}).then(function(response) {
+					let data = response.data
+					console.log(data)
+					if (data !== "") {
+						if (data["err"]) {
+							console.log("error")
+							setTimeout(() => {
 								checkValidation(false)
 								// alert(data['msg'])
-								setErrorMsg(data["msg"])
-							} else {
-								location.replace(data["redirect"])
-							}
+								// setErrorMsg(data["msg"])
+								PVMStartButton.stopSpinner()
+								PVMStartButton.showErr("입력정보를 다시 확인하세요.")
+							}, 1000)
+							
+						} else {
+							location.replace(data["redirect"])
 						}
-					})
+					}
 				})
-			}
+			})
 
 			let passwordViewBtn = document.querySelector("#register-main .view")
-			if (passwordViewBtn) {
-				passwordViewBtn.addEventListener("click", e => {
-					togglePassView()
-				})
-			}
+			passwordViewBtn.addEventListener("click", e => {
+				togglePassView()
+			})
 
 			function togglePassView() {
 				if (passInputObj.target.type === "password") {
@@ -161,7 +171,7 @@ import TextInput from "./TextInput"
 				}
 			}
 
-			let passStrengthIndicator = {
+			const passStrengthIndicator = {
 				dom: document.querySelector("#register-main .strength"),
 
 				show: function() {
