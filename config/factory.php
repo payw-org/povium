@@ -48,6 +48,8 @@ return [
 	\Povium\Http\Middleware\User\ProfileViewMiddleware::class => \Povium\Http\Middleware\Factory\ProfileViewMiddlewareFactory::class,
 	\Povium\Http\Middleware\Error\HttpErrorViewMiddleware::class => \Povium\Http\Middleware\Factory\HttpErrorViewMiddlewareFactory::class,
 
+	\Povium\Loader\GlobalModule\GlobalNavigationLoader::class => \Povium\Loader\Factory\GlobalNavigationLoaderFactory::class,
+
 	\Povium\MailSender\ActivationMailSender::class => \Povium\MailSender\Factory\ActivationMailSenderFactory::class,
 
 	\Povium\Provider\AuthServiceProvider::class => \Povium\Provider\Factory\AuthServiceProviderFactory::class,
