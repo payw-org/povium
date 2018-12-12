@@ -9,6 +9,7 @@
 namespace Povium\Http\Controller\User;
 
 use Povium\Http\Controller\Exception\UserNotFoundException;
+use Povium\Loader\GlobalModule\GlobalNavigationLoader;
 use Povium\Security\User\UserManager;
 
 class ProfileViewController
@@ -19,19 +20,27 @@ class ProfileViewController
 	private $config;
 
 	/**
+	 * @var GlobalNavigationLoader
+	 */
+	protected $globalNavigationLoader;
+
+	/**
 	 * @var UserManager
 	 */
 	protected $userManager;
 
 	/**
-	 * @param array 		$config
-	 * @param UserManager 	$user_manager
+	 * @param array 					$config
+	 * @param GlobalNavigationLoader 	$global_navigation_loader
+	 * @param UserManager 				$user_manager
 	 */
 	public function __construct(
 		array $config,
+		GlobalNavigationLoader $global_navigation_loader,
 		UserManager $user_manager
 	) {
 		$this->config = $config;
+		$this->globalNavigationLoader = $global_navigation_loader;
 		$this->userManager = $user_manager;
 	}
 
@@ -46,12 +55,16 @@ class ProfileViewController
 	 */
 	public function loadViewConfig($readable_id)
 	{
+		$view_config = array();
+
 		$user_id = $this->userManager->getUserIDFromReadableID($readable_id);
 
 		//	User not found
 		if ($user_id === false) {
 			throw new UserNotFoundException($this->config['msg']['user_not_found']);
 		}
+
+		$view_config['global_nav'] = $this->globalNavigationLoader->loadData();
 
 		$user = $this->userManager->getUser($user_id);
 

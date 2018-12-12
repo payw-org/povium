@@ -34,6 +34,10 @@ return [
 	\Povium\Http\Controller\Authentication\LoginFormValidationController::class => \Povium\Http\Controller\Factory\LoginFormValidationControllerFactory::class,
 	\Povium\Http\Controller\Setting\EmailAddController::class => \Povium\Http\Controller\Factory\EmailAddControllerFactory::class,
 	\Povium\Http\Controller\User\ProfileViewController::class => \Povium\Http\Controller\Factory\ProfileViewControllerFactory::class,
+	\Povium\Http\Controller\Home\HomeViewController::class => \Povium\Http\Controller\Factory\HomeViewControllerFactory::class,
+	\Povium\Http\Controller\Authentication\LoginViewController::class => \Povium\Http\Controller\Factory\LoginViewControllerFactory::class,
+	\Povium\Http\Controller\Authentication\RegisterViewController::class => \Povium\Http\Controller\Factory\RegisterViewControllerFactory::class,
+	\Povium\Http\Controller\Error\HttpErrorViewController::class => \Povium\Http\Controller\Factory\HttpErrorViewControllerFactory::class,
 
     \Povium\Http\Middleware\Authentication\LoginMiddleware::class => \Povium\Http\Middleware\Factory\LoginMiddlewareFactory::class,
 	\Povium\Http\Middleware\Authentication\RegisterMiddleware::class => \Povium\Http\Middleware\Factory\RegisterMiddlewareFactory::class,

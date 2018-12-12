@@ -1,6 +1,6 @@
 <?php
 /**
- * This factory is responsible for creating "ProfileViewController" instance.
+ * This factory is responsible for creating "HttpErrorViewController" instance.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -11,9 +11,8 @@ namespace Povium\Http\Controller\Factory;
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
 use Povium\Loader\GlobalModule\GlobalNavigationLoader;
-use Povium\Security\User\UserManager;
 
-class ProfileViewControllerFactory extends AbstractChildFactory
+class HttpErrorViewControllerFactory extends AbstractChildFactory
 {
 	/**
 	 * {@inheritdoc}
@@ -22,14 +21,12 @@ class ProfileViewControllerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/profile_view_controller.php');
 		$global_navigation_loader = $factory->createInstance(GlobalNavigationLoader::class);
-		$user_manager = $factory->createInstance(UserManager::class);
+		$http_response_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
 
 		$this->args = array(
-			$config,
 			$global_navigation_loader,
-			$user_manager
+			$http_response_config
 		);
 	}
 }
