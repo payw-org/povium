@@ -35,13 +35,11 @@ class LoginControllerFactory extends AbstractChildFactory
 		$session_manager = $factory->createInstance(SessionManager::class);
 		$authenticator = $materials[0];
 
-		$this->args = array(
-			$config,
-			$login_form_validation_controller,
-			$password_encoder,
-			$user_manager,
-			$session_manager,
-			$authenticator
-		);
+		$this->args[] = $config;
+		$this->args[] = $login_form_validation_controller;
+		$this->args[] = $password_encoder;
+		$this->args[] = $user_manager;
+		$this->args[] = $session_manager;
+		$this->args[] = $authenticator;
 	}
 }

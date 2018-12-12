@@ -33,12 +33,10 @@ class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
         $activation_mail_sender = $factory->createInstance(ActivationMailSender::class);
         $router = $materials[0];
 
-        $this->args = array(
-            $config,
-            $random_string_generator,
-            $email_add_controller,
-            $activation_mail_sender,
-            $router
-        );
+		$this->args[] = $config;
+		$this->args[] = $random_string_generator;
+		$this->args[] = $email_add_controller;
+		$this->args[] = $activation_mail_sender;
+		$this->args[] = $router;
     }
 }

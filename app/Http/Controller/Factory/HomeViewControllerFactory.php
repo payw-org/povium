@@ -23,8 +23,6 @@ class HomeViewControllerFactory extends AbstractChildFactory
 
 		$global_navigation_loader = $factory->createInstance(GlobalNavigationLoader::class);
 
-		$this->args = array(
-			$global_navigation_loader
-		);
+		$this->args[] = $global_navigation_loader;
 	}
 }

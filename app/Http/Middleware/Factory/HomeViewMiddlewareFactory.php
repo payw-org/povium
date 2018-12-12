@@ -23,8 +23,6 @@ class HomeViewMiddlewareFactory extends AbstractChildFactory
 
 		$home_view_controller = $factory->createInstance(HomeViewController::class);
 
-		$this->args = array(
-			$home_view_controller
-		);
+		$this->args[] = $home_view_controller;
 	}
 }

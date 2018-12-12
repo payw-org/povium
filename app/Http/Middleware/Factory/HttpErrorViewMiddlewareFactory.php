@@ -23,8 +23,6 @@ class HttpErrorViewMiddlewareFactory extends AbstractChildFactory
 
 		$http_error_view_controller = $factory->createInstance(HttpErrorViewController::class);
 
-		$this->args = array(
-			$http_error_view_controller
-		);
+		$this->args[] = $http_error_view_controller;
 	}
 }

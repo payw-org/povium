@@ -24,8 +24,6 @@ class AuthorizerFactory extends AbstractChildFactory
 
         $authenticator = $materials[0];
 
-        $this->args = array(
-            $authenticator
-        );
+		$this->args[] = $authenticator;
     }
 }

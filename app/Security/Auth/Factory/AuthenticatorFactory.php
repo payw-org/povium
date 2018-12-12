@@ -32,13 +32,11 @@ class AuthenticatorFactory extends AbstractChildFactory
 		$user_manager = $factory->createInstance(UserManager::class);
 		$session_manager = $factory->createInstance(SessionManager::class);
 
-		$this->args = array(
-			$config,
-			$conn,
-			$random_string_generator,
-			$client,
-			$user_manager,
-			$session_manager
-		);
+		$this->args[] = $config;
+		$this->args[] = $conn;
+		$this->args[] = $random_string_generator;
+		$this->args[] = $client;
+		$this->args[] = $user_manager;
+		$this->args[] = $session_manager;
 	}
 }

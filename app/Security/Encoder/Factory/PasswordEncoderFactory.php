@@ -19,8 +19,6 @@ class PasswordEncoderFactory extends AbstractChildFactory
 	{
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/password_encoder.php');
 
-		$this->args = array(
-			$config
-		);
+		$this->args[] = $config;
 	}
 }

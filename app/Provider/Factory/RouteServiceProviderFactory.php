@@ -29,10 +29,8 @@ class RouteServiceProviderFactory extends AbstractChildFactory
 		$authenticator = $materials[0];
 		$blade = $materials[1];
 
-		$this->args = array(
-			$factory,
-			$authenticator,
-			$blade
-		);
+		$this->args[] = $factory;
+		$this->args[] = $authenticator;
+		$this->args[] = $blade;
 	}
 }

@@ -28,11 +28,9 @@ class RegisterControllerFactory extends AbstractChildFactory
 		$password_encoder = $factory->createInstance(PasswordEncoder::class);
 		$user_manager = $factory->createInstance(UserManager::class);
 
-		$this->args = array(
-			$config,
-			$registration_form_validation_controller,
-			$password_encoder,
-			$user_manager
-		);
+		$this->args[] = $config;
+		$this->args[] = $registration_form_validation_controller;
+		$this->args[] = $password_encoder;
+		$this->args[] = $user_manager;
 	}
 }

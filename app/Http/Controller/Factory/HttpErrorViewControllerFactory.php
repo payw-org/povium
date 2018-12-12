@@ -24,9 +24,7 @@ class HttpErrorViewControllerFactory extends AbstractChildFactory
 		$global_navigation_loader = $factory->createInstance(GlobalNavigationLoader::class);
 		$http_response_config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
 
-		$this->args = array(
-			$global_navigation_loader,
-			$http_response_config
-		);
+		$this->args[] = $global_navigation_loader;
+		$this->args[] = $http_response_config;
 	}
 }

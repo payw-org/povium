@@ -26,10 +26,8 @@ class ProfileViewControllerFactory extends AbstractChildFactory
 		$global_navigation_loader = $factory->createInstance(GlobalNavigationLoader::class);
 		$user_manager = $factory->createInstance(UserManager::class);
 
-		$this->args = array(
-			$config,
-			$global_navigation_loader,
-			$user_manager
-		);
+		$this->args[] = $config;
+		$this->args[] = $global_navigation_loader;
+		$this->args[] = $user_manager;
 	}
 }

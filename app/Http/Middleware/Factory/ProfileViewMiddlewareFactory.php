@@ -23,8 +23,6 @@ class ProfileViewMiddlewareFactory extends AbstractChildFactory
 
 		$profile_view_controller = $factory->createInstance(ProfileViewController::class);
 
-		$this->args = array(
-			$profile_view_controller
-		);
+		$this->args[] = $profile_view_controller;
 	}
 }

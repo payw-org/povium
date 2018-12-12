@@ -26,10 +26,8 @@ class EmailAddControllerFactory extends AbstractChildFactory
 		$conn = DBConnection::getInstance()->getConn();
 		$email_validator = $factory->createInstance(EmailValidator::class);
 
-		$this->args = array(
-			$config,
-			$conn,
-			$email_validator
-		);
+		$this->args[] = $config;
+		$this->args[] = $conn;
+		$this->args[] = $email_validator;
 	}
 }

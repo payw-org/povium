@@ -23,8 +23,6 @@ class RegistrationFeedbackMiddlewareFactory extends AbstractChildFactory
 
         $registration_form_validation_controller = $factory->createInstance(RegistrationFormValidationController::class);
 
-        $this->args = array(
-            $registration_form_validation_controller
-        );
+		$this->args[] = $registration_form_validation_controller;
     }
 }

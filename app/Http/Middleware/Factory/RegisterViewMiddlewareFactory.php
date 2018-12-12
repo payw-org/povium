@@ -28,9 +28,7 @@ class RegisterViewMiddlewareFactory extends AbstractChildFactory
 		$router = $materials[0];
 		$register_view_controller = $factory->createInstance(RegisterViewController::class);
 
-		$this->args = array(
-			$router,
-			$register_view_controller
-		);
+		$this->args[] = $router;
+		$this->args[] = $register_view_controller;
 	}
 }

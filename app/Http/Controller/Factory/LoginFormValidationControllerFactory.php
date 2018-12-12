@@ -28,11 +28,9 @@ class LoginFormValidationControllerFactory extends AbstractChildFactory
 		$email_validator = $factory->createInstance(EmailValidator::class);
 		$password_validator = $factory->createInstance(PasswordValidator::class);
 
-		$this->args = array(
-			$config,
-			$readable_id_validator,
-			$email_validator,
-			$password_validator
-		);
+		$this->args[] = $config;
+		$this->args[] = $readable_id_validator;
+		$this->args[] = $email_validator;
+		$this->args[] = $password_validator;
 	}
 }

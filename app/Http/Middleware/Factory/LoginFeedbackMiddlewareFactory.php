@@ -23,8 +23,6 @@ class LoginFeedbackMiddlewareFactory extends AbstractChildFactory
 
 		$login_form_validation_controller = $factory->createInstance(LoginFormValidationController::class);
 
-		$this->args = array(
-			$login_form_validation_controller
-		);
+		$this->args[] = $login_form_validation_controller;
 	}
 }

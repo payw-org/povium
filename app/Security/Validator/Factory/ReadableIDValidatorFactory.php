@@ -24,9 +24,7 @@ class ReadableIDValidatorFactory extends AbstractChildFactory
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/readable_id_validator.php');
 		$user_manager = $factory->createInstance(UserManager::class);
 
-		$this->args = array(
-			$config,
-			$user_manager
-		);
+		$this->args[] = $config;
+		$this->args[] = $user_manager;
 	}
 }

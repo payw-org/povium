@@ -28,9 +28,7 @@ class LoginViewMiddlewareFactory extends AbstractChildFactory
 		$router = $materials[0];
 		$login_view_controller = $factory->createInstance(LoginViewController::class);
 
-		$this->args = array(
-			$router,
-			$login_view_controller
-		);
+		$this->args[] = $router;
+		$this->args[] = $login_view_controller;
 	}
 }

@@ -21,9 +21,7 @@ class DBBuilderFactory extends AbstractChildFactory
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/db_builder.php');
 		$conn = DBConnection::getInstance()->getConn();
 
-		$this->args = array(
-			$config,
-			$conn
-		);
+		$this->args[] = $config;
+		$this->args[] = $conn;
 	}
 }

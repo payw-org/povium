@@ -27,10 +27,8 @@ class RegistrationFormValidationControllerFactory extends AbstractChildFactory
 		$name_validator = $factory->createInstance(NameValidator::class);
 		$password_validator = $factory->createInstance(PasswordValidator::class);
 
-		$this->args = array(
-			$readable_id_validator,
-			$name_validator,
-			$password_validator
-		);
+		$this->args[] = $readable_id_validator;
+		$this->args[] = $name_validator;
+		$this->args[] = $password_validator;
 	}
 }

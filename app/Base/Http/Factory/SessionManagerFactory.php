@@ -26,10 +26,8 @@ class SessionManagerFactory extends AbstractChildFactory
 		$conn = DBConnection::getInstance()->getConn();
 		$session_handler = $factory->createInstance(PDOSessionHandler::class);
 
-		$this->args = array(
-			$config,
-			$conn,
-			$session_handler
-		);
+		$this->args[] = $config;
+		$this->args[] = $conn;
+		$this->args[] = $session_handler;
 	}
 }

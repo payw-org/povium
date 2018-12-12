@@ -20,8 +20,6 @@ class AuthServiceProviderFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$this->args = array(
-			$factory
-		);
+		$this->args[] = $factory;
 	}
 }

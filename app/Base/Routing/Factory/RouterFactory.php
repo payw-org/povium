@@ -27,10 +27,8 @@ class RouterFactory extends AbstractChildFactory
 		$generator = $factory->createInstance(URIGenerator::class);
 		$redirector = $factory->createInstance(Redirector::class);
 
-		$this->args = array(
-			$matcher,
-			$generator,
-			$redirector
-		);
+		$this->args[] = $matcher;
+		$this->args[] = $generator;
+		$this->args[] = $redirector;
 	}
 }

@@ -26,10 +26,8 @@ class EmailActivationControllerFactory extends AbstractChildFactory
 		$conn = DBConnection::getInstance()->getConn();
 		$user_manager = $factory->createInstance(UserManager::class);
 
-		$this->args = array(
-			$config,
-			$conn,
-			$user_manager
-		);
+		$this->args[] = $config;
+		$this->args[] = $conn;
+		$this->args[] = $user_manager;
 	}
 }

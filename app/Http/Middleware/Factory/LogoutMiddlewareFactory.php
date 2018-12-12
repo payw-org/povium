@@ -28,8 +28,6 @@ class LogoutMiddlewareFactory extends AbstractChildFactory
         $authenticator = $materials[0];
         $logout_controller = $factory->createInstance(LogoutController::class, $authenticator);
 
-        $this->args = array(
-            $logout_controller
-        );
+		$this->args[] = $logout_controller;
     }
 }
