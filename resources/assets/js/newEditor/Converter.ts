@@ -87,7 +87,7 @@ export default class Converter {
 	}
 
 	static stringify(editorNodes: PVMNode[]) {
-		let obj: PostData.Frame = {
+		let dataObj: PostData.Frame = {
 			title: "",
 			subtitle: "",
 			body: "",
@@ -113,6 +113,6 @@ export default class Converter {
 			}
 		})
 
-		return JSON.stringify(obj)
+		return JSON.stringify(dataObj)
 	}
 }
