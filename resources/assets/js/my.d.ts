@@ -2,3 +2,4 @@
 
 declare module 'scroll-snap'
 declare module 'pjax'
+declare module 'detect-browser'
