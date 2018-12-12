@@ -34,6 +34,12 @@ class TemplateServiceProvider implements ServiceProviderInterface
 	{
 		$blade = $this->factory->createInstance(Blade::class);
 
+		//	Set template shared data
+		$shared_data = array(
+			'is_logged_in' => $GLOBALS['is_logged_in']
+		);
+		$blade->view()->share($shared_data);
+
 		return $blade;
 	}
 }
