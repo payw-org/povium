@@ -225,7 +225,7 @@
 
 	// New Popular
 	#popular {
-
+		position: relative;
 		margin-top: 2rem;
 		height: 16vw;
 		overflow-y: hidden;
@@ -243,6 +243,50 @@
 		.when-larger-than(@threshold--3, {
 			height: 12.5vw;
 		});
+
+		&:hover .scroll-btn {
+			opacity: 0.7;
+			visibility: visible;
+		}
+ 
+		.scroll-btn {
+			cursor: pointer;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 3.4rem;
+			height: 3.4rem;
+			position: absolute;
+			opacity: 0.7;
+			border-radius: 50%;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity .2s ease, visibility .2s ease, background-color .2s ease, filter .2s ease;
+			background-repeat: no-repeat;
+			background-size: 100%;
+			background-position: center;
+ 
+			&:active {
+				filter: brightness(1.3);
+			}
+ 
+			&:hover {
+				background-color: @white-blue;
+				opacity: 1;
+			}
+ 
+			&.left {
+				background-image: url("/assets/images/povium/home/left.svg");
+				left: 2rem;
+				.responsive({left: 1rem},{});
+			}
+			&.right {
+				background-image: url("/assets/images/povium/home/right.svg");
+				right: 2rem;
+				.responsive({right: 1rem},{});
+			}
+		}
 
 		.post-container {
 			padding: 0;
