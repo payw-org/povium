@@ -9,6 +9,8 @@
 namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\Home\HomeViewController;
 
 class HomeViewMiddlewareFactory extends AbstractChildFactory
 {
@@ -17,5 +19,12 @@ class HomeViewMiddlewareFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
+		$factory = new MasterFactory();
+
+		$home_view_controller = $factory->createInstance(HomeViewController::class);
+
+		$this->args = array(
+			$home_view_controller
+		);
 	}
 }

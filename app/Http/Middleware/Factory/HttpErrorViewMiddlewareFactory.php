@@ -9,6 +9,8 @@
 namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\Error\HttpErrorViewController;
 
 class HttpErrorViewMiddlewareFactory extends AbstractChildFactory
 {
@@ -17,10 +19,12 @@ class HttpErrorViewMiddlewareFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/http_response.php');
+		$factory = new MasterFactory();
+
+		$http_error_view_controller = $factory->createInstance(HttpErrorViewController::class);
 
 		$this->args = array(
-			$config
+			$http_error_view_controller
 		);
 	}
 }

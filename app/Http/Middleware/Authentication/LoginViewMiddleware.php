@@ -9,6 +9,7 @@
 namespace Povium\Http\Middleware\Authentication;
 
 use Povium\Base\Routing\Router;
+use Povium\Http\Controller\Authentication\LoginViewController;
 use Povium\Http\Middleware\AbstractViewMiddleware;
 use Povium\Http\Middleware\RefererCheckerInterface;
 
@@ -20,11 +21,20 @@ class LoginViewMiddleware extends AbstractViewMiddleware implements RefererCheck
 	protected $router;
 
 	/**
-	 * @param Router $router
+	 * @var LoginViewController
 	 */
-	public function __construct(Router $router)
-	{
+	protected $loginViewController;
+
+	/**
+	 * @param Router 				$router
+	 * @param LoginViewController 	$login_view_controller
+	 */
+	public function __construct(
+		Router $router,
+		LoginViewController $login_view_controller
+	) {
 		$this->router = $router;
+		$this->loginViewController = $login_view_controller;
 	}
 
 	/**
@@ -37,6 +47,8 @@ class LoginViewMiddleware extends AbstractViewMiddleware implements RefererCheck
 		if ($referer_query !== false) {
 			$this->router->redirect('/login' . '?' . $referer_query);
 		}
+
+		$this->viewConfig = $this->loginViewController->loadViewConfig();
 	}
 
 	/**

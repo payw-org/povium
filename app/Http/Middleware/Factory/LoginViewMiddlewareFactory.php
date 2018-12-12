@@ -9,7 +9,9 @@
 namespace Povium\Http\Middleware\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Routing\Router;
+use Povium\Http\Controller\Authentication\LoginViewController;
 
 class LoginViewMiddlewareFactory extends AbstractChildFactory
 {
@@ -21,11 +23,14 @@ class LoginViewMiddlewareFactory extends AbstractChildFactory
 	protected function prepareArgs()
 	{
 		$materials = func_get_args();
+		$factory = new MasterFactory();
 
 		$router = $materials[0];
+		$login_view_controller = $factory->createInstance(LoginViewController::class);
 
 		$this->args = array(
-			$router
+			$router,
+			$login_view_controller
 		);
 	}
 }

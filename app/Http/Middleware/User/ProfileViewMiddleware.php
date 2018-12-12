@@ -43,9 +43,7 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 		$readable_id = strtolower($readable_id);
 
 		try {
-			$view_config = $this->profileViewController->loadViewConfig($readable_id);
-
-			$this->viewConfig = $view_config;
+			$this->viewConfig = $this->profileViewController->loadViewConfig($readable_id);
 		} catch (UserNotFoundException $e) {
 			throw new NotFoundHttpException(
 				$e->getMessage(),

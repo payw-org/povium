@@ -9,6 +9,7 @@
 namespace Povium\Http\Middleware\Authentication;
 
 use Povium\Base\Routing\Router;
+use Povium\Http\Controller\Authentication\RegisterViewController;
 use Povium\Http\Middleware\AbstractViewMiddleware;
 use Povium\Http\Middleware\RefererCheckerInterface;
 
@@ -20,11 +21,20 @@ class RegisterViewMiddleware extends AbstractViewMiddleware implements RefererCh
 	protected $router;
 
 	/**
-	 * @param Router $router
+	 * @var RegisterViewController
 	 */
-	public function __construct(Router $router)
-	{
+	protected $registerViewController;
+
+	/**
+	 * @param Router 					$router
+	 * @param RegisterViewController 	$register_view_controller
+	 */
+	public function __construct(
+		Router $router,
+		RegisterViewController $register_view_controller
+	) {
 		$this->router = $router;
+		$this->registerViewController = $register_view_controller;
 	}
 
 	/**
@@ -37,6 +47,8 @@ class RegisterViewMiddleware extends AbstractViewMiddleware implements RefererCh
 		if ($referer_query !== false) {
 			$this->router->redirect('/register' . '?' . $referer_query);
 		}
+
+		$this->viewConfig = $this->registerViewController->loadViewConfig();
 	}
 
 	/**

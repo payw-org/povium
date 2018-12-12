@@ -9,21 +9,22 @@
 namespace Povium\Http\Middleware\Error;
 
 use Povium\Base\Http\Exception\HttpException;
+use Povium\Http\Controller\Error\HttpErrorViewController;
 use Povium\Http\Middleware\AbstractViewMiddleware;
 
 class HttpErrorViewMiddleware extends AbstractViewMiddleware
 {
 	/**
-	 * @var array
+	 * @var HttpErrorViewController
 	 */
-	protected $httpResponseConfig;
+	protected $httpErrorViewController;
 
 	/**
-	 * @param array $http_response_config
+	 * @param HttpErrorViewController $http_error_view_controller
 	 */
-	public function __construct(array $http_response_config)
+	public function __construct(HttpErrorViewController $http_error_view_controller)
 	{
-		$this->httpResponseConfig = $http_response_config;
+		$this->httpErrorViewController = $http_error_view_controller;
 	}
 
 	/**
@@ -36,15 +37,8 @@ class HttpErrorViewMiddleware extends AbstractViewMiddleware
 		$args = func_get_args();
 		$http_exception = $args[0];
 
-		$response_code = $http_exception->getResponseCode();
-		http_response_code($response_code);
+		http_response_code($http_exception->getResponseCode());
 
-		$title = $this->httpResponseConfig[$response_code]['title'];
-		$heading = $this->httpResponseConfig[$response_code]['heading'];
-		$details = $http_exception->getMessage();
-
-		$this->viewConfig['title'] = $title;
-		$this->viewConfig['heading'] = $heading;
-		$this->viewConfig['details'] = $details;
+		$this->viewConfig = $this->httpErrorViewController->loadViewConfig($http_exception);
 	}
 }
