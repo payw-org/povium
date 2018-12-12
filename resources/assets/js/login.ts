@@ -6,8 +6,6 @@
 import Axios from "axios"
 import TextInput from "./TextInput"
 import PVMButton from "./PVMButton"
-import Pjax from "pjax"
-import PVMPjax from "./PVMPjax";
 
 ;["load", "pjax:complete"].forEach(eventName => {
 	window.addEventListener(eventName, e => {
@@ -83,8 +81,7 @@ import PVMPjax from "./PVMPjax";
 								PVMConfirmButton.showErr(data["msg"])
 							}, 1000)
 						} else {
-							// location.replace(data["redirect"])
-							PVMPjax.loadUrl(data["redirect"])
+							location.replace(data["redirect"])
 						}
 					}
 				})
