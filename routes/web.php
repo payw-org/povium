@@ -172,7 +172,7 @@ $collection->post(
  */
 $collection->get(
 	'/c/email/activation',
-	function () use ($factory, $authenticator, $router) {
+	function () use ($factory, $router) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			$router->redirect('/login', true);
 		}
@@ -181,7 +181,7 @@ $collection->get(
 			\Povium\Http\Middleware\Authentication\EmailActivationMiddleware::class,
 			$router
 		);
-		$email_activation_middleware->activateEmail($authenticator->getCurrentUser());
+		$email_activation_middleware->activateEmail($GLOBALS['current_user']);
 	},
 	'email_activation'
 );
@@ -207,7 +207,7 @@ $collection->get(
  */
 $collection->get(
 	'/me/settings/email/new-request',
-	function () use ($factory, $authenticator, $router) {
+	function () use ($factory, $router) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			return;
 		}
@@ -216,7 +216,7 @@ $collection->get(
 			\Povium\Http\Middleware\Setting\EmailActivationRequestMiddleware::class,
 			$router
 		);
-		$email_activation_request_middleware->requestEmailActivation($authenticator->getCurrentUser());
+		$email_activation_request_middleware->requestEmailActivation($GLOBALS['current_user']);
 	}
 );
 

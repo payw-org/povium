@@ -33,9 +33,12 @@ class AuthServiceProvider implements ServiceProviderInterface
 	public function boot()
 	{
 		$authenticator = $this->factory->createInstance(Authenticator::class);
-
 		$authorizer = $this->factory->createInstance(Authorizer::class, $authenticator);
-		$authorizer->authorize();
+
+		//	Set current auth state to global.
+		$GLOBALS['is_logged_in'] = $authenticator->isLoggedIn();
+		$GLOBALS['current_user'] = $authenticator->getCurrentUser();
+		$GLOBALS['authority'] = $authorizer->getAuthority();
 
 		return $authenticator;
 	}
