@@ -4,6 +4,7 @@ import NodeManager from "./NodeManager"
 import PVMNode from "./PVMNode"
 import PVMRange from "./PVMRange"
 import UndoManager from "./UndoManager"
+import EditSession from "./EditSession";
 
 export default class SelectionManager {
 	constructor() {}
@@ -214,7 +215,14 @@ export default class SelectionManager {
 
 	public static getCurrentNode(): PVMNode {
 		let sel = window.getSelection()
-		if (sel.rangeCount === 0) return null
+		if (sel.rangeCount === 0) {
+			let node = EditSession.editorBody.querySelector(".node-focused")
+			if (!node) {
+				return null
+			} else {
+				return NodeManager.getNodeByID(NodeManager.getNodeID(node))
+			}
+		}
 
 		let range = sel.getRangeAt(0)
 		let startNode = range.startContainer
