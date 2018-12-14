@@ -94,6 +94,10 @@ export default class EventManager {
 			}
 		})
 
+		EditSession.editorBody.addEventListener("input", e => {
+			console.log(e)
+		})
+
 		window.addEventListener("keydown", e => {
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
 				if (e.shiftKey) {
@@ -138,7 +142,6 @@ export default class EventManager {
 			let target = <HTMLElement>e.target
 
 			if (target.classList.contains("image-wrapper")) {
-				console.log("image clicked")
 				e.preventDefault()
 
 				var selectedFigure = EditSession.editorBody.querySelector(
@@ -151,6 +154,7 @@ export default class EventManager {
 				var figure = target.parentElement
 				figure.classList.remove("caption-selected")
 				figure.classList.add("image-selected")
+				figure.classList.add("node-focused")
 				PopTool.showImageTool(target)
 
 				if (figure.querySelector("FIGCAPTION").textContent.length === 0) {
@@ -215,11 +219,14 @@ export default class EventManager {
 				)
 				if (selectedFigure) {
 					selectedFigure.classList.remove("image-selected")
+					selectedFigure.classList.remove("node-focused")
 					selectedFigure.classList.remove("caption-selected")
 				}
 
 				PopTool.hideImageTool()
 			}
+
+			this.onSelectionChanged()
 		})
 
 		window.addEventListener("mousedown", e => {
@@ -821,9 +828,7 @@ export default class EventManager {
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
 
-		let isCollapsed = currentRange.isCollapsed()
-
-		if (isCollapsed) {
+		if (currentRange && currentRange.isCollapsed()) {
 			// Selection is collapsed
 
 			let state = currentRange.start.state
@@ -925,9 +930,7 @@ export default class EventManager {
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
 
-		let isCollapsed = currentRange.isCollapsed()
-
-		if (isCollapsed) {
+		if (currentRange && currentRange.isCollapsed()) {
 			let state = currentRange.start.state
 
 			if (state === 1 || state === 4) {
@@ -1053,9 +1056,7 @@ export default class EventManager {
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
 
-		let isCollapsed = currentRange.isCollapsed()
-
-		if (isCollapsed) {
+		if (currentRange && currentRange.isCollapsed()) {
 			let state = currentRange.start.state
 
 			if (state === 3 || state === 4) {
@@ -1222,11 +1223,11 @@ export default class EventManager {
 				}
 			}
 
-			if (newEndContainer.nodeName === "BR") {
-				jsRange.setEndBefore(newEndContainer)
-			} else {
-				jsRange.setEnd(newEndContainer, newEndOffset)
-			}
+			// if (newEndContainer.nodeName === "BR") {
+			// 	jsRange.setEndBefore(newEndContainer)
+			// } else {
+			// 	jsRange.setEnd(newEndContainer, newEndOffset)
+			// }
 
 			// If <br> tag is set
 			// setstartbefore occurs an error
