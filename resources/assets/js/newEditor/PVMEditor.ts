@@ -25,7 +25,7 @@ export default class PVMEditor {
 		EditSession.editorBody.innerHTML = ""
 
 		let pvmNodes = Converter.parse(Example)
-		console.log(pvmNodes)
+		// console.log(pvmNodes)
 
 		pvmNodes.forEach(node => {
 			NodeManager.appendChild(node)
