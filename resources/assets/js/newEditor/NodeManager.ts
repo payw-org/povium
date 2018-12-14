@@ -163,6 +163,9 @@ export default class NodeManager {
 	}
 
 	public static getNodeID(element: Element): number {
+		if (!element) {
+			console.error("Could not find element.")
+		}
 		let id = Number(element.getAttribute("data-ni"))
 		if (!id) {
 			// error handler
