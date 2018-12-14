@@ -31,7 +31,7 @@ import PVMButton from "../PVMButton"
 
 						wait = setTimeout(() => {
 							checkValidation()
-						}, 300)
+						}, 500)
 					})
 
 					;["focus", "input"].forEach(eventName => {
@@ -132,13 +132,12 @@ import PVMButton from "../PVMButton"
 					if (data !== "") {
 						if (data["err"]) {
 							console.log("error")
-							setTimeout(() => {
-								checkValidation(false)
-								// alert(data['msg'])
-								// setErrorMsg(data["msg"])
-								PVMStartButton.stopSpinner()
-								PVMStartButton.showErr("입력정보를 다시 확인하세요.")
-							}, 1000)
+
+							checkValidation(false)
+							// alert(data['msg'])
+							// setErrorMsg(data["msg"])
+							PVMStartButton.stopSpinner()
+							PVMStartButton.showErr("입력정보를 다시 확인하세요.")
 							
 						} else {
 							location.replace(data["redirect"])
