@@ -14,7 +14,7 @@ class PDOSessionHandler implements \SessionHandlerInterface
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	* Database connection (PDO)

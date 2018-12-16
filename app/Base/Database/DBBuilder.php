@@ -25,7 +25,7 @@ class DBBuilder
 	 *
 	 * @var \PDO
 	 */
-	private $conn;
+	protected $conn;
 
 	/**
 	 * @param array $config
@@ -42,8 +42,6 @@ class DBBuilder
 	 * Create all tables.
 	 *
 	 * @param  int	$build_option
-	 *
-	 * @return null
 	 */
 	public function build($build_option)
 	{
@@ -84,8 +82,6 @@ class DBBuilder
 	/**
 	 * Drop all tables in database.
 	 *
-	 * @return null
-	 *
 	 * @throws \PDOException
 	 */
 	private function dropAllTables()
@@ -108,8 +104,6 @@ class DBBuilder
 
 	/**
 	 * Create all tables.
-	 *
-	 * @return null
 	 *
 	 * @throws \PDOException
 	 */

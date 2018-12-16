@@ -15,7 +15,7 @@ class ContentsValidator implements ValidatorInterface
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @param array $config
@@ -27,6 +27,8 @@ class ContentsValidator implements ValidatorInterface
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $contents
 	 *
 	 * @return array 	Error flag and message
 	 */
@@ -43,7 +45,7 @@ class ContentsValidator implements ValidatorInterface
 			return $return;
 		}
 
-		$contents_array = json_decode($contents, true);
+		json_decode($contents, true);
 		if (json_last_error() !== JSON_ERROR_NONE) {
 			$return['msg'] = $this->config['msg']['contents_invalid'];
 

@@ -15,7 +15,7 @@ class SubtitleValidator implements ValidatorInterface
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @param array $config
@@ -27,6 +27,8 @@ class SubtitleValidator implements ValidatorInterface
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $subtitle
 	 *
 	 * @return array 	Error flag and message
 	 */

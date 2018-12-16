@@ -15,7 +15,7 @@ class TitleValidator implements ValidatorInterface
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @param array $config
@@ -27,6 +27,8 @@ class TitleValidator implements ValidatorInterface
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $title
 	 *
 	 * @return array 	Error flag and message
 	 */

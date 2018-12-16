@@ -6,7 +6,8 @@
 * @copyright 	2018 DesignAndDevelop
 */
 
-use Povium\Security\Authorization\Authorizer;
+use Povium\Security\Auth\Authorizer;
+use Povium\Base\Http\Exception\HttpException;
 use Povium\Base\Http\Exception\NotFoundHttpException;
 use Povium\Base\Http\Exception\ForbiddenHttpException;
 use Povium\Base\Http\Exception\GoneHttpException;
@@ -18,9 +19,9 @@ $collection->get(
 	'/',
 	function () use ($factory, $blade) {
 		$home_view_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Home\HomeViewMiddleware'
+			\Povium\Http\Middleware\Home\HomeViewMiddleware::class
 		);
-		$home_view_middleware->verifyViewRequest();
+		$home_view_middleware->requestView();
 
 		echo $blade->view()->make(
 			'sections.home',
@@ -40,10 +41,10 @@ $collection->get(
 		}
 
 		$login_view_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\LoginViewMiddleware',
+			\Povium\Http\Middleware\Authentication\LoginViewMiddleware::class,
 			$router
 		);
-		$login_view_middleware->verifyViewRequest();
+		$login_view_middleware->requestView();
 
 		echo $blade->view()->make(
 			'sections.login',
@@ -63,10 +64,27 @@ $collection->post(
 		}
 
 		$login_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\LoginMiddleware',
+			\Povium\Http\Middleware\Authentication\LoginMiddleware::class,
 			$authenticator
 		);
 		$login_middleware->login();
+	}
+);
+
+/**
+ * Validate login form and give some feedback.
+ */
+$collection->put(
+	'/login',
+	function() use ($factory) {
+		if ($GLOBALS['authority'] >= Authorizer::USER) {
+			return;
+		}
+
+		$login_feedback_middleware = $factory->createInstance(
+			\Povium\Http\Middleware\Authentication\LoginFeedbackMiddleware::class
+		);
+		$login_feedback_middleware->giveFeedback();
 	}
 );
 
@@ -81,10 +99,10 @@ $collection->get(
 		}
 
 		$register_view_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\RegisterViewMiddleware',
+			\Povium\Http\Middleware\Authentication\RegisterViewMiddleware::class,
 			$router
 		);
-		$register_view_middleware->verifyViewRequest();
+		$register_view_middleware->requestView();
 
 		echo $blade->view()->make(
 			'sections.register',
@@ -104,7 +122,7 @@ $collection->post(
 		}
 
 		$register_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\RegisterMiddleware',
+			\Povium\Http\Middleware\Authentication\RegisterMiddleware::class,
 			$authenticator
 		);
 		$register_middleware->register();
@@ -122,9 +140,9 @@ $collection->put(
 		}
 
 		$registration_feedback_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\RegistrationFeedbackMiddleware'
+			\Povium\Http\Middleware\Authentication\RegistrationFeedbackMiddleware::class
 		);
-		$registration_feedback_middleware->validateRegistrationForm();
+		$registration_feedback_middleware->giveFeedback();
 	}
 );
 
@@ -139,7 +157,7 @@ $collection->post(
 		}
 
 		$logout_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\LogoutMiddleware',
+			\Povium\Http\Middleware\Authentication\LogoutMiddleware::class,
 			$authenticator
 		);
 		$logout_middleware->logout();
@@ -154,17 +172,16 @@ $collection->post(
  */
 $collection->get(
 	'/c/email/activation',
-	function () use ($factory, $authenticator, $router) {
+	function () use ($factory, $router) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			$router->redirect('/login', true);
 		}
 
 		$email_activation_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Authentication\EmailActivationMiddleware',
-			$router,
-			$authenticator->getCurrentUser()
+			\Povium\Http\Middleware\Authentication\EmailActivationMiddleware::class,
+			$router
 		);
-		$email_activation_middleware->activateEmail();
+		$email_activation_middleware->activateEmail($GLOBALS['current_user']);
 	},
 	'email_activation'
 );
@@ -190,17 +207,16 @@ $collection->get(
  */
 $collection->get(
 	'/me/settings/email/new-request',
-	function () use ($factory, $authenticator, $router) {
+	function () use ($factory, $router) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			return;
 		}
 
 		$email_activation_request_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\Setting\EmailActivationRequestMiddleware',
-			$router,
-			$authenticator->getCurrentUser()
+			\Povium\Http\Middleware\Setting\EmailActivationRequestMiddleware::class,
+			$router
 		);
-		$email_activation_request_middleware->requestEmailActivation();
+		$email_activation_request_middleware->requestEmailActivation($GLOBALS['current_user']);
 	}
 );
 
@@ -210,7 +226,9 @@ $collection->get(
 $collection->get(
 	'/editor',
  	function () use ($blade) {
-		echo $blade->view()->make('sections.pvmeditor')->render();
+		echo $blade->view()->make(
+			'sections.pvmeditor'
+		)->render();
 	}
 );
 
@@ -225,9 +243,9 @@ $collection->get(
 	'/@{readable_id:.+}',
 	function ($readable_id) use ($factory, $blade) {
 		$profile_view_middleware = $factory->createInstance(
-			'\Povium\Route\Middleware\User\ProfileViewMiddleware'
+			\Povium\Http\Middleware\User\ProfileViewMiddleware::class
 		);
-		$profile_view_middleware->verifyViewRequest($readable_id);
+		$profile_view_middleware->requestView($readable_id);
 
 		echo $blade->view()->make(
 			'sections.profile',
@@ -257,28 +275,25 @@ $collection->get(
 );
 
 /**
- * Show http status view.
+ * Show http error view.
  *
  * User cannot directly access this route.
  * DO NOT GENERATE URI FOR THIS ROUTE.
  *
- * @param	int		$response_code	Http response code
- * @param	string	$title 			Http response title
- * @param	string	$heading		Http response heading
- * @param	string	$details		Http response details
+ * @param	HttpException	$http_exception
  */
 $collection->get(
 	'/*',
-	function ($response_code, $title, $heading, $details) use ($blade) {
-		http_response_code($response_code);
-
-		$config = array(
-			'title' => $title,
-			'heading' => $heading,
-			'details' => $details
+	function ($http_exception) use ($factory, $blade) {
+		$http_error_view_middleware = $factory->createInstance(
+			\Povium\Http\Middleware\Error\HttpErrorViewMiddleware::class
 		);
+		$http_error_view_middleware->requestView($http_exception);
 
-		echo $blade->view()->make('sections.http-error', $config)->render();
+		echo $blade->view()->make(
+			'sections.http-error',
+			$http_error_view_middleware->getViewConfig()
+		)->render();
 	},
 	'http_error'
 );

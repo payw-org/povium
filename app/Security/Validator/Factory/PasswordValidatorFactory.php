@@ -21,9 +21,7 @@ class PasswordValidatorFactory extends AbstractChildFactory
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/password_validator.php');
 		$zxcvbn = new Zxcvbn();
 
-		$this->args = array(
-			$config,
-			$zxcvbn
-		);
+		$this->args[] = $config;
+		$this->args[] = $zxcvbn;
 	}
 }

@@ -11,6 +11,7 @@ namespace Povium\Base\Http\Factory;
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Database\DBConnection;
+use Povium\Base\Http\Session\PDOSessionHandler;
 
 class SessionManagerFactory extends AbstractChildFactory
 {
@@ -19,16 +20,14 @@ class SessionManagerFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$session_handler = $master_factory->createInstance('\Povium\Base\Http\Session\PDOSessionHandler');
+		$session_handler = $factory->createInstance(PDOSessionHandler::class);
 
-		$this->args = array(
-			$config,
-			$conn,
-			$session_handler
-		);
+		$this->args[] = $config;
+		$this->args[] = $conn;
+		$this->args[] = $session_handler;
 	}
 }

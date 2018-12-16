@@ -21,43 +21,35 @@ use Povium\Base\Http\Exception\MethodNotAllowedHttpException;
 class Router implements RouterInterface
 {
 	/**
-	 * @var array
-	 */
-	private $httpResponseConfig;
-
-	/**
 	 * @var RequestMatcher
 	 */
-	private $matcher;
+	protected $matcher;
 
 	/**
 	 * @var URIGenerator
 	 */
-	private $generator;
+	protected $generator;
 
 	/**
 	 * @var Redirector
 	 */
-	private $redirector;
+	protected $redirector;
 
 	/**
 	 * @var RouteCollection
 	 */
-	private $routeCollection;
+	protected $routeCollection;
 
 	/**
-	 * @param array          $http_response_config
 	 * @param RequestMatcher $matcher
 	 * @param URIGenerator   $generator
 	 * @param Redirector     $redirector
 	 */
 	public function __construct(
-		array $http_response_config,
 		RequestMatcher $matcher,
 		URIGenerator $generator,
 		Redirector $redirector
 	) {
-		$this->httpResponseConfig = $http_response_config;
 		$this->matcher = $matcher;
 		$this->generator = $generator;
 		$this->redirector = $redirector;
@@ -129,15 +121,10 @@ class Router implements RouterInterface
  					$e
 				);
 			}
-		} catch (HttpException $e) {				//	Handle the http error
+		} catch (HttpException $e) {	//	Handle the http error
 			$handler = $this->routeCollection->getRouteFromName('http_error')->getHandler();
 
-			$response_code = $e->getResponseCode();	//	Http response code
-			$details = $e->getMessage();			//	Http response details
-			$title = $this->httpResponseConfig[$response_code]['title'];		//	Http response title
-			$heading = $this->httpResponseConfig[$response_code]['heading'];	//	Http response heading
-
-			$handler($response_code, $title, $heading, $details);
+			$handler($e);
 		}
 	}
 }

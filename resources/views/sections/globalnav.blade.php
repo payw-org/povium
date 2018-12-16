@@ -23,13 +23,13 @@
                 <a id="gn-home-link" href="/"></a>
             </div>
 
-            @if ($GLOBALS['authenticator']->isLoggedIn())
+            @if ($is_logged_in)
 
             <div id="gn-loggedin-view">
                 <div class="container">
                     <a href="" class="user-info">
                         <div class="bg"></div>
-                        <span>{{$GLOBALS['authenticator']->getCurrentUser()->getName()}}</span>
+                        <span>{{$global_nav['current_user']['name']}}</span>
                     </a>
                     <a href="/logout" class="sign-out full-load">
                         <div class="bg"></div>

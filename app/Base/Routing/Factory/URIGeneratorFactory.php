@@ -17,5 +17,8 @@ class URIGeneratorFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/uri_generator.php');
+
+		$this->args[] = $config;
 	}
 }

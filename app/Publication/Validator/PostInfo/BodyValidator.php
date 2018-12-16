@@ -15,7 +15,7 @@ class BodyValidator implements ValidatorInterface
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @param array $config
@@ -27,6 +27,8 @@ class BodyValidator implements ValidatorInterface
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $body
 	 *
 	 * @return array 	Error flag and message
 	 */

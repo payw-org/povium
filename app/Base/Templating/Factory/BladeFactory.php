@@ -19,9 +19,7 @@ class BladeFactory extends AbstractChildFactory
 	{
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/blade.php');
 
-		$this->args = array(
-			$config['views'],
-			$config['cache']
-		);
+		$this->args[] = $config['views'];
+		$this->args[] = $config['cache'];
 	}
 }

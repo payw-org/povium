@@ -18,7 +18,7 @@ require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_session_table.ph
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_tag_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_topic_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_user_table.php');
-require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_autosaved_post_table.php');
+require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_auto_saved_post_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_deleted_comment_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_deleted_post_table.php');
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_deleted_series_table.php');
@@ -39,7 +39,7 @@ return [
 		new CreateTagTable(),
 		new CreateTopicTable(),
 		new CreateUserTable(),
-		new CreateAutosavedPostTable(),
+		new CreateAutoSavedPostTable(),
 		new CreateDeletedCommentTable(),
 		new CreateDeletedPostTable(),
 		new CreateDeletedSeriesTable()

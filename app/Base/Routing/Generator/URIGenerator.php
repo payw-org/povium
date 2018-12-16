@@ -15,9 +15,22 @@ use Povium\Base\Routing\Exception\InvalidParameterException;
 class URIGenerator implements URIGeneratorInterface
 {
 	/**
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @var RouteCollection
 	 */
-	private $routeCollection;
+	protected $routeCollection;
+
+	/**
+	 * @param array $config
+	 */
+	public function __construct(array $config)
+	{
+		$this->config = $config;
+	}
 
 	/**
 	 * @param RouteCollection $collection
@@ -82,30 +95,34 @@ class URIGenerator implements URIGeneratorInterface
 
 				//	Generate sub URI by referring to each regex part
 				for ($idx = 0; $idx < $match_count; $idx++) {
-					$param = $params[$placeholders[$idx]];
-
 					//	If param is not exist
-					if (!isset($param)) {
+					if (!isset($params[$placeholders[$idx]])) {
 						throw new InvalidParameterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")');
 					}
+
+					$param = $params[$placeholders[$idx]];
 
 					//	If the param does not match the regex
 					if (!preg_match('/^' . $regexes[$idx] . '$/', $param)) {
 						throw new InvalidParameterException('Invalid params for reversed routing. (Pattern: "' . $pattern . '")');
 					}
 
-					//	Special case: Param is user's readable id.
-					//	Do not encode this.
-					if ($prefixes[$idx] == '@') {
-						$sub_uri .= '@' . $param;
-					} else {	//	Encode param.
-						//	Convert all special chars(include whitespace) to '-'.
-						//	After convert, param is suitible form for uri.
-						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
-
-						//	Concatenate prefix and param that encoded to uri form.
-						$sub_uri .= $prefixes[$idx] . $param;
+					//	If parameter length is too long
+					if (mb_strlen($param) > $this->config['max_param_length']) {
+						$param = mb_substr($param, 0, $this->config['max_param_length']);
 					}
+
+					//	Special case '@': Param is user's readable id.
+					//	Do not encode this.
+					if ($prefixes[$idx] != '@') {
+						//	Encode param.
+						//	Convert all special chars(include whitespace) to '-'.
+						//	After convert, param is suitable form for uri.
+						$param = preg_replace('/[^\p{L}0-9]/u', '-', $param);
+					}
+
+					//	Concatenate prefix and param that encoded to uri form.
+					$sub_uri .= $prefixes[$idx] . $param;
 				}
 				//	Delete '-' of both ends.
 				$sub_uri = ltrim($sub_uri, '-');

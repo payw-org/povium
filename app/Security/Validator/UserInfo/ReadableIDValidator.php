@@ -12,6 +12,8 @@ class ReadableIDValidator extends UserInfoDuplicateValidator
 {
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $readable_id
 	 */
 	public function validate($readable_id, $duplicate_check = false)
 	{
@@ -71,6 +73,8 @@ class ReadableIDValidator extends UserInfoDuplicateValidator
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $readable_id
 	 */
 	public function isAlreadyTaken($readable_id)
 	{

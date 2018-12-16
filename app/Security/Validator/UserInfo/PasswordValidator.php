@@ -16,7 +16,7 @@ class PasswordValidator implements ValidatorInterface
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @var Zxcvbn
@@ -35,6 +35,8 @@ class PasswordValidator implements ValidatorInterface
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @param string $password
 	 *
 	 * @return array 	Error flag and message
 	 */

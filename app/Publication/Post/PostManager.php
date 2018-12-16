@@ -16,7 +16,7 @@ class PostManager extends AbstractRecordManager
 	/**
 	 * @var array
 	 */
-	protected $config;
+	private $config;
 
 	/**
 	 * @param array 	$config
@@ -52,7 +52,7 @@ class PostManager extends AbstractRecordManager
 	 * @param int	  		$user_id
 	 * @param string  		$title
 	 * @param string		$body
-	 * @param string  		$contents   Json string
+	 * @param string  		$contents
 	 * @param bool			$is_premium
 	 * @param int|null  	$series_id
 	 * @param string|null  	$subtitle

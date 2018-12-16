@@ -21,9 +21,7 @@ class ActivationMailSenderFactory extends AbstractChildFactory
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mail_sender.php');
 		$mail = new PHPMailer(true);
 
-		$this->args = array(
-			$config,
-			$mail
-		);
+		$this->args[] = $config;
+		$this->args[] = $mail;
 	}
 }

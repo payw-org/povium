@@ -10,6 +10,7 @@ namespace Povium\Security\Validator\Factory;
 
 use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
+use Povium\Security\User\UserManager;
 
 class NameValidatorFactory extends AbstractChildFactory
 {
@@ -18,14 +19,12 @@ class NameValidatorFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$master_factory = new MasterFactory();
+		$factory = new MasterFactory();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/name_validator.php');
-		$user_manager = $master_factory->createInstance('\Povium\Security\User\UserManager');
+		$user_manager = $factory->createInstance(UserManager::class);
 
-		$this->args = array(
-			$config,
-			$user_manager
-		);
+		$this->args[] = $config;
+		$this->args[] = $user_manager;
 	}
 }

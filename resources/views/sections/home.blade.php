@@ -37,7 +37,7 @@
 			<button class="scroll-btn left"></button>
 			<button class="scroll-btn right"></button>
 			<div class="post-container">
-				@foreach ($posts as $post)
+				@foreach ($popular_posts as $post)
 				<div class="scroll-item">
 					<div class="post">
 						<div class="thumb">

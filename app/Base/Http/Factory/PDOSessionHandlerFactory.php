@@ -21,9 +21,7 @@ class PDOSessionHandlerFactory extends AbstractChildFactory
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 		$conn = DBConnection::getInstance()->getConn();
 
-		$this->args = array(
-			$config,
- 			$conn
-		);
+		$this->args[] = $config;
+		$this->args[] = $conn;
 	}
 }
