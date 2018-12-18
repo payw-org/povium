@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for loading config of profile view.
+ * Controller for loading config of profile view page.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -8,17 +8,13 @@
 
 namespace Povium\Http\Controller\User;
 
+use Povium\Http\Controller\StandardViewController;
 use Povium\Http\Controller\Exception\UserNotFoundException;
 use Povium\Loader\GlobalModule\GlobalNavigationLoader;
 use Povium\Security\User\UserManager;
 
-class ProfileViewController
+class ProfileViewController extends StandardViewController
 {
-	/**
-	 * @var GlobalNavigationLoader
-	 */
-	protected $globalNavigationLoader;
-
 	/**
 	 * @var UserManager
 	 */
@@ -39,23 +35,24 @@ class ProfileViewController
 		UserManager $user_manager,
 		array $config
 	) {
-		$this->globalNavigationLoader = $global_navigation_loader;
+		parent::__construct($global_navigation_loader);
 		$this->userManager = $user_manager;
 		$this->config = $config;
 	}
 
 	/**
-	 * Load config for profile view.
+	 * {@inheritdoc}
 	 *
 	 * @param string $readable_id
 	 *
-	 * @return array
-	 *
 	 * @throws UserNotFoundException	If user is not found
 	 */
-	public function loadViewConfig($readable_id)
+	public function loadViewConfig()
 	{
-		$view_config = array();
+		parent::loadViewConfig();
+
+		$args = func_get_args();
+		$readable_id = $args[0];
 
 		$user_id = $this->userManager->getUserIDFromReadableID($readable_id);
 
@@ -64,16 +61,14 @@ class ProfileViewController
 			throw new UserNotFoundException($this->config['msg']['user_not_found']);
 		}
 
-		$view_config['global_nav'] = $this->globalNavigationLoader->loadData();
-
 		$user = $this->userManager->getUser($user_id);
 
-		$view_config['user'] = array(
+		$this->viewConfig['user'] = array(
 			'name' => $user->getName(),
 			'profile_image' => $user->getProfileImage(),
 			'bio' => $user->getBio()
 		);
 
-		return $view_config;
+		return $this->viewConfig;
 	}
 }

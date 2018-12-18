@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for loading config of http error view.
+ * Controller for loading config of http error view page.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -9,15 +9,11 @@
 namespace Povium\Http\Controller\Error;
 
 use Povium\Base\Http\Exception\HttpException;
+use Povium\Http\Controller\StandardViewController;
 use Povium\Loader\GlobalModule\GlobalNavigationLoader;
 
-class HttpErrorViewController
+class HttpErrorViewController extends StandardViewController
 {
-	/**
-	 * @var GlobalNavigationLoader
-	 */
-	protected $globalNavigationLoader;
-
 	/**
 	 * @var array
 	 */
@@ -31,31 +27,30 @@ class HttpErrorViewController
 		GlobalNavigationLoader $global_navigation_loader,
 		array $http_response_config
 	) {
-		$this->globalNavigationLoader = $global_navigation_loader;
+		parent::__construct($global_navigation_loader);
 		$this->httpResponseConfig = $http_response_config;
 	}
 
 	/**
-	 * Load config for http error view.
+	 * {@inheritdoc}
 	 *
 	 * @param HttpException	$http_exception
-	 *
-	 * @return array
 	 */
-	public function loadViewConfig($http_exception)
+	public function loadViewConfig()
 	{
-		$view_config = array();
+		parent::loadViewConfig();
 
-		$view_config['global_nav'] = $this->globalNavigationLoader->loadData();
+		$args = func_get_args();
+		$http_exception = $args[0];
 
 		$response_code = $http_exception->getResponseCode();
 
-		$view_config['error'] = array(
+		$this->viewConfig['error'] = array(
 			'title' => $this->httpResponseConfig[$response_code]['title'],
 			'heading' => $this->httpResponseConfig[$response_code]['heading'],
 			'details' => $http_exception->getMessage()
 		);
 
-		return $view_config;
+		return $this->viewConfig;
 	}
 }

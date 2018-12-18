@@ -8,21 +8,13 @@
 
 namespace Povium\Http\Controller\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
-
-class LoginViewControllerFactory extends AbstractChildFactory
+class LoginViewControllerFactory extends StandardViewControllerFactory
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	protected function prepareArgs()
 	{
-		$factory = new MasterFactory();
-
-		$global_navigation_loader = $factory->createInstance(GlobalNavigationLoader::class);
-
-		$this->args[] = $global_navigation_loader;
+		parent::prepareArgs();
 	}
 }

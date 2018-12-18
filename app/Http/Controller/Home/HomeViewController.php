@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for loading config of home view.
+ * Controller for loading config of home view page.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -8,36 +8,18 @@
 
 namespace Povium\Http\Controller\Home;
 
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
+use Povium\Http\Controller\StandardViewController;
 
-class HomeViewController
+class HomeViewController extends StandardViewController
 {
 	/**
-	 * @var GlobalNavigationLoader
-	 */
-	protected $globalNavigationLoader;
-
-	/**
-	 * @param GlobalNavigationLoader $global_navigation_loader
-	 */
-	public function __construct(
-		GlobalNavigationLoader $global_navigation_loader
-	) {
-		$this->globalNavigationLoader = $global_navigation_loader;
-	}
-
-	/**
-	 * Load config for home view.
-	 *
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function loadViewConfig()
 	{
-		$view_config = array();
+		parent::loadViewConfig();
 
-		$view_config['global_nav'] = $this->globalNavigationLoader->loadData();
-
-		$view_config['popular_posts'] = array(
+		$this->viewConfig['popular_posts'] = array(
 			[
 				"img" => "macbookpro2018",
 				"title" => "2018년 맥북프로는 너무 뜨거워",
@@ -93,6 +75,6 @@ class HomeViewController
 			]
 		);
 
-		return $view_config;
+		return $this->viewConfig;
 	}
 }

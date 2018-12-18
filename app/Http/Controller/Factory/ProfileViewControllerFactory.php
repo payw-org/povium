@@ -8,25 +8,23 @@
 
 namespace Povium\Http\Controller\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
 use Povium\Base\Factory\MasterFactory;
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
 use Povium\Security\User\UserManager;
 
-class ProfileViewControllerFactory extends AbstractChildFactory
+class ProfileViewControllerFactory extends StandardViewControllerFactory
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	protected function prepareArgs()
 	{
+		parent::prepareArgs();
+
 		$factory = new MasterFactory();
 
-		$global_navigation_loader = $factory->createInstance(GlobalNavigationLoader::class);
 		$user_manager = $factory->createInstance(UserManager::class);
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/profile_view_controller.php');
 
-		$this->args[] = $global_navigation_loader;
 		$this->args[] = $user_manager;
 		$this->args[] = $config;
 	}

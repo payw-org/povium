@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller for loading config of login view.
+ * Controller for loading config of login view page.
  *
  * @author 		H.Chihoon
  * @copyright 	2018 DesignAndDevelop
@@ -8,35 +8,17 @@
 
 namespace Povium\Http\Controller\Authentication;
 
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
+use Povium\Http\Controller\StandardViewController;
 
-class LoginViewController
+class LoginViewController extends StandardViewController
 {
 	/**
-	 * @var GlobalNavigationLoader
-	 */
-	protected $globalNavigationLoader;
-
-	/**
-	 * @param GlobalNavigationLoader $global_navigation_loader
-	 */
-	public function __construct(
-		GlobalNavigationLoader $global_navigation_loader
-	) {
-		$this->globalNavigationLoader = $global_navigation_loader;
-	}
-
-	/**
-	 * Load config for login view.
-	 *
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function loadViewConfig()
 	{
-		$view_config = array();
+		parent::loadViewConfig();
 
-		$view_config['global_nav'] = $this->globalNavigationLoader->loadData();
-
-		return $view_config;
+		return $this->viewConfig;
 	}
 }
