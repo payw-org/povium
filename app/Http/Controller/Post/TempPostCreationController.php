@@ -14,11 +14,6 @@ use Povium\Security\User\User;
 class TempPostCreationController
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	 * @var PostFormValidationController
 	 */
 	protected $postFormValidationController;
@@ -29,18 +24,23 @@ class TempPostCreationController
 	protected $autoSavedPostManager;
 
 	/**
-	 * @param array 						$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param PostFormValidationController 	$post_form_validation_controller
 	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 * @param array 						$config
 	 */
 	public function __construct(
-		array $config,
 		PostFormValidationController $post_form_validation_controller,
-		AutoSavedPostManager $auto_saved_post_manager
+		AutoSavedPostManager $auto_saved_post_manager,
+		array $config
 	) {
-		$this->config = $config;
 		$this->postFormValidationController = $post_form_validation_controller;
 		$this->autoSavedPostManager = $auto_saved_post_manager;
+		$this->config = $config;
 	}
 
 	/**

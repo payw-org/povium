@@ -15,22 +15,15 @@ use Povium\Security\User\UserManager;
 abstract class UserInfoDuplicateValidator implements ValidatorInterface, DuplicateCheckerInterface
 {
 	/**
-	 * @var array
-	 */
-	protected $config;
-
-	/**
 	 * @var UserManager
 	 */
 	protected $userManager;
 
 	/**
-	 * @param array 		$config
-	 * @param UserManager	$user_manager
+	 * @param UserManager 	$user_manager
 	 */
-	public function __construct(array $config, UserManager $user_manager)
+	public function __construct(UserManager $user_manager)
 	{
-		$this->config = $config;
 		$this->userManager = $user_manager;
 	}
 

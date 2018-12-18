@@ -14,23 +14,23 @@ use ZxcvbnPhp\Zxcvbn;
 class PasswordValidator implements ValidatorInterface
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	 * @var Zxcvbn
 	 */
 	protected $zxcvbn;
 
 	/**
-	 * @param array 	$config
-	 * @param Zxcvbn	$zxcvbn
+	 * @var array
 	 */
-	public function __construct(array $config, Zxcvbn $zxcvbn)
+	private $config;
+
+	/**
+	 * @param Zxcvbn 	$zxcvbn
+	 * @param array 	$config
+	 */
+	public function __construct(Zxcvbn $zxcvbn, array $config)
 	{
-		$this->config = $config;
 		$this->zxcvbn = $zxcvbn;
+		$this->config = $config;
 	}
 
 	/**

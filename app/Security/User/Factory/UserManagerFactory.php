@@ -8,20 +8,19 @@
 
 namespace Povium\Security\User\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Database\DBConnection;
+use Povium\Base\Database\Factory\AbstractRecordManagerFactory;
 
-class UserManagerFactory extends AbstractChildFactory
+class UserManagerFactory extends AbstractRecordManagerFactory
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	protected function prepareArgs()
 	{
+		parent::prepareArgs();
+
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/user_manager.php');
-		$conn = DBConnection::getInstance()->getConn();
 
 		$this->args[] = $config;
-		$this->args[] = $conn;
 	}
 }

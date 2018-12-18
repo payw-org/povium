@@ -14,23 +14,6 @@ use Povium\Base\Database\Exception\InvalidParameterNumberException;
 class UserManager extends AbstractRecordManager
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
-	 * @param array $config
-	 * @param \PDO	$conn
-	 */
-	public function __construct(array $config, \PDO $conn)
-	{
-		$this->config = $config;
-		$this->conn = $conn;
-
-		$this->table = $this->config['user_table'];
-	}
-
-	/**
 	 * Returns user id from readable id.
 	 *
 	 * @param  string $readable_id
@@ -40,7 +23,7 @@ class UserManager extends AbstractRecordManager
 	public function getUserIDFromReadableID($readable_id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->table}
+			"SELECT id FROM {$this->config['table']}
 			WHERE readable_id = ?"
 		);
 		$stmt->execute([$readable_id]);
@@ -62,7 +45,7 @@ class UserManager extends AbstractRecordManager
 	public function getUserIDFromName($name)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->table}
+			"SELECT id FROM {$this->config['table']}
 			WHERE name = ?"
 		);
 		$stmt->execute([$name]);
@@ -84,7 +67,7 @@ class UserManager extends AbstractRecordManager
 	public function getUserIDFromEmail($email)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT id FROM {$this->table}
+			"SELECT id FROM {$this->config['table']}
 			WHERE email = ?"
 		);
 		$stmt->execute([$email]);
@@ -132,7 +115,7 @@ class UserManager extends AbstractRecordManager
 		$password = $args[2];
 
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->table}
+			"INSERT INTO {$this->config['table']}
 			(readable_id, name, password)
 			VALUES (:readable_id, :name, :password)"
 		);

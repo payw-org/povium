@@ -8,25 +8,11 @@
 
 namespace Povium\Provider;
 
-use Povium\Base\Factory\MasterFactory;
 use Povium\Security\Auth\Authenticator;
 use Povium\Security\Auth\Authorizer;
 
-class AuthServiceProvider implements ServiceProviderInterface
+class AuthServiceProvider extends AbstractServiceProvider
 {
-	/**
-	 * @var MasterFactory
-	 */
-	protected $factory;
-
-	/**
-	 * @param MasterFactory $factory
-	 */
-	public function __construct(MasterFactory $factory)
-	{
-		$this->factory = $factory;
-	}
-
 	/**
 	 * {@inheritdoc}
 	 */

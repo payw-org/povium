@@ -14,12 +14,12 @@ use Povium\Base\Routing\RouteCollection;
 use Povium\Base\Routing\Router;
 use Povium\Security\Auth\Authenticator;
 
-class RouteServiceProvider implements ServiceProviderInterface
+class RouteServiceProvider extends AbstractServiceProvider
 {
 	/**
-	 * @var MasterFactory
+	 * @var Blade
 	 */
-	protected $factory;
+	protected $blade;
 
 	/**
 	 * @var Authenticator
@@ -27,23 +27,18 @@ class RouteServiceProvider implements ServiceProviderInterface
 	protected $authenticator;
 
 	/**
-	 * @var Blade
-	 */
-	protected $blade;
-
-	/**
 	 * @param MasterFactory $factory
-	 * @param Authenticator $authenticator
 	 * @param Blade 		$blade
+	 * @param Authenticator $authenticator
 	 */
 	public function __construct(
 		MasterFactory $factory,
-		Authenticator $authenticator,
-		Blade $blade
+		Blade $blade,
+		Authenticator $authenticator
 	) {
-		$this->factory = $factory;
-		$this->authenticator = $authenticator;
+		parent::__construct($factory);
 		$this->blade = $blade;
+		$this->authenticator = $authenticator;
 	}
 
 	/**
@@ -51,12 +46,12 @@ class RouteServiceProvider implements ServiceProviderInterface
 	 */
 	public function boot()
 	{
-		$collection = $this->factory->createInstance(RouteCollection::class);
-
 		$router = $this->factory->createInstance(Router::class);
 		$factory = $this->factory;
-		$authenticator = $this->authenticator;
 		$blade = $this->blade;
+		$authenticator = $this->authenticator;
+
+		$collection = $this->factory->createInstance(RouteCollection::class);
 
 		//	Create routes and register to collection.
 		require($_SERVER['DOCUMENT_ROOT'] . '/../routes/web.php');

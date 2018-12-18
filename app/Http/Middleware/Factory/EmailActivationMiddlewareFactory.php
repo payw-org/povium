@@ -25,10 +25,10 @@ class EmailActivationMiddlewareFactory extends AbstractChildFactory
         $materials = func_get_args();
 		$factory = new MasterFactory();
 
-        $email_activation_controller = $factory->createInstance(EmailActivationController::class);
-        $router = $materials[0];
+		$router = $materials[0];
+		$email_activation_controller = $factory->createInstance(EmailActivationController::class);
 
-		$this->args[] = $email_activation_controller;
 		$this->args[] = $router;
+		$this->args[] = $email_activation_controller;
     }
 }

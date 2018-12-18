@@ -14,14 +14,9 @@ use Povium\Security\User\UserManager;
 class RegisterController
 {
 	/**
-	* @var array
-	*/
-	private $config;
-
-	/**
-	 * @var RegistrationFormValidationController
+	 * @var UserManager
 	 */
-	protected $registrationFormValidationController;
+	protected $userManager;
 
 	/**
 	 * @var PasswordEncoder
@@ -29,26 +24,31 @@ class RegisterController
 	protected $passwordEncoder;
 
 	/**
-	 * @var UserManager
+	 * @var RegistrationFormValidationController
 	 */
-	protected $userManager;
+	protected $registrationFormValidationController;
 
 	/**
-	 * @param array 								$config
-	 * @param RegistrationFormValidationController 	$registration_form_validation_controller
-	 * @param PasswordEncoder 						$password_encoder
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param UserManager 							$user_manager
+	 * @param PasswordEncoder 						$password_encoder
+	 * @param RegistrationFormValidationController 	$registration_form_validation_controller
+	 * @param array 								$config
 	 */
 	public function __construct(
-		array $config,
-		RegistrationFormValidationController $registration_form_validation_controller,
+		UserManager $user_manager,
 		PasswordEncoder $password_encoder,
-		UserManager $user_manager
+		RegistrationFormValidationController $registration_form_validation_controller,
+		array $config
 	) {
-		$this->config = $config;
-		$this->registrationFormValidationController = $registration_form_validation_controller;
-		$this->passwordEncoder = $password_encoder;
 		$this->userManager = $user_manager;
+		$this->passwordEncoder = $password_encoder;
+		$this->registrationFormValidationController = $registration_form_validation_controller;
+		$this->config = $config;
 	}
 
 	/**

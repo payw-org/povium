@@ -8,23 +8,17 @@
 
 namespace Povium\Security\Validator\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Security\User\UserManager;
-
-class ReadableIDValidatorFactory extends AbstractChildFactory
+class ReadableIDValidatorFactory extends UserInfoDuplicateValidatorFactory
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	protected function prepareArgs()
 	{
-		$factory = new MasterFactory();
+		parent::prepareArgs();
 
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/readable_id_validator.php');
-		$user_manager = $factory->createInstance(UserManager::class);
 
 		$this->args[] = $config;
-		$this->args[] = $user_manager;
 	}
 }

@@ -14,23 +14,23 @@ use PHPMailer\PHPMailer\Exception;
 abstract class AbstractMailSender
 {
 	/**
-	 * @var array
-	 */
-	protected $config;
-
-	/**
 	 * @var PHPMailer
 	 */
 	protected $mail;
 
 	/**
-	 * @param array     $config
-	 * @param PHPMailer $mail
+	 * @var array
 	 */
-	public function __construct(array $config, PHPMailer $mail)
+	protected $config;
+
+	/**
+	 * @param PHPMailer $mail
+	 * @param array $config
+	 */
+	public function __construct(PHPMailer $mail, array $config)
 	{
-		$this->config = $config;
 		$this->mail = $mail;
+		$this->config = $config;
 	}
 
 	/**

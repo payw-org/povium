@@ -15,7 +15,7 @@ class RedirectURIValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @return bool	Is validate?
+	 * @return bool	Whether uri is valid.
 	 */
 	public function validate($redirect_uri)
 	{

@@ -8,24 +8,10 @@
 
 namespace Povium\Provider;
 
-use Povium\Base\Factory\MasterFactory;
 use Povium\Base\Http\Session\SessionManager;
 
-class SessionServiceProvider implements ServiceProviderInterface
+class SessionServiceProvider extends AbstractServiceProvider
 {
-	/**
-	 * @var MasterFactory
-	 */
-	protected $factory;
-
-	/**
-	 * @param MasterFactory $factory
-	 */
-	public function __construct(MasterFactory $factory)
-	{
-		$this->factory = $factory;
-	}
-
 	/**
 	 * {@inheritdoc}
 	 */

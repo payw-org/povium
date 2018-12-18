@@ -12,25 +12,25 @@ namespace Povium\Base\Http\Session;
 class PDOSessionHandler implements \SessionHandlerInterface
 {
 	/**
+	 * Database connection (PDO)
+	 *
+	 * @var \PDO
+	 */
+	protected $conn;
+
+	/**
 	 * @var array
 	 */
 	private $config;
 
 	/**
-	* Database connection (PDO)
-	*
-	* @var \PDO
-	*/
-	protected $conn;
-
-	/**
+	 * @param \PDO 	$conn
 	 * @param array $config
-	 * @param \PDO  $conn
 	 */
-	public function __construct(array $config, \PDO $conn)
+	public function __construct(\PDO $conn, array $config)
 	{
-		$this->config = $config;
 		$this->conn = $conn;
+		$this->config = $config;
 	}
 
 	/**

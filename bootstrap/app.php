@@ -30,8 +30,8 @@ $app['blade'] = $factory->createInstance(
 
 $app['router'] = $factory->createInstance(
 	\Povium\Provider\RouteServiceProvider::class,
-	$app['authenticator'],
-	$app['blade']
+	$app['blade'],
+	$app['authenticator']
 )->boot();
 
 return $app;

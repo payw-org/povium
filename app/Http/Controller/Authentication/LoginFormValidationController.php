@@ -15,11 +15,6 @@ use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 class LoginFormValidationController
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	 * @var ReadableIDValidator
 	 */
 	protected $readableIDValidator;
@@ -35,21 +30,26 @@ class LoginFormValidationController
 	protected $passwordValidator;
 
 	/**
-	 * @param array					$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param ReadableIDValidator 	$readable_id_validator
 	 * @param EmailValidator 		$email_validator
 	 * @param PasswordValidator 	$password_validator
+	 * @param array 				$config
 	 */
 	public function __construct(
-		array $config,
 		ReadableIDValidator $readable_id_validator,
 		EmailValidator $email_validator,
-		PasswordValidator $password_validator
+		PasswordValidator $password_validator,
+		array $config
 	) {
-		$this->config = $config;
 		$this->readableIDValidator = $readable_id_validator;
 		$this->emailValidator = $email_validator;
 		$this->passwordValidator = $password_validator;
+		$this->config = $config;
 	}
 
 	/**

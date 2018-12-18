@@ -1,6 +1,6 @@
 <?php
 /**
- * AutoSavedPost class store auto saved post info.
+ * A single auto saved post.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -53,18 +53,20 @@ class AutoSavedPost extends PostFrame
 		?string $subtitle,
 		?string $thumbnail
 	) {
-		$this->id = $id;
-		$this->userID = $user_id;
-		$this->title = $title;
-		$this->body = $body;
-		$this->contents = $contents;
-		$this->isPremium = $is_premium;
+		parent::__construct(
+			$id,
+			$user_id,
+			$title,
+			$body,
+			$contents,
+			$is_premium,
+			$series_id,
+			$subtitle,
+			$thumbnail
+		);
 		$this->creationDt = $creation_dt;
 		$this->lastEditedDt = $last_edited_dt;
 		$this->postID = $post_id;
-		$this->seriesID = $series_id;
-		$this->subtitle = $subtitle;
-		$this->thumbnail = $thumbnail;
 	}
 
 	/**

@@ -14,23 +14,6 @@ use Povium\Base\Database\Exception\InvalidParameterNumberException;
 class AutoSavedPostManager extends AbstractRecordManager
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
-	 * @param array 	$config
-	 * @param \PDO   	$conn
-	 */
-	public function __construct(array $config, \PDO $conn)
-	{
-		$this->config = $config;
-		$this->conn = $conn;
-
-		$this->table = $this->config['auto_saved_post_table'];
-	}
-
-	/**
 	 * Returns an auto saved post instance.
 	 *
 	 * @param  int	$auto_saved_post_id
@@ -56,7 +39,7 @@ class AutoSavedPostManager extends AbstractRecordManager
 	public function getAutoSavedPostFromPostID($post_id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->table}
+			"SELECT * FROM {$this->config['table']}
 			WHERE post_id = ?"
 		);
 		$stmt->execute([$post_id]);
@@ -104,7 +87,7 @@ class AutoSavedPostManager extends AbstractRecordManager
 		$thumbnail = $args[8];
 
 		$stmt = $this->conn->prepare(
-			"INSERT INTO {$this->table}
+			"INSERT INTO {$this->config['table']}
 			(user_id, title, body, contents, is_premium, post_id, series_id, subtitle, thumbnail)
 			VALUES (:user_id, :title, :body, :contents, :is_premium, :post_id, :series_id, :subtitle, :thumbnail)"
 		);

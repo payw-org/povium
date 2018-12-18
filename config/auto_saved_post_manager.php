@@ -7,6 +7,5 @@
 */
 
 return [
-	'auto_saved_post_table' => 'auto_saved_post',
-	'auto_saved_post_id_length' => 12
+	'table' => 'auto_saved_post'
 ];

@@ -17,11 +17,6 @@ use Povium\Security\User\User;
 class PostPublicationController
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	 * Database connection (PDO)
 	 *
 	 * @var \PDO
@@ -29,14 +24,14 @@ class PostPublicationController
 	protected $conn;
 
 	/**
-	 * @var AutoSavedPostManager
-	 */
-	protected $autoSavedPostManager;
-
-	/**
 	 * @var PostFormValidationController
 	 */
 	protected $postFormValidationController;
+
+	/**
+	 * @var AutoSavedPostManager
+	 */
+	protected $autoSavedPostManager;
 
 	/**
 	 * @var PostManager
@@ -44,24 +39,29 @@ class PostPublicationController
 	protected $postManager;
 
 	/**
-	 * @param array 						$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param \PDO 							$conn
-	 * @param AutoSavedPostManager 			$auto_saved_post_manager
 	 * @param PostFormValidationController 	$post_form_validation_controller
+	 * @param AutoSavedPostManager 			$auto_saved_post_manager
 	 * @param PostManager 					$post_manager
+	 * @param array 						$config
 	 */
 	public function __construct(
-		array $config,
 		\PDO $conn,
-		AutoSavedPostManager $auto_saved_post_manager,
 		PostFormValidationController $post_form_validation_controller,
-		PostManager $post_manager
+		AutoSavedPostManager $auto_saved_post_manager,
+		PostManager $post_manager,
+		array $config
 	) {
-		$this->config = $config;
 		$this->conn = $conn;
-		$this->autoSavedPostManager = $auto_saved_post_manager;
 		$this->postFormValidationController = $post_form_validation_controller;
+		$this->autoSavedPostManager = $auto_saved_post_manager;
 		$this->postManager = $post_manager;
+		$this->config = $config;
 	}
 
 	/**

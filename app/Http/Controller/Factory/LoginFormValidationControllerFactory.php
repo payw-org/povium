@@ -23,14 +23,14 @@ class LoginFormValidationControllerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_form_validation_controller.php');
 		$readable_id_validator = $factory->createInstance(ReadableIDValidator::class);
 		$email_validator = $factory->createInstance(EmailValidator::class);
 		$password_validator = $factory->createInstance(PasswordValidator::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_form_validation_controller.php');
 
-		$this->args[] = $config;
 		$this->args[] = $readable_id_validator;
 		$this->args[] = $email_validator;
 		$this->args[] = $password_validator;
+		$this->args[] = $config;
 	}
 }

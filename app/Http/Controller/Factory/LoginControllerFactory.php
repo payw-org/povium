@@ -28,18 +28,18 @@ class LoginControllerFactory extends AbstractChildFactory
 		$materials = func_get_args();
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_controller.php');
-		$login_form_validation_controller = $factory->createInstance(LoginFormValidationController::class);
-		$password_encoder = $factory->createInstance(PasswordEncoder::class);
-		$user_manager = $factory->createInstance(UserManager::class);
-		$session_manager = $factory->createInstance(SessionManager::class);
 		$authenticator = $materials[0];
+		$session_manager = $factory->createInstance(SessionManager::class);
+		$user_manager = $factory->createInstance(UserManager::class);
+		$password_encoder = $factory->createInstance(PasswordEncoder::class);
+		$login_form_validation_controller = $factory->createInstance(LoginFormValidationController::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_controller.php');
 
-		$this->args[] = $config;
-		$this->args[] = $login_form_validation_controller;
-		$this->args[] = $password_encoder;
-		$this->args[] = $user_manager;
-		$this->args[] = $session_manager;
 		$this->args[] = $authenticator;
+		$this->args[] = $session_manager;
+		$this->args[] = $user_manager;
+		$this->args[] = $password_encoder;
+		$this->args[] = $login_form_validation_controller;
+		$this->args[] = $config;
 	}
 }

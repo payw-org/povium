@@ -18,16 +18,16 @@ class DBConnection
 	use SingletonTrait;
 
 	/**
-	* @var array
-	*/
+	 * @var array
+	 */
 	private $config;
 
 	/**
-	* Database connection (PDO)
-	*
-	* @var \PDO
-	*/
-	protected $conn;
+	 * Database connection (PDO)
+	 *
+	 * @var \PDO
+	 */
+	private $conn;
 
 	/**
 	* Opens the database connection using PDO

@@ -15,11 +15,6 @@ use Povium\Security\User\UserManager;
 class ProfileViewController
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	 * @var GlobalNavigationLoader
 	 */
 	protected $globalNavigationLoader;
@@ -30,18 +25,23 @@ class ProfileViewController
 	protected $userManager;
 
 	/**
-	 * @param array 					$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param GlobalNavigationLoader 	$global_navigation_loader
 	 * @param UserManager 				$user_manager
+	 * @param array 					$config
 	 */
 	public function __construct(
-		array $config,
 		GlobalNavigationLoader $global_navigation_loader,
-		UserManager $user_manager
+		UserManager $user_manager,
+		array $config
 	) {
-		$this->config = $config;
 		$this->globalNavigationLoader = $global_navigation_loader;
 		$this->userManager = $user_manager;
+		$this->config = $config;
 	}
 
 	/**

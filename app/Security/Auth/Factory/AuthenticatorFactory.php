@@ -25,18 +25,18 @@ class AuthenticatorFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/authenticator.php');
 		$conn = DBConnection::getInstance()->getConn();
-		$random_string_generator = $factory->createInstance(RandomStringGenerator::class);
 		$client = $factory->createInstance(Client::class);
-		$user_manager = $factory->createInstance(UserManager::class);
 		$session_manager = $factory->createInstance(SessionManager::class);
+		$user_manager = $factory->createInstance(UserManager::class);
+		$random_string_generator = $factory->createInstance(RandomStringGenerator::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/authenticator.php');
 
-		$this->args[] = $config;
 		$this->args[] = $conn;
-		$this->args[] = $random_string_generator;
 		$this->args[] = $client;
-		$this->args[] = $user_manager;
 		$this->args[] = $session_manager;
+		$this->args[] = $user_manager;
+		$this->args[] = $random_string_generator;
+		$this->args[] = $config;
 	}
 }

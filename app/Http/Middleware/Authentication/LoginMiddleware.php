@@ -15,27 +15,27 @@ use Povium\Base\Routing\Validator\RedirectURIValidator;
 
 class LoginMiddleware extends AbstractAjaxMiddleware implements RefererCheckerInterface
 {
-    /**
-     * @var LoginController
-     */
-    protected $loginController;
-
-    /**
+	/**
      * @var RedirectURIValidator
      */
     protected $redirectURIValidator;
 
-    /**
-     * @param LoginController       $login_controller
-     * @param RedirectURIValidator  $redirect_uri_validator
-     */
+	/**
+	 * @var LoginController
+	 */
+	protected $loginController;
+
+	/**
+	 * @param RedirectURIValidator 	$redirect_uri_validator
+	 * @param LoginController 		$login_controller
+	 */
     public function __construct(
-        LoginController $login_controller,
-        RedirectURIValidator $redirect_uri_validator
+		RedirectURIValidator $redirect_uri_validator,
+        LoginController $login_controller
     ) {
-        $this->loginController = $login_controller;
-        $this->redirectURIValidator = $redirect_uri_validator;
-    }
+		$this->redirectURIValidator = $redirect_uri_validator;
+		$this->loginController = $login_controller;
+	}
 
     /**
      * Receive login inputs and process login.

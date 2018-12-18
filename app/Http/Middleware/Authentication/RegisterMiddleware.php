@@ -16,34 +16,34 @@ use Povium\Base\Routing\Validator\RedirectURIValidator;
 
 class RegisterMiddleware extends AbstractAjaxMiddleware implements RefererCheckerInterface
 {
-    /**
+	/**
+	 * @var RedirectURIValidator
+	 */
+	protected $redirectURIValidator;
+
+	/**
+	 * @var LoginController
+	 */
+	protected $loginController;
+
+	/**
      * @var RegisterController
      */
     protected $registerController;
 
-    /**
-     * @var LoginController
-     */
-    protected $loginController;
-
-    /**
-     * @var RedirectURIValidator
-     */
-    protected $redirectURIValidator;
-
-    /**
-     * @param RegisterController    $register_controller
-     * @param LoginController       $login_controller
-     * @param RedirectURIValidator  $redirect_uri_validator
-     */
+	/**
+	 * @param RedirectURIValidator 	$redirect_uri_validator
+	 * @param LoginController 		$login_controller
+	 * @param RegisterController 	$register_controller
+	 */
     public function __construct(
-        RegisterController $register_controller,
-        LoginController $login_controller,
-        RedirectURIValidator $redirect_uri_validator
+		RedirectURIValidator $redirect_uri_validator,
+		LoginController $login_controller,
+		RegisterController $register_controller
     ) {
-        $this->registerController = $register_controller;
-        $this->loginController = $login_controller;
-        $this->redirectURIValidator = $redirect_uri_validator;
+		$this->redirectURIValidator = $redirect_uri_validator;
+		$this->loginController = $login_controller;
+		$this->registerController = $register_controller;
     }
 
     /**

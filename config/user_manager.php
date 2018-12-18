@@ -7,5 +7,5 @@
 */
 
 return [
-	'user_table' => 'user'
+	'table' => 'user'
 ];

@@ -18,19 +18,19 @@ class RouteServiceProviderFactory extends AbstractChildFactory
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @param Authenticator
 	 * @param Blade
+	 * @param Authenticator
 	 */
 	protected function prepareArgs()
 	{
 		$materials = func_get_args();
 
 		$factory = new MasterFactory();
-		$authenticator = $materials[0];
-		$blade = $materials[1];
+		$blade = $materials[0];
+		$authenticator = $materials[1];
 
 		$this->args[] = $factory;
-		$this->args[] = $authenticator;
 		$this->args[] = $blade;
+		$this->args[] = $authenticator;
 	}
 }

@@ -27,10 +27,10 @@ class LoginMiddlewareFactory extends AbstractChildFactory
 		$factory = new MasterFactory();
 
         $authenticator = $materials[0];
-        $login_controller = $factory->createInstance(LoginController::class, $authenticator);
-        $redirect_uri_validator = $factory->createInstance(RedirectURIValidator::class);
+		$redirect_uri_validator = $factory->createInstance(RedirectURIValidator::class);
+		$login_controller = $factory->createInstance(LoginController::class, $authenticator);
 
-		$this->args[] = $login_controller;
 		$this->args[] = $redirect_uri_validator;
+		$this->args[] = $login_controller;
     }
 }

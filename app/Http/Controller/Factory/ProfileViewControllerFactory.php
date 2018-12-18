@@ -22,12 +22,12 @@ class ProfileViewControllerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/profile_view_controller.php');
 		$global_navigation_loader = $factory->createInstance(GlobalNavigationLoader::class);
 		$user_manager = $factory->createInstance(UserManager::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/profile_view_controller.php');
 
-		$this->args[] = $config;
 		$this->args[] = $global_navigation_loader;
 		$this->args[] = $user_manager;
+		$this->args[] = $config;
 	}
 }

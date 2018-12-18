@@ -17,51 +17,51 @@ use Povium\Security\User\User;
 
 class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
 {
-    /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * @var RandomStringGenerator
-     */
-    protected $randomStringGenerator;
-
-    /**
-     * @var EmailAddController
-     */
-    protected $emailAddController;
-
-    /**
-     * @var ActivationMailSender
-     */
-    protected $activationMailSender;
-
-    /**
+	/**
      * @var Router
      */
     protected $router;
 
-    /**
-     * @param array                 $config
-     * @param RandomStringGenerator $random_string_generator
-     * @param EmailAddController    $email_add_controller
-     * @param ActivationMailSender  $activation_mail_sender
-     * @param Router                $router
-     */
+	/**
+	 * @var RandomStringGenerator
+	 */
+	protected $randomStringGenerator;
+
+	/**
+	 * @var ActivationMailSender
+	 */
+	protected $activationMailSender;
+
+	/**
+	 * @var EmailAddController
+	 */
+	protected $emailAddController;
+
+	/**
+	 * @var array
+	 */
+	private $config;
+
+	/**
+	 * @param Router 				$router
+	 * @param RandomStringGenerator $random_string_generator
+	 * @param ActivationMailSender 	$activation_mail_sender
+	 * @param EmailAddController 	$email_add_controller
+	 * @param array 				$config
+	 */
     public function __construct(
-        array $config,
-        RandomStringGenerator $random_string_generator,
-        EmailAddController $email_add_controller,
-        ActivationMailSender $activation_mail_sender,
-        Router $router
+		Router $router,
+		RandomStringGenerator $random_string_generator,
+		ActivationMailSender $activation_mail_sender,
+		EmailAddController $email_add_controller,
+		array $config
     ) {
-        $this->config = $config;
-        $this->randomStringGenerator = $random_string_generator;
-        $this->emailAddController = $email_add_controller;
-        $this->activationMailSender = $activation_mail_sender;
-        $this->router = $router;
-    }
+		$this->router = $router;
+		$this->randomStringGenerator = $random_string_generator;
+		$this->activationMailSender = $activation_mail_sender;
+		$this->emailAddController = $email_add_controller;
+		$this->config = $config;
+	}
 
     /**
      * Receive email address and request activation.

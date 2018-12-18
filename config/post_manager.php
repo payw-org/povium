@@ -7,6 +7,5 @@
 */
 
 return [
-	'post_table' => 'post',
-	'post_id_length' => 12
+	'table' => 'post'
 ];

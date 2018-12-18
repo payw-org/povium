@@ -32,8 +32,6 @@ class Client
 	public function getIP()
 	{
 		if ($this->ip === null) {
-			$ip = "";
-
 			if (getenv('HTTP_CLIENT_IP')) {
 				$ip = getenv('HTTP_CLIENT_IP');
 			} else if (getenv('HTTP_X_FORWARDED_FOR')) {

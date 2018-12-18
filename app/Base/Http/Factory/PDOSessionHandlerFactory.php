@@ -18,10 +18,10 @@ class PDOSessionHandlerFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 		$conn = DBConnection::getInstance()->getConn();
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 
-		$this->args[] = $config;
 		$this->args[] = $conn;
+		$this->args[] = $config;
 	}
 }

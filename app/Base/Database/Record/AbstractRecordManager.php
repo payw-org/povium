@@ -20,11 +20,19 @@ abstract class AbstractRecordManager
 	protected $conn;
 
 	/**
-	 * Table name
-	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $table;
+	protected $config;
+
+	/**
+	 * @param \PDO	$conn
+	 * @param array $config
+	 */
+	public function __construct(\PDO $conn, array $config)
+	{
+		$this->conn = $conn;
+		$this->config = $config;
+	}
 
 	/**
 	 * Returns a table record.
@@ -36,7 +44,7 @@ abstract class AbstractRecordManager
 	public function getRecord($id)
 	{
 		$stmt = $this->conn->prepare(
-			"SELECT * FROM {$this->table}
+			"SELECT * FROM {$this->config['table']}
 			WHERE id = ?"
 		);
 		$stmt->execute([$id]);
@@ -83,7 +91,7 @@ abstract class AbstractRecordManager
 		$set_params = implode(', ', $col_list);
 
 		$stmt = $this->conn->prepare(
-			"UPDATE {$this->table}
+			"UPDATE {$this->config['table']}
  			SET " . $set_params .
 			" WHERE id = ?"
 		);
@@ -104,7 +112,7 @@ abstract class AbstractRecordManager
 	public function deleteRecord($id)
 	{
 		$stmt = $this->conn->prepare(
-			"DELETE FROM {$this->table}
+			"DELETE FROM {$this->config['table']}
 			WHERE id = ?"
 		);
 		$stmt->execute([$id]);

@@ -22,12 +22,12 @@ class SessionManagerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 		$conn = DBConnection::getInstance()->getConn();
 		$session_handler = $factory->createInstance(PDOSessionHandler::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 
-		$this->args[] = $config;
 		$this->args[] = $conn;
 		$this->args[] = $session_handler;
+		$this->args[] = $config;
 	}
 }

@@ -25,10 +25,10 @@ class LogoutControllerFactory extends AbstractChildFactory
 		$materials = func_get_args();
 		$factory = new MasterFactory();
 
-		$session_manager = $factory->createInstance(SessionManager::class);
 		$authenticator = $materials[0];
+		$session_manager = $factory->createInstance(SessionManager::class);
 
-		$this->args[] = $session_manager;
 		$this->args[] = $authenticator;
+		$this->args[] = $session_manager;
 	}
 }

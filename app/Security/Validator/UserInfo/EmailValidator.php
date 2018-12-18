@@ -8,8 +8,25 @@
 
 namespace Povium\Security\Validator\UserInfo;
 
+use Povium\Security\User\UserManager;
+
 class EmailValidator extends UserInfoDuplicateValidator
 {
+	/**
+	 * @var array
+	 */
+	private $config;
+
+	/**
+	 * @param UserManager 	$user_manager
+	 * @param array 		$config
+	 */
+	public function __construct(UserManager $user_manager, array $config)
+	{
+		parent::__construct($user_manager);
+		$this->config = $config;
+	}
+
 	/**
 	 * {@inheritdoc}
 	 *

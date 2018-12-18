@@ -28,12 +28,12 @@ class RegisterMiddlewareFactory extends AbstractChildFactory
 		$factory = new MasterFactory();
 
         $authenticator = $materials[0];
-        $register_controller = $factory->createInstance(RegisterController::class);
-        $login_controller = $factory->createInstance(LoginController::class, $authenticator);
-        $redirect_uri_validator = $factory->createInstance(RedirectURIValidator::class);
+		$redirect_uri_validator = $factory->createInstance(RedirectURIValidator::class);
+		$login_controller = $factory->createInstance(LoginController::class, $authenticator);
+		$register_controller = $factory->createInstance(RegisterController::class);
 
-		$this->args[] = $register_controller;
-		$this->args[] = $login_controller;
 		$this->args[] = $redirect_uri_validator;
+		$this->args[] = $login_controller;
+		$this->args[] = $register_controller;
     }
 }

@@ -14,11 +14,6 @@ use Povium\Security\User\User;
 class EmailAddController
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	* Database connection (PDO)
 	*
 	* @var \PDO
@@ -31,18 +26,23 @@ class EmailAddController
 	protected $emailValidator;
 
 	/**
-	 * @param array          $config
-	 * @param \PDO           $conn
-	 * @param EmailValidator $email_validator
+	 * @var array
+	 */
+	private $config;
+
+	/**
+	 * @param \PDO 				$conn
+	 * @param EmailValidator 	$email_validator
+	 * @param array 			$config
 	 */
 	public function __construct(
-		array $config,
 		\PDO $conn,
-		EmailValidator $email_validator
+		EmailValidator $email_validator,
+		array $config
 	) {
-		$this->config = $config;
 		$this->conn = $conn;
 		$this->emailValidator = $email_validator;
+		$this->config = $config;
 	}
 
 	/**

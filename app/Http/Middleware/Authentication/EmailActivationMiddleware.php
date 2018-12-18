@@ -19,26 +19,26 @@ use Povium\Base\Http\Exception\GoneHttpException;
 
 class EmailActivationMiddleware
 {
-    /**
+	/**
+	 * @var Router
+	 */
+	protected $router;
+
+	/**
      * @var EmailActivationController
      */
     protected $emailActivationController;
 
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    /**
-     * @param EmailActivationController $email_activation_controller
-     * @param Router                    $router
-     */
+	/**
+	 * @param Router 					$router
+	 * @param EmailActivationController $email_activation_controller
+	 */
     public function __construct(
-        EmailActivationController $email_activation_controller,
-        Router $router
+		Router $router,
+        EmailActivationController $email_activation_controller
     ) {
-        $this->emailActivationController = $email_activation_controller;
-        $this->router = $router;
+		$this->router = $router;
+		$this->emailActivationController = $email_activation_controller;
     }
 
     /**

@@ -23,14 +23,14 @@ class RegisterControllerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/register_controller.php');
-		$registration_form_validation_controller = $factory->createInstance(RegistrationFormValidationController::class);
-		$password_encoder = $factory->createInstance(PasswordEncoder::class);
 		$user_manager = $factory->createInstance(UserManager::class);
+		$password_encoder = $factory->createInstance(PasswordEncoder::class);
+		$registration_form_validation_controller = $factory->createInstance(RegistrationFormValidationController::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/register_controller.php');
 
-		$this->args[] = $config;
-		$this->args[] = $registration_form_validation_controller;
-		$this->args[] = $password_encoder;
 		$this->args[] = $user_manager;
+		$this->args[] = $password_encoder;
+		$this->args[] = $registration_form_validation_controller;
+		$this->args[] = $config;
 	}
 }

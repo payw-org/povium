@@ -10,23 +10,9 @@ namespace Povium\Provider;
 
 use Povium\Base\Database\DBBuilder;
 use Povium\Base\Database\DBConnection;
-use Povium\Base\Factory\MasterFactory;
 
-class DBServiceProvider implements ServiceProviderInterface
+class DBServiceProvider extends AbstractServiceProvider
 {
-	/**
-	 * @var MasterFactory
-	 */
-	protected $factory;
-
-	/**
-	 * @param MasterFactory $factory
-	 */
-	public function __construct(MasterFactory $factory)
-	{
-		$this->factory = $factory;
-	}
-
 	/**
 	 * {@inheritdoc}
 	 */

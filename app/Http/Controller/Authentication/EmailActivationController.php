@@ -17,11 +17,6 @@ use Povium\Security\User\User;
 class EmailActivationController
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	* Database connection (PDO)
 	*
 	* @var \PDO
@@ -34,18 +29,23 @@ class EmailActivationController
 	protected $userManager;
 
 	/**
-	 * @param array          $config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param \PDO           $conn
 	 * @param UserManager	 $user_manager
+	 * @param array          $config
 	 */
 	public function __construct(
-		array $config,
 		\PDO $conn,
-		UserManager $user_manager
+		UserManager $user_manager,
+		array $config
 	) {
-		$this->config = $config;
 		$this->conn = $conn;
 		$this->userManager = $user_manager;
+		$this->config = $config;
 	}
 
 	/**

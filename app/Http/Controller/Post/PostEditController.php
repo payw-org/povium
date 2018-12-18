@@ -17,21 +17,11 @@ use Povium\Security\User\User;
 class PostEditController
 {
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	 * Database connection (PDO)
 	 *
 	 * @var \PDO
 	 */
 	protected $conn;
-
-	/**
-	 * @var PostManager
-	 */
-	protected $postManager;
 
 	/**
 	 * @var PostFormValidationController
@@ -44,24 +34,34 @@ class PostEditController
 	protected $autoSavedPostManager;
 
 	/**
-	 * @param array 						$config
+	 * @var PostManager
+	 */
+	protected $postManager;
+
+	/**
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param \PDO 							$conn
-	 * @param PostManager 					$post_manager
 	 * @param PostFormValidationController 	$post_form_validation_controller
 	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 * @param PostManager 					$post_manager
+	 * @param array 						$config
 	 */
 	public function __construct(
-		array $config,
 		\PDO $conn,
-		PostManager $post_manager,
 		PostFormValidationController $post_form_validation_controller,
-		AutoSavedPostManager $auto_saved_post_manager
+		AutoSavedPostManager $auto_saved_post_manager,
+		PostManager $post_manager,
+		array $config
 	) {
-		$this->config = $config;
 		$this->conn = $conn;
-		$this->postManager = $post_manager;
 		$this->postFormValidationController = $post_form_validation_controller;
 		$this->autoSavedPostManager = $auto_saved_post_manager;
+		$this->postManager = $post_manager;
+		$this->config = $config;
 	}
 
 	/**

@@ -18,11 +18,6 @@ use Povium\Security\User\User;
 class Authenticator
 {
 	/**
-	* @var array
-	*/
-	private $config;
-
-	/**
 	* Database connection (PDO)
 	*
 	* @var \PDO
@@ -30,14 +25,14 @@ class Authenticator
 	protected $conn;
 
 	/**
-	 * @var RandomStringGenerator
-	 */
-	protected $randomStringGenerator;
-
-	/**
 	 * @var Client
 	 */
 	private $client;
+
+	/**
+	 * @var SessionManager
+	 */
+	protected $sessionManager;
 
 	/**
 	 * @var UserManager
@@ -45,9 +40,14 @@ class Authenticator
 	protected $userManager;
 
 	/**
-	 * @var SessionManager
+	 * @var RandomStringGenerator
 	 */
-	protected $sessionManager;
+	protected $randomStringGenerator;
+
+	/**
+	 * @var array
+	 */
+	private $config;
 
 	/**
 	 * Whether client is logged in
@@ -64,27 +64,27 @@ class Authenticator
 	private $currentUser = null;
 
 	/**
-	 * @param array          		$config
-	 * @param \PDO         	 		$conn
-	 * @param RandomStringGenerator	$random_string_generator
-	 * @param Client				$client
-	 * @param UserManager			$user_manager
+	 * @param \PDO 					$conn
+	 * @param Client 				$client
 	 * @param SessionManager 		$session_manager
+	 * @param UserManager 			$user_manager
+	 * @param RandomStringGenerator $random_string_generator
+	 * @param array 				$config
 	 */
 	public function __construct(
-		array $config,
  		\PDO $conn,
-		RandomStringGenerator $random_string_generator,
 		Client $client,
+		SessionManager $session_manager,
 		UserManager $user_manager,
-		SessionManager $session_manager
+		RandomStringGenerator $random_string_generator,
+		array $config
 	) {
-		$this->config = $config;
 		$this->conn = $conn;
-		$this->randomStringGenerator = $random_string_generator;
 		$this->client = $client;
-		$this->userManager = $user_manager;
 		$this->sessionManager = $session_manager;
+		$this->userManager = $user_manager;
+		$this->randomStringGenerator = $random_string_generator;
+		$this->config = $config;
 
 		$this->isLoggedIn();
 	}

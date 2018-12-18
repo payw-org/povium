@@ -16,11 +16,6 @@ class DBBuilder
 	const DROP_AND_CREATE = 2;
 
 	/**
-	 * @var array
-	 */
-	private $config;
-
-	/**
 	 * Database connection (PDO)
 	 *
 	 * @var \PDO
@@ -28,13 +23,18 @@ class DBBuilder
 	protected $conn;
 
 	/**
-	 * @param array $config
-	 * @param \PDO  $conn
+	 * @var array
 	 */
-	public function __construct(array $config, \PDO $conn)
+	private $config;
+
+	/**
+	 * @param \PDO 	$conn
+	 * @param array $config
+	 */
+	public function __construct(\PDO $conn, array $config)
 	{
-		$this->config = $config;
 		$this->conn = $conn;
+		$this->config = $config;
 	}
 
 	/**

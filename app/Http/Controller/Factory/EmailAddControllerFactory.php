@@ -22,12 +22,12 @@ class EmailAddControllerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_add_controller.php');
 		$conn = DBConnection::getInstance()->getConn();
 		$email_validator = $factory->createInstance(EmailValidator::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_add_controller.php');
 
-		$this->args[] = $config;
 		$this->args[] = $conn;
 		$this->args[] = $email_validator;
+		$this->args[] = $config;
 	}
 }

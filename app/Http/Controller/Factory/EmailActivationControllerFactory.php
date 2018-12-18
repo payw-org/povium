@@ -22,12 +22,12 @@ class EmailActivationControllerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_controller.php');
 		$conn = DBConnection::getInstance()->getConn();
 		$user_manager = $factory->createInstance(UserManager::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_controller.php');
 
-		$this->args[] = $config;
 		$this->args[] = $conn;
 		$this->args[] = $user_manager;
+		$this->args[] = $config;
 	}
 }

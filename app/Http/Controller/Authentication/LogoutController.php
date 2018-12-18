@@ -14,25 +14,25 @@ use Povium\Security\Auth\Authenticator;
 class LogoutController
 {
 	/**
-	 * @var SessionManager
-	 */
-	protected $sessionManager;
-
-	/**
 	 * @var Authenticator
 	 */
 	protected $authenticator;
 
 	/**
-	 * @param SessionManager	$session_manager
+	 * @var SessionManager
+	 */
+	protected $sessionManager;
+
+	/**
 	 * @param Authenticator		$authenticator
+	 * @param SessionManager	$session_manager
 	 */
 	public function __construct(
-		SessionManager $session_manager,
- 		Authenticator $authenticator
+		Authenticator $authenticator,
+		SessionManager $session_manager
 	) {
-		$this->sessionManager = $session_manager;
 		$this->authenticator = $authenticator;
+		$this->sessionManager = $session_manager;
 	}
 
 	/**

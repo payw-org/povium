@@ -1,6 +1,6 @@
 <?php
 /**
- * Post class store published post info.
+ * A single post.
  *
  * @author		H.Chihoon
  * @copyright	2018 DesignAndDevelop
@@ -53,18 +53,20 @@ class Post extends PostFrame
 		?string $subtitle,
 		?string $thumbnail
 	) {
-		$this->id = $id;
-		$this->userID = $user_id;
-		$this->title = $title;
-		$this->body = $body;
-		$this->contents = $contents;
-		$this->isPremium = $is_premium;
+		parent::__construct(
+			$id,
+			$user_id,
+			$title,
+			$body,
+			$contents,
+			$is_premium,
+			$series_id,
+			$subtitle,
+			$thumbnail
+		);
 		$this->viewCnt = $view_cnt;
 		$this->publicationDt = $publication_dt;
 		$this->lastEditedDt = $last_edited_dt;
-		$this->seriesID = $series_id;
-		$this->subtitle = $subtitle;
-		$this->thumbnail = $thumbnail;
 	}
 
 	/**
