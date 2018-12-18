@@ -10,10 +10,6 @@ namespace Povium\Loader\GlobalModule;
 
 class GlobalNavigationLoader
 {
-	public function __construct()
-	{
-	}
-
 	/**
 	 * @return array
 	 */
