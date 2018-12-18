@@ -32,13 +32,13 @@ class HttpErrorViewMiddleware extends AbstractViewMiddleware
 	 *
 	 * @param	HttpException	$http_exception
 	 */
-	public function requestView()
+	public function requestViewConfig()
 	{
 		$args = func_get_args();
 		$http_exception = $args[0];
 
 		http_response_code($http_exception->getResponseCode());
 
-		$this->viewConfig = $this->httpErrorViewController->loadViewConfig($http_exception);
+		return $this->httpErrorViewController->loadViewConfig($http_exception);
 	}
 }

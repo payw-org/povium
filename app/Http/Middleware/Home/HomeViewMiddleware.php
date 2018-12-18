@@ -29,8 +29,8 @@ class HomeViewMiddleware extends AbstractViewMiddleware
 	/**
 	 * {@inheritdoc}
 	 */
-	public function requestView()
+	public function requestViewConfig()
 	{
-		$this->viewConfig = $this->homeViewController->loadViewConfig();
+		return $this->homeViewController->loadViewConfig();
 	}
 }

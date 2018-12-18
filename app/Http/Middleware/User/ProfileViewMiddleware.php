@@ -35,7 +35,7 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 	 *
 	 * @throws NotFoundHttpException	If the readable id of user is not found
 	 */
-	public function requestView()
+	public function requestViewConfig()
 	{
 		$args = func_get_args();
 		$readable_id = $args[0];
@@ -43,7 +43,7 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 		$readable_id = strtolower($readable_id);
 
 		try {
-			$this->viewConfig = $this->profileViewController->loadViewConfig($readable_id);
+			return $this->profileViewController->loadViewConfig($readable_id);
 		} catch (UserNotFoundException $e) {
 			throw new NotFoundHttpException(
 				$e->getMessage(),

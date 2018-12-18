@@ -40,7 +40,7 @@ class LoginViewMiddleware extends AbstractViewMiddleware implements RefererCheck
 	/**
 	 * {@inheritdoc}
 	 */
-	public function requestView()
+	public function requestViewConfig()
 	{
 		$referer_query = $this->checkReferer();
 
@@ -48,7 +48,7 @@ class LoginViewMiddleware extends AbstractViewMiddleware implements RefererCheck
 			$this->router->redirect('/login' . '?' . $referer_query);
 		}
 
-		$this->viewConfig = $this->loginViewController->loadViewConfig();
+		return $this->loginViewController->loadViewConfig();
 	}
 
 	/**

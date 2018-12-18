@@ -21,11 +21,11 @@ $collection->get(
 		$home_view_middleware = $factory->createInstance(
 			\Povium\Http\Middleware\Home\HomeViewMiddleware::class
 		);
-		$home_view_middleware->requestView();
+		$view_config = $home_view_middleware->requestViewConfig();
 
 		echo $blade->view()->make(
 			'sections.home',
-			$home_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	}
 );
@@ -44,11 +44,11 @@ $collection->get(
 			\Povium\Http\Middleware\Authentication\LoginViewMiddleware::class,
 			$router
 		);
-		$login_view_middleware->requestView();
+		$view_config = $login_view_middleware->requestViewConfig();
 
 		echo $blade->view()->make(
 			'sections.login',
-			$login_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	}
 );
@@ -102,11 +102,11 @@ $collection->get(
 			\Povium\Http\Middleware\Authentication\RegisterViewMiddleware::class,
 			$router
 		);
-		$register_view_middleware->requestView();
+		$view_config = $register_view_middleware->requestViewConfig();
 
 		echo $blade->view()->make(
 			'sections.register',
-			$register_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	}
 );
@@ -245,11 +245,11 @@ $collection->get(
 		$profile_view_middleware = $factory->createInstance(
 			\Povium\Http\Middleware\User\ProfileViewMiddleware::class
 		);
-		$profile_view_middleware->requestView($readable_id);
+		$view_config = $profile_view_middleware->requestViewConfig($readable_id);
 
 		echo $blade->view()->make(
 			'sections.profile',
-			$profile_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	},
 	'profile'
@@ -288,11 +288,11 @@ $collection->get(
 		$http_error_view_middleware = $factory->createInstance(
 			\Povium\Http\Middleware\Error\HttpErrorViewMiddleware::class
 		);
-		$http_error_view_middleware->requestView($http_exception);
+		$view_config = $http_error_view_middleware->requestViewConfig($http_exception);
 
 		echo $blade->view()->make(
 			'sections.http-error',
-			$http_error_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	},
 	'http_error'

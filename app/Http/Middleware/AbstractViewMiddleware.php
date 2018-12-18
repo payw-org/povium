@@ -11,22 +11,11 @@ namespace Povium\Http\Middleware;
 abstract class AbstractViewMiddleware
 {
 	/**
-	 * @var array
-	 */
-	protected $viewConfig = array();
-
-	/**
 	 * Verify request and load view config.
 	 *
 	 * @param 	mixed	URI data
+	 *
+	 * @return	array
 	 */
-	abstract public function requestView();
-
-	/**
-	 * @return array
-	 */
-	public function getViewConfig()
-	{
-		return $this->viewConfig;
-	}
+	abstract public function requestViewConfig();
 }

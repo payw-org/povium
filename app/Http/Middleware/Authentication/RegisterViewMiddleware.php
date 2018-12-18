@@ -40,7 +40,7 @@ class RegisterViewMiddleware extends AbstractViewMiddleware implements RefererCh
 	/**
 	 * {@inheritdoc}
 	 */
-	public function requestView()
+	public function requestViewConfig()
 	{
 		$referer_query = $this->checkReferer();
 
@@ -48,7 +48,7 @@ class RegisterViewMiddleware extends AbstractViewMiddleware implements RefererCh
 			$this->router->redirect('/register' . '?' . $referer_query);
 		}
 
-		$this->viewConfig = $this->registerViewController->loadViewConfig();
+		return $this->registerViewController->loadViewConfig();
 	}
 
 	/**
