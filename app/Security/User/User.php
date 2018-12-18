@@ -1,6 +1,6 @@
 <?php
 /**
-* User class is the user implementation.
+* A single user.
 *
 * @author		H.Chihoon
 * @copyright	2018 DesignAndDevelop
