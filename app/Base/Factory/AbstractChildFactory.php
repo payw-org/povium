@@ -38,7 +38,7 @@ abstract class AbstractChildFactory implements FactoryInterface
 	}
 
 	/**
-	* Prepare arguments
+	* Prepare arguments.
 	*
 	* @param	mixed	materials
 	*/
