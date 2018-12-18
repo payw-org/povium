@@ -22,14 +22,3 @@ $app = require_once($_SERVER['DOCUMENT_ROOT'] . '/../bootstrap/app.php');
 /* Dispatch a request to router */
 
 $app['router']->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-
-// use Hashids\Hashids;
-//
-// $hashids = new Hashids('Povium auto_saved_post', 12, 'abcdefghijklmnopqrstuvwxyz1234567890');
-//
-// $hash = $hashids->encode(90);
-// echo $hash;
-// echo "<br>";
-// echo strlen($hash);
-// echo "<br>";
-// echo $hashids->decode($hash)[0];
