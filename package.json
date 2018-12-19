@@ -47,12 +47,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DesignAndDevelop/Povium.git"
+    "url": "git+https://gitlab.com/Povium/Readigm/Readigm-web.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/DesignAndDevelop/Povium/issues"
-  },
-  "homepage": "https://github.com/DesignAndDevelop/Povium#readme"
+    "url": "https://gitlab.com/Povium/Readigm/Readigm-web/issues"
+  }
 }
