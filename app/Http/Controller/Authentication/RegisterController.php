@@ -3,13 +3,13 @@
 * Controller for register.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Security\Encoder\PasswordEncoder;
-use Povium\Security\User\UserManager;
+use Readigm\Security\Encoder\PasswordEncoder;
+use Readigm\Security\User\UserManager;
 
 class RegisterController
 {

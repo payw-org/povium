@@ -3,12 +3,12 @@
 * This factory is responsible for creating "RedirectURIValidator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Routing\Factory;
+namespace Readigm\Base\Routing\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
 
 class RedirectURIValidatorFactory extends AbstractChildFactory
 {

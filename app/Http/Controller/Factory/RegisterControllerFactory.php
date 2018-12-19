@@ -3,16 +3,16 @@
 * This factory is responsible for creating "RegisterController" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Http\Controller\Factory;
+namespace Readigm\Http\Controller\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Http\Controller\Authentication\RegistrationFormValidationController;
-use Povium\Security\Encoder\PasswordEncoder;
-use Povium\Security\User\UserManager;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Http\Controller\Authentication\RegistrationFormValidationController;
+use Readigm\Security\Encoder\PasswordEncoder;
+use Readigm\Security\User\UserManager;
 
 class RegisterControllerFactory extends AbstractChildFactory
 {

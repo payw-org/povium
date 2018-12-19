@@ -3,12 +3,12 @@
  * Controller for loading config of register view page.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Http\Controller\StandardViewController;
+use Readigm\Http\Controller\StandardViewController;
 
 class RegisterViewController extends StandardViewController
 {

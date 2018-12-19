@@ -3,10 +3,10 @@
  * Http exception for 410 Gone.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Http\Exception;
+namespace Readigm\Base\Http\Exception;
 
 class GoneHttpException extends HttpException
 {

@@ -3,15 +3,15 @@
  * Controller for loading config of profile view page.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\User;
+namespace Readigm\Http\Controller\User;
 
-use Povium\Http\Controller\StandardViewController;
-use Povium\Http\Controller\Exception\UserNotFoundException;
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
-use Povium\Security\User\UserManager;
+use Readigm\Http\Controller\StandardViewController;
+use Readigm\Http\Controller\Exception\UserNotFoundException;
+use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Security\User\UserManager;
 
 class ProfileViewController extends StandardViewController
 {

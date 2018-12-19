@@ -3,10 +3,10 @@
 * Session manager
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Http\Session;
+namespace Readigm\Base\Http\Session;
 
 class SessionManager
 {

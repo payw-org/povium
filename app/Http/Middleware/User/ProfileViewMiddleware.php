@@ -3,15 +3,15 @@
  * Middleware for profile view.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\User;
+namespace Readigm\Http\Middleware\User;
 
-use Povium\Base\Http\Exception\NotFoundHttpException;
-use Povium\Http\Controller\Exception\UserNotFoundException;
-use Povium\Http\Controller\User\ProfileViewController;
-use Povium\Http\Middleware\AbstractViewMiddleware;
+use Readigm\Base\Http\Exception\NotFoundHttpException;
+use Readigm\Http\Controller\Exception\UserNotFoundException;
+use Readigm\Http\Controller\User\ProfileViewController;
+use Readigm\Http\Middleware\AbstractViewMiddleware;
 
 class ProfileViewMiddleware extends AbstractViewMiddleware
 {

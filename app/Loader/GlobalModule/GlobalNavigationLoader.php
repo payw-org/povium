@@ -3,10 +3,10 @@
  * Loader for data in global navigation.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Loader\GlobalModule;
+namespace Readigm\Loader\GlobalModule;
 
 class GlobalNavigationLoader
 {

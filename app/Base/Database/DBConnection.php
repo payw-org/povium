@@ -3,12 +3,12 @@
 * Create a database connection using PDO.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Database;
+namespace Readigm\Base\Database;
 
-use Povium\Traits\SingletonTrait;
+use Readigm\Traits\SingletonTrait;
 
 class DBConnection
 {

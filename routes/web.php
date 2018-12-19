@@ -3,14 +3,14 @@
 * Set routes for web.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-use Povium\Security\Auth\Authorizer;
-use Povium\Base\Http\Exception\HttpException;
-use Povium\Base\Http\Exception\NotFoundHttpException;
-use Povium\Base\Http\Exception\ForbiddenHttpException;
-use Povium\Base\Http\Exception\GoneHttpException;
+use Readigm\Security\Auth\Authorizer;
+use Readigm\Base\Http\Exception\HttpException;
+use Readigm\Base\Http\Exception\NotFoundHttpException;
+use Readigm\Base\Http\Exception\ForbiddenHttpException;
+use Readigm\Base\Http\Exception\GoneHttpException;
 
 /**
  * Show home view.
@@ -19,7 +19,7 @@ $collection->get(
 	'/',
 	function () use ($factory, $blade) {
 		$home_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Home\HomeViewMiddleware::class
+			\Readigm\Http\Middleware\Home\HomeViewMiddleware::class
 		);
 		$view_config = $home_view_middleware->requestViewConfig();
 
@@ -41,7 +41,7 @@ $collection->get(
 		}
 
 		$login_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\LoginViewMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\LoginViewMiddleware::class,
 			$router
 		);
 		$view_config = $login_view_middleware->requestViewConfig();
@@ -64,7 +64,7 @@ $collection->post(
 		}
 
 		$login_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\LoginMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\LoginMiddleware::class,
 			$authenticator
 		);
 		$login_middleware->login();
@@ -82,7 +82,7 @@ $collection->put(
 		}
 
 		$login_feedback_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\LoginFeedbackMiddleware::class
+			\Readigm\Http\Middleware\Authentication\LoginFeedbackMiddleware::class
 		);
 		$login_feedback_middleware->giveFeedback();
 	}
@@ -99,7 +99,7 @@ $collection->get(
 		}
 
 		$register_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\RegisterViewMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\RegisterViewMiddleware::class,
 			$router
 		);
 		$view_config = $register_view_middleware->requestViewConfig();
@@ -122,7 +122,7 @@ $collection->post(
 		}
 
 		$register_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\RegisterMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\RegisterMiddleware::class,
 			$authenticator
 		);
 		$register_middleware->register();
@@ -140,7 +140,7 @@ $collection->put(
 		}
 
 		$registration_feedback_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\RegistrationFeedbackMiddleware::class
+			\Readigm\Http\Middleware\Authentication\RegistrationFeedbackMiddleware::class
 		);
 		$registration_feedback_middleware->giveFeedback();
 	}
@@ -157,7 +157,7 @@ $collection->post(
 		}
 
 		$logout_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\LogoutMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\LogoutMiddleware::class,
 			$authenticator
 		);
 		$logout_middleware->logout();
@@ -178,7 +178,7 @@ $collection->get(
 		}
 
 		$email_activation_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\EmailActivationMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\EmailActivationMiddleware::class,
 			$router
 		);
 		$email_activation_middleware->activateEmail($GLOBALS['current_user']);
@@ -213,7 +213,7 @@ $collection->get(
 		}
 
 		$email_activation_request_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Setting\EmailActivationRequestMiddleware::class,
+			\Readigm\Http\Middleware\Setting\EmailActivationRequestMiddleware::class,
 			$router
 		);
 		$email_activation_request_middleware->requestEmailActivation($GLOBALS['current_user']);
@@ -243,7 +243,7 @@ $collection->get(
 	'/@{readable_id:.+}',
 	function ($readable_id) use ($factory, $blade) {
 		$profile_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\User\ProfileViewMiddleware::class
+			\Readigm\Http\Middleware\User\ProfileViewMiddleware::class
 		);
 		$view_config = $profile_view_middleware->requestViewConfig($readable_id);
 
@@ -286,7 +286,7 @@ $collection->get(
 	'/*',
 	function ($http_exception) use ($factory, $blade) {
 		$http_error_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Error\HttpErrorViewMiddleware::class
+			\Readigm\Http\Middleware\Error\HttpErrorViewMiddleware::class
 		);
 		$view_config = $http_error_view_middleware->requestViewConfig($http_exception);
 

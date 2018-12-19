@@ -1,6 +1,6 @@
 <?php
 
-$url = "http://povium.local/test";
+$url = "http://readigm.local/test";
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -21,7 +21,7 @@ curl_close ($ch);
 
 var_dump($server_output);
 
-// callRestAPI("http://povium.local/test");
+// callRestAPI("http://readigm.local/test");
 //
 // function callRestAPI($uri) {
 //      $channel = curl_init($uri);

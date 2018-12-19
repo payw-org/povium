@@ -3,12 +3,12 @@
 * This factory is responsible for creating "UserManager" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\User\Factory;
+namespace Readigm\Security\User\Factory;
 
-use Povium\Base\Database\Factory\AbstractRecordManagerFactory;
+use Readigm\Base\Database\Factory\AbstractRecordManagerFactory;
 
 class UserManagerFactory extends AbstractRecordManagerFactory
 {

@@ -3,12 +3,12 @@
  * Bootstrap session services.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider;
+namespace Readigm\Provider;
 
-use Povium\Base\Http\Session\SessionManager;
+use Readigm\Base\Http\Session\SessionManager;
 
 class SessionServiceProvider extends AbstractServiceProvider
 {

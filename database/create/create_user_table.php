@@ -3,7 +3,7 @@
 * Create user table.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
 class CreateUserTable

@@ -3,16 +3,16 @@
 * Interface for router.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Routing;
+namespace Readigm\Base\Routing;
 
-use Povium\Base\Routing\Matcher\RequestMatcherInterface;
-use Povium\Base\Routing\Generator\URIGeneratorInterface;
-use Povium\Base\Routing\Redirector\RedirectorInterface;
-use Povium\Base\Routing\Exception\NullPropertyException;
-use Povium\Base\Routing\Exception\NamedRouteNotFoundException;
+use Readigm\Base\Routing\Matcher\RequestMatcherInterface;
+use Readigm\Base\Routing\Generator\URIGeneratorInterface;
+use Readigm\Base\Routing\Redirector\RedirectorInterface;
+use Readigm\Base\Routing\Exception\NullPropertyException;
+use Readigm\Base\Routing\Exception\NamedRouteNotFoundException;
 
 interface RouterInterface extends
 	RequestMatcherInterface,

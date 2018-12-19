@@ -3,12 +3,12 @@
  * Manage a set of Route instances.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Routing;
+namespace Readigm\Base\Routing;
 
-use Povium\Base\Routing\Exception\NamedRouteNotFoundException;
+use Readigm\Base\Routing\Exception\NamedRouteNotFoundException;
 
 class RouteCollection
 {

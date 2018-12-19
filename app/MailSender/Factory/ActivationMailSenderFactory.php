@@ -3,12 +3,12 @@
 * This factory is responsible for creating "ActivationMailSender" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\MailSender\Factory;
+namespace Readigm\MailSender\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class ActivationMailSenderFactory extends AbstractChildFactory

@@ -1,9 +1,9 @@
 <?php
 /**
- * Povium web
+ * Readigm web
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
 /* Environment setting */

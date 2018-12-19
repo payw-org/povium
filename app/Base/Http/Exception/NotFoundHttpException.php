@@ -3,10 +3,10 @@
  * Http exception for 404 Not Found.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Http\Exception;
+namespace Readigm\Base\Http\Exception;
 
 class NotFoundHttpException extends HttpException
 {

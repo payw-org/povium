@@ -3,14 +3,14 @@
  * Controller for validating login form.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Security\Validator\UserInfo\EmailValidator;
-use Povium\Security\Validator\UserInfo\PasswordValidator;
-use Povium\Security\Validator\UserInfo\ReadableIDValidator;
+use Readigm\Security\Validator\UserInfo\EmailValidator;
+use Readigm\Security\Validator\UserInfo\PasswordValidator;
+use Readigm\Security\Validator\UserInfo\ReadableIDValidator;
 
 class LoginFormValidationController
 {

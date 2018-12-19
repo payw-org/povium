@@ -3,12 +3,12 @@
  * Record manager which is responsible for managing table record.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Database\Record;
+namespace Readigm\Base\Database\Record;
 
-use Povium\Base\Database\Exception\InvalidParameterNumberException;
+use Readigm\Base\Database\Exception\InvalidParameterNumberException;
 
 abstract class AbstractRecordManager
 {

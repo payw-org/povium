@@ -3,10 +3,10 @@
 * Http exception
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Http\Exception;
+namespace Readigm\Base\Http\Exception;
 
 abstract class HttpException extends \RuntimeException implements ExceptionInterface
 {

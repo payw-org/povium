@@ -3,12 +3,12 @@
 * This factory is responsible for creating "Client" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Http\Factory;
+namespace Readigm\Base\Http\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
 
 class ClientFactory extends AbstractChildFactory
 {

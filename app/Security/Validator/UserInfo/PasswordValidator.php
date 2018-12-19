@@ -3,12 +3,12 @@
 * Validate user's password.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\Validator\UserInfo;
+namespace Readigm\Security\Validator\UserInfo;
 
-use Povium\Validator\ValidatorInterface;
+use Readigm\Validator\ValidatorInterface;
 use ZxcvbnPhp\Zxcvbn;
 
 class PasswordValidator implements ValidatorInterface

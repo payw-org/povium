@@ -3,13 +3,13 @@
  * Controller for creating temp post.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Post;
+namespace Readigm\Http\Controller\Post;
 
-use Povium\Publication\Post\AutoSavedPostManager;
-use Povium\Security\User\User;
+use Readigm\Publication\Post\AutoSavedPostManager;
+use Readigm\Security\User\User;
 
 class TempPostCreationController
 {

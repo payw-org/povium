@@ -3,15 +3,15 @@
 * Controller for login.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Security\Encoder\PasswordEncoder;
-use Povium\Security\User\UserManager;
-use Povium\Base\Http\Session\SessionManager;
-use Povium\Security\Auth\Authenticator;
+use Readigm\Security\Encoder\PasswordEncoder;
+use Readigm\Security\User\UserManager;
+use Readigm\Base\Http\Session\SessionManager;
+use Readigm\Security\Auth\Authenticator;
 
 class LoginController
 {

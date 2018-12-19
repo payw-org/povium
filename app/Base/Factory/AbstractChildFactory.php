@@ -4,10 +4,10 @@
 * of given type.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Factory;
+namespace Readigm\Base\Factory;
 
 abstract class AbstractChildFactory implements FactoryInterface
 {

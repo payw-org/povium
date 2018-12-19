@@ -3,13 +3,13 @@
  * Abstract form for factory which is responsible for creating record manager instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Database\Factory;
+namespace Readigm\Base\Database\Factory;
 
-use Povium\Base\Database\DBConnection;
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Database\DBConnection;
+use Readigm\Base\Factory\AbstractChildFactory;
 
 abstract class AbstractRecordManagerFactory extends AbstractChildFactory
 {

@@ -3,17 +3,17 @@
  * This factory is responsible for creating "EmailActivationRequestMiddleware" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Factory;
+namespace Readigm\Http\Middleware\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Base\Routing\Router;
-use Povium\Generator\RandomStringGenerator;
-use Povium\Http\Controller\Setting\EmailAddController;
-use Povium\MailSender\ActivationMailSender;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Routing\Router;
+use Readigm\Generator\RandomStringGenerator;
+use Readigm\Http\Controller\Setting\EmailAddController;
+use Readigm\MailSender\ActivationMailSender;
 
 class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
 {

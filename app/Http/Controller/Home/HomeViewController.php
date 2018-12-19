@@ -3,12 +3,12 @@
  * Controller for loading config of home view page.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Home;
+namespace Readigm\Http\Controller\Home;
 
-use Povium\Http\Controller\StandardViewController;
+use Readigm\Http\Controller\StandardViewController;
 
 class HomeViewController extends StandardViewController
 {

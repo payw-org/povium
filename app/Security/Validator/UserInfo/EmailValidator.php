@@ -3,12 +3,12 @@
 * Validate user's email.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\Validator\UserInfo;
+namespace Readigm\Security\Validator\UserInfo;
 
-use Povium\Security\User\UserManager;
+use Readigm\Security\User\UserManager;
 
 class EmailValidator extends UserInfoDuplicateValidator
 {

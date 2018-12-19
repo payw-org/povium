@@ -3,13 +3,13 @@
 * Controller for logout.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Base\Http\Session\SessionManager;
-use Povium\Security\Auth\Authenticator;
+use Readigm\Base\Http\Session\SessionManager;
+use Readigm\Security\Auth\Authenticator;
 
 class LogoutController
 {

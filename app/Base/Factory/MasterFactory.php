@@ -5,13 +5,13 @@
 * responsible for creating which instance and delegates instantiation.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Factory;
+namespace Readigm\Base\Factory;
 
-use Povium\Base\Factory\Exception\NonexistentTypeException;
-use Povium\Base\Factory\Exception\UnregisteredTypeException;
+use Readigm\Base\Factory\Exception\NonexistentTypeException;
+use Readigm\Base\Factory\Exception\UnregisteredTypeException;
 
 class MasterFactory implements FactoryInterface
 {

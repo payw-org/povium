@@ -3,7 +3,7 @@
 * Config array for email validator
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
 return [

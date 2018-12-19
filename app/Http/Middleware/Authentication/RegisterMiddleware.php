@@ -3,16 +3,16 @@
  * Middleware for register.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Authentication;
+namespace Readigm\Http\Middleware\Authentication;
 
-use Povium\Http\Middleware\AbstractAjaxMiddleware;
-use Povium\Http\Middleware\RefererCheckerInterface;
-use Povium\Http\Controller\Authentication\RegisterController;
-use Povium\Http\Controller\Authentication\LoginController;
-use Povium\Base\Routing\Validator\RedirectURIValidator;
+use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Middleware\RefererCheckerInterface;
+use Readigm\Http\Controller\Authentication\RegisterController;
+use Readigm\Http\Controller\Authentication\LoginController;
+use Readigm\Base\Routing\Validator\RedirectURIValidator;
 
 class RegisterMiddleware extends AbstractAjaxMiddleware implements RefererCheckerInterface
 {

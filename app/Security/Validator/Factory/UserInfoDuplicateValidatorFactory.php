@@ -4,14 +4,14 @@
  * user info duplicate validator instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Security\Validator\Factory;
+namespace Readigm\Security\Validator\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Security\User\UserManager;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Security\User\UserManager;
 
 abstract class UserInfoDuplicateValidatorFactory extends AbstractChildFactory
 {

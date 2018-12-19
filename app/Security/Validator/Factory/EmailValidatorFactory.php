@@ -3,10 +3,10 @@
 * This factory is responsible for creating "EmailValidator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\Validator\Factory;
+namespace Readigm\Security\Validator\Factory;
 
 class EmailValidatorFactory extends UserInfoDuplicateValidatorFactory
 {

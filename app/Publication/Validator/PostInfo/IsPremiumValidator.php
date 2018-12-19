@@ -3,13 +3,13 @@
  * Validate premium setting for post.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Publication\Validator\PostInfo;
+namespace Readigm\Publication\Validator\PostInfo;
 
-use Povium\Security\Auth\Authorizer;
-use Povium\Validator\ValidatorInterface;
+use Readigm\Security\Auth\Authorizer;
+use Readigm\Validator\ValidatorInterface;
 
 class IsPremiumValidator implements ValidatorInterface
 {

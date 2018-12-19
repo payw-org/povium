@@ -3,12 +3,12 @@
  * Abstract form for controller for standard view page.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Controller;
+namespace Readigm\Http\Controller;
 
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
 
 abstract class StandardViewController extends AbstractViewController
 {

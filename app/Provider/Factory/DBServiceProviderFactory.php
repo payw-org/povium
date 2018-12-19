@@ -3,13 +3,13 @@
  * This factory is responsible for creating "DBServiceProvider" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider\Factory;
+namespace Readigm\Provider\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
 
 class DBServiceProviderFactory extends AbstractChildFactory
 {

@@ -3,10 +3,10 @@
 * A single route.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Routing;
+namespace Readigm\Base\Routing;
 
 class Route
 {

@@ -3,10 +3,10 @@
  * Database builder.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Database;
+namespace Readigm\Base\Database;
 
 class DBBuilder
 {

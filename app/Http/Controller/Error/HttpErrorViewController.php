@@ -3,14 +3,14 @@
  * Controller for loading config of http error view page.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Error;
+namespace Readigm\Http\Controller\Error;
 
-use Povium\Base\Http\Exception\HttpException;
-use Povium\Http\Controller\StandardViewController;
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Base\Http\Exception\HttpException;
+use Readigm\Http\Controller\StandardViewController;
+use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
 
 class HttpErrorViewController extends StandardViewController
 {

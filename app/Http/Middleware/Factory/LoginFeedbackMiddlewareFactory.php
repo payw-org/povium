@@ -3,14 +3,14 @@
  * This factory is responsible for creating "LoginFeedbackMiddleware" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Factory;
+namespace Readigm\Http\Middleware\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Http\Controller\Authentication\LoginFormValidationController;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Http\Controller\Authentication\LoginFormValidationController;
 
 class LoginFeedbackMiddlewareFactory extends AbstractChildFactory
 {

@@ -3,13 +3,13 @@
  * Bootstrap database services.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider;
+namespace Readigm\Provider;
 
-use Povium\Base\Database\DBBuilder;
-use Povium\Base\Database\DBConnection;
+use Readigm\Base\Database\DBBuilder;
+use Readigm\Base\Database\DBConnection;
 
 class DBServiceProvider extends AbstractServiceProvider
 {
@@ -23,7 +23,7 @@ class DBServiceProvider extends AbstractServiceProvider
 
 		//	Build a database
 		$db_builder = $this->factory->createInstance(DBBuilder::class);
-		$db_builder->build(DBBuilder::NOT_BUILD);
+		$db_builder->build(DBBuilder::CREATE);
 
 		return $db_builder;
 	}

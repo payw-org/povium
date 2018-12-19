@@ -3,10 +3,10 @@
  * A single auto saved post.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Publication\Post;
+namespace Readigm\Publication\Post;
 
 class AutoSavedPost extends PostFrame
 {

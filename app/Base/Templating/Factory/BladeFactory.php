@@ -3,12 +3,12 @@
  * This factory is responsible for creating "Blade" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Templating\Factory;
+namespace Readigm\Base\Templating\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
 
 class BladeFactory extends AbstractChildFactory
 {

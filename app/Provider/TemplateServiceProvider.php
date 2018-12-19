@@ -3,10 +3,10 @@
  * Bootstrap template services.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider;
+namespace Readigm\Provider;
 
 use Philo\Blade\Blade;
 

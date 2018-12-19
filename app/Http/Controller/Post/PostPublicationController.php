@@ -3,16 +3,16 @@
  * Controller for publishing post.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Post;
+namespace Readigm\Http\Controller\Post;
 
-use Povium\Http\Controller\Exception\InvalidAccessException;
-use Povium\Http\Controller\Exception\PostNotFoundException;
-use Povium\Publication\Post\AutoSavedPostManager;
-use Povium\Publication\Post\PostManager;
-use Povium\Security\User\User;
+use Readigm\Http\Controller\Exception\InvalidAccessException;
+use Readigm\Http\Controller\Exception\PostNotFoundException;
+use Readigm\Publication\Post\AutoSavedPostManager;
+use Readigm\Publication\Post\PostManager;
+use Readigm\Security\User\User;
 
 class PostPublicationController
 {

@@ -3,14 +3,14 @@
  * Controller for validating registration form.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Security\Validator\UserInfo\ReadableIDValidator;
-use Povium\Security\Validator\UserInfo\NameValidator;
-use Povium\Security\Validator\UserInfo\PasswordValidator;
+use Readigm\Security\Validator\UserInfo\ReadableIDValidator;
+use Readigm\Security\Validator\UserInfo\NameValidator;
+use Readigm\Security\Validator\UserInfo\PasswordValidator;
 
 class RegistrationFormValidationController
 {

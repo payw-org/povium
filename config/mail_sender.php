@@ -3,7 +3,7 @@
 * Config array for mail sender
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
 return [
@@ -19,10 +19,10 @@ return [
 	'mail_charset' => 'UTF-8',
 
 	'activation_mail' => [
-		'from_email' => 'noreply@povium.com',
-		'from_name' => 'Povium',
+		'from_email' => 'noreply@readigm.com',
+		'from_name' => 'Readigm',
 
-		'mail_subject' => '[Povium] 이메일을 인증해주세요.',
+		'mail_subject' => '[Readigm] 이메일을 인증해주세요.',
 		'mail_body' => '인증링크: ',
 		'mail_altbody' => ''
 	]

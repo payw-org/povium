@@ -3,13 +3,13 @@
 * Manage all user record.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\User;
+namespace Readigm\Security\User;
 
-use Povium\Base\Database\Record\AbstractRecordManager;
-use Povium\Base\Database\Exception\InvalidParameterNumberException;
+use Readigm\Base\Database\Record\AbstractRecordManager;
+use Readigm\Base\Database\Exception\InvalidParameterNumberException;
 
 class UserManager extends AbstractRecordManager
 {

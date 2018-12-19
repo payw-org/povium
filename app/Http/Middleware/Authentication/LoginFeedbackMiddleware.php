@@ -3,13 +3,13 @@
  * Middleware for login feedback.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Authentication;
+namespace Readigm\Http\Middleware\Authentication;
 
-use Povium\Http\Middleware\AbstractAjaxMiddleware;
-use Povium\Http\Controller\Authentication\LoginFormValidationController;
+use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Controller\Authentication\LoginFormValidationController;
 
 class LoginFeedbackMiddleware extends AbstractAjaxMiddleware
 {

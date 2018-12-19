@@ -3,14 +3,14 @@
 * Duplicate validator for user info.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\Validator\UserInfo;
+namespace Readigm\Security\Validator\UserInfo;
 
-use Povium\Validator\ValidatorInterface;
-use Povium\Validator\DuplicateCheckerInterface;
-use Povium\Security\User\UserManager;
+use Readigm\Validator\ValidatorInterface;
+use Readigm\Validator\DuplicateCheckerInterface;
+use Readigm\Security\User\UserManager;
 
 abstract class UserInfoDuplicateValidator implements ValidatorInterface, DuplicateCheckerInterface
 {

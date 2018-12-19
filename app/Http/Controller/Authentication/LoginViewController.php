@@ -3,12 +3,12 @@
  * Controller for loading config of login view page.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Http\Controller\StandardViewController;
+use Readigm\Http\Controller\StandardViewController;
 
 class LoginViewController extends StandardViewController
 {

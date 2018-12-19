@@ -3,17 +3,17 @@
  * Middleware for requesting email activation.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Setting;
+namespace Readigm\Http\Middleware\Setting;
 
-use Povium\Generator\RandomStringGenerator;
-use Povium\Http\Middleware\AbstractAjaxMiddleware;
-use Povium\Http\Controller\Setting\EmailAddController;
-use Povium\MailSender\ActivationMailSender;
-use Povium\Base\Routing\Router;
-use Povium\Security\User\User;
+use Readigm\Generator\RandomStringGenerator;
+use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Controller\Setting\EmailAddController;
+use Readigm\MailSender\ActivationMailSender;
+use Readigm\Base\Routing\Router;
+use Readigm\Security\User\User;
 
 class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
 {

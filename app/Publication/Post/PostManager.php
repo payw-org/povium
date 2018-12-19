@@ -3,13 +3,13 @@
  * Manage all post records.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Publication\Post;
+namespace Readigm\Publication\Post;
 
-use Povium\Base\Database\Record\AbstractRecordManager;
-use Povium\Base\Database\Exception\InvalidParameterNumberException;
+use Readigm\Base\Database\Record\AbstractRecordManager;
+use Readigm\Base\Database\Exception\InvalidParameterNumberException;
 
 class PostManager extends AbstractRecordManager
 {

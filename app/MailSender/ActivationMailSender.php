@@ -3,10 +3,10 @@
 * This mail sender send email to activate user email address.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\MailSender;
+namespace Readigm\MailSender;
 
 use PHPMailer\PHPMailer\Exception;
 

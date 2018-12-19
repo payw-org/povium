@@ -4,10 +4,10 @@
 * A factory can create object instances for given types.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Factory;
+namespace Readigm\Base\Factory;
 
 interface FactoryInterface
 {

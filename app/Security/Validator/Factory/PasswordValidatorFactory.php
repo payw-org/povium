@@ -3,12 +3,12 @@
 * This factory is responsible for creating "PasswordValidator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\Validator\Factory;
+namespace Readigm\Security\Validator\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
 use ZxcvbnPhp\Zxcvbn;
 
 class PasswordValidatorFactory extends AbstractChildFactory

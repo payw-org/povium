@@ -3,16 +3,16 @@
 * Controller for email activation.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Http\Controller\Exception\RequestExpiredException;
-use Povium\Http\Controller\Exception\RequestNotFoundException;
-use Povium\Http\Controller\Exception\TokenNotMatchedException;
-use Povium\Security\User\UserManager;
-use Povium\Security\User\User;
+use Readigm\Http\Controller\Exception\RequestExpiredException;
+use Readigm\Http\Controller\Exception\RequestNotFoundException;
+use Readigm\Http\Controller\Exception\TokenNotMatchedException;
+use Readigm\Security\User\UserManager;
+use Readigm\Security\User\User;
 
 class EmailActivationController
 {

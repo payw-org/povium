@@ -3,10 +3,10 @@
 * Interface for Duplicate checker.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Validator;
+namespace Readigm\Validator;
 
 interface DuplicateCheckerInterface
 {

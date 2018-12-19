@@ -3,13 +3,13 @@
 * Config array for "DBConnection".
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
 return [
 	'driver' => 'mysql',
 	'host' => '127.0.0.1',
-	'dbname' => 'povium_local_db',
+	'dbname' => 'readigm_local_db',
 	'username' => 'povium',
 	'password' => 'welovepovium2018',
 	'opt' => [

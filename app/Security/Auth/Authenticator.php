@@ -4,16 +4,16 @@
 * Issue access key and update it periodically.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Security\Auth;
+namespace Readigm\Security\Auth;
 
-use Povium\Generator\RandomStringGenerator;
-use Povium\Base\Http\Client;
-use Povium\Security\User\UserManager;
-use Povium\Base\Http\Session\SessionManager;
-use Povium\Security\User\User;
+use Readigm\Generator\RandomStringGenerator;
+use Readigm\Base\Http\Client;
+use Readigm\Security\User\UserManager;
+use Readigm\Base\Http\Session\SessionManager;
+use Readigm\Security\User\User;
 
 class Authenticator
 {

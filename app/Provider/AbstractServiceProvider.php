@@ -3,12 +3,12 @@
  * Abstract form for service provider.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider;
+namespace Readigm\Provider;
 
-use Povium\Base\Factory\MasterFactory;
+use Readigm\Base\Factory\MasterFactory;
 
 abstract class AbstractServiceProvider
 {

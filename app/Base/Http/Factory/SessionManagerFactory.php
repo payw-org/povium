@@ -3,15 +3,15 @@
 * This factory is responsible for creating "SessionManager" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Http\Factory;
+namespace Readigm\Base\Http\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Base\Database\DBConnection;
-use Povium\Base\Http\Session\PDOSessionHandler;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Database\DBConnection;
+use Readigm\Base\Http\Session\PDOSessionHandler;
 
 class SessionManagerFactory extends AbstractChildFactory
 {

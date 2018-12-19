@@ -3,16 +3,16 @@
  * Bootstrap route services.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider;
+namespace Readigm\Provider;
 
 use Philo\Blade\Blade;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Base\Routing\RouteCollection;
-use Povium\Base\Routing\Router;
-use Povium\Security\Auth\Authenticator;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Routing\RouteCollection;
+use Readigm\Base\Routing\Router;
+use Readigm\Security\Auth\Authenticator;
 
 class RouteServiceProvider extends AbstractServiceProvider
 {

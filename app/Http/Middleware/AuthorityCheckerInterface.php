@@ -3,10 +3,10 @@
  * Interface for checking authority.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware;
+namespace Readigm\Http\Middleware;
 
 interface AuthorityCheckerInterface
 {

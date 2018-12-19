@@ -3,10 +3,10 @@
  * Abstract form for controller for view page.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Controller;
+namespace Readigm\Http\Controller;
 
 abstract class AbstractViewController
 {

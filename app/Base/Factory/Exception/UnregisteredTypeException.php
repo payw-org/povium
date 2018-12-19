@@ -3,10 +3,10 @@
  * Exception thrown when a type does not register.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Factory\Exception;
+namespace Readigm\Base\Factory\Exception;
 
 class UnregisteredTypeException extends \InvalidArgumentException implements ExceptionInterface
 {

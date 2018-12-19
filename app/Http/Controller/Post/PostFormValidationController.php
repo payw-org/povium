@@ -3,19 +3,19 @@
  * Controller for validating post form.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Post;
+namespace Readigm\Http\Controller\Post;
 
-use Povium\Publication\Validator\PostInfo\BodyValidator;
-use Povium\Publication\Validator\PostInfo\ContentsValidator;
-use Povium\Publication\Validator\PostInfo\IsPremiumValidator;
-use Povium\Publication\Validator\PostInfo\SeriesIDValidator;
-use Povium\Publication\Validator\PostInfo\SubtitleValidator;
-use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
-use Povium\Publication\Validator\PostInfo\TitleValidator;
-use Povium\Security\User\User;
+use Readigm\Publication\Validator\PostInfo\BodyValidator;
+use Readigm\Publication\Validator\PostInfo\ContentsValidator;
+use Readigm\Publication\Validator\PostInfo\IsPremiumValidator;
+use Readigm\Publication\Validator\PostInfo\SeriesIDValidator;
+use Readigm\Publication\Validator\PostInfo\SubtitleValidator;
+use Readigm\Publication\Validator\PostInfo\ThumbnailValidator;
+use Readigm\Publication\Validator\PostInfo\TitleValidator;
+use Readigm\Security\User\User;
 
 class PostFormValidationController
 {

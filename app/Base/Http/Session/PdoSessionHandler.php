@@ -4,10 +4,10 @@
 * Store session data to database using PDO.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Http\Session;
+namespace Readigm\Base\Http\Session;
 
 class PDOSessionHandler implements \SessionHandlerInterface
 {

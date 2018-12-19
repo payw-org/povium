@@ -3,10 +3,10 @@
 * Manage client who is visited by browser.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Http;
+namespace Readigm\Base\Http;
 
 class Client
 {

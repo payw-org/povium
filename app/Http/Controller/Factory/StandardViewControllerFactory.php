@@ -3,14 +3,14 @@
  * Abstract form for factory which is responsible for creating standard view controller instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Controller\Factory;
+namespace Readigm\Http\Controller\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
 
 class StandardViewControllerFactory extends AbstractChildFactory
 {

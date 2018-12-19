@@ -3,15 +3,15 @@
 * This factory is responsible for creating "EmailActivationController" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Http\Controller\Factory;
+namespace Readigm\Http\Controller\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Base\Database\DBConnection;
-use Povium\Security\User\UserManager;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Database\DBConnection;
+use Readigm\Security\User\UserManager;
 
 class EmailActivationControllerFactory extends AbstractChildFactory
 {

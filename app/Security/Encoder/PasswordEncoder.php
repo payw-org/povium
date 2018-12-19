@@ -3,10 +3,10 @@
 * Password encoder
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\Encoder;
+namespace Readigm\Security\Encoder;
 
 class PasswordEncoder implements PasswordEncoderInterface
 {

@@ -3,10 +3,10 @@
 * Responsible for redirect.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Routing\Redirector;
+namespace Readigm\Base\Routing\Redirector;
 
 class Redirector implements RedirectorInterface
 {
