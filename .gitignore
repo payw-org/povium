@@ -3,6 +3,7 @@
 /public_html/build
 /.idea
 /storage/framework/blade
+/public_html/storage
 
 package-lock.json
 composer.lock
