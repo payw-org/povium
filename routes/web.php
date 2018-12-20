@@ -173,7 +173,7 @@ $collection->get(
  */
 $collection->get(
 	'/c/email/activation',
-	function () use ($factory, $router) {
+	function () use ($router, $factory) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			$router->redirect('/login', true);
 		}
@@ -208,7 +208,7 @@ $collection->get(
  */
 $collection->get(
 	'/me/settings/email/new-request',
-	function () use ($factory, $router) {
+	function () use ($router, $factory) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			return;
 		}
