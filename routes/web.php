@@ -149,15 +149,16 @@ $collection->put(
 /**
  * Logout.
  */
-$collection->post(
+$collection->get(
 	'/logout',
-	function () use ($factory, $authenticator) {
+	function () use ($router, $factory, $authenticator) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
-			return;
+			$router->redirect('/');
 		}
 
 		$logout_middleware = $factory->createInstance(
 			\Readigm\Http\Middleware\Authentication\LogoutMiddleware::class,
+			$router,
 			$authenticator
 		);
 		$logout_middleware->logout();

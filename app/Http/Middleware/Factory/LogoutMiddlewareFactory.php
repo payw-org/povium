@@ -10,6 +10,7 @@ namespace Readigm\Http\Middleware\Factory;
 
 use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Routing\Router;
 use Readigm\Http\Controller\Authentication\LogoutController;
 use Readigm\Security\Auth\Authenticator;
 
@@ -18,6 +19,7 @@ class LogoutMiddlewareFactory extends AbstractChildFactory
     /**
      * {@inheritdoc}
      *
+	 * @param Router
      * @param Authenticator
      */
     protected function prepareArgs()
@@ -25,9 +27,11 @@ class LogoutMiddlewareFactory extends AbstractChildFactory
         $materials = func_get_args();
 		$factory = new MasterFactory();
 
-        $authenticator = $materials[0];
+        $router = $materials[0];
+        $authenticator = $materials[1];
         $logout_controller = $factory->createInstance(LogoutController::class, $authenticator);
 
+        $this->args[] = $router;
 		$this->args[] = $logout_controller;
     }
 }
