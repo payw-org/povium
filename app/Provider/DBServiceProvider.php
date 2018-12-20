@@ -23,7 +23,7 @@ class DBServiceProvider extends AbstractServiceProvider
 
 		//	Build a database
 		$db_builder = $this->factory->createInstance(DBBuilder::class);
-		$db_builder->build(DBBuilder::CREATE);
+		$db_builder->build(DBBuilder::NOT_BUILD);
 
 		return $db_builder;
 	}
