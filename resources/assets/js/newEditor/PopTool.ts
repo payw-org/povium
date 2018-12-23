@@ -34,10 +34,14 @@ export default class PopTool {
 	}
 
 	public static showPopTool() {
-		var range = document.getSelection().getRangeAt(0)
+		let sel = window.getSelection()
+		if (sel.rangeCount === 0) {
+			return
+		}
+		let range = document.getSelection().getRangeAt(0)
 
 		let currentRange = SelectionManager.getCurrentRange()
-		var currentNode = SelectionManager.getCurrentNode()
+		let currentNode = SelectionManager.getCurrentNode()
 
 		if (!currentNode || currentRange.isCollapsed()) {
 			this.hidePopTool()
