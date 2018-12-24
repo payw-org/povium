@@ -8,14 +8,13 @@
 
 namespace Readigm\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Factory\MasterFactory;
 use Readigm\Base\Routing\Router;
 use Readigm\Generator\RandomStringGenerator;
 use Readigm\Http\Controller\Setting\EmailAddController;
 use Readigm\MailSender\ActivationMailSender;
 
-class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
+class EmailActivationRequestMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {
     /**
      * {@inheritdoc}
@@ -24,6 +23,8 @@ class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
      */
     protected function prepareArgs()
     {
+    	parent::prepareArgs();
+
         $materials = func_get_args();
 		$factory = new MasterFactory();
 

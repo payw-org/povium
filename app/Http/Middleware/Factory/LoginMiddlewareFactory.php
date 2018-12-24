@@ -8,13 +8,12 @@
 
 namespace Readigm\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Factory\MasterFactory;
 use Readigm\Base\Routing\Validator\RedirectURIValidator;
 use Readigm\Http\Controller\Authentication\LoginController;
 use Readigm\Security\Auth\Authenticator;
 
-class LoginMiddlewareFactory extends AbstractChildFactory
+class LoginMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {
     /**
      * {@inheritdoc}
@@ -23,6 +22,8 @@ class LoginMiddlewareFactory extends AbstractChildFactory
      */
     protected function prepareArgs()
     {
+    	parent::prepareArgs();
+
         $materials = func_get_args();
 		$factory = new MasterFactory();
 

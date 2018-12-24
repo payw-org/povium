@@ -8,17 +8,18 @@
 
 namespace Readigm\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Factory\MasterFactory;
 use Readigm\Http\Controller\Authentication\RegistrationFormValidationController;
 
-class RegistrationFeedbackMiddlewareFactory extends AbstractChildFactory
+class RegistrationFeedbackMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {
     /**
      * {@inheritdoc}
      */
     protected function prepareArgs()
     {
+    	parent::prepareArgs();
+
 		$factory = new MasterFactory();
 
         $registration_form_validation_controller = $factory->createInstance(RegistrationFormValidationController::class);

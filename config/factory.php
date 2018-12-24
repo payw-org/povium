@@ -39,6 +39,7 @@ return [
 	\Readigm\Http\Controller\Authentication\RegisterViewController::class => \Readigm\Http\Controller\Factory\RegisterViewControllerFactory::class,
 	\Readigm\Http\Controller\Error\HttpErrorViewController::class => \Readigm\Http\Controller\Factory\HttpErrorViewControllerFactory::class,
 
+	\Readigm\Http\Middleware\CamelToSnakeConverter::class => \Readigm\Http\Middleware\Factory\CamelToSnakeConverterFactory::class,
     \Readigm\Http\Middleware\Authentication\LoginMiddleware::class => \Readigm\Http\Middleware\Factory\LoginMiddlewareFactory::class,
 	\Readigm\Http\Middleware\Authentication\RegisterMiddleware::class => \Readigm\Http\Middleware\Factory\RegisterMiddlewareFactory::class,
 	\Readigm\Http\Middleware\Authentication\RegistrationFeedbackMiddleware::class => \Readigm\Http\Middleware\Factory\RegistrationFeedbackMiddlewareFactory::class,

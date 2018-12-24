@@ -9,6 +9,7 @@
 namespace Readigm\Http\Middleware\Authentication;
 
 use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Middleware\CamelToSnakeConverter;
 use Readigm\Http\Middleware\RefererCheckerInterface;
 use Readigm\Http\Controller\Authentication\LoginController;
 use Readigm\Base\Routing\Validator\RedirectURIValidator;
@@ -26,13 +27,16 @@ class LoginMiddleware extends AbstractAjaxMiddleware implements RefererCheckerIn
 	protected $loginController;
 
 	/**
+	 * @param CamelToSnakeConverter	$camel_to_snake_converter
 	 * @param RedirectURIValidator 	$redirect_uri_validator
 	 * @param LoginController 		$login_controller
 	 */
     public function __construct(
+    	CamelToSnakeConverter $camel_to_snake_converter,
 		RedirectURIValidator $redirect_uri_validator,
         LoginController $login_controller
     ) {
+    	parent::__construct($camel_to_snake_converter);
 		$this->redirectURIValidator = $redirect_uri_validator;
 		$this->loginController = $login_controller;
 	}
@@ -75,7 +79,7 @@ class LoginMiddleware extends AbstractAjaxMiddleware implements RefererCheckerIn
 			}
         }
 
-        $this->sendAjaxData($return);
+        $this->sendAjaxData($return, false);
     }
 
 	/**

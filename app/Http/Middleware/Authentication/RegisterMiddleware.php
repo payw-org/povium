@@ -9,6 +9,7 @@
 namespace Readigm\Http\Middleware\Authentication;
 
 use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Middleware\CamelToSnakeConverter;
 use Readigm\Http\Middleware\RefererCheckerInterface;
 use Readigm\Http\Controller\Authentication\RegisterController;
 use Readigm\Http\Controller\Authentication\LoginController;
@@ -32,15 +33,18 @@ class RegisterMiddleware extends AbstractAjaxMiddleware implements RefererChecke
     protected $registerController;
 
 	/**
+	 * @param CamelToSnakeConverter	$camel_to_snake_converter
 	 * @param RedirectURIValidator 	$redirect_uri_validator
 	 * @param LoginController 		$login_controller
 	 * @param RegisterController 	$register_controller
 	 */
     public function __construct(
+    	CamelToSnakeConverter $camel_to_snake_converter,
 		RedirectURIValidator $redirect_uri_validator,
 		LoginController $login_controller,
 		RegisterController $register_controller
     ) {
+    	parent::__construct($camel_to_snake_converter);
 		$this->redirectURIValidator = $redirect_uri_validator;
 		$this->loginController = $login_controller;
 		$this->registerController = $register_controller;
@@ -85,7 +89,7 @@ class RegisterMiddleware extends AbstractAjaxMiddleware implements RefererChecke
 			}
         }
 
-        $this->sendAjaxData($return);
+        $this->sendAjaxData($return, false);
     }
 
 	/**

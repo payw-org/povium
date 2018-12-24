@@ -10,6 +10,7 @@ namespace Readigm\Http\Middleware\Authentication;
 
 use Readigm\Http\Middleware\AbstractAjaxMiddleware;
 use Readigm\Http\Controller\Authentication\RegistrationFormValidationController;
+use Readigm\Http\Middleware\CamelToSnakeConverter;
 
 class RegistrationFeedbackMiddleware extends AbstractAjaxMiddleware
 {
@@ -19,11 +20,14 @@ class RegistrationFeedbackMiddleware extends AbstractAjaxMiddleware
 	protected $registrationFormValidationController;
 
 	/**
-	 * @param RegistrationFormValidationController $registration_form_validation_controller
+	 * @param CamelToSnakeConverter 				$camel_to_snake_converter
+	 * @param RegistrationFormValidationController 	$registration_form_validation_controller
 	 */
     public function __construct(
+    	CamelToSnakeConverter $camel_to_snake_converter,
     	RegistrationFormValidationController $registration_form_validation_controller
 	) {
+    	parent::__construct($camel_to_snake_converter);
 		$this->registrationFormValidationController = $registration_form_validation_controller;
 	}
 
@@ -47,6 +51,6 @@ class RegistrationFeedbackMiddleware extends AbstractAjaxMiddleware
 			$password
 		);
 
-        $this->sendAjaxData($return);
+        $this->sendAjaxData($return, false);
     }
 }

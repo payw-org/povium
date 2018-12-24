@@ -11,6 +11,7 @@ namespace Readigm\Http\Middleware\Setting;
 use Readigm\Generator\RandomStringGenerator;
 use Readigm\Http\Middleware\AbstractAjaxMiddleware;
 use Readigm\Http\Controller\Setting\EmailAddController;
+use Readigm\Http\Middleware\CamelToSnakeConverter;
 use Readigm\MailSender\ActivationMailSender;
 use Readigm\Base\Routing\Router;
 use Readigm\Security\User\User;
@@ -43,6 +44,7 @@ class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
 	private $config;
 
 	/**
+	 * @param CamelToSnakeConverter	$camel_to_snake_converter
 	 * @param Router 				$router
 	 * @param RandomStringGenerator $random_string_generator
 	 * @param ActivationMailSender 	$activation_mail_sender
@@ -50,12 +52,14 @@ class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
 	 * @param array 				$config
 	 */
     public function __construct(
+    	CamelToSnakeConverter $camel_to_snake_converter,
 		Router $router,
 		RandomStringGenerator $random_string_generator,
 		ActivationMailSender $activation_mail_sender,
 		EmailAddController $email_add_controller,
 		array $config
     ) {
+    	parent::__construct($camel_to_snake_converter);
 		$this->router = $router;
 		$this->randomStringGenerator = $random_string_generator;
 		$this->activationMailSender = $activation_mail_sender;
@@ -103,6 +107,6 @@ class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
             }
         }
 
-        $this->sendAjaxData($return);
+        $this->sendAjaxData($return, false);
     }
 }

@@ -8,17 +8,18 @@
 
 namespace Readigm\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Factory\MasterFactory;
 use Readigm\Http\Controller\Authentication\LoginFormValidationController;
 
-class LoginFeedbackMiddlewareFactory extends AbstractChildFactory
+class LoginFeedbackMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	protected function prepareArgs()
 	{
+		parent::prepareArgs();
+
 		$factory = new MasterFactory();
 
 		$login_form_validation_controller = $factory->createInstance(LoginFormValidationController::class);
