@@ -8,10 +8,12 @@
 
 namespace Readigm\Loader\GlobalModule;
 
-class GlobalNavigationLoader
+use Readigm\Loader\LoaderInterface;
+
+class GlobalNavigationLoader implements LoaderInterface
 {
 	/**
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function loadData()
 	{
