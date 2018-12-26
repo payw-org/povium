@@ -20,9 +20,7 @@ class GlobalNavigationLoader implements LoaderInterface
 		$data = array();
 
 		if ($GLOBALS['is_logged_in']) {
-			$data['current_user'] = array(
-				'name' => $GLOBALS['current_user']->getName()
-			);
+			$data['user_name'] = $GLOBALS['current_user']->getName();
 		}
 
 		return $data;
