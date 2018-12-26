@@ -11,10 +11,16 @@ namespace Readigm\Http\Controller\User;
 use Readigm\Http\Controller\StandardViewController;
 use Readigm\Http\Controller\Exception\UserNotFoundException;
 use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Loader\ProfileModule\ProfileInfoLoader;
 use Readigm\Security\User\UserManager;
 
 class ProfileViewController extends StandardViewController
 {
+	/**
+	 * @var ProfileInfoLoader
+	 */
+	protected $profileInfoLoader;
+
 	/**
 	 * @var UserManager
 	 */
@@ -27,15 +33,18 @@ class ProfileViewController extends StandardViewController
 
 	/**
 	 * @param GlobalNavigationLoader 	$global_navigation_loader
+	 * @param ProfileInfoLoader 		$profile_info_loader
 	 * @param UserManager 				$user_manager
 	 * @param array 					$config
 	 */
 	public function __construct(
 		GlobalNavigationLoader $global_navigation_loader,
+		ProfileInfoLoader $profile_info_loader,
 		UserManager $user_manager,
 		array $config
 	) {
 		parent::__construct($global_navigation_loader);
+		$this->profileInfoLoader = $profile_info_loader;
 		$this->userManager = $user_manager;
 		$this->config = $config;
 	}
@@ -61,13 +70,7 @@ class ProfileViewController extends StandardViewController
 			throw new UserNotFoundException($this->config['msg']['user_not_found']);
 		}
 
-		$user = $this->userManager->getUser($user_id);
-
-		$this->viewConfig['user'] = array(
-			'name' => $user->getName(),
-			'profile_image' => $user->getProfileImage(),
-			'bio' => $user->getBio()
-		);
+		$this->viewConfig['profile_info'] = $this->profileInfoLoader->loadData($user_id);
 
 		return $this->viewConfig;
 	}

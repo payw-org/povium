@@ -54,6 +54,7 @@ return [
 	\Readigm\Http\Middleware\Error\HttpErrorViewMiddleware::class => \Readigm\Http\Middleware\Factory\HttpErrorViewMiddlewareFactory::class,
 
 	\Readigm\Loader\GlobalModule\GlobalNavigationLoader::class => \Readigm\Loader\Factory\GlobalNavigationLoaderFactory::class,
+	\Readigm\Loader\ProfileModule\ProfileInfoLoader::class => \Readigm\Loader\Factory\ProfileInfoLoaderFactory::class,
 
 	\Readigm\MailSender\ActivationMailSender::class => \Readigm\MailSender\Factory\ActivationMailSenderFactory::class,
 
