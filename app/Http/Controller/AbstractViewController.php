@@ -18,6 +18,8 @@ abstract class AbstractViewController
 	/**
 	 * Load config for specific view page.
 	 *
+	 * @param mixed
+	 *
 	 * @return array
 	 */
 	abstract public function loadViewConfig();

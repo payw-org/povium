@@ -13,7 +13,7 @@ abstract class AbstractViewMiddleware
 	/**
 	 * Verify request and load view config.
 	 *
-	 * @param 	mixed	URI data
+	 * @param 	mixed
 	 *
 	 * @return	array
 	 */
