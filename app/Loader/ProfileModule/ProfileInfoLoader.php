@@ -36,13 +36,13 @@ class ProfileInfoLoader implements LoaderInterface
 		$args = func_get_args();
 		$user_id = $args[0];
 
+		$data = array();
+
 		$user = $this->userManager->getUser($user_id);
 
-		$data = array(
-			'name' => $user->getName(),
-			'profile_image' => $user->getProfileImage(),
-			'bio' => $user->getBio()
-		);
+		$data['name'] = $user->getName();
+		$data['profile_image'] = $user->getProfileImage();
+		$data['bio'] = $user->getBio();
 
 		return $data;
 	}
