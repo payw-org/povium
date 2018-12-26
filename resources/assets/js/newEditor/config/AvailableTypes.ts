@@ -8,30 +8,5 @@ export const AT = {
 	textContained: ["p", "h1", "h2", "h3", "blockquote", "li", "image"],
 	alignable: ["p", "h1", "h2", "h3"],
 	textStyle: ["b", "strong", "em", "i", "strikethrough"],
-	headings: ["h1", "h2", "h3"],
-	/**
-	 * @param {string} type
-	 */
-	isHeading: function(type) {
-		type = type.toLowerCase()
-		if (this.headings.includes(type)) {
-			return true
-		} else {
-			return false
-		}
-	},
-	/**
-	 * @param {string} type
-	 */
-	isParagraph: function(type) {
-		type = type.toLowerCase()
-		return type === "p"
-	},
-	/**
-	 * @param {string} type
-	 */
-	isListItem: function(type) {
-		type = type.toLowerCase()
-		return type === "li"
-	}
+	headings: ["h1", "h2", "h3"]
 }
