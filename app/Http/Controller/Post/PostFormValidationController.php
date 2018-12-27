@@ -85,6 +85,7 @@ class PostFormValidationController
 	 * Check if fields of post form are valid.
 	 *
 	 * @param User			$user			User who wrote the post
+	 * @param int			$authority		Authority level of user
 	 * @param string		$title
 	 * @param string 		$body
 	 * @param string 		$contents
@@ -98,6 +99,7 @@ class PostFormValidationController
 	 */
 	public function isValid(
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -132,7 +134,7 @@ class PostFormValidationController
 			return false;
 		}
 
-		$validate_is_premium = $this->isPremiumValidator->validate($is_premium);
+		$validate_is_premium = $this->isPremiumValidator->validate($is_premium, $authority);
 
 		//	If invalid is_premium
 		if ($validate_is_premium['err']) {
@@ -173,6 +175,7 @@ class PostFormValidationController
 	 * Validate all fields of post form.
 	 *
 	 * @param User			$user			User who wrote the post
+	 * @param int			$authority		Authority level of user
 	 * @param string		$title
 	 * @param string 		$body
 	 * @param string 		$contents
@@ -185,6 +188,7 @@ class PostFormValidationController
 	 */
 	public function validateAllFields(
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -242,7 +246,7 @@ class PostFormValidationController
 		$return['contents_return']['err'] = $validate_contents['err'];
 		$return['contents_return']['msg'] = $validate_contents['msg'];
 
-		$validate_is_premium = $this->isPremiumValidator->validate($is_premium);
+		$validate_is_premium = $this->isPremiumValidator->validate($is_premium, $authority);
 		$return['is_premium_return']['err'] = $validate_is_premium['err'];
 		$return['is_premium_return']['msg'] = $validate_is_premium['msg'];
 

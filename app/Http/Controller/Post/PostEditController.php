@@ -70,6 +70,7 @@ class PostEditController
 	 *
 	 * @param int			$post_id
 	 * @param User 			$user		User who requested
+	 * @param int			$authority	Authority level of user
 	 * @param string 		$title
 	 * @param string 		$body
 	 * @param string 		$contents
@@ -86,6 +87,7 @@ class PostEditController
 	public function edit(
 		$post_id,
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -113,6 +115,7 @@ class PostEditController
 
 		if (!$this->postFormValidationController->isValid(
 			$user,
+			$authority,
 			$title,
 			$body,
 			$contents,

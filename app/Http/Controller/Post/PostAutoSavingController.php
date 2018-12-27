@@ -60,6 +60,7 @@ class PostAutoSavingController
 	 *
 	 * @param int 			$post_id
 	 * @param User 			$user		User who requested
+	 * @param int			$authority	Authority level of user
 	 * @param string 		$title
 	 * @param string 		$body
 	 * @param string 		$contents
@@ -76,6 +77,7 @@ class PostAutoSavingController
 	public function autoSave(
 		$post_id,
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -103,6 +105,7 @@ class PostAutoSavingController
 
 		if (!$this->postFormValidationController->isValid(
 			$user,
+			$authority,
 			$title,
 			$body,
 			$contents,

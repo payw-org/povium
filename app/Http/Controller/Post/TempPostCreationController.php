@@ -48,6 +48,7 @@ class TempPostCreationController
 	 * And create an auto saved record for temp post.
 	 *
 	 * @param  User			$user		User who requested
+	 * @param  int			$authority	Authority level of user
 	 * @param  string  		$title
 	 * @param  string  		$body
 	 * @param  string  		$contents
@@ -60,6 +61,7 @@ class TempPostCreationController
 	 */
 	public function create(
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -78,6 +80,7 @@ class TempPostCreationController
 
 		if (!$this->postFormValidationController->isValid(
 			$user,
+			$authority,
 			$title,
 			$body,
 			$contents,

@@ -70,6 +70,7 @@ class PostPublicationController
 	 *
 	 * @param int 			$auto_saved_post_id
 	 * @param User 			$user				User who requested
+	 * @param int			$authority			Authority level of user
 	 * @param string 		$title
 	 * @param string 		$body
 	 * @param string 		$contents
@@ -86,6 +87,7 @@ class PostPublicationController
 	public function publish(
 		$auto_saved_post_id,
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -114,6 +116,7 @@ class PostPublicationController
 
 		if (!$this->postFormValidationController->isValid(
 			$user,
+			$authority,
 			$title,
 			$body,
 			$contents,
