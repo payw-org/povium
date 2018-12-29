@@ -2,6 +2,7 @@ import * as PostData from "./interfaces/PostData"
 import NodeManager from "./NodeManager"
 import PVMNode from "./PVMNode";
 import { AT } from "./config/AvailableTypes";
+import TypeChecker from "./TypeChecker";
 
 export default class Converter {
 	static parse(frame: PostData.Frame): PVMNode[] {
@@ -100,16 +101,10 @@ export default class Converter {
 		body = ""
 
 		editorNodes.forEach(pvmNode => {
-			if (
-				(AT.isHeading(pvmNode.type) ||
-				AT.isParagraph(pvmNode.type)) &&
-				title === null
-			) {
-				title = pvmNode.getTextContent()
-			}
 
 			let block: PostData.Block = {
 				type: pvmNode.type
+
 			}
 		})
 
