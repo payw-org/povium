@@ -3,24 +3,19 @@
 * Controller for email activation.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Http\Controller\Exception\RequestExpiredException;
-use Povium\Http\Controller\Exception\RequestNotFoundException;
-use Povium\Http\Controller\Exception\TokenNotMatchedException;
-use Povium\Security\User\UserManager;
-use Povium\Security\User\User;
+use Readigm\Http\Controller\Exception\RequestExpiredException;
+use Readigm\Http\Controller\Exception\RequestNotFoundException;
+use Readigm\Http\Controller\Exception\TokenNotMatchedException;
+use Readigm\Security\User\UserManager;
+use Readigm\Security\User\User;
 
 class EmailActivationController
 {
-	/**
-	 * @var array
-	 */
-	private $config;
-
 	/**
 	* Database connection (PDO)
 	*
@@ -34,18 +29,23 @@ class EmailActivationController
 	protected $userManager;
 
 	/**
-	 * @param array          $config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param \PDO           $conn
 	 * @param UserManager	 $user_manager
+	 * @param array          $config
 	 */
 	public function __construct(
-		array $config,
 		\PDO $conn,
-		UserManager $user_manager
+		UserManager $user_manager,
+		array $config
 	) {
-		$this->config = $config;
 		$this->conn = $conn;
 		$this->userManager = $user_manager;
+		$this->config = $config;
 	}
 
 	/**

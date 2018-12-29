@@ -3,10 +3,10 @@
  * Exception thrown when a route name does not exist.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Routing\Exception;
+namespace Readigm\Base\Routing\Exception;
 
 class NamedRouteNotFoundException extends \InvalidArgumentException implements ExceptionInterface
 {

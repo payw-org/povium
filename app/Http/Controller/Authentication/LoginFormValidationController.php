@@ -3,22 +3,17 @@
  * Controller for validating login form.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Security\Validator\UserInfo\EmailValidator;
-use Povium\Security\Validator\UserInfo\PasswordValidator;
-use Povium\Security\Validator\UserInfo\ReadableIDValidator;
+use Readigm\Security\Validator\UserInfo\EmailValidator;
+use Readigm\Security\Validator\UserInfo\PasswordValidator;
+use Readigm\Security\Validator\UserInfo\ReadableIDValidator;
 
 class LoginFormValidationController
 {
-	/**
-	 * @var array
-	 */
-	private $config;
-
 	/**
 	 * @var ReadableIDValidator
 	 */
@@ -35,21 +30,26 @@ class LoginFormValidationController
 	protected $passwordValidator;
 
 	/**
-	 * @param array					$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param ReadableIDValidator 	$readable_id_validator
 	 * @param EmailValidator 		$email_validator
 	 * @param PasswordValidator 	$password_validator
+	 * @param array 				$config
 	 */
 	public function __construct(
-		array $config,
 		ReadableIDValidator $readable_id_validator,
 		EmailValidator $email_validator,
-		PasswordValidator $password_validator
+		PasswordValidator $password_validator,
+		array $config
 	) {
-		$this->config = $config;
 		$this->readableIDValidator = $readable_id_validator;
 		$this->emailValidator = $email_validator;
 		$this->passwordValidator = $password_validator;
+		$this->config = $config;
 	}
 
 	/**

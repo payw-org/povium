@@ -3,15 +3,15 @@
  * Middleware for profile view.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\User;
+namespace Readigm\Http\Middleware\User;
 
-use Povium\Base\Http\Exception\NotFoundHttpException;
-use Povium\Http\Controller\Exception\UserNotFoundException;
-use Povium\Http\Controller\User\ProfileViewController;
-use Povium\Http\Middleware\AbstractViewMiddleware;
+use Readigm\Base\Http\Exception\NotFoundHttpException;
+use Readigm\Http\Controller\Exception\UserNotFoundException;
+use Readigm\Http\Controller\User\ProfileViewController;
+use Readigm\Http\Middleware\AbstractViewMiddleware;
 
 class ProfileViewMiddleware extends AbstractViewMiddleware
 {
@@ -35,7 +35,7 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 	 *
 	 * @throws NotFoundHttpException	If the readable id of user is not found
 	 */
-	public function requestView()
+	public function requestViewConfig()
 	{
 		$args = func_get_args();
 		$readable_id = $args[0];
@@ -43,7 +43,7 @@ class ProfileViewMiddleware extends AbstractViewMiddleware
 		$readable_id = strtolower($readable_id);
 
 		try {
-			$this->viewConfig = $this->profileViewController->loadViewConfig($readable_id);
+			return $this->profileViewController->loadViewConfig($readable_id);
 		} catch (UserNotFoundException $e) {
 			throw new NotFoundHttpException(
 				$e->getMessage(),

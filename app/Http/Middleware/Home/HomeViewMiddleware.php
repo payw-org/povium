@@ -3,13 +3,13 @@
  * Middleware for home view.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Home;
+namespace Readigm\Http\Middleware\Home;
 
-use Povium\Http\Controller\Home\HomeViewController;
-use Povium\Http\Middleware\AbstractViewMiddleware;
+use Readigm\Http\Controller\Home\HomeViewController;
+use Readigm\Http\Middleware\AbstractViewMiddleware;
 
 class HomeViewMiddleware extends AbstractViewMiddleware
 {
@@ -29,8 +29,8 @@ class HomeViewMiddleware extends AbstractViewMiddleware
 	/**
 	 * {@inheritdoc}
 	 */
-	public function requestView()
+	public function requestViewConfig()
 	{
-		$this->viewConfig = $this->homeViewController->loadViewConfig();
+		return $this->homeViewController->loadViewConfig();
 	}
 }

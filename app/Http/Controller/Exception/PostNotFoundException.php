@@ -3,10 +3,10 @@
  * Exception thrown when post not found.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Controller\Exception;
+namespace Readigm\Http\Controller\Exception;
 
 class PostNotFoundException extends \RuntimeException implements ExceptionInterface
 {

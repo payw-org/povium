@@ -3,10 +3,10 @@
 * Random string generator.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Generator;
+namespace Readigm\Generator;
 
 class RandomStringGenerator
 {

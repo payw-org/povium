@@ -3,31 +3,36 @@
  * This factory is responsible for creating "LogoutMiddleware" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Factory;
+namespace Readigm\Http\Middleware\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Http\Controller\Authentication\LogoutController;
-use Povium\Security\Auth\Authenticator;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Routing\Router;
+use Readigm\Http\Controller\Authentication\LogoutController;
+use Readigm\Security\Auth\Authenticator;
 
-class LogoutMiddlewareFactory extends AbstractChildFactory
+class LogoutMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {
     /**
      * {@inheritdoc}
      *
+	 * @param Router
      * @param Authenticator
      */
     protected function prepareArgs()
     {
+    	parent::prepareArgs();
+
         $materials = func_get_args();
 		$factory = new MasterFactory();
 
-        $authenticator = $materials[0];
+        $router = $materials[0];
+        $authenticator = $materials[1];
         $logout_controller = $factory->createInstance(LogoutController::class, $authenticator);
 
+        $this->args[] = $router;
 		$this->args[] = $logout_controller;
     }
 }

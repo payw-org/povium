@@ -3,19 +3,19 @@
 * Validate redirect URI.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Routing\Validator;
+namespace Readigm\Base\Routing\Validator;
 
-use Povium\Validator\ValidatorInterface;
+use Readigm\Validator\ValidatorInterface;
 
 class RedirectURIValidator implements ValidatorInterface
 {
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @return bool	Is validate?
+	 * @return bool	Whether uri is valid.
 	 */
 	public function validate($redirect_uri)
 	{

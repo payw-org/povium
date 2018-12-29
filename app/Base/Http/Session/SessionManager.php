@@ -3,23 +3,18 @@
 * Session manager
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Http\Session;
+namespace Readigm\Base\Http\Session;
 
 class SessionManager
 {
 	/**
-	 * @var array
+	 * Database connection (PDO)
+	 *
+	 * @var \PDO
 	 */
-	private $config;
-
-	/**
-	* Database connection (PDO)
-	*
-	* @var \PDO
-	*/
 	protected $conn;
 
 	/**
@@ -28,15 +23,23 @@ class SessionManager
 	protected $sessionHandler;
 
 	/**
-	 * @param array 			$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param \PDO				$conn
 	 * @param PDOSessionHandler $session_handler
+	 * @param array 			$config
 	 */
-	public function __construct(array $config, \PDO $conn, PDOSessionHandler $session_handler)
-	{
-		$this->config = $config;
+	public function __construct(
+		\PDO $conn,
+		PDOSessionHandler $session_handler,
+		array $config
+	) {
 		$this->conn = $conn;
 		$this->sessionHandler = $session_handler;
+		$this->config = $config;
 	}
 
 	/**

@@ -3,19 +3,19 @@
  * Interface for URI generator.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Routing\Generator;
+namespace Readigm\Base\Routing\Generator;
 
-use Povium\Base\Routing\Exception\NullPropertyException;
-use Povium\Base\Routing\Exception\NamedRouteNotFoundException;
-use Povium\Base\Routing\Exception\InvalidParameterException;
+use Readigm\Base\Routing\Exception\NullPropertyException;
+use Readigm\Base\Routing\Exception\NamedRouteNotFoundException;
+use Readigm\Base\Routing\Exception\InvalidParameterException;
 
 interface URIGeneratorInterface
 {
 	/**
-	 * Generate as URL form. Ex) "https://povium.com/foo/bar"
+	 * Generate as URL form. Ex) "https://readigm.com/foo/bar"
 	 *
 	 * @var integer
 	 */

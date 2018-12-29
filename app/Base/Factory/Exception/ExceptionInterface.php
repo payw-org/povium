@@ -3,10 +3,10 @@
  * Exception interface
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Factory\Exception;
+namespace Readigm\Base\Factory\Exception;
 
 interface ExceptionInterface
 {

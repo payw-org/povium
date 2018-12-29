@@ -3,14 +3,14 @@
  * This can generate a URI for named routes based on the given arguments.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Routing\Generator;
+namespace Readigm\Base\Routing\Generator;
 
-use Povium\Base\Routing\RouteCollection;
-use Povium\Base\Routing\Exception\NullPropertyException;
-use Povium\Base\Routing\Exception\InvalidParameterException;
+use Readigm\Base\Routing\RouteCollection;
+use Readigm\Base\Routing\Exception\NullPropertyException;
+use Readigm\Base\Routing\Exception\InvalidParameterException;
 
 class URIGenerator implements URIGeneratorInterface
 {

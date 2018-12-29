@@ -3,13 +3,13 @@
  * This factory is responsible for creating "Authorizer" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Security\Auth\Factory;
+namespace Readigm\Security\Auth\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Security\Auth\Authenticator;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Security\Auth\Authenticator;
 
 class AuthorizerFactory extends AbstractChildFactory
 {

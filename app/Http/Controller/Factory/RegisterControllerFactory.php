@@ -3,16 +3,16 @@
 * This factory is responsible for creating "RegisterController" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Http\Controller\Factory;
+namespace Readigm\Http\Controller\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Http\Controller\Authentication\RegistrationFormValidationController;
-use Povium\Security\Encoder\PasswordEncoder;
-use Povium\Security\User\UserManager;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Http\Controller\Authentication\RegistrationFormValidationController;
+use Readigm\Security\Encoder\PasswordEncoder;
+use Readigm\Security\User\UserManager;
 
 class RegisterControllerFactory extends AbstractChildFactory
 {
@@ -23,14 +23,14 @@ class RegisterControllerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/register_controller.php');
-		$registration_form_validation_controller = $factory->createInstance(RegistrationFormValidationController::class);
-		$password_encoder = $factory->createInstance(PasswordEncoder::class);
 		$user_manager = $factory->createInstance(UserManager::class);
+		$password_encoder = $factory->createInstance(PasswordEncoder::class);
+		$registration_form_validation_controller = $factory->createInstance(RegistrationFormValidationController::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/register_controller.php');
 
-		$this->args[] = $config;
-		$this->args[] = $registration_form_validation_controller;
-		$this->args[] = $password_encoder;
 		$this->args[] = $user_manager;
+		$this->args[] = $password_encoder;
+		$this->args[] = $registration_form_validation_controller;
+		$this->args[] = $config;
 	}
 }

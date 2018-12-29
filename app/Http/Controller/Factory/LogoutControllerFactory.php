@@ -3,15 +3,15 @@
 * This factory is responsible for creating "LogoutController" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Http\Controller\Factory;
+namespace Readigm\Http\Controller\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Base\Http\Session\SessionManager;
-use Povium\Security\Auth\Authenticator;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Http\Session\SessionManager;
+use Readigm\Security\Auth\Authenticator;
 
 class LogoutControllerFactory extends AbstractChildFactory
 {
@@ -25,10 +25,10 @@ class LogoutControllerFactory extends AbstractChildFactory
 		$materials = func_get_args();
 		$factory = new MasterFactory();
 
-		$session_manager = $factory->createInstance(SessionManager::class);
 		$authenticator = $materials[0];
+		$session_manager = $factory->createInstance(SessionManager::class);
 
-		$this->args[] = $session_manager;
 		$this->args[] = $authenticator;
+		$this->args[] = $session_manager;
 	}
 }

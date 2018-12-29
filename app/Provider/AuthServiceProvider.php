@@ -3,30 +3,16 @@
  * Bootstrap authentication or authorization services.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider;
+namespace Readigm\Provider;
 
-use Povium\Base\Factory\MasterFactory;
-use Povium\Security\Auth\Authenticator;
-use Povium\Security\Auth\Authorizer;
+use Readigm\Security\Auth\Authenticator;
+use Readigm\Security\Auth\Authorizer;
 
-class AuthServiceProvider implements ServiceProviderInterface
+class AuthServiceProvider extends AbstractServiceProvider
 {
-	/**
-	 * @var MasterFactory
-	 */
-	protected $factory;
-
-	/**
-	 * @param MasterFactory $factory
-	 */
-	public function __construct(MasterFactory $factory)
-	{
-		$this->factory = $factory;
-	}
-
 	/**
 	 * {@inheritdoc}
 	 */

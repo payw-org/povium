@@ -29,7 +29,7 @@
                 <div class="container">
                     <a href="" class="user-info">
                         <div class="bg"></div>
-                        <span>{{$global_nav['current_user']['name']}}</span>
+                        <span>{{$global_nav['user_name']}}</span>
                     </a>
                     <a href="/logout" class="sign-out full-load">
                         <div class="bg"></div>

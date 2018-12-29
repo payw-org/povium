@@ -3,20 +3,20 @@
 * This is a RESTful based router.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Routing;
+namespace Readigm\Base\Routing;
 
-use Povium\Base\Routing\Matcher\RequestMatcher;
-use Povium\Base\Routing\Generator\URIGenerator;
-use Povium\Base\Routing\Redirector\Redirector;
-use Povium\Base\Routing\Exception\RouteNotFoundException;
-use Povium\Base\Routing\Exception\MethodNotAllowedException;
-use Povium\Base\Routing\Exception\NullPropertyException;
-use Povium\Base\Http\Exception\HttpException;
-use Povium\Base\Http\Exception\NotFoundHttpException;
-use Povium\Base\Http\Exception\MethodNotAllowedHttpException;
+use Readigm\Base\Routing\Matcher\RequestMatcher;
+use Readigm\Base\Routing\Generator\URIGenerator;
+use Readigm\Base\Routing\Redirector\Redirector;
+use Readigm\Base\Routing\Exception\RouteNotFoundException;
+use Readigm\Base\Routing\Exception\MethodNotAllowedException;
+use Readigm\Base\Routing\Exception\NullPropertyException;
+use Readigm\Base\Http\Exception\HttpException;
+use Readigm\Base\Http\Exception\NotFoundHttpException;
+use Readigm\Base\Http\Exception\MethodNotAllowedHttpException;
 
 class Router implements RouterInterface
 {

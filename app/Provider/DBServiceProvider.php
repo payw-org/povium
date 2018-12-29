@@ -3,30 +3,16 @@
  * Bootstrap database services.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider;
+namespace Readigm\Provider;
 
-use Povium\Base\Database\DBBuilder;
-use Povium\Base\Database\DBConnection;
-use Povium\Base\Factory\MasterFactory;
+use Readigm\Base\Database\DBBuilder;
+use Readigm\Base\Database\DBConnection;
 
-class DBServiceProvider implements ServiceProviderInterface
+class DBServiceProvider extends AbstractServiceProvider
 {
-	/**
-	 * @var MasterFactory
-	 */
-	protected $factory;
-
-	/**
-	 * @param MasterFactory $factory
-	 */
-	public function __construct(MasterFactory $factory)
-	{
-		$this->factory = $factory;
-	}
-
 	/**
 	 * {@inheritdoc}
 	 */

@@ -3,35 +3,35 @@
  * Bootstrap the app.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-use Povium\Base\Factory\MasterFactory;
+use Readigm\Base\Factory\MasterFactory;
 
 $factory = new MasterFactory();
 
 /* Bootstrap the app services */
 
 $app['db_builder'] = $factory->createInstance(
-	\Povium\Provider\DBServiceProvider::class
+	\Readigm\Provider\DBServiceProvider::class
 )->boot();
 
 $app['session_manager'] = $factory->createInstance(
-	\Povium\Provider\SessionServiceProvider::class
+	\Readigm\Provider\SessionServiceProvider::class
 )->boot();
 
 $app['authenticator'] = $factory->createInstance(
-	\Povium\Provider\AuthServiceProvider::class
+	\Readigm\Provider\AuthServiceProvider::class
 )->boot();
 
 $app['blade'] = $factory->createInstance(
-	\Povium\Provider\TemplateServiceProvider::class
+	\Readigm\Provider\TemplateServiceProvider::class
 )->boot();
 
 $app['router'] = $factory->createInstance(
-	\Povium\Provider\RouteServiceProvider::class,
-	$app['authenticator'],
-	$app['blade']
+	\Readigm\Provider\RouteServiceProvider::class,
+	$app['blade'],
+	$app['authenticator']
 )->boot();
 
 return $app;

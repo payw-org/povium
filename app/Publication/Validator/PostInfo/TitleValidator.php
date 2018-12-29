@@ -3,12 +3,12 @@
  * Validate post title.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Publication\Validator\PostInfo;
+namespace Readigm\Publication\Validator\PostInfo;
 
-use Povium\Validator\ValidatorInterface;
+use Readigm\Validator\ValidatorInterface;
 
 class TitleValidator implements ValidatorInterface
 {

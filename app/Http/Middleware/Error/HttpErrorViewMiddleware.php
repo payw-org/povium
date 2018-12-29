@@ -3,14 +3,14 @@
  * Middleware for http error view.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Error;
+namespace Readigm\Http\Middleware\Error;
 
-use Povium\Base\Http\Exception\HttpException;
-use Povium\Http\Controller\Error\HttpErrorViewController;
-use Povium\Http\Middleware\AbstractViewMiddleware;
+use Readigm\Base\Http\Exception\HttpException;
+use Readigm\Http\Controller\Error\HttpErrorViewController;
+use Readigm\Http\Middleware\AbstractViewMiddleware;
 
 class HttpErrorViewMiddleware extends AbstractViewMiddleware
 {
@@ -32,13 +32,13 @@ class HttpErrorViewMiddleware extends AbstractViewMiddleware
 	 *
 	 * @param	HttpException	$http_exception
 	 */
-	public function requestView()
+	public function requestViewConfig()
 	{
 		$args = func_get_args();
 		$http_exception = $args[0];
 
 		http_response_code($http_exception->getResponseCode());
 
-		$this->viewConfig = $this->httpErrorViewController->loadViewConfig($http_exception);
+		return $this->httpErrorViewController->loadViewConfig($http_exception);
 	}
 }

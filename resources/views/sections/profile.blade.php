@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('title')
-	<title>Povium | {{$user['name']}}</title>
+	<title>Povium | {{$profile_info['name']}}</title>
 @endsection
 
 @section('content')
@@ -9,10 +9,10 @@
 
 		<div id="info">
 			<div class="profile-image">
-				<img src="{{$user['profile_image']}}" alt="" onerror="this.src='/assets/images/profile/user-profile-default.svg'">
+				<img src="{{$profile_info['profile_image']}}" alt="" onerror="this.src='/assets/images/profile/user-profile-default.svg'">
 			</div>
-			<h1 class="name">{{$user['name']}}</h1>
-			<p class="manifesto">{{$user['bio']}}</p>
+			<h1 class="name">{{$profile_info['name']}}</h1>
+			<p class="manifesto">{{$profile_info['bio']}}</p>
 		</div>
 
 		<div id="history">

@@ -3,24 +3,19 @@
  * Controller for publishing post.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Post;
+namespace Readigm\Http\Controller\Post;
 
-use Povium\Http\Controller\Exception\InvalidAccessException;
-use Povium\Http\Controller\Exception\PostNotFoundException;
-use Povium\Publication\Post\AutoSavedPostManager;
-use Povium\Publication\Post\PostManager;
-use Povium\Security\User\User;
+use Readigm\Http\Controller\Exception\InvalidAccessException;
+use Readigm\Http\Controller\Exception\PostNotFoundException;
+use Readigm\Publication\Post\AutoSavedPostManager;
+use Readigm\Publication\Post\PostManager;
+use Readigm\Security\User\User;
 
 class PostPublicationController
 {
-	/**
-	 * @var array
-	 */
-	private $config;
-
 	/**
 	 * Database connection (PDO)
 	 *
@@ -29,14 +24,14 @@ class PostPublicationController
 	protected $conn;
 
 	/**
-	 * @var AutoSavedPostManager
-	 */
-	protected $autoSavedPostManager;
-
-	/**
 	 * @var PostFormValidationController
 	 */
 	protected $postFormValidationController;
+
+	/**
+	 * @var AutoSavedPostManager
+	 */
+	protected $autoSavedPostManager;
 
 	/**
 	 * @var PostManager
@@ -44,24 +39,29 @@ class PostPublicationController
 	protected $postManager;
 
 	/**
-	 * @param array 						$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param \PDO 							$conn
-	 * @param AutoSavedPostManager 			$auto_saved_post_manager
 	 * @param PostFormValidationController 	$post_form_validation_controller
+	 * @param AutoSavedPostManager 			$auto_saved_post_manager
 	 * @param PostManager 					$post_manager
+	 * @param array 						$config
 	 */
 	public function __construct(
-		array $config,
 		\PDO $conn,
-		AutoSavedPostManager $auto_saved_post_manager,
 		PostFormValidationController $post_form_validation_controller,
-		PostManager $post_manager
+		AutoSavedPostManager $auto_saved_post_manager,
+		PostManager $post_manager,
+		array $config
 	) {
-		$this->config = $config;
 		$this->conn = $conn;
-		$this->autoSavedPostManager = $auto_saved_post_manager;
 		$this->postFormValidationController = $post_form_validation_controller;
+		$this->autoSavedPostManager = $auto_saved_post_manager;
 		$this->postManager = $post_manager;
+		$this->config = $config;
 	}
 
 	/**
@@ -70,6 +70,7 @@ class PostPublicationController
 	 *
 	 * @param int 			$auto_saved_post_id
 	 * @param User 			$user				User who requested
+	 * @param int			$authority			Authority level of user
 	 * @param string 		$title
 	 * @param string 		$body
 	 * @param string 		$contents
@@ -86,6 +87,7 @@ class PostPublicationController
 	public function publish(
 		$auto_saved_post_id,
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -114,6 +116,7 @@ class PostPublicationController
 
 		if (!$this->postFormValidationController->isValid(
 			$user,
+			$authority,
 			$title,
 			$body,
 			$contents,

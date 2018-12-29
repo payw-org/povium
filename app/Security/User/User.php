@@ -1,12 +1,12 @@
 <?php
 /**
-* User class is the user implementation.
+* A single user.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\User;
+namespace Readigm\Security\User;
 
 class User
 {

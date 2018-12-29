@@ -3,13 +3,13 @@
 * This factory is responsible for creating "PDOSessionHandler" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Base\Http\Factory;
+namespace Readigm\Base\Http\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Database\DBConnection;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Database\DBConnection;
 
 class PDOSessionHandlerFactory extends AbstractChildFactory
 {
@@ -18,10 +18,10 @@ class PDOSessionHandlerFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 		$conn = DBConnection::getInstance()->getConn();
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
 
-		$this->args[] = $config;
 		$this->args[] = $conn;
+		$this->args[] = $config;
 	}
 }

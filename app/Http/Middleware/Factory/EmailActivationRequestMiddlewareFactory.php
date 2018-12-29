@@ -3,19 +3,18 @@
  * This factory is responsible for creating "EmailActivationRequestMiddleware" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Factory;
+namespace Readigm\Http\Middleware\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Base\Routing\Router;
-use Povium\Generator\RandomStringGenerator;
-use Povium\Http\Controller\Setting\EmailAddController;
-use Povium\MailSender\ActivationMailSender;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Routing\Router;
+use Readigm\Generator\RandomStringGenerator;
+use Readigm\Http\Controller\Setting\EmailAddController;
+use Readigm\MailSender\ActivationMailSender;
 
-class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
+class EmailActivationRequestMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {
     /**
      * {@inheritdoc}
@@ -24,19 +23,21 @@ class EmailActivationRequestMiddlewareFactory extends AbstractChildFactory
      */
     protected function prepareArgs()
     {
+    	parent::prepareArgs();
+
         $materials = func_get_args();
 		$factory = new MasterFactory();
 
-        $config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_request_middleware.php');
-        $random_string_generator = $factory->createInstance(RandomStringGenerator::class);
-        $email_add_controller = $factory->createInstance(EmailAddController::class);
-        $activation_mail_sender = $factory->createInstance(ActivationMailSender::class);
-        $router = $materials[0];
+		$router = $materials[0];
+		$random_string_generator = $factory->createInstance(RandomStringGenerator::class);
+		$activation_mail_sender = $factory->createInstance(ActivationMailSender::class);
+		$email_add_controller = $factory->createInstance(EmailAddController::class);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_request_middleware.php');
 
-		$this->args[] = $config;
-		$this->args[] = $random_string_generator;
-		$this->args[] = $email_add_controller;
-		$this->args[] = $activation_mail_sender;
 		$this->args[] = $router;
-    }
+		$this->args[] = $random_string_generator;
+		$this->args[] = $activation_mail_sender;
+		$this->args[] = $email_add_controller;
+		$this->args[] = $config;
+	}
 }

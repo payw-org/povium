@@ -1,28 +1,25 @@
 <?php
 /**
- * Controller for loading config of profile view.
+ * Controller for loading config of profile view page.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\User;
+namespace Readigm\Http\Controller\User;
 
-use Povium\Http\Controller\Exception\UserNotFoundException;
-use Povium\Loader\GlobalModule\GlobalNavigationLoader;
-use Povium\Security\User\UserManager;
+use Readigm\Http\Controller\StandardViewController;
+use Readigm\Http\Controller\Exception\UserNotFoundException;
+use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Loader\ProfileModule\ProfileInfoLoader;
+use Readigm\Security\User\UserManager;
 
-class ProfileViewController
+class ProfileViewController extends StandardViewController
 {
 	/**
-	 * @var array
+	 * @var ProfileInfoLoader
 	 */
-	private $config;
-
-	/**
-	 * @var GlobalNavigationLoader
-	 */
-	protected $globalNavigationLoader;
+	protected $profileInfoLoader;
 
 	/**
 	 * @var UserManager
@@ -30,32 +27,41 @@ class ProfileViewController
 	protected $userManager;
 
 	/**
-	 * @param array 					$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param GlobalNavigationLoader 	$global_navigation_loader
+	 * @param ProfileInfoLoader 		$profile_info_loader
 	 * @param UserManager 				$user_manager
+	 * @param array 					$config
 	 */
 	public function __construct(
-		array $config,
 		GlobalNavigationLoader $global_navigation_loader,
-		UserManager $user_manager
+		ProfileInfoLoader $profile_info_loader,
+		UserManager $user_manager,
+		array $config
 	) {
-		$this->config = $config;
-		$this->globalNavigationLoader = $global_navigation_loader;
+		parent::__construct($global_navigation_loader);
+		$this->profileInfoLoader = $profile_info_loader;
 		$this->userManager = $user_manager;
+		$this->config = $config;
 	}
 
 	/**
-	 * Load config for profile view.
+	 * {@inheritdoc}
 	 *
 	 * @param string $readable_id
 	 *
-	 * @return array
-	 *
 	 * @throws UserNotFoundException	If user is not found
 	 */
-	public function loadViewConfig($readable_id)
+	public function loadViewConfig()
 	{
-		$view_config = array();
+		parent::loadViewConfig();
+
+		$args = func_get_args();
+		$readable_id = $args[0];
 
 		$user_id = $this->userManager->getUserIDFromReadableID($readable_id);
 
@@ -64,16 +70,8 @@ class ProfileViewController
 			throw new UserNotFoundException($this->config['msg']['user_not_found']);
 		}
 
-		$view_config['global_nav'] = $this->globalNavigationLoader->loadData();
+		$this->viewConfig['profile_info'] = $this->profileInfoLoader->loadData($user_id);
 
-		$user = $this->userManager->getUser($user_id);
-
-		$view_config['user'] = array(
-			'name' => $user->getName(),
-			'profile_image' => $user->getProfileImage(),
-			'bio' => $user->getBio()
-		);
-
-		return $view_config;
+		return $this->viewConfig;
 	}
 }

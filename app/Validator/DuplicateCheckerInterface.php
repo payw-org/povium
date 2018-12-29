@@ -1,12 +1,12 @@
 <?php
 /**
-* Interface for Duplicate checker.
+* Interface for duplicate checker.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Validator;
+namespace Readigm\Validator;
 
 interface DuplicateCheckerInterface
 {

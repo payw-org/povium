@@ -3,37 +3,22 @@
 * Controller for login.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Http\Controller\Authentication;
+namespace Readigm\Http\Controller\Authentication;
 
-use Povium\Security\Encoder\PasswordEncoder;
-use Povium\Security\User\UserManager;
-use Povium\Base\Http\Session\SessionManager;
-use Povium\Security\Auth\Authenticator;
+use Readigm\Security\Encoder\PasswordEncoder;
+use Readigm\Security\User\UserManager;
+use Readigm\Base\Http\Session\SessionManager;
+use Readigm\Security\Auth\Authenticator;
 
 class LoginController
 {
 	/**
-	* @var array
-	*/
-	private $config;
-
-	/**
-	 * @var LoginFormValidationController
+	 * @var Authenticator
 	 */
-	protected $loginFormValidationController;
-
-	/**
-	 * @var PasswordEncoder
-	 */
-	protected $passwordEncoder;
-
-	/**
-	 * @var UserManager
-	 */
-	protected $userManager;
+	protected $authenticator;
 
 	/**
 	 * @var SessionManager
@@ -41,32 +26,47 @@ class LoginController
 	protected $sessionManager;
 
 	/**
-	 * @var Authenticator
+	 * @var UserManager
 	 */
-	protected $authenticator;
+	protected $userManager;
 
 	/**
-	 * @param array               			$config
+	 * @var PasswordEncoder
+	 */
+	protected $passwordEncoder;
+
+	/**
+	 * @var LoginFormValidationController
+	 */
+	protected $loginFormValidationController;
+
+	/**
+	 * @var array
+	 */
+	private $config;
+
+	/**
+	 * @param Authenticator 				$authenticator
+	 * @param SessionManager 				$session_manager
+	 * @param UserManager 					$user_manager
+	 * @param PasswordEncoder 				$password_encoder
 	 * @param LoginFormValidationController $login_form_validation_controller
-	 * @param PasswordEncoder	  			$password_encoder
-	 * @param UserManager		  			$user_manager
-	 * @param SessionManager	  			$session_manager
-	 * @param Authenticator       			$authenticator
+	 * @param array 						$config
 	 */
 	public function __construct(
-		array $config,
-		LoginFormValidationController $login_form_validation_controller,
-		PasswordEncoder $password_encoder,
-		UserManager $user_manager,
+		Authenticator $authenticator,
 		SessionManager $session_manager,
-		Authenticator $authenticator
+		UserManager $user_manager,
+		PasswordEncoder $password_encoder,
+		LoginFormValidationController $login_form_validation_controller,
+		array $config
 	) {
-		$this->config = $config;
-		$this->loginFormValidationController = $login_form_validation_controller;
-		$this->passwordEncoder = $password_encoder;
-		$this->userManager = $user_manager;
-		$this->sessionManager = $session_manager;
 		$this->authenticator = $authenticator;
+		$this->sessionManager = $session_manager;
+		$this->userManager = $user_manager;
+		$this->passwordEncoder = $password_encoder;
+		$this->loginFormValidationController = $login_form_validation_controller;
+		$this->config = $config;
 	}
 
 	/**

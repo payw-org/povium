@@ -3,65 +3,69 @@
  * Middleware for requesting email activation.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Setting;
+namespace Readigm\Http\Middleware\Setting;
 
-use Povium\Generator\RandomStringGenerator;
-use Povium\Http\Middleware\AbstractAjaxMiddleware;
-use Povium\Http\Controller\Setting\EmailAddController;
-use Povium\MailSender\ActivationMailSender;
-use Povium\Base\Routing\Router;
-use Povium\Security\User\User;
+use Readigm\Generator\RandomStringGenerator;
+use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Controller\Setting\EmailAddController;
+use Readigm\Http\Middleware\CamelToSnakeConverter;
+use Readigm\MailSender\ActivationMailSender;
+use Readigm\Base\Routing\Router;
+use Readigm\Security\User\User;
 
 class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
 {
-    /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * @var RandomStringGenerator
-     */
-    protected $randomStringGenerator;
-
-    /**
-     * @var EmailAddController
-     */
-    protected $emailAddController;
-
-    /**
-     * @var ActivationMailSender
-     */
-    protected $activationMailSender;
-
-    /**
+	/**
      * @var Router
      */
     protected $router;
 
-    /**
-     * @param array                 $config
-     * @param RandomStringGenerator $random_string_generator
-     * @param EmailAddController    $email_add_controller
-     * @param ActivationMailSender  $activation_mail_sender
-     * @param Router                $router
-     */
+	/**
+	 * @var RandomStringGenerator
+	 */
+	protected $randomStringGenerator;
+
+	/**
+	 * @var ActivationMailSender
+	 */
+	protected $activationMailSender;
+
+	/**
+	 * @var EmailAddController
+	 */
+	protected $emailAddController;
+
+	/**
+	 * @var array
+	 */
+	private $config;
+
+	/**
+	 * @param CamelToSnakeConverter	$camel_to_snake_converter
+	 * @param Router 				$router
+	 * @param RandomStringGenerator $random_string_generator
+	 * @param ActivationMailSender 	$activation_mail_sender
+	 * @param EmailAddController 	$email_add_controller
+	 * @param array 				$config
+	 */
     public function __construct(
-        array $config,
-        RandomStringGenerator $random_string_generator,
-        EmailAddController $email_add_controller,
-        ActivationMailSender $activation_mail_sender,
-        Router $router
+    	CamelToSnakeConverter $camel_to_snake_converter,
+		Router $router,
+		RandomStringGenerator $random_string_generator,
+		ActivationMailSender $activation_mail_sender,
+		EmailAddController $email_add_controller,
+		array $config
     ) {
-        $this->config = $config;
-        $this->randomStringGenerator = $random_string_generator;
-        $this->emailAddController = $email_add_controller;
-        $this->activationMailSender = $activation_mail_sender;
-        $this->router = $router;
-    }
+    	parent::__construct($camel_to_snake_converter);
+		$this->router = $router;
+		$this->randomStringGenerator = $random_string_generator;
+		$this->activationMailSender = $activation_mail_sender;
+		$this->emailAddController = $email_add_controller;
+		$this->config = $config;
+	}
 
     /**
      * Receive email address and request activation.

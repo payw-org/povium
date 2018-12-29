@@ -3,22 +3,22 @@
  * Controller for auto saving temp post.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Post;
+namespace Readigm\Http\Controller\Post;
 
-use Povium\Http\Controller\Exception\InvalidAccessException;
-use Povium\Http\Controller\Exception\PostNotFoundException;
-use Povium\Publication\Post\AutoSavedPostManager;
-use Povium\Security\User\User;
+use Readigm\Http\Controller\Exception\InvalidAccessException;
+use Readigm\Http\Controller\Exception\PostNotFoundException;
+use Readigm\Publication\Post\AutoSavedPostManager;
+use Readigm\Security\User\User;
 
 class TempPostAutoSavingController
 {
 	/**
-	 * @var array
+	 * @var PostFormValidationController
 	 */
-	private $config;
+	protected $postFormValidationController;
 
 	/**
 	 * @var AutoSavedPostManager
@@ -26,23 +26,23 @@ class TempPostAutoSavingController
 	protected $autoSavedPostManager;
 
 	/**
-	 * @var PostFormValidationController
+	 * @var array
 	 */
-	protected $postFormValidationController;
+	private $config;
 
 	/**
-	 * @param array 						$config
-	 * @param AutoSavedPostManager 			$auto_saved_post_manager
 	 * @param PostFormValidationController 	$post_form_validation_controller
+	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 * @param array 						$config
 	 */
 	public function __construct(
-		array $config,
+		PostFormValidationController $post_form_validation_controller,
 		AutoSavedPostManager $auto_saved_post_manager,
-		PostFormValidationController $post_form_validation_controller
+		array $config
 	) {
-		$this->config = $config;
-		$this->autoSavedPostManager = $auto_saved_post_manager;
 		$this->postFormValidationController = $post_form_validation_controller;
+		$this->autoSavedPostManager = $auto_saved_post_manager;
+		$this->config = $config;
 	}
 
 	/**
@@ -51,6 +51,7 @@ class TempPostAutoSavingController
 	 *
 	 * @param  int  		$auto_saved_post_id
 	 * @param  User			$user				User who requested
+	 * @param  int			$authority			Authority level of user
 	 * @param  string  		$title
 	 * @param  string  		$body
 	 * @param  string  		$contents
@@ -67,6 +68,7 @@ class TempPostAutoSavingController
 	public function autoSave(
 		$auto_saved_post_id,
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -94,6 +96,7 @@ class TempPostAutoSavingController
 
 		if (!$this->postFormValidationController->isValid(
 			$user,
+			$authority,
 			$title,
 			$body,
 			$contents,

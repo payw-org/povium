@@ -3,18 +3,17 @@
  * This factory is responsible for creating "LoginMiddleware" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Factory;
+namespace Readigm\Http\Middleware\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Factory\MasterFactory;
-use Povium\Base\Routing\Validator\RedirectURIValidator;
-use Povium\Http\Controller\Authentication\LoginController;
-use Povium\Security\Auth\Authenticator;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Base\Routing\Validator\RedirectURIValidator;
+use Readigm\Http\Controller\Authentication\LoginController;
+use Readigm\Security\Auth\Authenticator;
 
-class LoginMiddlewareFactory extends AbstractChildFactory
+class LoginMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {
     /**
      * {@inheritdoc}
@@ -23,14 +22,16 @@ class LoginMiddlewareFactory extends AbstractChildFactory
      */
     protected function prepareArgs()
     {
+    	parent::prepareArgs();
+
         $materials = func_get_args();
 		$factory = new MasterFactory();
 
         $authenticator = $materials[0];
-        $login_controller = $factory->createInstance(LoginController::class, $authenticator);
-        $redirect_uri_validator = $factory->createInstance(RedirectURIValidator::class);
+		$redirect_uri_validator = $factory->createInstance(RedirectURIValidator::class);
+		$login_controller = $factory->createInstance(LoginController::class, $authenticator);
 
-		$this->args[] = $login_controller;
 		$this->args[] = $redirect_uri_validator;
+		$this->args[] = $login_controller;
     }
 }

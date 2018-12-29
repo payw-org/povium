@@ -3,13 +3,13 @@
  * This factory is responsible for creating "DBBuilder" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Base\Database\Factory;
+namespace Readigm\Base\Database\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Database\DBConnection;
+use Readigm\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Database\DBConnection;
 
 class DBBuilderFactory extends AbstractChildFactory
 {
@@ -18,10 +18,10 @@ class DBBuilderFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/db_builder.php');
 		$conn = DBConnection::getInstance()->getConn();
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/db_builder.php');
 
-		$this->args[] = $config;
 		$this->args[] = $conn;
+		$this->args[] = $config;
 	}
 }

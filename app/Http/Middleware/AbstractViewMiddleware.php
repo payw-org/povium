@@ -3,30 +3,19 @@
  * Abstract form for view middleware.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware;
+namespace Readigm\Http\Middleware;
 
 abstract class AbstractViewMiddleware
 {
 	/**
-	 * @var array
-	 */
-	protected $viewConfig = array();
-
-	/**
 	 * Verify request and load view config.
 	 *
-	 * @param 	mixed	URI data
+	 * @param 	mixed
+	 *
+	 * @return	array
 	 */
-	abstract public function requestView();
-
-	/**
-	 * @return array
-	 */
-	public function getViewConfig()
-	{
-		return $this->viewConfig;
-	}
+	abstract public function requestViewConfig();
 }

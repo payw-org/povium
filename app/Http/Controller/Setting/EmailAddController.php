@@ -3,21 +3,16 @@
 * Controller for adding new email.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Http\Controller\Setting;
+namespace Readigm\Http\Controller\Setting;
 
-use Povium\Security\Validator\UserInfo\EmailValidator;
-use Povium\Security\User\User;
+use Readigm\Security\Validator\UserInfo\EmailValidator;
+use Readigm\Security\User\User;
 
 class EmailAddController
 {
-	/**
-	 * @var array
-	 */
-	private $config;
-
 	/**
 	* Database connection (PDO)
 	*
@@ -31,18 +26,23 @@ class EmailAddController
 	protected $emailValidator;
 
 	/**
-	 * @param array          $config
-	 * @param \PDO           $conn
-	 * @param EmailValidator $email_validator
+	 * @var array
+	 */
+	private $config;
+
+	/**
+	 * @param \PDO 				$conn
+	 * @param EmailValidator 	$email_validator
+	 * @param array 			$config
 	 */
 	public function __construct(
-		array $config,
 		\PDO $conn,
-		EmailValidator $email_validator
+		EmailValidator $email_validator,
+		array $config
 	) {
-		$this->config = $config;
 		$this->conn = $conn;
 		$this->emailValidator = $email_validator;
+		$this->config = $config;
 	}
 
 	/**

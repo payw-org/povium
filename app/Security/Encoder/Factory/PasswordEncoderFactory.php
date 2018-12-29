@@ -3,12 +3,12 @@
 * This factory is responsible for creating "PasswordEncoder" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\Encoder\Factory;
+namespace Readigm\Security\Encoder\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
 
 class PasswordEncoderFactory extends AbstractChildFactory
 {

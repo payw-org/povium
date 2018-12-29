@@ -3,42 +3,42 @@
  * Middleware for email activation.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Authentication;
+namespace Readigm\Http\Middleware\Authentication;
 
-use Povium\Http\Controller\Authentication\EmailActivationController;
-use Povium\Base\Routing\Router;
-use Povium\Http\Controller\Exception\RequestExpiredException;
-use Povium\Http\Controller\Exception\RequestNotFoundException;
-use Povium\Http\Controller\Exception\TokenNotMatchedException;
-use Povium\Security\User\User;
-use Povium\Base\Http\Exception\ForbiddenHttpException;
-use Povium\Base\Http\Exception\GoneHttpException;
+use Readigm\Http\Controller\Authentication\EmailActivationController;
+use Readigm\Base\Routing\Router;
+use Readigm\Http\Controller\Exception\RequestExpiredException;
+use Readigm\Http\Controller\Exception\RequestNotFoundException;
+use Readigm\Http\Controller\Exception\TokenNotMatchedException;
+use Readigm\Security\User\User;
+use Readigm\Base\Http\Exception\ForbiddenHttpException;
+use Readigm\Base\Http\Exception\GoneHttpException;
 
 class EmailActivationMiddleware
 {
-    /**
+	/**
+	 * @var Router
+	 */
+	protected $router;
+
+	/**
      * @var EmailActivationController
      */
     protected $emailActivationController;
 
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    /**
-     * @param EmailActivationController $email_activation_controller
-     * @param Router                    $router
-     */
+	/**
+	 * @param Router 					$router
+	 * @param EmailActivationController $email_activation_controller
+	 */
     public function __construct(
-        EmailActivationController $email_activation_controller,
-        Router $router
+		Router $router,
+        EmailActivationController $email_activation_controller
     ) {
-        $this->emailActivationController = $email_activation_controller;
-        $this->router = $router;
+		$this->router = $router;
+		$this->emailActivationController = $email_activation_controller;
     }
 
     /**

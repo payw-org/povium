@@ -3,7 +3,7 @@
 * Config array for "DBBuilder".
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_comment_table.php');
@@ -24,7 +24,7 @@ require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_deleted_post_tab
 require($_SERVER['DOCUMENT_ROOT'] . '/../database/create/create_deleted_series_table.php');
 
 return [
-	'dbname' => 'povium_local_db',
+	'dbname' => 'readigm_local_db',
 
 	'table_list' => [
 		new CreateCommentTable(),

@@ -3,13 +3,13 @@
  * Validate premium setting for post.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Publication\Validator\PostInfo;
+namespace Readigm\Publication\Validator\PostInfo;
 
-use Povium\Security\Auth\Authorizer;
-use Povium\Validator\ValidatorInterface;
+use Readigm\Security\Auth\Authorizer;
+use Readigm\Validator\ValidatorInterface;
 
 class IsPremiumValidator implements ValidatorInterface
 {
@@ -29,19 +29,22 @@ class IsPremiumValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @param bool $is_premium
+	 * @param bool 	$is_premium
+	 * @param int	$authority
 	 *
 	 * @return array 	Error flag and message
 	 */
 	public function validate($is_premium)
 	{
+		$authority = func_get_arg(1);
+
 		$return = array(
 			'err' => true,
 			'msg' => ''
 		);
 
 		if ($is_premium) {
-			if ($GLOBALS['authority'] < Authorizer::PRO_EDITOR) {
+			if ($authority < Authorizer::PRO_EDITOR) {
 				$return['msg'] = $this->config['msg']['only_for_pro'];
 
 				return $return;

@@ -3,28 +3,24 @@
  * Loader for data in global navigation.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Loader\GlobalModule;
+namespace Readigm\Loader\GlobalModule;
 
-class GlobalNavigationLoader
+use Readigm\Loader\LoaderInterface;
+
+class GlobalNavigationLoader implements LoaderInterface
 {
-	public function __construct()
-	{
-	}
-
 	/**
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function loadData()
 	{
 		$data = array();
 
 		if ($GLOBALS['is_logged_in']) {
-			$data['current_user'] = array(
-				'name' => $GLOBALS['current_user']->getName()
-			);
+			$data['user_name'] = $GLOBALS['current_user']->getName();
 		}
 
 		return $data;

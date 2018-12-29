@@ -3,10 +3,10 @@
  * Authorize current client.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Security\Auth;
+namespace Readigm\Security\Auth;
 
 class Authorizer
 {

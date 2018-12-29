@@ -3,39 +3,43 @@
  * Middleware for login.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Authentication;
+namespace Readigm\Http\Middleware\Authentication;
 
-use Povium\Http\Middleware\AbstractAjaxMiddleware;
-use Povium\Http\Middleware\RefererCheckerInterface;
-use Povium\Http\Controller\Authentication\LoginController;
-use Povium\Base\Routing\Validator\RedirectURIValidator;
+use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Middleware\CamelToSnakeConverter;
+use Readigm\Http\Middleware\RefererCheckerInterface;
+use Readigm\Http\Controller\Authentication\LoginController;
+use Readigm\Base\Routing\Validator\RedirectURIValidator;
 
 class LoginMiddleware extends AbstractAjaxMiddleware implements RefererCheckerInterface
 {
-    /**
-     * @var LoginController
-     */
-    protected $loginController;
-
-    /**
+	/**
      * @var RedirectURIValidator
      */
     protected $redirectURIValidator;
 
-    /**
-     * @param LoginController       $login_controller
-     * @param RedirectURIValidator  $redirect_uri_validator
-     */
+	/**
+	 * @var LoginController
+	 */
+	protected $loginController;
+
+	/**
+	 * @param CamelToSnakeConverter	$camel_to_snake_converter
+	 * @param RedirectURIValidator 	$redirect_uri_validator
+	 * @param LoginController 		$login_controller
+	 */
     public function __construct(
-        LoginController $login_controller,
-        RedirectURIValidator $redirect_uri_validator
+    	CamelToSnakeConverter $camel_to_snake_converter,
+		RedirectURIValidator $redirect_uri_validator,
+        LoginController $login_controller
     ) {
-        $this->loginController = $login_controller;
-        $this->redirectURIValidator = $redirect_uri_validator;
-    }
+    	parent::__construct($camel_to_snake_converter);
+		$this->redirectURIValidator = $redirect_uri_validator;
+		$this->loginController = $login_controller;
+	}
 
     /**
      * Receive login inputs and process login.

@@ -3,12 +3,12 @@
 * This factory is responsible for creating "ActivationMailSender" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\MailSender\Factory;
+namespace Readigm\MailSender\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class ActivationMailSenderFactory extends AbstractChildFactory
@@ -18,10 +18,10 @@ class ActivationMailSenderFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mail_sender.php');
 		$mail = new PHPMailer(true);
+		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/mail_sender.php');
 
-		$this->args[] = $config;
 		$this->args[] = $mail;
+		$this->args[] = $config;
 	}
 }

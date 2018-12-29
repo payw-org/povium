@@ -3,47 +3,51 @@
  * Middleware for register.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Authentication;
+namespace Readigm\Http\Middleware\Authentication;
 
-use Povium\Http\Middleware\AbstractAjaxMiddleware;
-use Povium\Http\Middleware\RefererCheckerInterface;
-use Povium\Http\Controller\Authentication\RegisterController;
-use Povium\Http\Controller\Authentication\LoginController;
-use Povium\Base\Routing\Validator\RedirectURIValidator;
+use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Middleware\CamelToSnakeConverter;
+use Readigm\Http\Middleware\RefererCheckerInterface;
+use Readigm\Http\Controller\Authentication\RegisterController;
+use Readigm\Http\Controller\Authentication\LoginController;
+use Readigm\Base\Routing\Validator\RedirectURIValidator;
 
 class RegisterMiddleware extends AbstractAjaxMiddleware implements RefererCheckerInterface
 {
-    /**
+	/**
+	 * @var RedirectURIValidator
+	 */
+	protected $redirectURIValidator;
+
+	/**
+	 * @var LoginController
+	 */
+	protected $loginController;
+
+	/**
      * @var RegisterController
      */
     protected $registerController;
 
-    /**
-     * @var LoginController
-     */
-    protected $loginController;
-
-    /**
-     * @var RedirectURIValidator
-     */
-    protected $redirectURIValidator;
-
-    /**
-     * @param RegisterController    $register_controller
-     * @param LoginController       $login_controller
-     * @param RedirectURIValidator  $redirect_uri_validator
-     */
+	/**
+	 * @param CamelToSnakeConverter	$camel_to_snake_converter
+	 * @param RedirectURIValidator 	$redirect_uri_validator
+	 * @param LoginController 		$login_controller
+	 * @param RegisterController 	$register_controller
+	 */
     public function __construct(
-        RegisterController $register_controller,
-        LoginController $login_controller,
-        RedirectURIValidator $redirect_uri_validator
+    	CamelToSnakeConverter $camel_to_snake_converter,
+		RedirectURIValidator $redirect_uri_validator,
+		LoginController $login_controller,
+		RegisterController $register_controller
     ) {
-        $this->registerController = $register_controller;
-        $this->loginController = $login_controller;
-        $this->redirectURIValidator = $redirect_uri_validator;
+    	parent::__construct($camel_to_snake_converter);
+		$this->redirectURIValidator = $redirect_uri_validator;
+		$this->loginController = $login_controller;
+		$this->registerController = $register_controller;
     }
 
     /**

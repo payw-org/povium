@@ -3,12 +3,12 @@
 * This factory is responsible for creating "RandomStringGenerator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Generator\Factory;
+namespace Readigm\Generator\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
+use Readigm\Base\Factory\AbstractChildFactory;
 
 class RandomStringGeneratorFactory extends AbstractChildFactory
 {

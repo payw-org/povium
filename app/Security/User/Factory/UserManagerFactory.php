@@ -3,25 +3,24 @@
 * This factory is responsible for creating "UserManager" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 DesignAndDevelop
+* @copyright	2018 Povium
 */
 
-namespace Povium\Security\User\Factory;
+namespace Readigm\Security\User\Factory;
 
-use Povium\Base\Factory\AbstractChildFactory;
-use Povium\Base\Database\DBConnection;
+use Readigm\Base\Database\Factory\AbstractRecordManagerFactory;
 
-class UserManagerFactory extends AbstractChildFactory
+class UserManagerFactory extends AbstractRecordManagerFactory
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	protected function prepareArgs()
 	{
+		parent::prepareArgs();
+
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/user_manager.php');
-		$conn = DBConnection::getInstance()->getConn();
 
 		$this->args[] = $config;
-		$this->args[] = $conn;
 	}
 }

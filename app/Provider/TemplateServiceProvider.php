@@ -3,30 +3,15 @@
  * Bootstrap template services.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Provider;
+namespace Readigm\Provider;
 
 use Philo\Blade\Blade;
-use Povium\Base\Factory\MasterFactory;
 
-class TemplateServiceProvider implements ServiceProviderInterface
+class TemplateServiceProvider extends AbstractServiceProvider
 {
-	/**
-	 * @var MasterFactory
-	 */
-	protected $factory;
-
-	/**
-	 * @param MasterFactory $factory
-	 */
-	public function __construct(
-		MasterFactory $factory
-	) {
-		$this->factory = $factory;
-	}
-
 	/**
 	 * {@inheritdoc}
 	 */

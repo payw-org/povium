@@ -1,10 +1,10 @@
 {
-	"name": "DesignAndDevelop/Povium-web",
-	"description": "Povium Website",
+	"name": "Povium/Readigm-web",
+	"description": "Readigm Website",
 	"version": "v1.0.0",
 	"type": "project",
 	"keywords": [],
-	"homepage": "http://povium.com/",
+	"homepage": "http://readigm.com/",
 	"authors": [
 		{
 			"name": "J.Haemin",
@@ -27,7 +27,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Povium\\": "app/"
+			"Readigm\\": "app/"
 		}
 	}
 }

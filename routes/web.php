@@ -3,14 +3,14 @@
 * Set routes for web.
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-use Povium\Security\Auth\Authorizer;
-use Povium\Base\Http\Exception\HttpException;
-use Povium\Base\Http\Exception\NotFoundHttpException;
-use Povium\Base\Http\Exception\ForbiddenHttpException;
-use Povium\Base\Http\Exception\GoneHttpException;
+use Readigm\Security\Auth\Authorizer;
+use Readigm\Base\Http\Exception\HttpException;
+use Readigm\Base\Http\Exception\NotFoundHttpException;
+use Readigm\Base\Http\Exception\ForbiddenHttpException;
+use Readigm\Base\Http\Exception\GoneHttpException;
 
 /**
  * Show home view.
@@ -19,13 +19,13 @@ $collection->get(
 	'/',
 	function () use ($factory, $blade) {
 		$home_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Home\HomeViewMiddleware::class
+			\Readigm\Http\Middleware\Home\HomeViewMiddleware::class
 		);
-		$home_view_middleware->requestView();
+		$view_config = $home_view_middleware->requestViewConfig();
 
 		echo $blade->view()->make(
 			'sections.home',
-			$home_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	}
 );
@@ -41,14 +41,14 @@ $collection->get(
 		}
 
 		$login_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\LoginViewMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\LoginViewMiddleware::class,
 			$router
 		);
-		$login_view_middleware->requestView();
+		$view_config = $login_view_middleware->requestViewConfig();
 
 		echo $blade->view()->make(
 			'sections.login',
-			$login_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	}
 );
@@ -64,7 +64,7 @@ $collection->post(
 		}
 
 		$login_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\LoginMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\LoginMiddleware::class,
 			$authenticator
 		);
 		$login_middleware->login();
@@ -82,7 +82,7 @@ $collection->put(
 		}
 
 		$login_feedback_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\LoginFeedbackMiddleware::class
+			\Readigm\Http\Middleware\Authentication\LoginFeedbackMiddleware::class
 		);
 		$login_feedback_middleware->giveFeedback();
 	}
@@ -99,14 +99,14 @@ $collection->get(
 		}
 
 		$register_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\RegisterViewMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\RegisterViewMiddleware::class,
 			$router
 		);
-		$register_view_middleware->requestView();
+		$view_config = $register_view_middleware->requestViewConfig();
 
 		echo $blade->view()->make(
 			'sections.register',
-			$register_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	}
 );
@@ -122,7 +122,7 @@ $collection->post(
 		}
 
 		$register_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\RegisterMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\RegisterMiddleware::class,
 			$authenticator
 		);
 		$register_middleware->register();
@@ -140,7 +140,7 @@ $collection->put(
 		}
 
 		$registration_feedback_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\RegistrationFeedbackMiddleware::class
+			\Readigm\Http\Middleware\Authentication\RegistrationFeedbackMiddleware::class
 		);
 		$registration_feedback_middleware->giveFeedback();
 	}
@@ -149,15 +149,16 @@ $collection->put(
 /**
  * Logout.
  */
-$collection->post(
+$collection->get(
 	'/logout',
-	function () use ($factory, $authenticator) {
+	function () use ($router, $factory, $authenticator) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
-			return;
+			$router->redirect('/');
 		}
 
 		$logout_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\LogoutMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\LogoutMiddleware::class,
+			$router,
 			$authenticator
 		);
 		$logout_middleware->logout();
@@ -172,13 +173,13 @@ $collection->post(
  */
 $collection->get(
 	'/c/email/activation',
-	function () use ($factory, $router) {
+	function () use ($router, $factory) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			$router->redirect('/login', true);
 		}
 
 		$email_activation_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Authentication\EmailActivationMiddleware::class,
+			\Readigm\Http\Middleware\Authentication\EmailActivationMiddleware::class,
 			$router
 		);
 		$email_activation_middleware->activateEmail($GLOBALS['current_user']);
@@ -207,13 +208,13 @@ $collection->get(
  */
 $collection->get(
 	'/me/settings/email/new-request',
-	function () use ($factory, $router) {
+	function () use ($router, $factory) {
 		if ($GLOBALS['authority'] == Authorizer::VISITOR) {
 			return;
 		}
 
 		$email_activation_request_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Setting\EmailActivationRequestMiddleware::class,
+			\Readigm\Http\Middleware\Setting\EmailActivationRequestMiddleware::class,
 			$router
 		);
 		$email_activation_request_middleware->requestEmailActivation($GLOBALS['current_user']);
@@ -243,13 +244,13 @@ $collection->get(
 	'/@{readable_id:.+}',
 	function ($readable_id) use ($factory, $blade) {
 		$profile_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\User\ProfileViewMiddleware::class
+			\Readigm\Http\Middleware\User\ProfileViewMiddleware::class
 		);
-		$profile_view_middleware->requestView($readable_id);
+		$view_config = $profile_view_middleware->requestViewConfig($readable_id);
 
 		echo $blade->view()->make(
 			'sections.profile',
-			$profile_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	},
 	'profile'
@@ -286,13 +287,13 @@ $collection->get(
 	'/*',
 	function ($http_exception) use ($factory, $blade) {
 		$http_error_view_middleware = $factory->createInstance(
-			\Povium\Http\Middleware\Error\HttpErrorViewMiddleware::class
+			\Readigm\Http\Middleware\Error\HttpErrorViewMiddleware::class
 		);
-		$http_error_view_middleware->requestView($http_exception);
+		$view_config = $http_error_view_middleware->requestViewConfig($http_exception);
 
 		echo $blade->view()->make(
 			'sections.http-error',
-			$http_error_view_middleware->getViewConfig()
+			$view_config
 		)->render();
 	},
 	'http_error'

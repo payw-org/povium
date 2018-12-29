@@ -3,19 +3,19 @@
  * Controller for validating post form.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Post;
+namespace Readigm\Http\Controller\Post;
 
-use Povium\Publication\Validator\PostInfo\BodyValidator;
-use Povium\Publication\Validator\PostInfo\ContentsValidator;
-use Povium\Publication\Validator\PostInfo\IsPremiumValidator;
-use Povium\Publication\Validator\PostInfo\SeriesIDValidator;
-use Povium\Publication\Validator\PostInfo\SubtitleValidator;
-use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
-use Povium\Publication\Validator\PostInfo\TitleValidator;
-use Povium\Security\User\User;
+use Readigm\Publication\Validator\PostInfo\BodyValidator;
+use Readigm\Publication\Validator\PostInfo\ContentsValidator;
+use Readigm\Publication\Validator\PostInfo\IsPremiumValidator;
+use Readigm\Publication\Validator\PostInfo\SeriesIDValidator;
+use Readigm\Publication\Validator\PostInfo\SubtitleValidator;
+use Readigm\Publication\Validator\PostInfo\ThumbnailValidator;
+use Readigm\Publication\Validator\PostInfo\TitleValidator;
+use Readigm\Security\User\User;
 
 class PostFormValidationController
 {
@@ -85,6 +85,7 @@ class PostFormValidationController
 	 * Check if fields of post form are valid.
 	 *
 	 * @param User			$user			User who wrote the post
+	 * @param int			$authority		Authority level of user
 	 * @param string		$title
 	 * @param string 		$body
 	 * @param string 		$contents
@@ -98,6 +99,7 @@ class PostFormValidationController
 	 */
 	public function isValid(
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -132,7 +134,7 @@ class PostFormValidationController
 			return false;
 		}
 
-		$validate_is_premium = $this->isPremiumValidator->validate($is_premium);
+		$validate_is_premium = $this->isPremiumValidator->validate($is_premium, $authority);
 
 		//	If invalid is_premium
 		if ($validate_is_premium['err']) {
@@ -173,6 +175,7 @@ class PostFormValidationController
 	 * Validate all fields of post form.
 	 *
 	 * @param User			$user			User who wrote the post
+	 * @param int			$authority		Authority level of user
 	 * @param string		$title
 	 * @param string 		$body
 	 * @param string 		$contents
@@ -185,6 +188,7 @@ class PostFormValidationController
 	 */
 	public function validateAllFields(
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -242,7 +246,7 @@ class PostFormValidationController
 		$return['contents_return']['err'] = $validate_contents['err'];
 		$return['contents_return']['msg'] = $validate_contents['msg'];
 
-		$validate_is_premium = $this->isPremiumValidator->validate($is_premium);
+		$validate_is_premium = $this->isPremiumValidator->validate($is_premium, $authority);
 		$return['is_premium_return']['err'] = $validate_is_premium['err'];
 		$return['is_premium_return']['msg'] = $validate_is_premium['msg'];
 

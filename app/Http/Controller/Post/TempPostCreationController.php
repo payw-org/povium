@@ -3,21 +3,16 @@
  * Controller for creating temp post.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 DesignAndDevelop
+ * @copyright 	2018 Povium
  */
 
-namespace Povium\Http\Controller\Post;
+namespace Readigm\Http\Controller\Post;
 
-use Povium\Publication\Post\AutoSavedPostManager;
-use Povium\Security\User\User;
+use Readigm\Publication\Post\AutoSavedPostManager;
+use Readigm\Security\User\User;
 
 class TempPostCreationController
 {
-	/**
-	 * @var array
-	 */
-	private $config;
-
 	/**
 	 * @var PostFormValidationController
 	 */
@@ -29,18 +24,23 @@ class TempPostCreationController
 	protected $autoSavedPostManager;
 
 	/**
-	 * @param array 						$config
+	 * @var array
+	 */
+	private $config;
+
+	/**
 	 * @param PostFormValidationController 	$post_form_validation_controller
 	 * @param AutoSavedPostManager 			$auto_saved_post_manager
+	 * @param array 						$config
 	 */
 	public function __construct(
-		array $config,
 		PostFormValidationController $post_form_validation_controller,
-		AutoSavedPostManager $auto_saved_post_manager
+		AutoSavedPostManager $auto_saved_post_manager,
+		array $config
 	) {
-		$this->config = $config;
 		$this->postFormValidationController = $post_form_validation_controller;
 		$this->autoSavedPostManager = $auto_saved_post_manager;
+		$this->config = $config;
 	}
 
 	/**
@@ -48,6 +48,7 @@ class TempPostCreationController
 	 * And create an auto saved record for temp post.
 	 *
 	 * @param  User			$user		User who requested
+	 * @param  int			$authority	Authority level of user
 	 * @param  string  		$title
 	 * @param  string  		$body
 	 * @param  string  		$contents
@@ -60,6 +61,7 @@ class TempPostCreationController
 	 */
 	public function create(
 		$user,
+		$authority,
 		$title,
 		$body,
 		$contents,
@@ -78,6 +80,7 @@ class TempPostCreationController
 
 		if (!$this->postFormValidationController->isValid(
 			$user,
+			$authority,
 			$title,
 			$body,
 			$contents,

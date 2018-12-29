@@ -3,13 +3,14 @@
  * Middleware for login feedback.
  *
  * @author		H.Chihoon
- * @copyright	2018 DesignAndDevelop
+ * @copyright	2018 Povium
  */
 
-namespace Povium\Http\Middleware\Authentication;
+namespace Readigm\Http\Middleware\Authentication;
 
-use Povium\Http\Middleware\AbstractAjaxMiddleware;
-use Povium\Http\Controller\Authentication\LoginFormValidationController;
+use Readigm\Http\Middleware\AbstractAjaxMiddleware;
+use Readigm\Http\Controller\Authentication\LoginFormValidationController;
+use Readigm\Http\Middleware\CamelToSnakeConverter;
 
 class LoginFeedbackMiddleware extends AbstractAjaxMiddleware
 {
@@ -19,11 +20,14 @@ class LoginFeedbackMiddleware extends AbstractAjaxMiddleware
 	protected $loginFormValidationController;
 
 	/**
+	 * @param CamelToSnakeConverter 		$camel_to_snake_converter
 	 * @param LoginFormValidationController $login_form_validation_controller
 	 */
 	public function __construct(
+		CamelToSnakeConverter $camel_to_snake_converter,
 		LoginFormValidationController $login_form_validation_controller
 	) {
+		parent::__construct($camel_to_snake_converter);
 		$this->loginFormValidationController = $login_form_validation_controller;
 	}
 

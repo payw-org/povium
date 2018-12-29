@@ -3,10 +3,10 @@
 * Trait for singleton pattern
 *
 * @author 		H.Chihoon
-* @copyright 	2018 DesignAndDevelop
+* @copyright 	2018 Povium
 */
 
-namespace Povium\Traits;
+namespace Readigm\Traits;
 
 trait SingletonTrait
 {
