@@ -96,7 +96,7 @@ export default class EventManager {
 		})
 
 		EditSession.editorBody.addEventListener("input", e => {
-			console.log(e)
+			// console.log(e)
 		})
 
 		window.addEventListener("keydown", e => {
@@ -1142,7 +1142,7 @@ export default class EventManager {
 		}
 
 		// console.log(jsRange)
-		console.log(SelectionManager.getCurrentRange())
+		// console.log(SelectionManager.getCurrentRange())
 
 		// console.log(pvmRange)
 		// console.log(pvmRange.isCollapsed())
