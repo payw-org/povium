@@ -3,6 +3,7 @@ import EventManager from "./EventManager"
 import { Action } from "./interfaces/Action"
 import NodeManager from "./NodeManager"
 import SelectionManager from "./SelectionManager"
+import sizeof from "object-sizeof"
 
 export default class UndoManager {
 	private static actionStack: Array<Action | Array<Action>> = []
@@ -40,6 +41,8 @@ export default class UndoManager {
 		this.actionStack.push(action)
 		this.currentStep = this.actionStack.length - 1
 		// console.log(this.actionStack.slice(0))
+
+		// console.log(sizeof(this.actionStack))
 	}
 
 	public static undo() {
