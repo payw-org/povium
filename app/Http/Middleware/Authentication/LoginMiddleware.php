@@ -79,7 +79,7 @@ class LoginMiddleware extends AbstractAjaxMiddleware implements RefererCheckerIn
 			}
         }
 
-        $this->sendAjaxData($return, false);
+        $this->sendAjaxData($return);
     }
 
 	/**

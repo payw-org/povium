@@ -51,6 +51,6 @@ class RegistrationFeedbackMiddleware extends AbstractAjaxMiddleware
 			$password
 		);
 
-        $this->sendAjaxData($return, false);
+        $this->sendAjaxData($return);
     }
 }
