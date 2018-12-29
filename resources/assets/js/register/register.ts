@@ -72,7 +72,7 @@ import PVMButton from "../PVMButton"
 
 			function checkValidation(allowEmpty: boolean = true) {
 				var inputData = {
-					readable_id: readableIDInputDOM.value,
+					readableId: readableIDInputDOM.value,
 					name: nameInputDOM.value,
 					password: passInputDOM.value
 				}
@@ -85,25 +85,25 @@ import PVMButton from "../PVMButton"
 				.then(function(response) {
 					let data = response.data
 				 
-					if (data["readable_id_return"]["err"]) {
-						readableIDInputObj.showMsg(data["readable_id_return"]["msg"], allowEmpty)
+					if (data["readableIdReturn"]["err"]) {
+						readableIDInputObj.showMsg(data["readableIdReturn"]["msg"], allowEmpty)
 					} else {
 						readableIDInputObj.hideMsg()
 					}
 				 
-					if (data["name_return"]["err"]) {
-						nameInputObj.showMsg(data["name_return"]["msg"], allowEmpty)
+					if (data["nameReturn"]["err"]) {
+						nameInputObj.showMsg(data["nameReturn"]["msg"], allowEmpty)
 					} else {
 						nameInputObj.hideMsg()
 					}
 				 
-					if (data["password_return"]["err"]) {
-						passInputObj.showMsg(data["password_return"]["msg"], allowEmpty)
+					if (data["passwordReturn"]["err"]) {
+						passInputObj.showMsg(data["passwordReturn"]["msg"], allowEmpty)
 						passStrengthIndicator.hide()
 					} else {
 						passInputObj.hideMsg()
 						passStrengthIndicator.setStrength(
-							data["password_return"]["strength"]
+							data["passwordReturn"]["strength"]
 						)
 					}
 				 
@@ -115,7 +115,7 @@ import PVMButton from "../PVMButton"
 
 			startButton.addEventListener("click", function() {
 				var inputData = {
-					readable_id: readableIDInputDOM.value,
+					readableId: readableIDInputDOM.value,
 					name: nameInputDOM.value,
 					password: passInputDOM.value
 				}
