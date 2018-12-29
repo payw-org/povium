@@ -16,6 +16,7 @@ let pjax = new Pjax({
 	cacheBust: false
 })
 topbar.config({
+	barThickness: 2,
 	barColors: {
 		"0": "#5f42ff",
 		"1": "#5f42ff"

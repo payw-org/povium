@@ -20,6 +20,7 @@ export default class PVMButton {
 	}
 
 	startSpinner() {
+		this.init()
 		this.btnElem.disabled = true
 		let spinner = document.createElement("div")
 		spinner.className = "spinner"

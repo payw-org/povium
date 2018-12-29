@@ -76,10 +76,10 @@ import PVMButton from "./PVMButton"
 						if (data["err"]) {
 							// alert(data["msg"])
 							// setErrorMsg(data["msg"])
-							setTimeout(() => {
-								PVMConfirmButton.stopSpinner()
-								PVMConfirmButton.showErr(data["msg"])
-							}, 1000)
+
+							PVMConfirmButton.stopSpinner()
+							PVMConfirmButton.showErr(data["msg"])
+
 						} else {
 							location.replace(data["redirect"])
 						}

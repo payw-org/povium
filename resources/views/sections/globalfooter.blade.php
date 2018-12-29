@@ -1,4 +1,4 @@
 <footer id="globalfooter">
-    <img src="/assets/images/povium/DesignAndDevelop_logo.svg" alt="">
-    <span class="copyright">Copyright 2018 DesignAndDevelop</span>
+    <img src="/assets/images/povium/Povium-logo-shaded.svg" alt="">
+    <span class="copyright">Created by Povium</span>
 </footer>

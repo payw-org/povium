@@ -2,6 +2,7 @@ import { AT } from "./config/AvailableTypes"
 import EditSession from "./EditSession"
 import PVMNode from "./PVMNode"
 import SelectionManager from "./SelectionManager"
+import TypeChecker from "./TypeChecker";
 
 export default class NodeManager {
 	constructor() {}
@@ -36,9 +37,9 @@ export default class NodeManager {
 		// Updates view
 
 		// Inserting node is a list item
-		if (AT.isListItem(insertingChild.type)) {
+		if (TypeChecker.isListItem(insertingChild.type)) {
 			// Referenced node is a list item
-			if (AT.isListItem(refChild.type)) {
+			if (TypeChecker.isListItem(refChild.type)) {
 				if (refChild.parentType === insertingChild.parentType) {
 					if (
 						previousChild &&
@@ -59,7 +60,8 @@ export default class NodeManager {
 						refChild.element.parentElement,
 						refChild.element
 					)
-					if (previousChild && AT.isListItem(previousChild.type)) {
+
+					if (previousChild && TypeChecker.isListItem(previousChild.type)) {
 						if (previousChild.parentType === insertingChild.parentType) {
 							previousChild.element.parentElement.insertBefore(
 								insertingChild.element,
@@ -77,7 +79,7 @@ export default class NodeManager {
 					}
 				}
 			} else {
-				if (previousChild && AT.isListItem(previousChild.type)) {
+				if (previousChild && TypeChecker.isListItem(previousChild.type)) {
 					if (previousChild.parentType === insertingChild.parentType) {
 						previousChild.element.parentElement.insertBefore(
 							insertingChild.element,
@@ -100,7 +102,7 @@ export default class NodeManager {
 		} else {
 			// Inserting node is not a list item
 			// Referenced node is a list item
-			if (AT.isListItem(refChild.type)) {
+			if (TypeChecker.isListItem(refChild.type)) {
 				let abc = this.splitListByItem(
 					refChild.element.parentElement,
 					refChild.element
@@ -163,6 +165,9 @@ export default class NodeManager {
 	}
 
 	public static getNodeID(element: Element): number {
+		if (!element) {
+			console.error("Could not find element.")
+		}
 		let id = Number(element.getAttribute("data-ni"))
 		if (!id) {
 			// error handler
@@ -244,7 +249,8 @@ export default class NodeManager {
 			}
 			let imgWrapper = document.createElement("div")
 			imgWrapper.className = "image-wrapper"
-			imgWrapper.contentEditable = "false"
+			// imgWrapper.contentEditable = "false"
+			// imgWrapper.contentEditable = "true"
 			let imgDOM = document.createElement("img")
 			imgDOM.src = options.url
 			imgWrapper.appendChild(imgDOM)

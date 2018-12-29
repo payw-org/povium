@@ -2,6 +2,7 @@ import * as PostData from "./interfaces/PostData"
 import NodeManager from "./NodeManager"
 import PVMNode from "./PVMNode";
 import { AT } from "./config/AvailableTypes";
+import TypeChecker from "./TypeChecker";
 
 export default class Converter {
 	static parse(frame: PostData.Frame): PVMNode[] {
@@ -87,7 +88,7 @@ export default class Converter {
 	}
 
 	static stringify(editorNodes: PVMNode[]) {
-		let obj: PostData.Frame = {
+		let dataObj: PostData.Frame = {
 			title: "",
 			subtitle: "",
 			body: "",
@@ -100,19 +101,13 @@ export default class Converter {
 		body = ""
 
 		editorNodes.forEach(pvmNode => {
-			if (
-				(AT.isHeading(pvmNode.type) ||
-				AT.isParagraph(pvmNode.type)) &&
-				title === null
-			) {
-				title = pvmNode.getTextContent()
-			}
 
 			let block: PostData.Block = {
 				type: pvmNode.type
+
 			}
 		})
 
-		return JSON.stringify(obj)
+		return JSON.stringify(dataObj)
 	}
 }

@@ -1,6 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
+/* @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800'); */
 
+/* JHM Sans */
 @font-face {
 	font-family: 'JHM Sans';
 	font-style: normal;
@@ -50,4 +51,40 @@
 		url("/assets/fonts/JHM-Sans/JHMSans-Bold.woff") format("woff"),
 		url("/assets/fonts/JHM-Sans/JHMSans-Bold.eot") format("eot"),
 		url("/assets/fonts/JHM-Sans/JHMSans-Bold.ttf") format("truetype");
+}
+
+/* JHM Pro */
+@font-face {
+	font-family: 'JHM Pro';
+	font-style: normal;
+	font-weight: 200;
+	src: url("/assets/fonts/JHM-Pro/JHMPro-Thin.woff2") format("woff2"), url("/assets/fonts/JHM-Pro/JHMPro-Thin.woff") format("woff"), url("/assets/fonts/JHM-Pro/JHMPro-Thin.eot") format("eot"), url("/assets/fonts/JHM-Pro/JHMPro-Thin.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: 'JHM Pro';
+	font-style: normal;
+	font-weight: 300;
+	src: url("/assets/fonts/JHM-Pro/JHMPro-Light.woff2") format("woff2"), url("/assets/fonts/JHM-Pro/JHMPro-Light.woff") format("woff"), url("/assets/fonts/JHM-Pro/JHMPro-Light.eot") format("eot"), url("/assets/fonts/JHM-Pro/JHMPro-Light.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: 'JHM Pro';
+	font-style: normal;
+	font-weight: 400;
+	src: url("/assets/fonts/JHM-Pro/JHMPro-Regular.woff2") format("woff2"), url("/assets/fonts/JHM-Pro/JHMPro-Regular.woff") format("woff"), url("/assets/fonts/JHM-Pro/JHMPro-Regular.eot") format("eot"), url("/assets/fonts/JHM-Pro/JHMPro-Regular.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: 'JHM Pro';
+	font-style: normal;
+	font-weight: 500;
+	src: url("/assets/fonts/JHM-Pro/JHMPro-Medium.woff2") format("woff2"), url("/assets/fonts/JHM-Pro/JHMPro-Medium.woff") format("woff"), url("/assets/fonts/JHM-Pro/JHMPro-Medium.eot") format("eot"), url("/assets/fonts/JHM-Pro/JHMPro-Medium.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: 'JHM Pro';
+	font-style: normal;
+	font-weight: 700;
+	src: url("/assets/fonts/JHM-Pro/JHMPro-Bold.woff2") format("woff2"), url("/assets/fonts/JHM-Pro/JHMPro-Bold.woff") format("woff"), url("/assets/fonts/JHM-Pro/JHMPro-Bold.eot") format("eot"), url("/assets/fonts/JHM-Pro/JHMPro-Bold.ttf") format("truetype");
 }
