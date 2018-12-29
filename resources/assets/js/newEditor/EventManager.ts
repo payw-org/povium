@@ -5,6 +5,7 @@ import PopTool from "./PopTool"
 import PVMRange from "./PVMRange"
 import SelectionManager from "./SelectionManager"
 import UndoManager from "./UndoManager"
+import TypeChecker from "./TypeChecker";
 
 export default class EventManager {
 	public static mouseDownStart: boolean
@@ -788,7 +789,7 @@ export default class EventManager {
 		// Generates a list when types "- " or "1. "
 		if (
 			keyCode === 32 &&
-			AT.isParagraph(currentNode.type) &&
+			TypeChecker.isParagraph(currentNode.type) &&
 			currentNode &&
 			(currentNode.getTextContent().match(/^- /) ||
 				currentNode.getTextContent().match(/^1\. /))
@@ -1134,6 +1135,14 @@ export default class EventManager {
 		let jsRange = window.getSelection().getRangeAt(0)
 		let newStartContainer, newEndContainer, newStartOffset, newEndOffset
 		let needsFix = false
+
+		let pvmRange = SelectionManager.getCurrentRange()
+		if (pvmRange.start.node.type === "image") {
+			pvmRange.start.node.element.classList.add("image-selected")
+		}
+
+		// console.log(jsRange)
+		console.log(SelectionManager.getCurrentRange())
 
 		// console.log(pvmRange)
 		// console.log(pvmRange.isCollapsed())
