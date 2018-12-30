@@ -99,6 +99,31 @@ export default class EventManager {
 			// console.log(e)
 		})
 
+		EditSession.editorBody.addEventListener("compositionupdate", e => {
+			// console.log("compositioning")
+			console.log(e)
+			let currentNode = SelectionManager.getCurrentNode()
+
+			setTimeout(() => {
+				let modifiedContents = currentNode.textElement.innerHTML
+				console.log(modifiedContents)
+				let newRange = SelectionManager.getCurrentRange()
+				
+				let latestAction = UndoManager.getLatestAction()
+				if (
+					latestAction &&
+					!Array.isArray(latestAction) &&
+					latestAction.type === "textChange" &&
+					latestAction.key === "char"
+				) {
+					latestAction.nextHTML = modifiedContents
+					latestAction.nextRange = newRange
+					console.group("continue record")
+					console.groupEnd()
+				}
+			}, 4);
+		})
+
 		window.addEventListener("keydown", e => {
 			if (e.which === 90 && (e.ctrlKey || e.metaKey)) {
 				if (e.shiftKey) {
