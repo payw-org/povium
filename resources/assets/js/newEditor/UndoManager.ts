@@ -3,7 +3,6 @@ import EventManager from "./EventManager"
 import { Action } from "./interfaces/Action"
 import NodeManager from "./NodeManager"
 import SelectionManager from "./SelectionManager"
-import sizeof from "object-sizeof"
 
 export default class UndoManager {
 	private static actionStack: Array<Action | Array<Action>> = []
