@@ -42,7 +42,11 @@ export default class UndoManager {
 		this.currentStep = this.actionStack.length - 1
 		// console.log(this.actionStack.slice(0))
 
-		// console.log(sizeof(this.actionStack))
+		// var strByteLength = function (s: any, b?: any, i?: any, c?: any) {
+		// 	for (b = i = 0; c = s.charCodeAt(i++); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
+		// 	return b
+		// }
+		// console.log(strByteLength(JSON.stringify(this.actionStack)), "bytes")
 	}
 
 	public static undo() {
