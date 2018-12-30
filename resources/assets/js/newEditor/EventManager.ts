@@ -720,8 +720,8 @@ export default class EventManager {
 					latestAction &&
 					!Array.isArray(latestAction) &&
 					latestAction.type === "textChange" &&
-					latestAction.key === key &&
-					physKeyCode !== "Space"
+					latestAction.key === key
+					// && physKeyCode !== "Space"
 				) {
 					latestAction.nextHTML = modifiedContents
 					latestAction.nextRange = newRange
