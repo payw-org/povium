@@ -72,7 +72,7 @@ import PVMButton from "../PVMButton"
 
 			function checkValidation(allowEmpty: boolean = true) {
 				var inputData = {
-					readableId: readableIDInputDOM.value,
+					readableId: readableIDInputDOM.value.toLocaleLowerCase(),
 					name: nameInputDOM.value,
 					password: passInputDOM.value
 				}
@@ -115,7 +115,7 @@ import PVMButton from "../PVMButton"
 
 			startButton.addEventListener("click", function() {
 				var inputData = {
-					readableId: readableIDInputDOM.value,
+					readableId: readableIDInputDOM.value.toLocaleLowerCase(),
 					name: nameInputDOM.value,
 					password: passInputDOM.value
 				}
