@@ -11,12 +11,12 @@ export default class PVMRange {
 	start: RangePoint = {
 		node: undefined,
 		offset: undefined,
-		state: 2
+		state: undefined
 	}
 	end: RangePoint = {
 		node: undefined,
 		offset: undefined,
-		state: 2
+		state: undefined
 	}
 
 	constructor(
