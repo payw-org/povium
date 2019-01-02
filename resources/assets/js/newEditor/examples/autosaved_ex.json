@@ -1,0 +1,19 @@
+{
+	"contents": [
+		{
+			"nodeId": 1,
+			"state": null
+		},
+		{
+			"nodeId": 2,
+			"state": "updated",
+			"type": "h1",
+			"data": [
+				{
+					"type": "text",
+					"data": "This paragraph has been updated."
+				}
+			]
+		}
+	]
+}
