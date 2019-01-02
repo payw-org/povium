@@ -8,9 +8,7 @@ class GlobalNavView {
 		window.addEventListener("mousedown", e => this.handleWindowClickEvent(e))
 		window.addEventListener("touchstart", e => this.handleWindowClickEvent(e))
 
-		document
-			.querySelector("#globalnav .magnifier")
-			.addEventListener("click", e => {
+		document.querySelector("#globalnav .magnifier").addEventListener("click", e => {
 				this.handleMagnifierEvent()
 			})
 
@@ -20,19 +18,37 @@ class GlobalNavView {
 			}
 		})
 
-		document
-			.querySelector("#globalnav .mobile-btn")
-			.addEventListener("click", function() {
-				document
-					.querySelector("#globalnav")
-					.classList.toggle("mobile-menu-active")
-			})
+		document.querySelector("#globalnav .mobile-btn").addEventListener("click", e => {
+			if (this.gnDOM.classList.contains("mobile-menu-active")) {
+				this.foldMobileMenu()
+			} else {
+				this.expandMobileMenu()
+			}
+		})
+
+		window.addEventListener("resize", e => {
+			this.foldMobileMenu()
+		})
 	}
 
 	// Methods
+	expandMobileMenu() {
+		let mm = this.gnDOM.querySelector(".mobile-menu")
+		let mmNav = mm.querySelector(".mm-nav")
+		this.gnDOM.classList.add("mobile-menu-active")
+		mm.style.height = mmNav.getBoundingClientRect().height + "px"
+	}
+
+	foldMobileMenu() {
+		let mm = this.gnDOM.querySelector(".mobile-menu")
+		this.gnDOM.classList.remove("mobile-menu-active")
+		mm.style.height = ""
+	}
+
 	expandSearchInput() {
 		this.gnDOM.classList.add("search-active")
 		this.gnInputDOM.focus()
+		this.foldMobileMenu()
 	}
 
 	foldSearchInput() {
