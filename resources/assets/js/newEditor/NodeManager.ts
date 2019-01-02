@@ -2,7 +2,7 @@ import { AT } from "./config/AvailableTypes"
 import EditSession from "./EditSession"
 import PVMNode from "./PVMNode"
 import SelectionManager from "./SelectionManager"
-import TypeChecker from "./TypeChecker";
+import TypeChecker from "./TypeChecker"
 
 export default class NodeManager {
 	constructor() {}
@@ -166,7 +166,8 @@ export default class NodeManager {
 
 	public static getNodeID(element: Element): number {
 		if (!element) {
-			console.error("Could not find element.")
+			console.error("Could not find element.", element)
+			return
 		}
 		let id = Number(element.getAttribute("data-ni"))
 		if (!id) {
