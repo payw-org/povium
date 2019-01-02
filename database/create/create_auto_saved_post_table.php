@@ -18,22 +18,22 @@ class CreateAutoSavedPostTable
 		$sql = "CREATE TABLE IF NOT EXISTS auto_saved_post (
 			id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 			user_id INT(11) UNSIGNED NOT NULL,
-			title VARCHAR(128) NOT NULL,
-			body MEDIUMTEXT NOT NULL,
 			contents JSON NOT NULL,
 			is_premium BOOLEAN NOT NULL,
 			creation_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			last_edited_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			post_id INT(11) UNSIGNED UNIQUE,
-			series_id INT(11) UNSIGNED,
+			title VARCHAR(128),
 			subtitle VARCHAR(256),
+			body MEDIUMTEXT,
 			thumbnail VARCHAR(512),
+			series_id INT(11) UNSIGNED,
+			post_id INT(11) UNSIGNED UNIQUE,
 			CONSTRAINT FK__user__auto_saved_post FOREIGN KEY (user_id)
 			REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,
-			CONSTRAINT FK__post__auto_saved_post FOREIGN KEY (post_id)
-			REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE,
 			CONSTRAINT FK__series__auto_saved_post FOREIGN KEY (series_id)
-			REFERENCES series (id) ON DELETE SET NULL ON UPDATE CASCADE
+			REFERENCES series (id) ON DELETE SET NULL ON UPDATE CASCADE,
+			CONSTRAINT FK__post__auto_saved_post FOREIGN KEY (post_id)
+			REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE
 
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
