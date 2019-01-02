@@ -12,7 +12,6 @@ export default class EventManager {
 	private static linkRange: Range
 	private static charKeyDownLocked: boolean
 	private static multipleSpaceLocked: boolean
-	private static selectedAll: boolean
 	private static isBackspaceKeyPressed: boolean
 	private static tempLinkRange: PVMRange
 
@@ -26,38 +25,16 @@ export default class EventManager {
 		this.linkRange = document.createRange()
 		this.charKeyDownLocked = false
 		this.multipleSpaceLocked = false
-		this.selectedAll = false
 
 		// Event Listeners
 		window.addEventListener("click", e => {
-			// console.log(e.target)
-			// if (e.target.nodeName === "INPUT" && e.target.parentNode.classList.contains("pack")) {
-			// 	return
-			// } else {
-			// 	this.onSelectionChanged()
-			// }
+
 		})
 		;["mousedown", "touchstart"].forEach(eventName => {
 			window.addEventListener(eventName, e => {
 				if (!(<Element>e.target).closest("#poptool")) {
 					PopTool.hidePopTool()
 					this.mouseDownStart = true
-				}
-			})
-		})
-		;["mouseup", "touchend"].forEach(eventName => {
-			EditSession.editorBody.addEventListener(eventName, e => {
-				this.onSelectionChanged()
-			})
-		})
-		;["mouseup", "touchend"].forEach(eventName => {
-			window.addEventListener(eventName, e => {
-				if (
-					this.mouseDownStart &&
-					!(<Element>e.target).closest("#editor-body")
-				) {
-					this.mouseDownStart = false
-					this.onSelectionChanged()
 				}
 			})
 		})
@@ -100,13 +77,10 @@ export default class EventManager {
 		})
 
 		EditSession.editorBody.addEventListener("compositionupdate", e => {
-			// console.log("compositioning")
-			console.log(e)
 			let currentNode = SelectionManager.getCurrentNode()
 
 			setTimeout(() => {
 				let modifiedContents = currentNode.textElement.innerHTML
-				console.log(modifiedContents)
 				let newRange = SelectionManager.getCurrentRange()
 				
 				let latestAction = UndoManager.getLatestAction()
@@ -137,26 +111,16 @@ export default class EventManager {
 		})
 
 		EditSession.editorBody.addEventListener("keydown", e => {
-			EventManager.onKeyDown(e)
-			if (e.which >= 37 && e.which <= 40) {
-				// this.onSelectionChanged()
-			}
-			if (e.which === 65 && e.ctrlKey) {
-				this.selectedAll = true
-			}
+			this.onKeyDown(e)
+
 			if (!(<Element>e.target).closest("#poptool")) {
 				PopTool.hidePopTool()
 			}
 		})
 
 		EditSession.editorBody.addEventListener("keyup", e => {
-			EventManager.onKeyUp(e)
+			this.onKeyUp(e)
 			this.onSelectionChanged()
-
-			if (this.selectedAll) {
-				this.selectedAll = false
-				this.onSelectionChanged()
-			}
 		})
 
 		EditSession.editorBody.addEventListener("paste", e => {
@@ -275,14 +239,8 @@ export default class EventManager {
 	public static attachPopToolEvents() {
 		let self = this
 
-		window.addEventListener("mousedown", e => {
-			let target = <Element>e.target
-			if (
-				!target.classList.contains("operation") &&
-				!target.closest("button .operation")
-			) {
-				PopTool.hidePopTool()
-			}
+		window.addEventListener("click", e => {
+			PopTool.showPopTool()
 		})
 
 		window.addEventListener("resize", e => {
@@ -576,10 +534,25 @@ export default class EventManager {
 	 * @param {KeyboardEvent} e
 	 */
 	public static onKeyDown(e: KeyboardEvent) {
+		// console.log("keydown")
 		let keyCode = e.keyCode
 		let physKeyCode = e.code
 		// Prevent Hangul compositionEnd + spacebar
 		if (physKeyCode === "Space" && e.key === "Process") return
+
+		// Select all (command + a or control + a)
+		if (physKeyCode === "KeyA" && (e.metaKey || e.ctrlKey)) {
+			let pvmRange = SelectionManager.createRange(
+				EditSession.nodeList[0], 0,
+				EditSession.nodeList[EditSession.nodeList.length - 1],
+				EditSession.nodeList[EditSession.nodeList.length - 1].getTextContent().length
+				)
+			SelectionManager.setRange(pvmRange)
+			console.log("selected all")
+			console.log(pvmRange)
+			e.preventDefault()
+			return
+		}
 
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
@@ -742,10 +715,11 @@ export default class EventManager {
 
 				let latestAction = UndoManager.getLatestAction()
 				if (
-					latestAction &&
-					!Array.isArray(latestAction) &&
-					latestAction.type === "textChange" &&
-					latestAction.key === key
+					latestAction
+					&& !Array.isArray(latestAction)
+					&& latestAction.type === "textChange"
+					&& latestAction.key === key
+					&& latestAction.targetNode.isSameAs(currentNode)
 					// && physKeyCode !== "Space"
 				) {
 					latestAction.nextHTML = modifiedContents
@@ -1152,140 +1126,23 @@ export default class EventManager {
 	}
 
 	public static onSelectionChanged() {
-		if (window.getSelection().rangeCount === 0) {
-			return
-		}
-
 		// Fix selection
-		let jsRange = window.getSelection().getRangeAt(0)
+		let jsRange
+		if (window.getSelection().rangeCount > 0) {
+			jsRange = window.getSelection().getRangeAt(0)
+		}
 		let newStartContainer, newEndContainer, newStartOffset, newEndOffset
 		let needsFix = false
 
 		let pvmRange = SelectionManager.getCurrentRange()
+
+		if (!pvmRange || !pvmRange.start.node || !pvmRange.end.node) {
+			return
+		}
+
 		if (pvmRange.start.node.type === "image") {
 			pvmRange.start.node.element.classList.add("image-selected")
 		}
-
-		// console.log(jsRange)
-		// console.log(SelectionManager.getCurrentRange())
-
-		// console.log(pvmRange)
-		// console.log(pvmRange.isCollapsed())
-
-		// set new start
-		if (
-			jsRange.startContainer.nodeType !== 3 &&
-			jsRange.startContainer.childNodes.length > 0
-		) {
-			needsFix = true
-
-			newStartContainer = jsRange.startContainer.childNodes[jsRange.startOffset]
-			newStartOffset = 0
-
-			while (1) {
-				if (!newStartContainer) {
-					break
-				}
-				if (newStartContainer.firstChild) {
-					if (newStartContainer.firstChild.nodeType === 3) {
-						newStartContainer = newStartContainer.firstChild
-						break
-					} else {
-						newStartContainer = newStartContainer.firstChild
-						newStartOffset = newStartContainer.childNodes.length
-					}
-				} else {
-					break
-				}
-			}
-
-			if (newStartContainer.nodeName === "BR") {
-				jsRange.setStartBefore(newStartContainer)
-			} else {
-				jsRange.setStart(newStartContainer, newStartOffset)
-			}
-
-			// If <br> tag is set
-			// setstartbefore occurs an error
-			// so reset it.
-			// if (jsRange.startContainer.nodeType === 3) {
-			// 	jsRange.setStart(jsRange.startContainer, 0)
-			// }
-		}
-
-		// set new end
-		if (
-			jsRange.endContainer.nodeType !== 3 &&
-			jsRange.endContainer.childNodes.length > 0
-		) {
-			needsFix = true
-
-			let ofs = jsRange.endOffset - 1
-			// console.log(jsRange.endOffset)
-			if (ofs < 0) {
-				ofs = 0
-				newEndContainer = jsRange.endContainer.childNodes[ofs]
-				newEndOffset = 0
-			} else {
-				newEndContainer = jsRange.endContainer.childNodes[ofs]
-				newEndOffset = newEndContainer.childNodes.length
-			}
-
-			// console.log(newEndOffset)
-
-			while (1) {
-				if (!newEndContainer) {
-					break
-				}
-				if (newEndContainer.lastChild) {
-					if (newEndContainer.lastChild.nodeType === 3) {
-						newEndContainer = newEndContainer.lastChild
-						newEndOffset = newEndContainer.textContent.length
-						if (jsRange.endOffset === 0) {
-							newEndOffset = 0
-						}
-						break
-					} else {
-						newEndContainer = newEndContainer.lastChild
-						newEndOffset = newEndContainer.childNodes.length
-						if (jsRange.endOffset === 0) {
-							newEndOffset = 0
-						}
-					}
-				} else {
-					break
-				}
-			}
-
-			// if (newEndContainer.nodeName === "BR") {
-			// 	jsRange.setEndBefore(newEndContainer)
-			// } else {
-			// 	jsRange.setEnd(newEndContainer, newEndOffset)
-			// }
-
-			// If <br> tag is set
-			// setstartbefore occurs an error
-			// so reset it.
-			// if (jsRange.endContainer.nodeType === 3) {
-			// 	jsRange.setEnd(jsRange.endContainer, jsRange.endContainer.textContent.length)
-			// }
-		}
-
-		if (needsFix) {
-			window.getSelection().removeAllRanges()
-			window.getSelection().addRange(jsRange)
-		}
-
-		// if (!pvmRange.isCollapsed()) {
-		// 	if (pvmRange.start.state === 3 || pvmRange.start.state === 4) {
-		// 		pvmRange.setStart(pvmRange.start.node.nextSibling, 0)
-		// 	}
-		// 	if (pvmRange.end.state === 1 || pvmRange.end.state === 4) {
-		// 		pvmRange.setEnd(pvmRange.end.node.previousSibling, pvmRange.end.node.previousSibling.getTextContent().length)
-		// 	}
-		// 	console.log("here")
-		// 	SelectionManager.setRange(pvmRange)
-		// }
 
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
