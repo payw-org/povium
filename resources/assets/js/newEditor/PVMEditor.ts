@@ -4,7 +4,7 @@ import { Example } from "./examples/example1"
 import * as PostData from "./interfaces/PostData"
 import NodeManager from "./NodeManager"
 import PopTool from "./PopTool"
-import Converter from "./Converter";
+import Converter from "./Converter"
 
 export default class PVMEditor {
 	/**
