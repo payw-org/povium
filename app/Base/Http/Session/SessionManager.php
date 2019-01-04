@@ -173,8 +173,8 @@ class SessionManager
 	{
 		//	Destroyed session
 		if (isset($_SESSION['destroyed'])) {
-			// Should not happen usually
-			// This could be attack or due to unstable network
+			//	Should not happen usually
+			//	This could be attack or due to unstable network
 			if ($_SESSION['destroyed'] + $this->config['delay_time'] < time()) {
 				return true;
 			}
