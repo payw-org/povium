@@ -89,6 +89,51 @@
 	src: url("/assets/fonts/JHM-Pro/JHMPro-Bold.woff2") format("woff2"), url("/assets/fonts/JHM-Pro/JHMPro-Bold.woff") format("woff"), url("/assets/fonts/JHM-Pro/JHMPro-Bold.eot") format("eot"), url("/assets/fonts/JHM-Pro/JHMPro-Bold.ttf") format("truetype");
 }
 
+/* sans-serif-display */
+@font-face {
+	font-family: 'sans-serif-display';
+	src: url('/assets/fonts/sans-serif-display/sans-serif-display-Bold.eot');
+	src: url('/assets/fonts/sans-serif-display/sans-serif-display-Bold.eot?#iefix') format('embedded-opentype'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Bold.woff2') format('woff2'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Bold.woff') format('woff'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Bold.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'sans-serif-display';
+	src: url('/assets/fonts/sans-serif-display/sans-serif-display-Light.eot');
+	src: url('/assets/fonts/sans-serif-display/sans-serif-display-Light.eot?#iefix') format('embedded-opentype'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Light.woff2') format('woff2'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Light.woff') format('woff'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Light.ttf') format('truetype');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'sans-serif-display';
+	src: url('/assets/fonts/sans-serif-display/sans-serif-display-Regular.eot');
+	src: url('/assets/fonts/sans-serif-display/sans-serif-display-Regular.eot?#iefix') format('embedded-opentype'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Regular.woff2') format('woff2'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Regular.woff') format('woff'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Regular.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'sans-serif-display';
+	src: url('/assets/fonts/sans-serif-display/sans-serif-display-Medium.eot');
+	src: url('/assets/fonts/sans-serif-display/sans-serif-display-Medium.eot?#iefix') format('embedded-opentype'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Medium.woff2') format('woff2'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Medium.woff') format('woff'),
+			url('/assets/fonts/sans-serif-display/sans-serif-display-Medium.ttf') format('truetype');
+	font-weight: 500;
+	font-style: normal;
+}
+
 /* sans-serif-text */
 @font-face {
 	font-family: 'sans-serif-text';
