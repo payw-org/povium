@@ -51,12 +51,10 @@ export default class EventManager {
 		window.addEventListener("keydown", e => {
 			let currentRange = EditSession.currentState.range
 			if (e.keyCode === 8 || e.keyCode === 46) {
-				if (EditSession.editorBody.querySelector(".image-selected")) {
+				if (EditSession.editorBody.querySelector(".node-selected")) {
 					console.log("image should be deleted")
 					let imageNode = NodeManager.getNodeByID(
-						NodeManager.getNodeID(
-							EditSession.editorBody.querySelector(".image-selected")
-						)
+						NodeManager.getNodeID(EditSession.editorBody.querySelector(".node-selected"))
 					)
 					let nextNode = imageNode.nextSibling
 					NodeManager.removeChild(imageNode)
@@ -127,24 +125,21 @@ export default class EventManager {
 			// this.onPaste(e)
 		})
 
-		// Image click event
+		// Packed with all window click events.
 		window.addEventListener("click", e => {
 			let target = <HTMLElement>e.target
 
 			if (target.classList.contains("image-wrapper")) {
 				e.preventDefault()
 
-				var selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
-				)
-				if (selectedFigure) {
-					selectedFigure.classList.remove("image-selected")
+				var alreadySelectedFigure = EditSession.editorBody.querySelector("figure.node-selected")
+				if (alreadySelectedFigure) {
+					alreadySelectedFigure.classList.remove("node-selected")
 				}
 
 				var figure = target.parentElement
-				figure.classList.remove("caption-selected")
-				figure.classList.add("image-selected")
-				figure.classList.add("node-focused")
+				figure.classList.remove("caption-focused")
+				figure.classList.add("node-selected")
 				PopTool.showImageTool(target)
 
 				if (figure.querySelector("FIGCAPTION").textContent.length === 0) {
@@ -154,28 +149,28 @@ export default class EventManager {
 				window.getSelection().removeAllRanges()
 			} else if (target.id === "full" && target.nodeName === "BUTTON") {
 				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
+					"figure.node-selected"
 				)
-				selectedFigure.className = "image image-selected"
+				selectedFigure.className = "image node-selected"
 				selectedFigure.classList.add("full")
 				PopTool.hideImageTool()
 				setTimeout(() => {
 					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 			} else if (target.id === "fit" && target.nodeName === "BUTTON") {
-				var selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
+				var alreadySelectedFigure = EditSession.editorBody.querySelector(
+					"figure.node-selected"
 				)
-				selectedFigure.className = "image image-selected"
+				alreadySelectedFigure.className = "image node-selected"
 				PopTool.hideImageTool()
 				setTimeout(() => {
-					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
+					PopTool.showImageTool(alreadySelectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 			} else if (target.id === "large" && target.nodeName === "BUTTON") {
 				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
+					"figure.node-selected"
 				)
-				selectedFigure.className = "image image-selected"
+				selectedFigure.className = "image node-selected"
 				selectedFigure.classList.add("large")
 				PopTool.hideImageTool()
 				setTimeout(() => {
@@ -183,17 +178,17 @@ export default class EventManager {
 				}, 500)
 			} else if (target.id === "float-left" && target.nodeName === "BUTTON") {
 				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
+					"figure.node-selected"
 				)
-				selectedFigure.className = "image image-selected"
+				selectedFigure.className = "image node-selected"
 				selectedFigure.classList.add("float-left")
 				PopTool.hideImageTool()
 				setTimeout(() => {
 					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 			} else if (target.nodeName === "FIGCAPTION") {
-				target.parentElement.classList.add("caption-selected")
-				target.parentElement.classList.remove("image-selected")
+				target.parentElement.classList.add("caption-focused")
+				target.parentElement.classList.remove("node-selected")
 				PopTool.hideImageTool()
 				if (!target.parentElement.classList.contains("caption-enabled")) {
 					target.innerHTML = "<br>"
@@ -204,13 +199,12 @@ export default class EventManager {
 			) {
 				// console.log("clicked poptool input")
 			} else {
-				var selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected, figure.caption-selected"
+				var alreadySelectedFigure = EditSession.editorBody.querySelector(
+					"figure.node-selected, figure.caption-focused"
 				)
-				if (selectedFigure) {
-					selectedFigure.classList.remove("image-selected")
-					selectedFigure.classList.remove("node-focused")
-					selectedFigure.classList.remove("caption-selected")
+				if (alreadySelectedFigure) {
+					alreadySelectedFigure.classList.remove("node-selected")
+					alreadySelectedFigure.classList.remove("caption-focused")
 				}
 
 				PopTool.hideImageTool()
@@ -244,7 +238,7 @@ export default class EventManager {
 		})
 
 		window.addEventListener("resize", e => {
-			PopTool.showImageTool(document.querySelector(".image.image-selected img"))
+			PopTool.showImageTool(document.querySelector(".image.node-selected img"))
 			PopTool.showPopTool()
 		})
 
@@ -1141,7 +1135,7 @@ export default class EventManager {
 		}
 
 		if (pvmRange.start.node.type === "image") {
-			pvmRange.start.node.element.classList.add("image-selected")
+			pvmRange.start.node.element.classList.add("node-selected")
 		}
 
 		let currentRange = SelectionManager.getCurrentRange()
