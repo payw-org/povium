@@ -51,14 +51,14 @@
 
 		<div class="subjects-bar-wrapper">
 			<ul class="subjects-bar">
-				<li class="subject">테크</li>
-				<li class="subject">문화</li>
-				<li class="subject">정치</li>
-				<li class="subject">디자인</li>
-				<li class="subject">소설</li>
-				<li class="subject">건강</li>
-				<li class="subject">시</li>
-				<li class="subject more">더보기</li>
+				<li class="subject">Technology</li>
+				<li class="subject">Culture</li>
+				<li class="subject">Politics</li>
+				<li class="subject">Design</li>
+				<li class="subject">Social</li>
+				<li class="subject">Health</li>
+				<li class="subject">Poem</li>
+				<li class="subject more">More</li>
 			</ul>
 		</div>
 
@@ -99,7 +99,7 @@
 									<div class="profile-image-wrapper">
 										<img src="/assets/images/faces/tim.jpg" alt="">
 									</div>
-									<span class="name">팀 쿡</span>
+									<span class="name">Tim Cook</span>
 								</div>
 							</div>
 						</div>
