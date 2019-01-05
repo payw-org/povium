@@ -240,7 +240,7 @@
 	pointer-events: none;
 	z-index: 8888;
 	opacity: 0;
-	transition: opacity 0.2s ease;
+	transition: opacity 0.1s ease;
 
 	background-color: #232324;
 	// border-radius: 0 0 .5rem .5rem;
@@ -262,6 +262,16 @@
 		margin: 0.2rem 0.1rem;
 		transition: background-color 0.1s ease, transform 0.1s ease, transform 0.2s ease;
 		border-radius: 0.5rem;
+
+		&.is-applied {
+			background-color: #5833ff;
+			&:hover {
+				background-color: #5833ff;
+			}
+			&:active {
+				background-color: #7c5eff;
+			}
+		}
 
 		&#full {
 			background-image: url("/assets/images/editor/image-full.svg");
@@ -516,7 +526,7 @@
 				height: auto;
 			}
 		}
-		&.image-selected {
+		&.node-selected {
 			.image-wrapper img {
 				box-shadow: 0 0 0 5px @pvm-violet;
 				// box-shadow: 0 1rem 4rem rgba(0,0,0,.5);
@@ -525,7 +535,7 @@
 				display: block;
 			}
 		}
-		&.caption-selected {
+		&.caption-focused {
 			figcaption {
 				display: block;
 			}
