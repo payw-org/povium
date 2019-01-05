@@ -3,6 +3,7 @@ import SelectionManager from "./SelectionManager"
 
 interface RangePoint {
 	node: PVMNode
+	itself: boolean
 	offset: number
 	state: number
 }
@@ -10,11 +11,13 @@ interface RangePoint {
 export default class PVMRange {
 	start: RangePoint = {
 		node: undefined,
+		itself: false,
 		offset: undefined,
 		state: undefined
 	}
 	end: RangePoint = {
 		node: undefined,
+		itself: false,
 		offset: undefined,
 		state: undefined
 	}
