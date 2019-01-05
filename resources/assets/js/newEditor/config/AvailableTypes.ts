@@ -1,5 +1,6 @@
 export const AT = {
 	topTags: ["p", "h1", "h2", "h3", "blockquote", "li", "figure"],
+	textContainedTags: ["p", "h1", "h2", "h3", "blockquote", "li", "figcaption"],
 	topTypes: ["p", "h1", "h2", "h3", "blockquote", "li", "image", "video"],
 	transformable: ["p", "h1", "h2", "h3", "blockquote", "li"],
 	mergeable: ["p", "h1", "h2", "h3", "li", "blockquote"],
