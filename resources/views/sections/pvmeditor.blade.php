@@ -12,6 +12,10 @@
 			<div class="banner">에러가 발생했습니다.</div>
 		</div>
 
+		<div class="debug" style="position:fixed;z-index:9999;top:0;right:0;">
+			<button class="gcs">Get Current Sel</button>
+		</div>
+
 		<div id="editor-toolbar">
 
 			<div class="et-items">
