@@ -333,6 +333,9 @@ export default class PopTool {
 		UndoManager.record(actions)
 	}
 
+	/**
+	 * @param imageBlock ".image-wrapper"
+	 */
 	public static showImageTool(imageBlock: HTMLElement) {
 		if (!imageBlock) {
 			this.hideImageTool()
