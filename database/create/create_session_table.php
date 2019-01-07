@@ -16,7 +16,7 @@ class CreateSessionTable
 	public function getCreateSQL()
 	{
 		$sql = "CREATE TABLE IF NOT EXISTS session (
-			id VARCHAR(255) PRIMARY KEY,
+			id CHAR(64) PRIMARY KEY,
 			data TEXT,
 			creation_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			touched_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
