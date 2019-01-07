@@ -1,4 +1,4 @@
-import { AT } from "./config/AvailableTypes";
+import { AT } from "./AvailableTypes"
 
 export default class TypeChecker {
 	constructor() {}
