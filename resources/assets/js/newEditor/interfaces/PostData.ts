@@ -1,5 +1,5 @@
 import PVMNode from "../PVMNode"
-import { AT } from "../config/AvailableTypes"
+import { AT } from "../AvailableTypes"
 
 export interface Block {
 	type: string
