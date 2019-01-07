@@ -2,6 +2,7 @@ import PVMNode from "./PVMNode"
 import SelectionManager from "./SelectionManager"
 import PopTool from "./PopTool";
 import EditSession from "./EditSession";
+import EventManager from "./EventManager";
 
 export default class PVMImageNode extends PVMNode {
 	captionEnabled: boolean = false
@@ -16,28 +17,53 @@ export default class PVMImageNode extends PVMNode {
 	}
 
 	attachEventListeners() {
-		let imageWrapper = this.element.querySelector(".image-wrapper")
-		imageWrapper.addEventListener("click", e => {
-			this.selectImage()
+		this.textElement.addEventListener("keydown", e => {
+			setTimeout(() => {
+				this.setCaption()
+			}, 0)
 		})
 	}
 
-	selectImage() {
-		console.log("select image")
+	select() {
+		// When selecting an image independently,
+		// all other ranges in the window must be removed
+		// to be recognized the PVMRange correctly
+		// from SelectionManager
+		window.getSelection().removeAllRanges()
+
+		// Add classes to dom
 		this.element.classList.remove("caption-focused")
 		this.element.classList.add("node-selected")
+
+		// Set imageTool
 		PopTool.showImageTool(this.element.querySelector(".image-wrapper"))
+
+		// If the caption is empty, set default value
 		if (!this.captionEnabled) {
-			this.setInnerHTML("")
+			this.setInnerHTML("이미지 설명")
 		}
 	}
 
 	focusCaption() {
 		this.element.classList.remove("node-selected")
 		this.element.classList.add("caption-focused")
+		PopTool.hideImageTool()
 
 		if (!this.captionEnabled) {
-			// this.setInnerHTML("")
+			this.setInnerHTML("")
+		}
+	}
+
+	setCaption() {
+		console.log("setting caption")
+		let tc = this.textElement.textContent
+		if (tc.length > 0) {
+			this.captionEnabled = true
+			this.element.classList.add("caption-enabled")
+		} else {
+			this.captionEnabled = false
+			this.element.classList.remove("caption-enabled")
+			this.focusCaption()
 		}
 	}
 
