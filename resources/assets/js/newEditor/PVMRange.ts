@@ -89,7 +89,7 @@ export default class PVMRange {
 		} else if (endOffset === 0) {
 			this.end.state = 1
 		} else {
-			this.start.state = 2
+			this.end.state = 2
 		}
 	}
 
