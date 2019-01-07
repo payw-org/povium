@@ -1,4 +1,5 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
+import SelectionManager from "./SelectionManager"
 
 export default class PVMNode {
 	id: number
@@ -17,6 +18,18 @@ export default class PVMNode {
 			html = "<br>"
 		}
 		this.textElement.innerHTML = html
+	}
+
+	setElement(elm: HTMLElement) {
+		this.element = elm
+		this.attachEventListeners()
+	}
+
+	select() {
+		
+	}
+
+	attachEventListeners() {
 	}
 
 	fixEmptiness() {
