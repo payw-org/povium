@@ -1,8 +1,8 @@
 import * as PostData from "./interfaces/PostData"
 import NodeManager from "./NodeManager"
-import PVMNode from "./PVMNode";
-import { AT } from "./config/AvailableTypes";
-import TypeChecker from "./TypeChecker";
+import PVMNode from "./PVMNode"
+import { AT } from "./AvailableTypes"
+import TypeChecker from "./TypeChecker"
 
 export default class Converter {
 	static parse(frame: PostData.Frame): PVMNode[] {
