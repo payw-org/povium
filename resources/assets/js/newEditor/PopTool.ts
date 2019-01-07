@@ -1,4 +1,4 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
 import EditSession from "./EditSession"
 import NodeManager from "./NodeManager"
 import PVMRange from "./PVMRange"
