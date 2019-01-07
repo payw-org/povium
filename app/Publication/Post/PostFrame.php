@@ -21,9 +21,9 @@ abstract class PostFrame
 	protected $userID;
 
 	/**
-	 * @var string
+	 * @var string	Json string
 	 */
-	protected $title;
+	protected $contents;
 
 	/**
 	 * @var string
@@ -31,19 +31,14 @@ abstract class PostFrame
 	protected $body;
 
 	/**
-	 * @var string	Json string
-	 */
-	protected $contents;
-
-	/**
 	 * @var bool
 	 */
 	protected $isPremium;
 
 	/**
-	 * @var int|null
+	 * @var string|null
 	 */
-	protected $seriesID;
+	protected $title;
 
 	/**
 	 * @var string|null
@@ -56,36 +51,41 @@ abstract class PostFrame
 	protected $thumbnail;
 
 	/**
+	 * @var int|null
+	 */
+	protected $seriesID;
+
+	/**
 	 * @param int 			$id
 	 * @param int 			$user_id
-	 * @param string 		$title
-	 * @param string 		$body
 	 * @param string 		$contents
+	 * @param string 		$body
 	 * @param bool 			$is_premium
-	 * @param int|null 		$series_id
+	 * @param string|null 	$title
 	 * @param string|null 	$subtitle
 	 * @param string|null 	$thumbnail
+	 * @param int|null 		$series_id
 	 */
 	public function __construct(
 		int $id,
 		int $user_id,
-		string $title,
-		string $body,
 		string $contents,
+		string $body,
 		bool $is_premium,
-		?int $series_id,
+		?string $title,
 		?string $subtitle,
-		?string $thumbnail
+		?string $thumbnail,
+		?int $series_id
 	) {
 		$this->id = $id;
 		$this->userID = $user_id;
-		$this->title = $title;
-		$this->body = $body;
 		$this->contents = $contents;
+		$this->body = $body;
 		$this->isPremium = $is_premium;
-		$this->seriesID = $series_id;
+		$this->title = $title;
 		$this->subtitle = $subtitle;
 		$this->thumbnail = $thumbnail;
+		$this->seriesID = $series_id;
 	}
 
 	/**
@@ -107,9 +107,9 @@ abstract class PostFrame
 	/**
 	 * @return string
 	 */
-	public function getTitle()
+	public function getContents()
 	{
-		return $this->title;
+		return $this->contents;
 	}
 
 	/**
@@ -121,14 +121,6 @@ abstract class PostFrame
 	}
 
 	/**
-	 * @return string	Json string
-	 */
-	public function getContents()
-	{
-		return $this->contents;
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function isPremium()
@@ -137,11 +129,11 @@ abstract class PostFrame
 	}
 
 	/**
-	 * @return int|null
+	 * @return string|null
 	 */
-	public function getSeriesID()
+	public function getTitle()
 	{
-		return $this->seriesID;
+		return $this->title;
 	}
 
 	/**
@@ -158,5 +150,13 @@ abstract class PostFrame
 	public function getThumbnail()
 	{
 		return $this->thumbnail;
+	}
+
+	/**
+	 * @return int|null
+	 */
+	public function getSeriesID()
+	{
+		return $this->seriesID;
 	}
 }

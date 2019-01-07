@@ -21,56 +21,57 @@ class AutoSavedPost extends PostFrame
 	protected $lastEditedDt;
 
 	/**
-	 * @var int|null
+	 * @var int|null	ID of original post which is already posted
 	 */
 	protected $postID;
 
 	/**
-	 * @param int	     	$id
-	 * @param int     		$user_id
-	 * @param string  		$title
-	 * @param string		$body
-	 * @param string  		$contents
-	 * @param bool    		$is_premium
-	 * @param string  		$creation_dt
-	 * @param string  		$last_edited_dt
-	 * @param int|null		$post_id
-	 * @param int|null    	$series_id
+	 * @param int 			$id
+	 * @param int 			$user_id
+	 * @param string 		$contents
+	 * @param string 		$body
+	 * @param bool 			$is_premium
+	 * @param string 		$creation_dt
+	 * @param string 		$last_edited_dt
+	 * @param string|null 	$title
 	 * @param string|null 	$subtitle
 	 * @param string|null 	$thumbnail
+	 * @param int|null 		$series_id
+	 * @param int|null 		$post_id
 	 */
 	public function __construct(
 		int $id,
 		int $user_id,
-		string $title,
-		string $body,
 		string $contents,
+		string $body,
 		bool $is_premium,
 		string $creation_dt,
 		string $last_edited_dt,
-		?int $post_id,
-		?int $series_id,
+		?string $title,
 		?string $subtitle,
-		?string $thumbnail
+		?string $thumbnail,
+		?int $series_id,
+		?int $post_id
 	) {
 		parent::__construct(
 			$id,
 			$user_id,
-			$title,
-			$body,
 			$contents,
+			$body,
 			$is_premium,
-			$series_id,
+			$title,
 			$subtitle,
-			$thumbnail
+			$thumbnail,
+			$series_id
 		);
+
 		$this->creationDt = $creation_dt;
 		$this->lastEditedDt = $last_edited_dt;
 		$this->postID = $post_id;
 	}
 
 	/**
-	 * @return string	Datetime
+	 * @return string
 	 */
 	public function getCreationDt()
 	{
@@ -78,7 +79,7 @@ class AutoSavedPost extends PostFrame
 	}
 
 	/**
-	 * @return string	Datetime
+	 * @return string
 	 */
 	public function getLastEditedDt()
 	{

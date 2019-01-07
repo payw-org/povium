@@ -26,44 +26,45 @@ class Post extends PostFrame
 	protected $lastEditedDt;
 
 	/**
-	 * @param int	     	$id
-	 * @param int     		$user_id
-	 * @param string  		$title
-	 * @param string		$body
-	 * @param string  		$contents
-	 * @param bool    		$is_premium
-	 * @param int     		$view_cnt
-	 * @param string  		$publication_dt
-	 * @param string  		$last_edited_dt
-	 * @param int|null    	$series_id
+	 * @param int 			$id
+	 * @param int 			$user_id
+	 * @param string 		$contents
+	 * @param string 		$body
+	 * @param string 		$title
+	 * @param bool 			$is_premium
+	 * @param int 			$view_cnt
+	 * @param string 		$publication_dt
+	 * @param string 		$last_edited_dt
 	 * @param string|null 	$subtitle
 	 * @param string|null 	$thumbnail
+	 * @param int|null 		$series_id
 	 */
 	public function __construct(
 		int $id,
 		int $user_id,
-		string $title,
-		string $body,
 		string $contents,
+		string $body,
+		string $title,
 		bool $is_premium,
 		int $view_cnt,
 		string $publication_dt,
 		string $last_edited_dt,
-		?int $series_id,
 		?string $subtitle,
-		?string $thumbnail
+		?string $thumbnail,
+		?int $series_id
 	) {
 		parent::__construct(
 			$id,
 			$user_id,
-			$title,
-			$body,
 			$contents,
+			$body,
+			$title,
 			$is_premium,
-			$series_id,
 			$subtitle,
-			$thumbnail
+			$thumbnail,
+			$series_id
 		);
+
 		$this->viewCnt = $view_cnt;
 		$this->publicationDt = $publication_dt;
 		$this->lastEditedDt = $last_edited_dt;
@@ -78,7 +79,7 @@ class Post extends PostFrame
 	}
 
 	/**
-	 * @return string	Datetime
+	 * @return string
 	 */
 	public function getPublicationDt()
 	{
@@ -86,7 +87,7 @@ class Post extends PostFrame
 	}
 
 	/**
-	 * @return string	Datetime
+	 * @return string
 	 */
 	public function getLastEditedDt()
 	{

@@ -33,13 +33,13 @@ class PostManager extends AbstractRecordManager
 	 * {@inheritdoc}
 	 *
 	 * @param int	  		$user_id
-	 * @param string  		$title
-	 * @param string		$body
 	 * @param string  		$contents
+	 * @param string		$body
+	 * @param string  		$title
 	 * @param bool			$is_premium
-	 * @param int|null  	$series_id
 	 * @param string|null  	$subtitle
 	 * @param string|null	$thumbnail
+	 * @param int|null  	$series_id
 	 */
 	public function addRecord()
 	{
@@ -50,28 +50,28 @@ class PostManager extends AbstractRecordManager
 		$args = func_get_args();
 
 		$user_id = $args[0];
-		$title = $args[1];
+		$contents = $args[1];
 		$body = $args[2];
-		$contents = $args[3];
+		$title = $args[3];
 		$is_premium = $args[4];
-		$series_id = $args[5];
-		$subtitle = $args[6];
-		$thumbnail = $args[7];
+		$subtitle = $args[5];
+		$thumbnail = $args[6];
+		$series_id = $args[7];
 
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['table']}
-			(user_id, title, body, contents, is_premium, series_id, subtitle, thumbnail)
-			VALUES (:user_id, :title, :body, :contents, :is_premium, :series_id, :subtitle, :thumbnail)"
+			(user_id, contents, body, title, is_premium, subtitle, thumbnail, series_id)
+			VALUES (:user_id, :contents, :body, :title, :is_premium, :subtitle, :thumbnail, :series_id)"
 		);
 		$query_params = [
 			':user_id' => $user_id,
-			':title' => $title,
-			':body' => $body,
 			':contents' => $contents,
+			':body' => $body,
+			':title' => $title,
 			':is_premium' => $is_premium,
-			':series_id' => $series_id,
 			':subtitle' => $subtitle,
-			':thumbnail' => $thumbnail
+			':thumbnail' => $thumbnail,
+			':series_id' => $series_id
 		];
 		if (!$stmt->execute($query_params)) {
 			return false;

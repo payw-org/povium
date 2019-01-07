@@ -32,7 +32,7 @@ class AutoSavedPostManager extends AbstractRecordManager
 	/**
 	 * Returns an auto saved post instance from original post id.
 	 *
-	 * @param  int	$post_id	Original post id
+	 * @param  int	$post_id	ID of original post which is already posted
 	 *
 	 * @return AutoSavedPost|false
 	 */
@@ -59,14 +59,14 @@ class AutoSavedPostManager extends AbstractRecordManager
 	 * {@inheritdoc}
 	 *
 	 * @param int	 		$user_id
-	 * @param string  		$title
-	 * @param string  		$body
 	 * @param string  		$contents
+	 * @param string  		$body
 	 * @param bool 			$is_premium
-	 * @param int|null  	$post_id
-	 * @param int|null  	$series_id
+	 * @param string|null	$title
 	 * @param string|null  	$subtitle
 	 * @param string|null  	$thumbnail
+	 * @param int|null  	$series_id
+	 * @param int|null  	$post_id
 	 */
 	public function addRecord()
 	{
@@ -77,30 +77,30 @@ class AutoSavedPostManager extends AbstractRecordManager
 		$args = func_get_args();
 
 		$user_id = $args[0];
-		$title = $args[1];
+		$contents = $args[1];
 		$body = $args[2];
-		$contents = $args[3];
-		$is_premium = $args[4];
-		$post_id = $args[5];
-		$series_id = $args[6];
-		$subtitle = $args[7];
-		$thumbnail = $args[8];
+		$is_premium = $args[3];
+		$title = $args[4];
+		$subtitle = $args[5];
+		$thumbnail = $args[6];
+		$series_id = $args[7];
+		$post_id = $args[8];
 
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['table']}
-			(user_id, title, body, contents, is_premium, post_id, series_id, subtitle, thumbnail)
-			VALUES (:user_id, :title, :body, :contents, :is_premium, :post_id, :series_id, :subtitle, :thumbnail)"
+			(user_id, contents, body, is_premium, title, subtitle, thumbnail, series_id, post_id)
+			VALUES (:user_id, :contents, :body, :is_premium, :title, :subtitle, :thumbnail, :series_id, :post_id)"
 		);
 		$query_params = [
 			':user_id' => $user_id,
-			':title' => $title,
-			':body' => $body,
 			':contents' => $contents,
+			':body' => $body,
 			':is_premium' => $is_premium,
-			':post_id' => $post_id,
-			':series_id' => $series_id,
+			':title' => $title,
 			':subtitle' => $subtitle,
-			':thumbnail' => $thumbnail
+			':thumbnail' => $thumbnail,
+			':series_id' => $series_id,
+			':post_id' => $post_id
 		];
 		if (!$stmt->execute($query_params)) {
 			return false;
