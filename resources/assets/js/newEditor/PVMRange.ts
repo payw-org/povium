@@ -3,21 +3,19 @@ import SelectionManager from "./SelectionManager"
 
 interface RangePoint {
 	node: PVMNode
-	itself: boolean
 	offset: number
 	state: number
 }
 
 export default class PVMRange {
+	itself: boolean = false
 	start: RangePoint = {
 		node: undefined,
-		itself: false,
 		offset: undefined,
 		state: undefined
 	}
 	end: RangePoint = {
 		node: undefined,
-		itself: false,
 		offset: undefined,
 		state: undefined
 	}
@@ -26,10 +24,11 @@ export default class PVMRange {
 		startNode: PVMNode,
 		startOffset: number,
 		endNode: PVMNode,
-		endOffset: number
+		endOffset: number,
+		itself: boolean
 	) {
 		// Properties
-
+		this.itself = itself
 		this.setStart(startNode, startOffset)
 		this.setEnd(endNode, endOffset)
 	}
@@ -56,11 +55,18 @@ export default class PVMRange {
 	// Setters
 
 	setStart(startNode: PVMNode, startOffset: number) {
-		this.start.node = startNode
-		this.start.offset = startOffset
 		if (!startNode) {
 			return
 		}
+
+		this.start.node = startNode
+
+		if (this.itself) {
+			return
+		}
+
+		this.start.offset = startOffset
+
 		if (startNode.getTextContent().length === startOffset) {
 			if (startNode.getTextContent().length === 0) {
 				this.start.state = 4
@@ -75,11 +81,18 @@ export default class PVMRange {
 	}
 
 	setEnd(endNode: PVMNode, endOffset: number) {
-		this.end.node = endNode
-		this.end.offset = endOffset
 		if (!endNode) {
 			return
 		}
+
+		this.end.node = endNode
+
+		if (this.itself) {
+			return
+		}
+
+		this.end.offset = endOffset
+
 		if (endNode.getTextContent().length === endOffset) {
 			if (endNode.getTextContent().length === 0) {
 				this.end.state = 4
