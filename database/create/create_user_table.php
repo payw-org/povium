@@ -26,7 +26,7 @@ class CreateUserTable
 			last_login_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			profile_image VARCHAR(512) NOT NULL DEFAULT '/assets/images/profile/user-profile-default.svg',
 			email VARCHAR(254) UNIQUE,
-			bio VARCHAR(200)
+			bio VARCHAR(250)
 
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 

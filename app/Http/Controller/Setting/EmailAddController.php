@@ -81,13 +81,13 @@ class EmailAddController
 		//	Add new record
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['email_requesting_activation_table']}
-			(user_id, token, email, expn_dt)
-			VALUES (:user_id, :token, :email, :expn_dt)"
+			(user_id, email, token, expn_dt)
+			VALUES (:user_id, :email, :token, :expn_dt)"
 		);
 		$query_params = array(
 			':user_id' => $user->getID(),
-			':token' => $token,
 			':email' => $email,
+			':token' => $token,
 			':expn_dt' => date('Y-m-d H:i:s', time() + $this->config['email_activation_expire'])
 		);
 		if (!$stmt->execute($query_params)) {
