@@ -2,7 +2,6 @@ import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession";
 
 export const dbg = function() {
-	console.log("hello world")
 	let d = document.querySelector(".debug")
 	d.querySelector(".gcs").addEventListener("click", e => {
 		console.log(SelectionManager.getCurrentRange())
