@@ -1,10 +1,11 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
 import EventManager from "./EventManager"
 import NodeManager from "./NodeManager"
 import PVMNode from "./PVMNode"
 import PVMRange from "./PVMRange"
 import UndoManager from "./UndoManager"
-import EditSession from "./EditSession";
+import EditSession from "./EditSession"
+import PopTool from "./PopTool"
 
 export default class SelectionManager {
 	constructor() {}
@@ -12,7 +13,12 @@ export default class SelectionManager {
 	// Setters
 
 	public static setRange(pvmRange: PVMRange) {
-		if (!pvmRange) return
+		if (!pvmRange || !pvmRange.start.node || !pvmRange.end.node) return
+
+		if (pvmRange.itself) {
+			pvmRange.start.node.select()
+			return
+		}
 
 		let range = document.createRange() // JS Range
 		let rangeStartContainer, rangeStartOffset, rangeEndContainer, rangeEndOffset
@@ -135,20 +141,32 @@ export default class SelectionManager {
 	}
 
 	public static getCurrentRange() {
-		if (document.getSelection().rangeCount === 0) {
-			return null
+		// If there is no text selection
+		// return range with selected image or other media elements.
+		let selectedElm = EditSession.editorBody.querySelector(".node-selected")
+		if (selectedElm && window.getSelection().rangeCount === 0) {
+			let selectedNode = NodeManager.getNodeByID(NodeManager.getNodeID(selectedElm))
+			let r = this.createRange(selectedNode, 0, selectedNode, 0, true)
+			return r
 		}
-
+		
+		let sel = window.getSelection()
+		if (
+			sel.rangeCount === 0
+			|| (sel.rangeCount > 0 && !EditSession.editorBody.contains(sel.getRangeAt(0).startContainer))
+		) {
+			return
+		}
+		
 		let range = document.getSelection().getRangeAt(0)
 		let closestTarget: Element
 
 		let startNode, endNode
-		let startOffset = 0,
-			endOffset = 0
+		let startOffset = 0, endOffset = 0
 
 		for (let i = 0; i < AT.topTags.length; i++) {
 			if (range.startContainer.nodeType !== 3) {
-				closestTarget = <Element>range.startContainer
+				closestTarget = <Element> range.startContainer
 			} else {
 				closestTarget = range.startContainer.parentElement
 			}
@@ -156,14 +174,8 @@ export default class SelectionManager {
 			if (closestTarget.closest(AT.topTags[i])) {
 				let startElm = closestTarget.closest(AT.topTags[i])
 				startNode = NodeManager.getNodeByID(NodeManager.getNodeID(startElm))
-				let n,
-					walk = document.createTreeWalker(
-						startElm,
-						NodeFilter.SHOW_TEXT,
-						null,
-						false
-					)
-				while ((n = walk.nextNode())) {
+				let n, walk = document.createTreeWalker(startElm, NodeFilter.SHOW_TEXT, null, false)
+				while (n = walk.nextNode()) {
 					if (n.isSameNode(range.startContainer)) {
 						startOffset += range.startOffset
 						break
@@ -187,14 +199,8 @@ export default class SelectionManager {
 				if (closestTarget.closest(AT.topTags[i])) {
 					let endElm = closestTarget.closest(AT.topTags[i])
 					endNode = NodeManager.getNodeByID(NodeManager.getNodeID(endElm))
-					let n,
-						walk = document.createTreeWalker(
-							endElm,
-							NodeFilter.SHOW_TEXT,
-							null,
-							false
-						)
-					while ((n = walk.nextNode())) {
+					let n, walk = document.createTreeWalker(endElm, NodeFilter.SHOW_TEXT, null, false)
+					while (n = walk.nextNode()) {
 						if (n.isSameNode(range.endContainer)) {
 							endOffset += range.endOffset
 							break
@@ -210,44 +216,47 @@ export default class SelectionManager {
 			}
 		}
 
-		return new PVMRange(startNode, startOffset, endNode, endOffset)
+		return this.createRange(startNode, startOffset, endNode, endOffset)
 	}
 
 	public static getCurrentNode(): PVMNode {
 		let sel = window.getSelection()
-		if (sel.rangeCount === 0) {
-			let node = EditSession.editorBody.querySelector(".node-focused")
-			if (!node) {
-				return null
-			} else {
-				return NodeManager.getNodeByID(NodeManager.getNodeID(node))
-			}
+
+		let nodeFocused = EditSession.editorBody.querySelector(".node-focused")
+		if (nodeFocused) {
+			return NodeManager.getNodeByElement(nodeFocused)
 		}
+
+		// If there is no range
+		// return null
+		if (sel.rangeCount === 0) return null
 
 		let range = sel.getRangeAt(0)
 		let startNode = range.startContainer
 
 		let node: Element = null
 
-		for (let i = 0; i < AT.topTags.length; i++) {
-			if (startNode.nodeType === 3) {
-				node = startNode.parentElement.closest(AT.topTags[i])
-			} else {
-				node = (<Element>startNode).closest(AT.topTags[i])
-			}
+		// for (let i = 0; i < AT.topTags.length; i++) {
+		// 	if (startNode.nodeType === 3) {
+		// 		node = startNode.parentElement.closest(AT.topTags[i])
+		// 	} else {
+		// 		node = (<Element>startNode).closest(AT.topTags[i])
+		// 	}
 
-			if (node) break
-		}
+		// 	if (node) break
+		// }
 
-		if (!node) {
-			return null
-		}
+		// if (!node) {
+		// 	return null
+		// }
 
-		let nodeID = Number(node.getAttribute("data-ni"))
+		// let nodeID = Number(node.getAttribute("data-ni"))
 
-		let pvmNode = NodeManager.getNodeByID(nodeID)
+		// let pvmNode = NodeManager.getNodeByID(nodeID)
 
-		return pvmNode
+		// return pvmNode
+
+		return NodeManager.getNodeByChild(startNode)
 	}
 
 	public static getAllNodesInSelection(type?: string): PVMNode[] {
@@ -357,9 +366,10 @@ export default class SelectionManager {
 		startNode: PVMNode,
 		startOffset: number,
 		endNode: PVMNode,
-		endOffset: number
+		endOffset: number,
+		itself: boolean = false
 	) {
-		let range = new PVMRange(startNode, startOffset, endNode, endOffset)
+		let range = new PVMRange(startNode, startOffset, endNode, endOffset, itself)
 		return range
 	}
 
@@ -373,12 +383,10 @@ export default class SelectionManager {
 		let jsRange = window.getSelection().getRangeAt(0)
 		let pvmRange = this.getCurrentRange()
 		let nodes = this.getAllNodesInSelection()
+		console.log(nodes)
+		// return
 
-		let extraBackspace = true,
-			extraEnter = false
-
-		// console.log(pvmRange)
-		// console.log(jsRange)
+		let extraBackspace = true, extraEnter = false
 
 		let actions = []
 
@@ -416,10 +424,7 @@ export default class SelectionManager {
 				let originalContents = nodes[i].textElement.innerHTML
 				newRange.setEnd(nodes[i], nodes[i].textElement.textContent.length)
 				this.setRange(newRange)
-				window
-					.getSelection()
-					.getRangeAt(0)
-					.deleteContents()
+				window.getSelection().getRangeAt(0).deleteContents()
 				newRange.setStart(nodes[i], nodes[i].getTextContent().length)
 				newRange.setEnd(nodes[i], nodes[i].getTextContent().length)
 				this.setRange(newRange)
@@ -442,10 +447,7 @@ export default class SelectionManager {
 				let originalContents = nodes[i].textElement.innerHTML
 				newRange.setStart(nodes[i], 0)
 				this.setRange(newRange)
-				window
-					.getSelection()
-					.getRangeAt(0)
-					.deleteContents()
+				window.getSelection().getRangeAt(0).deleteContents()
 				newRange.setStart(nodes[i], 0)
 				newRange.setEnd(nodes[i], 0)
 				this.setRange(newRange)
@@ -491,5 +493,18 @@ export default class SelectionManager {
 			// 	EventManager.onPressEnter(ke, true)
 			// }, 0)
 		}
+	}
+
+	// Remove all selections from the editor
+	public static releaseNodeSelection() {
+		// Remove media selected
+		let elms = EditSession.editorBody.querySelectorAll(".node-selected, .caption-focused")
+		if (elms.length > 0) {
+			elms.forEach(elm => {
+				elm.classList.remove("node-selected")
+				elm.classList.remove("caption-focused")
+			})
+		}
+		PopTool.hideImageTool()
 	}
 }
