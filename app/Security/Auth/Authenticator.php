@@ -201,16 +201,16 @@ class Authenticator
 
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['connected_user_table']}
-			(session_id, hash, user_id, ip, expn_dt, agent)
-			VALUES (:session_id, :hash, :user_id, :ip, :expn_dt, :agent)"
+			(session_id, user_id, hash, ip, agent, expn_dt)
+			VALUES (:session_id, :user_id, :hash, :ip, :agent, :expn_dt)"
 		);
 		$query_params = [
 			':session_id' => $session_id,
-			':hash' => $access_hash,
 			':user_id' => $user_id,
-			':ip' => $ip,
-			':expn_dt' => date("Y-m-d H:i:s", $expiration_time),
-			':agent' => $agent
+			':hash' => $access_hash,
+			':ip' => inet_pton($ip),
+			':agent' => $agent,
+			':expn_dt' => date("Y-m-d H:i:s", $expiration_time)
 		];
 		if (!$stmt->execute($query_params)) {
 			return false;
@@ -256,7 +256,7 @@ class Authenticator
 		$agent = $this->client->getAgent();
 
 		$stmt = $this->conn->prepare(
-			"SELECT hash, ip, expn_dt, agent FROM {$this->config['connected_user_table']}
+			"SELECT hash, ip, agent, expn_dt FROM {$this->config['connected_user_table']}
 			WHERE session_id = ?"
 		);
 		$stmt->execute([$session_id]);
@@ -272,7 +272,7 @@ class Authenticator
 		$record = $stmt->fetch();
 
 		//	User ip is changed (Maybe bad user)
-		if ($ip !== $record['ip']) {
+		if ($ip !== inet_ntop($record['ip'])) {
 			// @TODO
 		}
 
@@ -322,7 +322,7 @@ class Authenticator
 			WHERE session_id = :session_id"
 		);
 		$query_params = [
-			':ip' => $ip,
+			':ip' => inet_pton($ip),
 			':agent' => $agent,
 			':session_id' => $session_id
 		];
