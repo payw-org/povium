@@ -3,7 +3,7 @@
  * Frame for post.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
 namespace Readigm\Publication\Post;
