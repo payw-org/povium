@@ -1,6 +1,7 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
 import EditSession from "./EditSession"
 import PVMNode from "./PVMNode"
+import PVMImageNode from "./PVMImageNode"
 import SelectionManager from "./SelectionManager"
 import TypeChecker from "./TypeChecker"
 
@@ -164,6 +165,27 @@ export default class NodeManager {
 		})
 	}
 
+	public static getNodeByElement(elm: Element): PVMNode {
+		return this.getNodeByID(this.getNodeID(elm))
+	}
+
+	public static getNodeByChild(target: Node|Element|EventTarget): PVMNode {
+		if ((<Element> target).closest) {
+			for (let i = 0; i < AT.topTags.length; i++) {
+				if ((<Element> target).closest(AT.topTags[i])) {
+					return this.getNodeByElement((<Element> target).closest(AT.topTags[i]))
+				}
+			}
+		} else {
+			let targetParent = (<Node> target).parentElement
+			for (let i = 0; i < AT.topTags.length; i++) {
+				if (targetParent.closest(AT.topTags[i])) {
+					return this.getNodeByElement(targetParent.closest(AT.topTags[i]))
+				}
+			}
+		}
+	}
+
 	public static getNodeID(element: Element): number {
 		if (!element) {
 			console.error("Could not find element.", element)
@@ -213,7 +235,12 @@ export default class NodeManager {
 			return
 		}
 
-		let newNode = new PVMNode()
+		let newNode: PVMNode
+		if (type === "image") {
+			newNode = new PVMImageNode()
+		} else {
+			newNode = new PVMNode()
+		}
 
 		// Set an unique auto incremental node ID
 		if (options && options.nodeID) {
@@ -239,31 +266,39 @@ export default class NodeManager {
 					dom.innerHTML = "<br>"
 				}
 			}
-			newNode.element = dom
+			// newNode.element = dom
+			newNode.setElement(dom)
 			newNode.textElement = dom
 		} else if (newNode.type === "image") {
 			// Image node
 			dom = document.createElement("figure")
 			dom.classList.add("image")
+			dom.contentEditable = "false"
 			if (options.size) {
 				dom.classList.add(options.size)
 			}
+
 			let imgWrapper = document.createElement("div")
 			imgWrapper.className = "image-wrapper"
-			// imgWrapper.contentEditable = "false"
-			// imgWrapper.contentEditable = "true"
+
 			let imgDOM = document.createElement("img")
 			imgDOM.src = options.url
 			imgWrapper.appendChild(imgDOM)
+
 			let captionDOM = document.createElement("figcaption")
+			captionDOM.contentEditable = "true"
 			captionDOM.innerHTML = options.html
+
+			// Caption exists
 			if (options.html.length > 0) {
-				dom.classList.add("caption-enabled")
+				dom.classList.add("caption-enabled");
+				(<PVMImageNode> newNode).captionEnabled = true
 			}
 			dom.appendChild(imgWrapper)
 			dom.appendChild(captionDOM)
-			newNode.element = dom
+			// newNode.element = dom
 			newNode.textElement = captionDOM
+			newNode.setElement(dom)
 		}
 
 		dom.setAttribute("data-ni", String(newNode.id))
