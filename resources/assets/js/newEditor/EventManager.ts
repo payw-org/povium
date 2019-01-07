@@ -127,27 +127,9 @@ export default class EventManager {
 
 		// Packed with all window click events.
 		window.addEventListener("click", e => {
-			let target = <HTMLElement>e.target
+			let target = <HTMLElement> e.target
 
-			if (target.classList.contains("image-wrapper")) {
-				e.preventDefault()
-
-				var alreadySelectedFigure = EditSession.editorBody.querySelector("figure.node-selected")
-				if (alreadySelectedFigure) {
-					alreadySelectedFigure.classList.remove("node-selected")
-				}
-
-				var figure = target.parentElement
-				figure.classList.remove("caption-focused")
-				figure.classList.add("node-selected")
-				PopTool.showImageTool(target)
-
-				if (figure.querySelector("FIGCAPTION").textContent.length === 0) {
-					figure.querySelector("FIGCAPTION").innerHTML = "이미지 설명"
-				}
-
-				window.getSelection().removeAllRanges()
-			} else if (target.id === "full" && target.nodeName === "BUTTON") {
+			if (target.id === "full" && target.nodeName === "BUTTON") {
 				let selectedFigure = EditSession.editorBody.querySelector(
 					"figure.node-selected"
 				)
@@ -187,27 +169,19 @@ export default class EventManager {
 					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
 				}, 500)
 			} else if (target.nodeName === "FIGCAPTION") {
-				target.parentElement.classList.add("caption-focused")
-				target.parentElement.classList.remove("node-selected")
-				PopTool.hideImageTool()
-				if (!target.parentElement.classList.contains("caption-enabled")) {
-					target.innerHTML = "<br>"
-				}
+				// target.parentElement.classList.add("caption-focused")
+				// target.parentElement.classList.remove("node-selected")
+				// PopTool.hideImageTool()
+				// if (!target.parentElement.classList.contains("caption-enabled")) {
+				// 	target.innerHTML = "<br>"
+				// }
 			} else if (
 				target.nodeName === "INPUT" &&
 				target.parentElement.classList.contains("pack")
 			) {
 				// console.log("clicked poptool input")
 			} else {
-				var alreadySelectedFigure = EditSession.editorBody.querySelector(
-					"figure.node-selected, figure.caption-focused"
-				)
-				if (alreadySelectedFigure) {
-					alreadySelectedFigure.classList.remove("node-selected")
-					alreadySelectedFigure.classList.remove("caption-focused")
-				}
 
-				PopTool.hideImageTool()
 			}
 
 			this.onSelectionChanged()
@@ -1120,6 +1094,7 @@ export default class EventManager {
 	}
 
 	public static onSelectionChanged() {
+		console.log("selection changed")
 		// Fix selection
 		let jsRange
 		if (window.getSelection().rangeCount > 0) {
@@ -1134,19 +1109,22 @@ export default class EventManager {
 			return
 		}
 
-		if (pvmRange.start.node.type === "image") {
-			pvmRange.start.node.element.classList.add("node-selected")
-		}
+		// if (pvmRange.start.node.type === "image") {
+		// 	pvmRange.start.node.element.classList.add("node-selected")
+		// }
 
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
 
 		PopTool.togglePopTool()
 
+		// Update current state
 		EditSession.currentState.node = currentNode
 		EditSession.currentState.range = currentRange
 		if (currentNode && currentNode.textElement) {
 			EditSession.currentState.textHTML = currentNode.textElement.innerHTML
 		}
+
+		console.log(EditSession.currentState.range)
 	}
 }
