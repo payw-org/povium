@@ -97,16 +97,14 @@ class PDOSessionHandler implements \SessionHandlerInterface
     {
 		$stmt = $this->conn->prepare(
 			"INSERT INTO {$this->config['session_table']}
-			(id, data, creation_dt, touched_dt)
-			VALUES (:id, :data, :creation_dt, :touched_dt)
+			(id, data)
+			VALUES (:id, :data)
 			ON DUPLICATE KEY
  			UPDATE data = :updated_data, touched_dt = :updated_touched_dt"
 		);
 		$query_params = array(
 			':id' => $id,
 			':data' => $data,
-			':creation_dt' => date("Y-m-d H:i:s"),
-			':touched_dt' => date("Y-m-d H:i:s"),
 			':updated_data' => $data,
 			':updated_touched_dt' => date("Y-m-d H:i:s")
 		);
