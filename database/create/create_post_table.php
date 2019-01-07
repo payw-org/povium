@@ -26,7 +26,7 @@ class CreatePostTable
 			last_edited_dt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			subtitle VARCHAR(256),
 			body MEDIUMTEXT,
-			thumbnail VARCHAR(512),
+			thumbnail VARCHAR(511),
 			series_id INT(11) UNSIGNED,
 			CONSTRAINT FK__user__post FOREIGN KEY (user_id)
 			REFERENCES user (id) ON DELETE CASCADE ON UPDATE CASCADE,

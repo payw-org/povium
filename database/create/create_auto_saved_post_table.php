@@ -25,7 +25,7 @@ class CreateAutoSavedPostTable
 			title VARCHAR(128),
 			subtitle VARCHAR(256),
 			body MEDIUMTEXT,
-			thumbnail VARCHAR(512),
+			thumbnail VARCHAR(511),
 			series_id INT(11) UNSIGNED,
 			post_id INT(11) UNSIGNED UNIQUE,
 			CONSTRAINT FK__user__auto_saved_post FOREIGN KEY (user_id)
