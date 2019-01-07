@@ -20,13 +20,13 @@
 		display: none;
 		position: fixed;
 		width: 2px;
-		height: 1.2rem;
+		height: 1.5rem;
 		background: #006eff;
 		animation-name: caretBlink;
 		animation-duration: 1s;
 		animation-iteration-count: infinite;
 		pointer-events: none;
-		transition: 0.1s left ease, 0.1s top ease;
+		transition: 0.1s left ease-out, 0.1s top ease-out;
 
 		&.stay {
 			animation: none;
@@ -549,6 +549,7 @@
 			margin-top: 1rem;
 			text-align: center;
 			color: #979797;
+			outline: none;
 		}
 		&.caption-enabled figcaption {
 			display: block;
