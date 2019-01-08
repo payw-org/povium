@@ -1,3 +1,5 @@
+require("../less/povium.style.less")
+
 import { globalscript } from "./globalscript"
 import { globalnav } from "./globalnav"
 // import { home } from "./home"
