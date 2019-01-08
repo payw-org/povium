@@ -1,12 +1,11 @@
 require("../less/povium.style.less")
 
-import { globalscript } from "./globalscript"
-import { globalnav } from "./globalnav"
-// import { home } from "./home"
-import { homeController } from "./home/homeController"
-import { profile } from "./profile/profile-home"
-import { login } from "./login"
-import { register } from "./register/register"
+require("./globalscript")
+require("./globalnav")
+require("./home/homeController")
+require("./profile/profile-home")
+require("./login")
+require("./register/register")
 import Pjax from "pjax"
 import topbar from "./topbar"
 
