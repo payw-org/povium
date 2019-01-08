@@ -28,7 +28,7 @@ class ImageValidator implements ValidatorInterface
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @param string $image		Image file path
+	 * @param string $image	Image file path
 	 *
 	 * @return array	Error flag and message
 	 */
