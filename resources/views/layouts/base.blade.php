@@ -13,7 +13,7 @@
 		@yield('css_sub')
 	</head>
 
-	<body>
+	<body style="opacity: 0;">
 
 		<povium-app>
 			@include('sections.globalnav')
