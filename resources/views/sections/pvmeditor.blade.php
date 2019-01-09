@@ -13,8 +13,10 @@
 		</div>
 
 		<div class="debug" style="position:fixed;z-index:9999;top:0;right:0;">
-			<button class="gcs">Get Current Sel</button>
+			<button class="gcn">Get Current Node</button>
+			<button class="gcs">Get Current Range</button>
 			<button class="gcnl">Get Current Node List</button>
+			<button class="converter-stringify">Convert to json</button>
 		</div>
 
 		<div id="editor-toolbar">
