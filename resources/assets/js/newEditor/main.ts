@@ -10,4 +10,6 @@ const browser = detect()
 // }
 
 let pvme = new PVMEditor(document.querySelector("#post-editor"))
-window.onload = dbg
+window.addEventListener("load", e => {
+	dbg()
+})
