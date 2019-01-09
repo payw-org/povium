@@ -222,9 +222,9 @@ export default class SelectionManager {
 	public static getCurrentNode(): PVMNode {
 		let sel = window.getSelection()
 
-		let nodeFocused = EditSession.editorBody.querySelector(".node-focused")
-		if (nodeFocused) {
-			return NodeManager.getNodeByElement(nodeFocused)
+		let nodeSelected = EditSession.editorBody.querySelector(".node-selected")
+		if (nodeSelected) {
+			return NodeManager.getNodeByElement(nodeSelected)
 		}
 
 		// If there is no range
