@@ -11,9 +11,11 @@
 		@include('global-inclusion.global-css')
 
 		@yield('css_sub')
+
+		@include('global-inclusion.global-script')
 	</head>
 
-	<body style="opacity: 0;">
+	<body>
 
 		<povium-app>
 			@include('sections.globalnav')
@@ -23,7 +25,7 @@
 			@include('sections.globalfooter')
 		</povium-app>
 
-		@include('global-inclusion.global-script')
+		
 	</body>
 
 </html>

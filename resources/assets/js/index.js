@@ -27,8 +27,3 @@ topbar.config({
 document.addEventListener('pjax:send', topbar.show)
 document.addEventListener('pjax:complete', topbar.hide)
 
-window.onload = () => {
-	setTimeout(() => {
-		document.body.style.opacity = "1";
-	}, 10);
-}

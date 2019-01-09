@@ -13,7 +13,7 @@
 		@yield('css_sub')
 	</head>
 
-	<body style="opacity: 0;">
+	<body>
 		@yield('content')
 		@include('global-inclusion.global-script')
 	</body>
