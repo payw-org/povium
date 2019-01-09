@@ -10,7 +10,7 @@ namespace Readigm\Http\Middleware\Factory;
 
 use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Factory\MasterFactory;
-use Readigm\Http\Middleware\CamelToSnakeConverter;
+use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
 
 abstract class AbstractAjaxMiddlewareFactory extends AbstractChildFactory
 {

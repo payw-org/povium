@@ -8,6 +8,8 @@
 
 namespace Readigm\Http\Middleware;
 
+use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
+
 abstract class AbstractAjaxMiddleware
 {
 	/**

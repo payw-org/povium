@@ -11,7 +11,7 @@ namespace Readigm\Http\Middleware\Setting;
 use Readigm\Generator\RandomStringGenerator;
 use Readigm\Http\Middleware\AbstractAjaxMiddleware;
 use Readigm\Http\Controller\Setting\EmailAddController;
-use Readigm\Http\Middleware\CamelToSnakeConverter;
+use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
 use Readigm\MailSender\ActivationMailSender;
 use Readigm\Base\Routing\Router;
 use Readigm\Security\User\User;

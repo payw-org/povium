@@ -11,7 +11,7 @@ namespace Readigm\Http\Middleware\Authentication;
 use Readigm\Base\Routing\Router;
 use Readigm\Http\Middleware\AbstractAjaxMiddleware;
 use Readigm\Http\Controller\Authentication\LogoutController;
-use Readigm\Http\Middleware\CamelToSnakeConverter;
+use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
 
 class LogoutMiddleware extends AbstractAjaxMiddleware
 {

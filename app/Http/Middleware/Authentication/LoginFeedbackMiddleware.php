@@ -10,7 +10,7 @@ namespace Readigm\Http\Middleware\Authentication;
 
 use Readigm\Http\Middleware\AbstractAjaxMiddleware;
 use Readigm\Http\Controller\Authentication\LoginFormValidationController;
-use Readigm\Http\Middleware\CamelToSnakeConverter;
+use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
 
 class LoginFeedbackMiddleware extends AbstractAjaxMiddleware
 {

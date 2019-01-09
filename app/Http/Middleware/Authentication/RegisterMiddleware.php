@@ -9,7 +9,7 @@
 namespace Readigm\Http\Middleware\Authentication;
 
 use Readigm\Http\Middleware\AbstractAjaxMiddleware;
-use Readigm\Http\Middleware\CamelToSnakeConverter;
+use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
 use Readigm\Http\Middleware\RefererCheckerInterface;
 use Readigm\Http\Controller\Authentication\RegisterController;
 use Readigm\Http\Controller\Authentication\LoginController;
