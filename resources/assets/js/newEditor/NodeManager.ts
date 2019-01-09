@@ -41,11 +41,11 @@ export default class NodeManager {
 		if (TypeChecker.isListItem(insertingChild.type)) {
 			// Referenced node is a list item
 			if (TypeChecker.isListItem(refChild.type)) {
-				if (refChild.parentType === insertingChild.parentType) {
+				if (refChild.kind === insertingChild.kind) {
 					if (
 						previousChild &&
 						previousChild.type === "li" &&
-						previousChild.parentType === refChild.parentType
+						previousChild.kind === refChild.kind
 					) {
 						this.mergeLists(
 							previousChild.element.parentElement,
@@ -63,31 +63,31 @@ export default class NodeManager {
 					)
 
 					if (previousChild && TypeChecker.isListItem(previousChild.type)) {
-						if (previousChild.parentType === insertingChild.parentType) {
+						if (previousChild.kind === insertingChild.kind) {
 							previousChild.element.parentElement.insertBefore(
 								insertingChild.element,
 								previousChild.element.nextElementSibling
 							)
 						} else {
-							let wrapper = document.createElement(insertingChild.parentType)
+							let wrapper = document.createElement(insertingChild.kind)
 							wrapper.appendChild(insertingChild.element)
 							abc.parentElement.insertBefore(wrapper, abc)
 						}
 					} else {
-						let wrapper = document.createElement(insertingChild.parentType)
+						let wrapper = document.createElement(insertingChild.kind)
 						wrapper.appendChild(insertingChild.element)
 						abc.parentElement.insertBefore(wrapper, abc)
 					}
 				}
 			} else {
 				if (previousChild && TypeChecker.isListItem(previousChild.type)) {
-					if (previousChild.parentType === insertingChild.parentType) {
+					if (previousChild.kind === insertingChild.kind) {
 						previousChild.element.parentElement.insertBefore(
 							insertingChild.element,
 							previousChild.element.nextElementSibling
 						)
 					} else {
-						let wrapper = document.createElement(insertingChild.parentType)
+						let wrapper = document.createElement(insertingChild.kind)
 						wrapper.appendChild(insertingChild.element)
 						refChild.element.parentElement.insertBefore(
 							wrapper,
@@ -95,7 +95,7 @@ export default class NodeManager {
 						)
 					}
 				} else {
-					let wrapper = document.createElement(insertingChild.parentType)
+					let wrapper = document.createElement(insertingChild.kind)
 					wrapper.appendChild(insertingChild.element)
 					refChild.element.parentElement.insertBefore(wrapper, refChild.element)
 				}
@@ -132,13 +132,13 @@ export default class NodeManager {
 
 		// Render dom
 		if (child.type === "li") {
-			let wrapper = document.createElement(child.parentType)
+			let wrapper = document.createElement(child.kind)
 			wrapper.appendChild(child.element)
 			EditSession.editorBody.appendChild(wrapper)
 			if (
 				child.previousSibling &&
 				child.previousSibling.type === "li" &&
-				child.previousSibling.parentType === child.parentType
+				child.previousSibling.kind === child.kind
 			) {
 				this.mergeLists(
 					child.previousSibling.element.parentElement,
@@ -218,11 +218,9 @@ export default class NodeManager {
 		type: string,
 		options?: {
 			nodeID?: number
-			parentType?: string
+			kind?: string
 			html?: string
 			url?: string
-			mode?: string
-			size?: string
 		}
 	): PVMNode {
 		type = type.toLowerCase()
@@ -250,8 +248,8 @@ export default class NodeManager {
 		}
 
 		newNode.type = type
-		if (options && "parentType" in options) {
-			newNode.parentType = options.parentType
+		if (options && "kind" in options) {
+			newNode.kind = options.kind
 		}
 
 		let dom
@@ -270,35 +268,41 @@ export default class NodeManager {
 			newNode.setElement(dom)
 			newNode.textElement = dom
 		} else if (newNode.type === "image") {
+			let n = newNode as PVMImageNode
+
 			// Image node
 			dom = document.createElement("figure")
 			dom.classList.add("image")
 			dom.contentEditable = "false"
-			if (options.size) {
-				dom.classList.add(options.size)
-			}
 
 			let imgWrapper = document.createElement("div")
 			imgWrapper.className = "image-wrapper"
 
 			let imgDOM = document.createElement("img")
-			imgDOM.src = options.url
 			imgWrapper.appendChild(imgDOM)
 
 			let captionDOM = document.createElement("figcaption")
 			captionDOM.contentEditable = "true"
-			captionDOM.innerHTML = options.html
+			captionDOM.innerHTML = ""
 
-			// Caption exists
-			if (options.html.length > 0) {
-				dom.classList.add("caption-enabled");
-				(<PVMImageNode> newNode).captionEnabled = true
-			}
 			dom.appendChild(imgWrapper)
 			dom.appendChild(captionDOM)
 			// newNode.element = dom
-			newNode.textElement = captionDOM
-			newNode.setElement(dom)
+			n.textElement = captionDOM
+			n.setElement(dom)
+
+			// Set image url(src)
+			n.setUrl(options.url)
+
+			// Set image size
+			if (options.kind) {
+				dom.classList.add(options.kind)
+			}
+
+			// Caption exists
+			if (options.html && options.html.length > 0) {
+				;(<PVMImageNode> newNode).setCaption(options.html)
+			}
 		}
 
 		dom.setAttribute("data-ni", String(newNode.id))
@@ -369,7 +373,7 @@ export default class NodeManager {
 		let extractedContents = range.extractContents()
 
 		let newNode = this.createNode(currentNode.type, {
-			parentType: currentNode.parentType,
+			kind: currentNode.kind,
 			nodeID: newNodeID
 		})
 		let n
@@ -553,7 +557,7 @@ export default class NodeManager {
 		// If the original node type and
 		// the new type is same, do nothing.
 		newType = newType.toLowerCase()
-		if (node.type === newType && node.parentType === newParentType) return
+		if (node.type === newType && node.kind === newParentType) return
 
 		let oldElm = node.element
 
@@ -565,7 +569,7 @@ export default class NodeManager {
 
 		this.copySoul(node.element, newElm)
 		node.type = newType
-		node.parentType = newParentType
+		node.kind = newParentType
 		node.replaceElement(newElm)
 
 		if (newType === "li") {
