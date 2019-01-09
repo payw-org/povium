@@ -134,44 +134,25 @@ export default class EventManager {
 			let target = <HTMLElement> e.target
 
 			if (target.id === "full" && target.nodeName === "BUTTON") {
-				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.node-selected"
-				)
-				selectedFigure.className = "image node-selected"
-				selectedFigure.classList.add("full")
-				PopTool.hideImageTool()
-				setTimeout(() => {
-					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
-				}, 500)
+				let currentNode = SelectionManager.getCurrentNode()
+				if (currentNode instanceof PVMImageNode) {
+					currentNode.setKind("full")
+				}
 			} else if (target.id === "fit" && target.nodeName === "BUTTON") {
-				var alreadySelectedFigure = EditSession.editorBody.querySelector(
-					"figure.node-selected"
-				)
-				alreadySelectedFigure.className = "image node-selected"
-				PopTool.hideImageTool()
-				setTimeout(() => {
-					PopTool.showImageTool(alreadySelectedFigure.querySelector(".image-wrapper"))
-				}, 500)
+				let currentNode = SelectionManager.getCurrentNode()
+				if (currentNode instanceof PVMImageNode) {
+					currentNode.setKind("fit")
+				}			
 			} else if (target.id === "large" && target.nodeName === "BUTTON") {
-				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.node-selected"
-				)
-				selectedFigure.className = "image node-selected"
-				selectedFigure.classList.add("large")
-				PopTool.hideImageTool()
-				setTimeout(() => {
-					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
-				}, 500)
+				let currentNode = SelectionManager.getCurrentNode()
+				if (currentNode instanceof PVMImageNode) {
+					currentNode.setKind("large")
+				}
 			} else if (target.id === "float-left" && target.nodeName === "BUTTON") {
-				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.node-selected"
-				)
-				selectedFigure.className = "image node-selected"
-				selectedFigure.classList.add("float-left")
-				PopTool.hideImageTool()
-				setTimeout(() => {
-					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
-				}, 500)
+				let currentNode = SelectionManager.getCurrentNode()
+				if (currentNode instanceof PVMImageNode) {
+					currentNode.setKind("float-left")
+				}
 			} else if (target.nodeName === "FIGCAPTION") {
 				// target.parentElement.classList.add("caption-focused")
 				// target.parentElement.classList.remove("node-selected")
@@ -206,7 +187,7 @@ export default class EventManager {
 		})
 
 		window.addEventListener("resize", e => {
-			PopTool.showImageTool(document.querySelector(".image.node-selected img"))
+			PopTool.showImageTool(document.querySelector(".image.node-selected"))
 			PopTool.showPopTool()
 		})
 
@@ -750,7 +731,7 @@ export default class EventManager {
 				parentType = "ol"
 			}
 			let originalType = currentNode.type
-			let originalParentType = currentNode.parentType
+			let originalParentType = currentNode.kind
 			NodeManager.transformNode(currentNode, "li", parentType)
 			currentNode.fixEmptiness()
 			let newRange = SelectionManager.createRange(
@@ -812,11 +793,11 @@ export default class EventManager {
 				if (currentNode.type === "li") {
 					if (state === 3) {
 						newNode = NodeManager.createNode("LI", {
-							parentType: currentNode.parentType
+							kind: currentNode.kind
 						})
 					} else if (state === 4) {
 						let originalType = currentNode.type
-						let originalParentType = currentNode.parentType
+						let originalParentType = currentNode.kind
 						NodeManager.transformNode(currentNode, "p")
 						SelectionManager.setRange(currentRange)
 						UndoManager.record({
@@ -834,7 +815,7 @@ export default class EventManager {
 				} else if (currentNode.type === "blockquote") {
 					if (state === 4) {
 						let originalType = currentNode.type
-						let originalParentType = currentNode.parentType
+						let originalParentType = currentNode.kind
 						NodeManager.transformNode(currentNode, "p")
 						SelectionManager.setRange(currentRange)
 						UndoManager.record({
@@ -894,7 +875,7 @@ export default class EventManager {
 			if (state === 1) {
 				if (currentNode.type === "li") {
 					let originalType = currentNode.type
-					let originalParentType = currentNode.parentType
+					let originalParentType = currentNode.kind
 					NodeManager.transformNode(currentNode, "p")
 					SelectionManager.setRange(currentRange)
 					UndoManager.record({
@@ -957,7 +938,7 @@ export default class EventManager {
 			} else if (state === 4) {
 				if (currentNode.type === "li") {
 					let originalType = currentNode.type
-					let originalParentType = currentNode.parentType
+					let originalParentType = currentNode.kind
 					NodeManager.transformNode(currentNode, "p")
 					SelectionManager.setRange(currentRange)
 					UndoManager.record({
@@ -1114,8 +1095,6 @@ export default class EventManager {
 
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
-
-		console.log(currentRange)
 
 		if (
 			currentRange
