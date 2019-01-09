@@ -267,7 +267,7 @@ export default class PopTool {
 				isAllAlreaySet = false
 				// chunks[i].transformTo(tagName)
 				let originalType = chunks[i].type
-				let originalParentType = chunks[i].parentType
+				let originalParentType = chunks[i].kind
 				NodeManager.transformNode(chunks[i], tagName)
 				actions.push({
 					type: "transform",
@@ -286,7 +286,7 @@ export default class PopTool {
 			for (let i = 0; i < chunks.length; i++) {
 				// chunks[i].transformTo("p")
 				let originalType = chunks[i].type
-				let originalParentType = chunks[i].parentType
+				let originalParentType = chunks[i].kind
 				NodeManager.transformNode(chunks[i], "p")
 				actions.push({
 					type: "transform",
@@ -346,16 +346,18 @@ export default class PopTool {
 
 		this.imageTool.classList.add("active")
 
+		let img =  imageBlock.querySelector("img")
+
 		this.imageTool.style.left =
-			imageBlock.getBoundingClientRect().left +
-			imageBlock.getBoundingClientRect().width / 2 -
+			img.getBoundingClientRect().left +
+			img.getBoundingClientRect().width / 2 -
 			this.imageTool.getBoundingClientRect().width / 2 +
 			"px"
 
 		this.imageTool.style.top =
 			-editorBody.getBoundingClientRect().top +
-			imageBlock.getBoundingClientRect().top +
-			imageBlock.getBoundingClientRect().height / 2 -
+			img.getBoundingClientRect().top +
+			img.getBoundingClientRect().height / 2 -
 			this.imageTool.getBoundingClientRect().height / 2 +
 			"px"
 		
