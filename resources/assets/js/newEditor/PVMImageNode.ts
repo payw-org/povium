@@ -6,6 +6,8 @@ import EventManager from "./EventManager";
 
 export default class PVMImageNode extends PVMNode {
 	captionEnabled: boolean = false
+	kind: string = "fit"
+	url: string
 
 	constructor() {
 		super()
@@ -54,9 +56,12 @@ export default class PVMImageNode extends PVMNode {
 		}
 	}
 
-	setCaption() {
-		console.log("setting caption")
+	setCaption(str?: string) {
 		let tc = this.textElement.textContent
+		if (str) {
+			tc = str
+			this.textElement.innerHTML = tc
+		}
 		if (tc.length > 0) {
 			this.captionEnabled = true
 			this.element.classList.add("caption-enabled")
@@ -67,9 +72,26 @@ export default class PVMImageNode extends PVMNode {
 		}
 	}
 
-	setImageUrl(newUrl: string) {
-		// Verify the new url
+	setKind(kind: string) {
+		this.element.classList.remove("fit")
+		this.element.classList.remove("full")
+		this.element.classList.remove("large")
+		this.element.classList.remove("float-left")
+
+		this.kind = kind
+		this.element.classList.add(kind)
+
+		PopTool.hideImageTool()
+
+		setTimeout(() => {
+			PopTool.showImageTool(this.element.querySelector(".image-wrapper"))
+		}, 500)
+	}
+
+	setUrl(url: string) {
+		// Verify url
 		//
-		this.element.querySelector("img").src = newUrl
+		this.url = url
+		this.element.querySelector("img").src = url
 	}
 }
