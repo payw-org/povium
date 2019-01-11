@@ -1,16 +1,16 @@
 <?php
 /**
- * Loader for data in global navigation.
+ * Loader for data in global navigation module.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 Povium
+ * @copyright 	2019 Povium
  */
 
-namespace Readigm\Loader\GlobalModule;
+namespace Readigm\Loader\Module\Globals;
 
-use Readigm\Loader\LoaderInterface;
+use Readigm\Loader\Module\ModuleLoaderInterface;
 
-class GlobalNavigationLoader implements LoaderInterface
+class GlobalNavigationModuleLoader implements ModuleLoaderInterface
 {
 	/**
 	 * {@inheritdoc}

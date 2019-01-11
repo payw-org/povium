@@ -10,7 +10,7 @@ namespace Readigm\Http\Controller\Error;
 
 use Readigm\Base\Http\Exception\HttpException;
 use Readigm\Http\Controller\StandardViewController;
-use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader;
 
 class HttpErrorViewController extends StandardViewController
 {
@@ -20,14 +20,14 @@ class HttpErrorViewController extends StandardViewController
 	protected $httpResponseConfig;
 
 	/**
-	 * @param GlobalNavigationLoader 	$global_navigation_loader
-	 * @param array 					$http_response_config
+	 * @param GlobalNavigationModuleLoader 	$global_navigation_module_loader
+	 * @param array 						$http_response_config
 	 */
 	public function __construct(
-		GlobalNavigationLoader $global_navigation_loader,
+		GlobalNavigationModuleLoader $global_navigation_module_loader,
 		array $http_response_config
 	) {
-		parent::__construct($global_navigation_loader);
+		parent::__construct($global_navigation_module_loader);
 		$this->httpResponseConfig = $http_response_config;
 	}
 

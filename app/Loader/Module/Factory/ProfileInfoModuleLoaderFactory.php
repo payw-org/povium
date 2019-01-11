@@ -1,18 +1,18 @@
 <?php
 /**
- * This factory is responsible for creating "ProfileInfoLoader" instance.
+ * This factory is responsible for creating "ProfileInfoModuleLoader" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
-namespace Readigm\Loader\Factory;
+namespace Readigm\Loader\Module\Factory;
 
 use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Factory\MasterFactory;
 use Readigm\Security\User\UserManager;
 
-class ProfileInfoLoaderFactory extends AbstractChildFactory
+class ProfileInfoModuleLoaderFactory extends AbstractChildFactory
 {
 	/**
 	 * {@inheritdoc}

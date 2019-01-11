@@ -9,7 +9,7 @@
 namespace Readigm\Http\Controller\Factory;
 
 use Readigm\Base\Factory\MasterFactory;
-use Readigm\Loader\ProfileModule\ProfileInfoLoader;
+use Readigm\Loader\Module\Profile\ProfileInfoModuleLoader;
 use Readigm\Security\User\UserManager;
 
 class ProfileViewControllerFactory extends StandardViewControllerFactory
@@ -23,11 +23,11 @@ class ProfileViewControllerFactory extends StandardViewControllerFactory
 
 		$factory = new MasterFactory();
 
-		$profile_info_loader = $factory->createInstance(ProfileInfoLoader::class);
+		$profile_info_module_loader = $factory->createInstance(ProfileInfoModuleLoader::class);
 		$user_manager = $factory->createInstance(UserManager::class);
 		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/profile_view_controller.php');
 
-		$this->args[] = $profile_info_loader;
+		$this->args[] = $profile_info_module_loader;
 		$this->args[] = $user_manager;
 		$this->args[] = $config;
 	}

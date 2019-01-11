@@ -10,7 +10,7 @@ namespace Readigm\Http\Controller\Factory;
 
 use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Factory\MasterFactory;
-use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader;
 
 class StandardViewControllerFactory extends AbstractChildFactory
 {
@@ -21,8 +21,8 @@ class StandardViewControllerFactory extends AbstractChildFactory
 	{
 		$factory = new MasterFactory();
 
-		$global_navigation_loader = $factory->createInstance(GlobalNavigationLoader::class);
+		$global_navigation_module_loader = $factory->createInstance(GlobalNavigationModuleLoader::class);
 
-		$this->args[] = $global_navigation_loader;
+		$this->args[] = $global_navigation_module_loader;
 	}
 }

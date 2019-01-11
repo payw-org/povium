@@ -1,14 +1,14 @@
 <?php
 /**
- * Interface for loader.
+ * Interface for module loader.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
-namespace Readigm\Loader;
+namespace Readigm\Loader\Module;
 
-interface LoaderInterface
+interface ModuleLoaderInterface
 {
 	/**
 	 * Load data for specific module.

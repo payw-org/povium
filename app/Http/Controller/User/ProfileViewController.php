@@ -10,16 +10,16 @@ namespace Readigm\Http\Controller\User;
 
 use Readigm\Http\Controller\StandardViewController;
 use Readigm\Http\Controller\Exception\UserNotFoundException;
-use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
-use Readigm\Loader\ProfileModule\ProfileInfoLoader;
+use Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader;
+use Readigm\Loader\Module\Profile\ProfileInfoModuleLoader;
 use Readigm\Security\User\UserManager;
 
 class ProfileViewController extends StandardViewController
 {
 	/**
-	 * @var ProfileInfoLoader
+	 * @var ProfileInfoModuleLoader
 	 */
-	protected $profileInfoLoader;
+	protected $profileInfoModuleLoader;
 
 	/**
 	 * @var UserManager
@@ -32,19 +32,19 @@ class ProfileViewController extends StandardViewController
 	private $config;
 
 	/**
-	 * @param GlobalNavigationLoader 	$global_navigation_loader
-	 * @param ProfileInfoLoader 		$profile_info_loader
-	 * @param UserManager 				$user_manager
-	 * @param array 					$config
+	 * @param GlobalNavigationModuleLoader 	$global_navigation_module_loader
+	 * @param ProfileInfoModuleLoader 		$profile_info_module_loader
+	 * @param UserManager 					$user_manager
+	 * @param array 						$config
 	 */
 	public function __construct(
-		GlobalNavigationLoader $global_navigation_loader,
-		ProfileInfoLoader $profile_info_loader,
+		GlobalNavigationModuleLoader $global_navigation_module_loader,
+		ProfileInfoModuleLoader $profile_info_module_loader,
 		UserManager $user_manager,
 		array $config
 	) {
-		parent::__construct($global_navigation_loader);
-		$this->profileInfoLoader = $profile_info_loader;
+		parent::__construct($global_navigation_module_loader);
+		$this->profileInfoModuleLoader = $profile_info_module_loader;
 		$this->userManager = $user_manager;
 		$this->config = $config;
 	}
@@ -70,7 +70,7 @@ class ProfileViewController extends StandardViewController
 			throw new UserNotFoundException($this->config['msg']['user_not_found']);
 		}
 
-		$this->viewConfig['profile_info'] = $this->profileInfoLoader->loadData($user_id);
+		$this->viewConfig['profile_info'] = $this->profileInfoModuleLoader->loadData($user_id);
 
 		return $this->viewConfig;
 	}

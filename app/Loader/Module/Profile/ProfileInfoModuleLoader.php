@@ -1,17 +1,17 @@
 <?php
 /**
- * Loader for data in profile info.
+ * Loader for data in profile info module.
  *
  * @author 		H.Chihoon
- * @copyright 	2018 Povium
+ * @copyright 	2019 Povium
  */
 
-namespace Readigm\Loader\ProfileModule;
+namespace Readigm\Loader\Module\Profile;
 
-use Readigm\Loader\LoaderInterface;
+use Readigm\Loader\Module\ModuleLoaderInterface;
 use Readigm\Security\User\UserManager;
 
-class ProfileInfoLoader implements LoaderInterface
+class ProfileInfoModuleLoader implements ModuleLoaderInterface
 {
 	/**
 	 * @var UserManager

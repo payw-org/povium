@@ -8,22 +8,22 @@
 
 namespace Readigm\Http\Controller;
 
-use Readigm\Loader\GlobalModule\GlobalNavigationLoader;
+use Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader;
 
 abstract class StandardViewController extends AbstractViewController
 {
 	/**
-	 * @var GlobalNavigationLoader
+	 * @var GlobalNavigationModuleLoader
 	 */
-	protected $globalNavigationLoader;
+	protected $globalNavigationModuleLoader;
 
 	/**
-	 * @param GlobalNavigationLoader $global_navigation_loader
+	 * @param GlobalNavigationModuleLoader $global_navigation_module_loader
 	 */
 	public function __construct(
-		GlobalNavigationLoader $global_navigation_loader
+		GlobalNavigationModuleLoader $global_navigation_module_loader
 	) {
-		$this->globalNavigationLoader = $global_navigation_loader;
+		$this->globalNavigationModuleLoader = $global_navigation_module_loader;
 	}
 
 	/**
@@ -31,7 +31,7 @@ abstract class StandardViewController extends AbstractViewController
 	 */
 	public function loadViewConfig()
 	{
-		$this->viewConfig['global_nav'] = $this->globalNavigationLoader->loadData();
+		$this->viewConfig['global_nav'] = $this->globalNavigationModuleLoader->loadData();
 
 		return $this->viewConfig;
 	}
