@@ -29,15 +29,15 @@ abstract class AbstractAjaxMiddleware
      * Receive and decode ajax data.
 	 * Convert case.
 	 *
-	 * @param bool	$convert_data	Option for converting case of array key
+	 * @param bool	$convert	Option for converting case of array key
      *
      * @return array    Decoded data
      */
-    public function receiveAjaxData($convert_data = true)
+    public function receiveAjaxData($convert = true)
     {
         $data = json_decode(file_get_contents('php://input'), true);
 
-        if ($convert_data && is_array($data)) {
+        if ($convert && is_array($data)) {
 			$data = $this->convertArrayKeyCaseRecursively(
 				$data,
 				array($this->camelToSnakeConverter, 'convert')
@@ -52,13 +52,13 @@ abstract class AbstractAjaxMiddleware
 	 * Encode and send ajax data.
      *
      * @param array	$data
-	 * @param bool	$convert_data	Option for converting case of array key
+	 * @param bool	$convert	Option for converting case of array key
      *
      * @return bool     Success or failure
      */
-    public function sendAjaxData($data, $convert_data = true)
+    public function sendAjaxData($data, $convert = true)
     {
-    	if ($convert_data && is_array($data)) {
+    	if ($convert && is_array($data)) {
     		$data = $this->convertArrayKeyCaseRecursively(
     			$data,
 				array($this->camelToSnakeConverter, 'reverse')
