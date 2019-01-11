@@ -226,7 +226,7 @@ export default class NodeManager {
 		type = type.toLowerCase()
 
 		if (
-			(type === "li" && options && !("parentType" in options)) ||
+			(type === "li" && options && !("kind" in options)) ||
 			(type === "li" && !options)
 		) {
 			console.error(`"li" node must be created with parent tag.`)
@@ -274,6 +274,13 @@ export default class NodeManager {
 			dom = document.createElement("figure")
 			dom.classList.add("image")
 			dom.contentEditable = "false"
+
+			// dummy contenteditable div for image selection
+			let dummy = document.createElement("div")
+			dummy.contentEditable = "true"
+			dummy.className = "selection-break"
+			dummy.innerHTML = "<br>"
+			dom.appendChild(dummy)
 
 			let imgWrapper = document.createElement("div")
 			imgWrapper.className = "image-wrapper"
