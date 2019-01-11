@@ -27,7 +27,7 @@ abstract class AbstractAjaxMiddleware
 
 	/**
      * Receive and decode ajax data.
-	 * Convert case.
+	 * Convert camel case to snake case.
 	 *
 	 * @param bool	$convert	Option for converting case of array key
      *
@@ -48,7 +48,7 @@ abstract class AbstractAjaxMiddleware
     }
 
     /**
-     * Convert case.
+     * Convert snake case to camel case.
 	 * Encode and send ajax data.
      *
      * @param array	$data
@@ -88,6 +88,7 @@ abstract class AbstractAjaxMiddleware
 	{
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {
+				//	Search for next depth
 				$array[$key] = $this->convertArrayKeyCaseRecursively($value, $callback);
 			}
 
