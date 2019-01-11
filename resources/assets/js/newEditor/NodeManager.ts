@@ -205,15 +205,6 @@ export default class NodeManager {
 		element.setAttribute("data-ni", String(id))
 	}
 
-	/**
-	 * @param {string} type
-	 * @param {object=} options
-	 * @param {string} options.parentType
-	 * @param {string} options.html
-	 * @param {string} options.url
-	 * @param {string} options.mode
-	 * @return {PVMNode}
-	 */
 	public static createNode(
 		type: string,
 		options?: {
