@@ -179,6 +179,13 @@ export default class Converter {
 					type: pvmNode.type,
 					data: this.buildTextDataFromHtml(pvmNode.element)
 				}
+				// Align
+				//
+
+				// Kind
+				if (pvmNode.kind) {
+					block.kind = pvmNode.kind
+				}
 				dataObj.contents.push(block)
 			} else if (TypeChecker.isImage(pvmNode.type)) {
 				let n = pvmNode as PVMImageNode
