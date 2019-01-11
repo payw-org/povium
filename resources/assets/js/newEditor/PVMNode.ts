@@ -4,7 +4,8 @@ import SelectionManager from "./SelectionManager"
 export default class PVMNode {
 	id: number
 	type: string
-	kind: string
+	kind?: string
+	align?: string
 	nextSibling: PVMNode
 	previousSibling: PVMNode
 	isConnected: boolean = false
