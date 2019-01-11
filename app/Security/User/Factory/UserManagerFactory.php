@@ -3,7 +3,7 @@
 * This factory is responsible for creating "UserManager" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Security\User\Factory;
@@ -19,7 +19,7 @@ class UserManagerFactory extends AbstractRecordManagerFactory
 	{
 		parent::prepareArgs();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/user_manager.php');
+		$config = $this->configLoader->load('user_manager');
 
 		$this->args[] = $config;
 	}

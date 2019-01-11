@@ -3,7 +3,7 @@
 * This factory is responsible for creating "NameValidator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Security\Validator\Factory;
@@ -17,7 +17,7 @@ class NameValidatorFactory extends UserInfoDuplicateValidatorFactory
 	{
 		parent::prepareArgs();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/name_validator.php');
+		$config = $this->configLoader->load('name_validator');
 
 		$this->args[] = $config;
 	}

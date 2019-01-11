@@ -25,7 +25,7 @@ class ProfileViewControllerFactory extends StandardViewControllerFactory
 
 		$profile_info_module_loader = $factory->createInstance(ProfileInfoModuleLoader::class);
 		$user_manager = $factory->createInstance(UserManager::class);
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/profile_view_controller.php');
+		$config = $this->configLoader->load('profile_view_controller');
 
 		$this->args[] = $profile_info_module_loader;
 		$this->args[] = $user_manager;

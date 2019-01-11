@@ -3,7 +3,7 @@
  * Find a route that matches a request.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
 namespace Readigm\Base\Routing\Matcher;
@@ -134,7 +134,7 @@ class RequestMatcher implements RequestMatcherInterface
 
 				//	Stored matched things.
 				array_shift($match_values);
-				$params = array_merge($params, array_combine($placeholders, $match_values));
+				$params += array_combine($placeholders, $match_values);
 			} else {	//	Not include regex part. Pattern is fixed string.
 				if ($parsed_pattern !== $parsed_uri) {
 					return false;

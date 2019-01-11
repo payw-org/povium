@@ -3,7 +3,7 @@
 * This factory is responsible for creating "EmailActivationController" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Http\Controller\Factory;
@@ -24,7 +24,7 @@ class EmailActivationControllerFactory extends AbstractChildFactory
 
 		$conn = DBConnection::getInstance()->getConn();
 		$user_manager = $factory->createInstance(UserManager::class);
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_controller.php');
+		$config = $this->configLoader->load('email_activation_controller');
 
 		$this->args[] = $conn;
 		$this->args[] = $user_manager;

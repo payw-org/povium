@@ -3,7 +3,7 @@
 * This factory is responsible for creating "URIGenerator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Base\Routing\Factory;
@@ -17,7 +17,7 @@ class URIGeneratorFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/uri_generator.php');
+		$config = $this->configLoader->load('uri_generator');
 
 		$this->args[] = $config;
 	}

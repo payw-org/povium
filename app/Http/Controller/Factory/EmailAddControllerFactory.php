@@ -3,7 +3,7 @@
 * This factory is responsible for creating "EmailAddController" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Http\Controller\Factory;
@@ -24,7 +24,7 @@ class EmailAddControllerFactory extends AbstractChildFactory
 
 		$conn = DBConnection::getInstance()->getConn();
 		$email_validator = $factory->createInstance(EmailValidator::class);
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_add_controller.php');
+		$config = $this->configLoader->load('email_add_controller');
 
 		$this->args[] = $conn;
 		$this->args[] = $email_validator;

@@ -3,7 +3,7 @@
 * This factory is responsible for creating "ReadableIDValidator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Security\Validator\Factory;
@@ -17,7 +17,7 @@ class ReadableIDValidatorFactory extends UserInfoDuplicateValidatorFactory
 	{
 		parent::prepareArgs();
 
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/readable_id_validator.php');
+		$config = $this->configLoader->load('readable_id_validator');
 
 		$this->args[] = $config;
 	}

@@ -4,13 +4,20 @@
 * of given type.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Base\Factory;
 
+use Readigm\Loader\ConfigLoader;
+
 abstract class AbstractChildFactory implements FactoryInterface
 {
+	/**
+	 * @var ConfigLoader
+	 */
+	protected $configLoader;
+
 	/**
 	* Fully qualified type name
 	*
@@ -24,6 +31,14 @@ abstract class AbstractChildFactory implements FactoryInterface
 	* @var array
 	*/
 	protected $args = array();
+
+	/**
+	 * Create loader for config file.
+	 */
+	public function __construct()
+	{
+		$this->configLoader = new ConfigLoader();
+	}
 
 	/**
 	* {@inheritdoc}

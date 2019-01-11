@@ -3,7 +3,7 @@
 * This factory is responsible for creating "PasswordValidator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Security\Validator\Factory;
@@ -19,7 +19,7 @@ class PasswordValidatorFactory extends AbstractChildFactory
 	protected function prepareArgs()
 	{
 		$zxcvbn = new Zxcvbn();
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/password_validator.php');
+		$config = $this->configLoader->load('password_validator');
 
 		$this->args[] = $zxcvbn;
 		$this->args[] = $config;

@@ -3,7 +3,7 @@
  * This factory is responsible for creating "EmailActivationRequestMiddleware" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
 namespace Readigm\Http\Middleware\Factory;
@@ -32,7 +32,7 @@ class EmailActivationRequestMiddlewareFactory extends AbstractAjaxMiddlewareFact
 		$random_string_generator = $factory->createInstance(RandomStringGenerator::class);
 		$activation_mail_sender = $factory->createInstance(ActivationMailSender::class);
 		$email_add_controller = $factory->createInstance(EmailAddController::class);
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/email_activation_request_middleware.php');
+		$config = $this->configLoader->load('email_activation_request_middleware');
 
 		$this->args[] = $router;
 		$this->args[] = $random_string_generator;

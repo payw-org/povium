@@ -3,7 +3,7 @@
 * This factory is responsible for creating "LoginController" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Http\Controller\Factory;
@@ -33,7 +33,7 @@ class LoginControllerFactory extends AbstractChildFactory
 		$user_manager = $factory->createInstance(UserManager::class);
 		$password_encoder = $factory->createInstance(PasswordEncoder::class);
 		$login_form_validation_controller = $factory->createInstance(LoginFormValidationController::class);
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_controller.php');
+		$config = $this->configLoader->load('login_controller');
 
 		$this->args[] = $authenticator;
 		$this->args[] = $session_manager;

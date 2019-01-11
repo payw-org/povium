@@ -3,7 +3,7 @@
  * This factory is responsible for creating "DBBuilder" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
 namespace Readigm\Base\Database\Factory;
@@ -19,7 +19,7 @@ class DBBuilderFactory extends AbstractChildFactory
 	protected function prepareArgs()
 	{
 		$conn = DBConnection::getInstance()->getConn();
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/db_builder.php');
+		$config = $this->configLoader->load('db_builder');
 
 		$this->args[] = $conn;
 		$this->args[] = $config;

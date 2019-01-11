@@ -3,7 +3,7 @@
  * This factory is responsible for creating "Blade" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
 namespace Readigm\Base\Templating\Factory;
@@ -17,7 +17,7 @@ class BladeFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/blade.php');
+		$config = $this->configLoader->load('blade');
 
 		$this->args[] = $config['views'];
 		$this->args[] = $config['cache'];

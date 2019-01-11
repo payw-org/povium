@@ -3,7 +3,7 @@
 * This factory is responsible for creating "SessionManager" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Base\Http\Factory;
@@ -24,7 +24,7 @@ class SessionManagerFactory extends AbstractChildFactory
 
 		$conn = DBConnection::getInstance()->getConn();
 		$session_handler = $factory->createInstance(PDOSessionHandler::class);
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/session.php');
+		$config = $this->configLoader->load('session');
 
 		$this->args[] = $conn;
 		$this->args[] = $session_handler;

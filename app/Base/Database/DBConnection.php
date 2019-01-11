@@ -3,11 +3,12 @@
 * Create a database connection using PDO.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Base\Database;
 
+use Readigm\Loader\ConfigLoader;
 use Readigm\Traits\SingletonTrait;
 
 class DBConnection
@@ -34,7 +35,7 @@ class DBConnection
 	*/
 	private function __construct()
 	{
-		$this->config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/db_connection.php');
+		$this->config = (new ConfigLoader())->load('db_connection');
 
 		$this->generatePDOConnection();
 	}

@@ -5,13 +5,14 @@
 * responsible for creating which instance and delegates instantiation.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Base\Factory;
 
 use Readigm\Base\Factory\Exception\NonexistentTypeException;
 use Readigm\Base\Factory\Exception\UnregisteredTypeException;
+use Readigm\Loader\ConfigLoader;
 
 class MasterFactory implements FactoryInterface
 {
@@ -28,7 +29,7 @@ class MasterFactory implements FactoryInterface
 	 */
 	public function __construct()
 	{
-		$this->typeMap = require($_SERVER['DOCUMENT_ROOT'] . '/../config/factory.php');
+		$this->typeMap = (new ConfigLoader())->load('factory');
 	}
 
 	/**

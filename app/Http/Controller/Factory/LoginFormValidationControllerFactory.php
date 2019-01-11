@@ -3,7 +3,7 @@
  * This factory is responsible for creating "LoginFormValidationController" instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
 namespace Readigm\Http\Controller\Factory;
@@ -26,7 +26,7 @@ class LoginFormValidationControllerFactory extends AbstractChildFactory
 		$readable_id_validator = $factory->createInstance(ReadableIDValidator::class);
 		$email_validator = $factory->createInstance(EmailValidator::class);
 		$password_validator = $factory->createInstance(PasswordValidator::class);
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/login_form_validation_controller.php');
+		$config = $this->configLoader->load('login_form_validation_controller');
 
 		$this->args[] = $readable_id_validator;
 		$this->args[] = $email_validator;

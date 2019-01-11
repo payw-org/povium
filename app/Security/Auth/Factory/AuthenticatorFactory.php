@@ -3,7 +3,7 @@
 * This factory is responsible for creating "Authenticator" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Security\Auth\Factory;
@@ -30,7 +30,7 @@ class AuthenticatorFactory extends AbstractChildFactory
 		$session_manager = $factory->createInstance(SessionManager::class);
 		$user_manager = $factory->createInstance(UserManager::class);
 		$random_string_generator = $factory->createInstance(RandomStringGenerator::class);
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/authenticator.php');
+		$config = $this->configLoader->load('authenticator');
 
 		$this->args[] = $conn;
 		$this->args[] = $client;

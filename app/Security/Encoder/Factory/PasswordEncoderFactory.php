@@ -3,7 +3,7 @@
 * This factory is responsible for creating "PasswordEncoder" instance.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Povium
 */
 
 namespace Readigm\Security\Encoder\Factory;
@@ -17,7 +17,7 @@ class PasswordEncoderFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
-		$config = require($_SERVER['DOCUMENT_ROOT'] . '/../config/password_encoder.php');
+		$config = $this->configLoader->load('password_encoder');
 
 		$this->args[] = $config;
 	}
