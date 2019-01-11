@@ -67,9 +67,9 @@ abstract class AbstractAjaxMiddleware
 
         $json_data = json_encode($data);
 
-        if ($json_data === false) {
-            return false;
-        }
+    	if (json_last_error() != JSON_ERROR_NONE) {
+			return false;
+		}
 
         echo $json_data;
 
