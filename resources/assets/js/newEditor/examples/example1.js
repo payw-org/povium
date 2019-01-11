@@ -1,88 +1,226 @@
 export const Example = {
-	title: "Blockchain Is a Semantic WasteLand",
-	subtitle: "this is subtitle",
-	body: "",
-	contents: [
+	"title": "",
+	"subtitle": "",
+	"body": "",
+	"contents": [
 		{
-			type: "image",
-			size: "",
-			url: "/assets/images/post-test-img-4.jpg",
-			captionEnabled: false
-		},
-		{
-			type: "p",
-			data: [
+			"type": "p",
+			"data": [
 				{
 					"type": "styledText",
-					"data": [
-						{
-							"type": "styledText",
-							"data": [
-								{
-									"type": "rawText",
-									"data": "second <u>bold</u>merging bold part second "
-								}
-							],
-							"style": "italic"
-						}
-					],
-					"style": "bold"
-				},
-			]
-		},
-		{
-			type: "p",
-			data: [
-				{
-					"type": "styledText",
+					"style": "bold",
 					"data": [
 						{
 							"type": "rawText",
-							"data": "second "
-						},
-						{
-							"type": "styledText",
-							"data": [
-								{
-									"type": "rawText",
-									"data": "merging"
-								}
-							],
-							"style": "italic"
-						},
-						{
-							"type": "rawText",
-							"data": " bold part second "
+							"data": "창재는 언제쯤 세팅이 끝날까? "
 						}
-					],
-					"style": "bold"
+					]
 				}
 			]
 		},
 		{
-			type: "image",
-			size: "",
-			url: "/assets/images/post-test-img.gif",
-			captionEnabled: true,
-			caption: {
-				data: [
+			"type": "li",
+			"data": [
+				{
+					"type": "styledText",
+					"style": "bold",
+					"data": [
+						{
+							"type": "rawText",
+							"data": "코"
+						},
+						{
+							"type": "styledText",
+							"style": "italic",
+							"data": [
+								{
+									"type": "rawText",
+									"data": "딩"
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "styledText",
+					"style": "italic",
+					"data": [
+						{
+							"type": "rawText",
+							"data": "해"
+						}
+					]
+				},
+				{
+					"type": "rawText",
+					"data": "라"
+				}
+			],
+			"kind": "ol"
+		},
+		{
+			"type": "li",
+			"data": [
+				{
+					"type": "rawText",
+					"data": "몽"
+				},
+				{
+					"type": "styledText",
+					"style": "underline",
+					"data": [
+						{
+							"type": "rawText",
+							"data": "키"
+						},
+						{
+							"type": "styledText",
+							"style": "strike",
+							"data": [
+								{
+									"type": "rawText",
+									"data": "들"
+								}
+							]
+						},
+						{
+							"type": "rawText",
+							"data": "아"
+						}
+					]
+				}
+			],
+			"kind": "ol"
+		},
+		{
+			"type": "h2",
+			"data": [
+				{
+					"type": "styledText",
+					"style": "bold",
+					"data": [
+						{
+							"type": "rawText",
+							"data": "과연 당신의 분석"
+						},
+						{
+							"type": "styledText",
+							"style": "italic",
+							"data": [
+								{
+									"type": "rawText",
+									"data": "기는 이 복"
+								},
+								{
+									"type": "styledText",
+									"style": "underline",
+									"data": [
+										{
+											"type": "rawText",
+											"data": "잡한 트"
+										},
+										{
+											"type": "styledText",
+											"style": "strike",
+											"data": [
+												{
+													"type": "rawText",
+													"data": "리구조를"
+												}
+											]
+										},
+										{
+											"type": "rawText",
+											"data": " 분석해"
+										}
+									]
+								},
+								{
+									"type": "rawText",
+									"data": "낼 수 있을것인가?"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "image",
+			"url": "/assets/images/post-test-img.gif",
+			"captionEnabled": true,
+			"caption": {
+				"data": [
 					{
 						"type": "rawText",
-						"data": "This is an image caption."
+						"data": "이것은 "
+					},
+					{
+						"type": "styledText",
+						"style": "italic",
+						"data": [
+							{
+								"type": "rawText",
+								"data": "이미지 "
+							},
+							{
+								"type": "styledText",
+								"style": "underline",
+								"data": [
+									{
+										"type": "rawText",
+										"data": "캡션을 "
+									}
+								]
+							}
+						]
+					},
+					{
+						"type": "styledText",
+						"style": "underline",
+						"data": [
+							{
+								"type": "styledText",
+								"style": "bold",
+								"data": [
+									{
+										"type": "styledText",
+										"style": "italic",
+										"data": [
+											{
+												"type": "rawText",
+												"data": "가"
+											}
+										]
+									},
+									{
+										"type": "rawText",
+										"data": "장한"
+									}
+								]
+							},
+							{
+								"type": "rawText",
+								"data": " 복잡한 "
+							}
+						]
+					},
+					{
+						"type": "rawText",
+						"data": "노드이다."
 					}
 				]
 			}
 		},
 		{
-			type: "blockquote",
-			data: [
+			"type": "blockquote",
+			"data": [
 				{
-					type: "rawText",
-					data: "The reason “blockchain” is such seductive marketing… is the subtle implication that the data structure alone — absent proof of work or open validation — could convey the same benefits as bitcoin."
+					"type": "rawText",
+					"data": "승진이의 연막은 걷잡을 수 없이 퍼지고 있다."
 				}
-			],
-			kind: "bar"
+			]
 		}
 	],
-	isPremium: true
+	"isPremium": null
 }
