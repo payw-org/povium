@@ -219,6 +219,23 @@ export default class SelectionManager {
 		return this.createRange(startNode, startOffset, endNode, endOffset)
 	}
 
+	private static getTextOffset(elm: Element, stopContainer: Node, givenOffset: number): number {
+		let n, walk = document.createTreeWalker(elm, NodeFilter.SHOW_TEXT, null, false)
+
+		let offset = 0
+
+		while (n = walk.nextNode()) {
+			if (n.isSameNode(stopContainer)) {
+				offset += givenOffset
+				break
+			} else {
+				offset += n.textContent.length
+			}
+		}
+
+		return offset
+	}
+
 	public static getCurrentNode(): PVMNode {
 		let sel = window.getSelection()
 
@@ -235,26 +252,6 @@ export default class SelectionManager {
 		let startNode = range.startContainer
 
 		let node: Element = null
-
-		// for (let i = 0; i < AT.topTags.length; i++) {
-		// 	if (startNode.nodeType === 3) {
-		// 		node = startNode.parentElement.closest(AT.topTags[i])
-		// 	} else {
-		// 		node = (<Element>startNode).closest(AT.topTags[i])
-		// 	}
-
-		// 	if (node) break
-		// }
-
-		// if (!node) {
-		// 	return null
-		// }
-
-		// let nodeID = Number(node.getAttribute("data-ni"))
-
-		// let pvmNode = NodeManager.getNodeByID(nodeID)
-
-		// return pvmNode
 
 		return NodeManager.getNodeByChild(startNode)
 	}
@@ -313,52 +310,53 @@ export default class SelectionManager {
 	 */
 	public static getCursorState() {}
 
-	public static getTextOffset(
-		node: Node,
-		container: Node,
-		rangeOffset: number
-	): number {
-		let travelNode: Node = node.firstChild
-		let length: number = 0
-		let loopDone: boolean = false
+	// Deprecated
+	// public static getTextOffset(
+	// 	node: Node,
+	// 	container: Node,
+	// 	rangeOffset: number
+	// ): number {
+	// 	let travelNode: Node = node.firstChild
+	// 	let length: number = 0
+	// 	let loopDone: boolean = false
 
-		while (1) {
-			if (travelNode.nodeType === 3) {
-				if (travelNode.isEqualNode(container)) {
-					length += rangeOffset
-					break
-				} else {
-					length += travelNode.textContent.length
-				}
-			}
+	// 	while (1) {
+	// 		if (travelNode.nodeType === 3) {
+	// 			if (travelNode.isEqualNode(container)) {
+	// 				length += rangeOffset
+	// 				break
+	// 			} else {
+	// 				length += travelNode.textContent.length
+	// 			}
+	// 		}
 
-			if (travelNode.firstChild) {
-				travelNode = travelNode.firstChild
-			} else if (travelNode.nextSibling) {
-				travelNode = travelNode.nextSibling
-			} else {
-				travelNode = travelNode.parentNode
+	// 		if (travelNode.firstChild) {
+	// 			travelNode = travelNode.firstChild
+	// 		} else if (travelNode.nextSibling) {
+	// 			travelNode = travelNode.nextSibling
+	// 		} else {
+	// 			travelNode = travelNode.parentNode
 
-				while (1) {
-					if (travelNode.isEqualNode(node)) {
-						loopDone = true
-						break
-					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling
-						break
-					} else {
-						travelNode = travelNode.parentNode
-					}
-				}
-			}
+	// 			while (1) {
+	// 				if (travelNode.isEqualNode(node)) {
+	// 					loopDone = true
+	// 					break
+	// 				} else if (travelNode.nextSibling) {
+	// 					travelNode = travelNode.nextSibling
+	// 					break
+	// 				} else {
+	// 					travelNode = travelNode.parentNode
+	// 				}
+	// 			}
+	// 		}
 
-			if (loopDone) {
-				break
-			}
-		}
+	// 		if (loopDone) {
+	// 			break
+	// 		}
+	// 	}
 
-		return length
-	}
+	// 	return length
+	// }
 
 	// Actions
 
