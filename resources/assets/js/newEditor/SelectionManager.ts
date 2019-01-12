@@ -15,11 +15,6 @@ export default class SelectionManager {
 	public static setRange(pvmRange: PVMRange) {
 		if (!pvmRange || !pvmRange.start.node || !pvmRange.end.node) return
 
-		if (pvmRange.itself) {
-			pvmRange.start.node.select()
-			return
-		}
-
 		let range = document.createRange() // JS Range
 		let rangeStartContainer, rangeStartOffset, rangeEndContainer, rangeEndOffset
 		let startNodePVMN = pvmRange.start.node
