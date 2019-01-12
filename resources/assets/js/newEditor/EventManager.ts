@@ -1088,11 +1088,6 @@ export default class EventManager {
 		// 	caret.classList.add("stay")
 		// }
 
-		let newStartContainer, newEndContainer, newStartOffset, newEndOffset
-		let needsFix = false
-
-		let pvmRange = SelectionManager.getCurrentRange()
-
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
 
