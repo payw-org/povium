@@ -3,10 +3,10 @@
  * Exception interface
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
-namespace Readigm\Base\Database\Exception;
+namespace Readigm\Record\Exception;
 
 interface ExceptionInterface
 {

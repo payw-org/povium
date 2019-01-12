@@ -3,10 +3,10 @@
  * Abstract form for factory which is responsible for creating record manager instance.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
-namespace Readigm\Base\Database\Factory;
+namespace Readigm\Record\Factory;
 
 use Readigm\Base\Database\DBConnection;
 use Readigm\Base\Factory\AbstractChildFactory;

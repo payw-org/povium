@@ -1,16 +1,14 @@
 <?php
 /**
- * Record manager which is responsible for managing table record.
+ * Record manager which is responsible for managing(CRUD) table record.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
-namespace Readigm\Base\Database\Record;
+namespace Readigm\Record;
 
-use Readigm\Base\Database\Exception\InvalidParameterNumberException;
-
-abstract class AbstractRecordManager
+abstract class AbstractRecordManager implements RecordManagerInterface
 {
 	/**
 	 * Database connection (PDO)
@@ -35,11 +33,7 @@ abstract class AbstractRecordManager
 	}
 
 	/**
-	 * Returns a table record.
-	 *
-	 * @param  int|string	$id		Table record id
-	 *
-	 * @return array|false
+	 * {@inheritdoc}
 	 */
 	public function getRecord($id)
 	{
@@ -59,23 +53,12 @@ abstract class AbstractRecordManager
 	}
 
 	/**
-	 * Add new table record.
-	 *
-	 * @param mixed	Fields
-	 *
-	 * @return bool	Whether successfully added
-	 *
-	 * @throws InvalidParameterNumberException	If parameter number for creating record is not valid
+	 * {@inheritdoc}
 	 */
 	abstract public function addRecord();
 
 	/**
-	 * Update some fields of specific table record.
-	 *
-	 * @param  int|string	$id		Table record id
-	 * @param  array 		$params	Assoc array (Field name => New value)
-	 *
-	 * @return bool	Whether successfully updated
+	 * {@inheritdoc}
 	 */
 	public function updateRecord($id, $params)
 	{
@@ -103,11 +86,7 @@ abstract class AbstractRecordManager
 	}
 
 	/**
-	 * Delete a table record.
-	 *
-	 * @param  int|string	$id		Table record id
-	 *
-	 * @return bool	Whether successfully deleted
+	 * {@inheritdoc}
 	 */
 	public function deleteRecord($id)
 	{

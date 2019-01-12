@@ -8,7 +8,7 @@
 
 namespace Readigm\Security\User\Factory;
 
-use Readigm\Base\Database\Factory\AbstractRecordManagerFactory;
+use Readigm\Record\Factory\AbstractRecordManagerFactory;
 
 class UserManagerFactory extends AbstractRecordManagerFactory
 {

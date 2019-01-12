@@ -8,8 +8,8 @@
 
 namespace Readigm\Security\User;
 
-use Readigm\Base\Database\Record\AbstractRecordManager;
-use Readigm\Base\Database\Exception\InvalidParameterNumberException;
+use Readigm\Record\AbstractRecordManager;
+use Readigm\Record\Exception\InvalidParameterNumberException;
 
 class UserManager extends AbstractRecordManager
 {
