@@ -15,7 +15,7 @@ class ConfigLoader
 	 *
 	 * @param	string	Config file names
 	 *
-	 * @return array
+	 * @return	array
 	 */
 	public function load()
 	{
