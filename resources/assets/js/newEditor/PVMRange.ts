@@ -14,7 +14,7 @@ interface RangePoint {
 }
 
 export default class PVMRange {
-	itself: boolean = false
+	collapsed: boolean
 	start: RangePoint = {
 		node: undefined,
 		offset: undefined,
@@ -34,9 +34,9 @@ export default class PVMRange {
 		itself: boolean
 	) {
 		// Properties
-		this.itself = itself
 		this.setStart(startNode, startOffset)
 		this.setEnd(endNode, endOffset)
+		this.collapsed = this.isCollapsed()
 	}
 
 	// Methods
