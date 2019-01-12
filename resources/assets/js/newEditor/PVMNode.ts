@@ -26,10 +26,6 @@ export default class PVMNode {
 		this.attachEventListeners()
 	}
 
-	select() {
-		
-	}
-
 	attachEventListeners() {
 	}
 
