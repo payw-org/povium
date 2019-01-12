@@ -7,6 +7,7 @@ import SelectionManager from "./SelectionManager"
 import UndoManager from "./UndoManager"
 import TypeChecker from "./TypeChecker"
 import PVMImageNode from "./PVMImageNode"
+import PVMNode from "./PVMNode";
 
 export default class EventManager {
 	public static mouseDownStart: boolean
@@ -761,13 +762,20 @@ export default class EventManager {
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
 
-		if (currentRange && currentRange.isCollapsed()) {
+		if (currentRange && currentRange.collapsed) {
 			// Selection is collapsed
 
 			let state = currentRange.start.state
 
 			if (state === 1) {
-				let newNode = NodeManager.createNode(currentNode.type)
+				let newNode: PVMNode
+				if (TypeChecker.isListItem(currentNode.type)) {
+					newNode = NodeManager.createNode("li", {
+						kind: currentNode.kind
+					})
+				} else {
+					newNode = NodeManager.createNode(currentNode.type)
+				}
 				NodeManager.insertChildBefore(newNode, currentNode)
 				UndoManager.record({
 					type: "insert",
@@ -798,7 +806,7 @@ export default class EventManager {
 				let newNode
 				if (currentNode.type === "li") {
 					if (state === 3) {
-						newNode = NodeManager.createNode("LI", {
+						newNode = NodeManager.createNode("li", {
 							kind: currentNode.kind
 						})
 					} else if (state === 4) {
