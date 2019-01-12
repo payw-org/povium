@@ -1,22 +1,15 @@
 <?php
 /**
-* Create auto_saved_post table.
-*
-* @author 		H.Chihoon
-* @copyright 	2019 Povium
-*/
+ * Sql for creating auto_saved_post table.
+ *
+ * @author 		H.Chihoon
+ * @copyright 	2019 Povium
+ */
 
-class CreateAutoSavedPostTable
-{
-	/**
-	 * Returns sql for creating auto_saved_post table.
-	 *
-	 * @return string
-	 */
-	public function getCreateSQL()
-	{
-		$sql = "CREATE TABLE IF NOT EXISTS auto_saved_post (
-			id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+return [
+	'sql' => '
+		CREATE TABLE IF NOT EXISTS auto_saved_post (
+  			id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 			user_id INT(11) UNSIGNED NOT NULL,
 			contents JSON NOT NULL,
 			body MEDIUMTEXT NOT NULL,
@@ -34,21 +27,7 @@ class CreateAutoSavedPostTable
 			REFERENCES series (id) ON DELETE SET NULL ON UPDATE CASCADE,
 			CONSTRAINT FK__post__auto_saved_post FOREIGN KEY (post_id)
 			REFERENCES post (id) ON DELETE CASCADE ON UPDATE CASCADE
-
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-
-		return $sql;
-	}
-
-	/**
-	 * Returns sql for dropping auto_saved_post table.
-	 *
-	 * @return string
-	 */
-	public function getDropSQL()
-	{
-		$sql = "DROP TABLE IF EXISTS auto_saved_post";
-
-		return $sql;
-	}
-}
+    	
+	  	) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	'
+];

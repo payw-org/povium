@@ -1,21 +1,14 @@
 <?php
 /**
-* Create post table.
-*
-* @author 		H.Chihoon
-* @copyright 	2019 Povium
-*/
+ * Sql for creating post table.
+ *
+ * @author 		H.Chihoon
+ * @copyright 	2019 Povium
+ */
 
-class CreatePostTable
-{
-	/**
-	 * Returns sql for creating post table.
-	 *
-	 * @return string
-	 */
-	public function getCreateSQL()
-	{
-		$sql = "CREATE TABLE IF NOT EXISTS post (
+return [
+	'sql' => '
+		CREATE TABLE IF NOT EXISTS post (
 			id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 			user_id INT(11) UNSIGNED NOT NULL,
 			contents JSON NOT NULL,
@@ -33,20 +26,6 @@ class CreatePostTable
 			CONSTRAINT FK__series__post FOREIGN KEY (series_id)
 			REFERENCES series (id) ON DELETE SET NULL ON UPDATE CASCADE
 
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-
-		return $sql;
-	}
-
-	/**
-	 * Returns sql for dropping post table.
-	 *
-	 * @return string
-	 */
-	public function getDropSQL()
-	{
-		$sql = "DROP TABLE IF EXISTS post";
-
-		return $sql;
-	}
-}
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	'
+];
