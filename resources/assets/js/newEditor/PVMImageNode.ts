@@ -26,18 +26,23 @@ export default class PVMImageNode extends PVMNode {
 		})
 	}
 
-	selectImage(imgElm?: HTMLImageElement) {
+	selectImage(imgElm?: Element | number) {
+		let imageWrapper: Element
 		if (!imgElm) {
 			imgElm = this.element.querySelector("img")
+		}
+
+		if (typeof(imgElm) === "number") {
+			imgElm = this.element.querySelectorAll("img")[imgElm]
+		} else {
+			// Add classed to image-wrapper
+			imageWrapper = imgElm.closest(".image-wrapper")
+			imageWrapper.classList.add("is-selected")
 		}
 
 		// Add classes to dom
 		this.element.classList.remove("caption-focused")
 		this.element.classList.add("node-selected")
-
-		// Add classed to image-wrapper
-		let imageWrapper = imgElm.closest(".image-wrapper")
-		imageWrapper.classList.add("is-selected")
 
 		// Set imageTool
 		PopTool.showImageTool(this.element.querySelector(".image-wrapper"))

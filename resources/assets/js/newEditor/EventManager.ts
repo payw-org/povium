@@ -1104,20 +1104,27 @@ export default class EventManager {
 		// }
 
 		let currentRange = SelectionManager.getCurrentRange()
-		let currentNode = SelectionManager.getCurrentNode()
+		if (!currentRange || !currentRange.start.node) return
+		let currentNode = currentRange.start.node
 
-		// if (
-		// 	currentRange
-		// 	&& !currentRange.itself
-		// 	&& TypeChecker.isImage(currentRange.start.node.type)
-		// ) {
-		// 	console.log("focused on caption")
-		// 	;(<PVMImageNode> currentRange.start.node).focusCaption()
-		// } else if (currentRange && !currentRange.itself) {
-		// 	SelectionManager.releaseNodeSelection()
-		// } else if (!currentRange) {
-		// 	SelectionManager.releaseNodeSelection()
-		// }
+		if (currentRange.collapsed) {
+			if (currentRange.start.state === 5) {
+				if (
+					currentRange.start.node.type === "image" ||
+					currentRange.start.node.type === "gallery"
+				) {
+					;(currentRange.start.node as PVMImageNode).selectImage(currentRange.start.offset)
+				}
+			} else if (
+				currentRange.start.node.type === "image" ||
+				currentRange.start.node.type === "gallery"
+			) {
+				SelectionManager.releaseNodeSelection()
+				;(currentRange.start.node as PVMImageNode).focusCaption()
+			} else {
+				SelectionManager.releaseNodeSelection()
+			}
+		}
 
 		PopTool.togglePopTool()
 

@@ -515,11 +515,12 @@ export default class SelectionManager {
 	// Remove all selections from the editor
 	public static releaseNodeSelection() {
 		// Remove media selected
-		let elms = EditSession.editorBody.querySelectorAll(".node-selected, .caption-focused")
+		let elms = EditSession.editorBody.querySelectorAll(".node-selected, .caption-focused, .is-selected")
 		if (elms.length > 0) {
 			elms.forEach(elm => {
 				elm.classList.remove("node-selected")
 				elm.classList.remove("caption-focused")
+				elm.classList.remove("is-selected")
 			})
 		}
 		PopTool.hideImageTool()

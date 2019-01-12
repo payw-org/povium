@@ -516,21 +516,26 @@
 		.image-wrapper {
 			cursor: default;
 			width: 100%;
+			transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
 			// overflow: hidden;
 			img {
-				transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease; // will-change: transform;
+				transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
 				cursor: default;
 
 				width: 100%;
 				// height: 100%; // max-width: 100%;
 				height: auto;
 			}
+
+			&.is-selected {
+				box-shadow: 0 0 0 5px @pvm-violet;
+			}
 		}
 		&.node-selected {
-			.image-wrapper img {
-				box-shadow: 0 0 0 5px @pvm-violet;
-				// box-shadow: 0 1rem 4rem rgba(0,0,0,.5);
-			}
+			// .image-wrapper img {
+			// 	box-shadow: 0 0 0 5px @pvm-violet;
+			// 	// box-shadow: 0 1rem 4rem rgba(0,0,0,.5);
+			// }
 			figcaption {
 				display: block;
 			}

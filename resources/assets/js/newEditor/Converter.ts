@@ -231,6 +231,11 @@ export default class Converter {
 			}
 
 			travelNode = travelNode.nextSibling
+			if (!travelNode) {
+				console.log("no more travelnode")
+			} else {
+				console.log(travelNode)
+			}
 		}
 
 		return textData
