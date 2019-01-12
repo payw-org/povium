@@ -26,13 +26,7 @@ export default class PVMImageNode extends PVMNode {
 		})
 	}
 
-	select() {
-		// When selecting an image independently,
-		// all other ranges in the window must be removed
-		// to be recognized the PVMRange correctly
-		// from SelectionManager
-		window.getSelection().removeAllRanges()
-
+	selectImage() {
 		// Add classes to dom
 		this.element.classList.remove("caption-focused")
 		this.element.classList.add("node-selected")
