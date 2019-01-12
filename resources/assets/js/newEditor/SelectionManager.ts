@@ -141,7 +141,12 @@ export default class SelectionManager {
 		let selectedElm = EditSession.editorBody.querySelector(".node-selected")
 		if (selectedElm && window.getSelection().rangeCount === 0) {
 			let selectedNode = NodeManager.getNodeByID(NodeManager.getNodeID(selectedElm))
-			let r = this.createRange(selectedNode, 0, selectedNode, 0, true)
+			let r = new PVMRange({
+				startNode: selectedNode,
+				startOffset: 0,
+				endNode: selectedNode,
+				endOffset: 0
+			})
 			return r
 		}
 		
@@ -154,69 +159,99 @@ export default class SelectionManager {
 		}
 		
 		let range = document.getSelection().getRangeAt(0)
+		let sc = range.startContainer, ec = range.endContainer
 		let closestTarget: Element
 
 		let startNode, endNode
 		let startOffset = 0, endOffset = 0
+		let startState = undefined, endState = undefined
 
-		for (let i = 0; i < AT.topTags.length; i++) {
-			if (range.startContainer.nodeType !== 3) {
-				closestTarget = <Element> range.startContainer
-			} else {
-				closestTarget = range.startContainer.parentElement
+		if (
+			sc.nodeType === 3 ||
+			AT.textContainedTags.includes(sc.nodeName.toLocaleLowerCase())
+		) {
+			for (let i = 0; i < AT.topTags.length; i++) {
+				if (sc.nodeType !== 3) {
+					closestTarget = <Element> sc
+				} else {
+					closestTarget = sc.parentElement
+				}
+
+				if (closestTarget.closest(AT.topTags[i])) {
+					let startElm = closestTarget.closest(AT.topTags[i])
+					startNode = NodeManager.getNodeByID(NodeManager.getNodeID(startElm))
+					startOffset = this.getTextOffset(startElm, sc, range.startOffset)
+					break
+				}
 			}
-
-			if (closestTarget.closest(AT.topTags[i])) {
-				let startElm = closestTarget.closest(AT.topTags[i])
-				startNode = NodeManager.getNodeByID(NodeManager.getNodeID(startElm))
-				let n, walk = document.createTreeWalker(startElm, NodeFilter.SHOW_TEXT, null, false)
-				while (n = walk.nextNode()) {
-					if (n.isSameNode(range.startContainer)) {
-						startOffset += range.startOffset
+		} else {
+			let focusedNode = NodeManager.getNodeByChild(sc)
+			let selectionBreaks = focusedNode.element.querySelectorAll(".selection-break")
+			if (selectionBreaks.length > 0) {
+				for (let i = 0; i < selectionBreaks.length; i++) {
+					if (selectionBreaks[i].contains(sc)) {
+						startNode = focusedNode
+						startOffset = i
+						startState = 5
 						break
 					}
-					startOffset += n.textContent.length
 				}
-				break
 			}
 		}
 
 		if (range.collapsed) {
-			;(endNode = startNode), (endOffset = startOffset)
-		} else {
+			endNode = startNode
+			endOffset = startOffset
+			endState = startState
+		} else if (
+			ec.nodeType === 3 ||
+			AT.textContainedTags.includes(ec.nodeName.toLocaleLowerCase())
+		) {
 			for (let i = 0; i < AT.topTags.length; i++) {
-				if (range.endContainer.nodeType !== 3) {
-					closestTarget = <Element>range.endContainer
+				if (ec.nodeType !== 3) {
+					closestTarget = <Element>ec
 				} else {
-					closestTarget = range.endContainer.parentElement
+					closestTarget = ec.parentElement
 				}
 
 				if (closestTarget.closest(AT.topTags[i])) {
 					let endElm = closestTarget.closest(AT.topTags[i])
 					endNode = NodeManager.getNodeByID(NodeManager.getNodeID(endElm))
-					let n, walk = document.createTreeWalker(endElm, NodeFilter.SHOW_TEXT, null, false)
-					while (n = walk.nextNode()) {
-						if (n.isSameNode(range.endContainer)) {
-							endOffset += range.endOffset
-							break
-						}
-						endOffset += n.textContent.length
-					}
+					endOffset = this.getTextOffset(endElm, ec, range.endOffset)
 					break
 				}
 			}
 
-			if (range.endContainer.nodeType !== 3) {
+			if (ec.nodeType !== 3) {
 				endOffset = range.endOffset
+			}
+		} else {
+			let focusedNode = NodeManager.getNodeByChild(ec)
+			let selectionBreaks = focusedNode.element.querySelectorAll(".selection-break")
+			if (selectionBreaks.length > 0) {
+				for (let i = 0; i < selectionBreaks.length; i++) {
+					if (selectionBreaks[i].contains(ec)) {
+						endNode = focusedNode
+						endOffset = i
+						endState = 5
+						break
+					}
+				}
 			}
 		}
 
-		return this.createRange(startNode, startOffset, endNode, endOffset)
+		return new PVMRange({
+			startNode: startNode,
+			startOffset: startOffset,
+			startState: startState,
+			endNode: endNode,
+			endOffset: endOffset,
+			endState: endState
+		})
 	}
 
 	private static getTextOffset(elm: Element, stopContainer: Node, givenOffset: number): number {
 		let n, walk = document.createTreeWalker(elm, NodeFilter.SHOW_TEXT, null, false)
-
 		let offset = 0
 
 		while (n = walk.nextNode()) {
@@ -354,17 +389,6 @@ export default class SelectionManager {
 	// }
 
 	// Actions
-
-	public static createRange(
-		startNode: PVMNode,
-		startOffset: number,
-		endNode: PVMNode,
-		endOffset: number,
-		itself: boolean = false
-	) {
-		let range = new PVMRange(startNode, startOffset, endNode, endOffset, itself)
-		return range
-	}
 
 	public static focusAt(node: PVMNode, offset: number) {}
 

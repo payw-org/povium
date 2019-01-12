@@ -26,13 +26,30 @@ export default class PVMImageNode extends PVMNode {
 		})
 	}
 
-	selectImage() {
+	selectImage(imgElm?: HTMLImageElement) {
+		if (!imgElm) {
+			imgElm = this.element.querySelector("img")
+		}
+
 		// Add classes to dom
 		this.element.classList.remove("caption-focused")
 		this.element.classList.add("node-selected")
 
+		// Add classed to image-wrapper
+		let imageWrapper = imgElm.closest(".image-wrapper")
+		imageWrapper.classList.add("is-selected")
+
 		// Set imageTool
 		PopTool.showImageTool(this.element.querySelector(".image-wrapper"))
+
+		// Add range
+		let jsRange = document.createRange()
+		let selectionBreak = imageWrapper.querySelector(".selection-break")
+		jsRange.setStart(selectionBreak, 0)
+		jsRange.setEnd(selectionBreak, 0)
+		let sel = window.getSelection()
+		sel.removeAllRanges()
+		sel.addRange(jsRange)
 
 		// If the caption is empty, set default value
 		if (!this.captionEnabled) {

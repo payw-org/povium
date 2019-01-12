@@ -4,6 +4,7 @@ import PVMNode from "./PVMNode"
 import PVMImageNode from "./PVMImageNode"
 import SelectionManager from "./SelectionManager"
 import TypeChecker from "./TypeChecker"
+import PVMRange from "./PVMRange";
 
 export default class NodeManager {
 	constructor() {}
@@ -266,15 +267,15 @@ export default class NodeManager {
 			dom.classList.add("image")
 			dom.contentEditable = "false"
 
-			// dummy contenteditable div for image selection
-			let dummy = document.createElement("div")
-			dummy.contentEditable = "true"
-			dummy.className = "selection-break"
-			dummy.innerHTML = "<br>"
-			dom.appendChild(dummy)
-
 			let imgWrapper = document.createElement("div")
 			imgWrapper.className = "image-wrapper"
+
+			// dummy contenteditable div for image selection
+			let selectionBreak = document.createElement("div")
+			selectionBreak.contentEditable = "true"
+			selectionBreak.className = "selection-break"
+			selectionBreak.innerHTML = "<br>"
+			imgWrapper.appendChild(selectionBreak)
 
 			let imgDOM = document.createElement("img")
 			imgWrapper.appendChild(imgDOM)
@@ -357,12 +358,12 @@ export default class NodeManager {
 		let bugSolver = document.createTextNode(" ")
 		currentNode.textElement.appendChild(bugSolver)
 
-		let newRange = SelectionManager.createRange(
-			currentNode,
-			currentRange.start.offset,
-			currentNode,
-			currentNode.getTextContent().length
-		)
+		let newRange = new PVMRange({
+			startNode: currentNode,
+			startOffset: currentRange.start.offset,
+			endNode: currentNode,
+			endOffset: currentNode.getTextContent().length
+		})
 
 		SelectionManager.setRange(newRange)
 

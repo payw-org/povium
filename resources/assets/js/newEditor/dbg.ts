@@ -8,6 +8,9 @@ export const dbg = function() {
 		console.log(SelectionManager.getCurrentNode())
 	})
 	d.querySelector(".gcs").addEventListener("click", e => {
+		console.log(window.getSelection().getRangeAt(0))
+	})
+	d.querySelector(".gcpr").addEventListener("click", e => {
 		console.log(SelectionManager.getCurrentRange())
 	})
 	d.querySelector(".gcnl").addEventListener("click", e => {

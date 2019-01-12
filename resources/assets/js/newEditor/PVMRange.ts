@@ -26,16 +26,17 @@ export default class PVMRange {
 		state: undefined
 	}
 
-	constructor(
+	constructor(args: {
 		startNode: PVMNode,
 		startOffset: number,
+		startState?: number,
 		endNode: PVMNode,
 		endOffset: number,
-		itself: boolean
-	) {
+		endState?: number
+	}) {
 		// Properties
-		this.setStart(startNode, startOffset)
-		this.setEnd(endNode, endOffset)
+		this.setStart(args.startNode, args.startOffset, args.startState)
+		this.setEnd(args.endNode, args.endOffset, args.endState)
 		this.collapsed = this.isCollapsed()
 	}
 
@@ -60,18 +61,18 @@ export default class PVMRange {
 
 	// Setters
 
-	setStart(startNode: PVMNode, startOffset: number) {
+	setStart(startNode: PVMNode, startOffset: number, startState?: number) {
 		if (!startNode) {
 			return
 		}
 
 		this.start.node = startNode
+		this.start.offset = startOffset
 
-		if (this.itself) {
+		if (startState) {
+			this.start.state = startState
 			return
 		}
-
-		this.start.offset = startOffset
 
 		if (startNode.getTextContent().length === startOffset) {
 			if (startNode.getTextContent().length === 0) {
@@ -86,18 +87,18 @@ export default class PVMRange {
 		}
 	}
 
-	setEnd(endNode: PVMNode, endOffset: number) {
+	setEnd(endNode: PVMNode, endOffset: number, endState?: number) {
 		if (!endNode) {
 			return
 		}
 
 		this.end.node = endNode
+		this.end.offset = endOffset
 
-		if (this.itself) {
+		if (endState) {
+			this.end.state = endState
 			return
 		}
-
-		this.end.offset = endOffset
 
 		if (endNode.getTextContent().length === endOffset) {
 			if (endNode.getTextContent().length === 0) {
@@ -120,12 +121,14 @@ export default class PVMRange {
 
 	clone() {
 		let sel = new SelectionManager()
-		let range = SelectionManager.createRange(
-			this.start.node,
-			this.start.offset,
-			this.end.node,
-			this.end.offset
-		)
+		let range = new PVMRange({
+			startNode: this.start.node,
+			startOffset: this.start.offset,
+			startState: this.start.state,
+			endNode: this.end.node,
+			endOffset: this.end.offset,
+			endState: this.end.state
+		})
 		return range
 	}
 

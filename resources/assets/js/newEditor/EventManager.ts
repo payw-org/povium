@@ -489,11 +489,12 @@ export default class EventManager {
 
 		// Select all (command + a or control + a)
 		if (physKeyCode === "KeyA" && (e.metaKey || e.ctrlKey)) {
-			let pvmRange = SelectionManager.createRange(
-				EditSession.nodeList[0], 0,
-				EditSession.nodeList[EditSession.nodeList.length - 1],
-				EditSession.nodeList[EditSession.nodeList.length - 1].getTextContent().length
-				)
+			let pvmRange = new PVMRange({
+				startNode: EditSession.nodeList[0],
+				startOffset: 0,
+				endNode: EditSession.nodeList[EditSession.nodeList.length - 1],
+				endOffset: EditSession.nodeList[EditSession.nodeList.length - 1].getTextContent().length
+			})
 			SelectionManager.setRange(pvmRange)
 			console.log("selected all")
 			console.log(pvmRange)
@@ -734,12 +735,12 @@ export default class EventManager {
 			let originalParentType = currentNode.kind
 			NodeManager.transformNode(currentNode, "li", parentType)
 			currentNode.fixEmptiness()
-			let newRange = SelectionManager.createRange(
-				currentNode,
-				0,
-				currentNode,
-				0
-			)
+			let newRange = new PVMRange({
+				startNode: currentNode,
+				startOffset: 0,
+				endNode: currentNode,
+				endOffset: 0
+			})
 			SelectionManager.setRange(newRange)
 			UndoManager.record({
 				type: "transform",
@@ -778,7 +779,12 @@ export default class EventManager {
 				})
 			} else if (state === 2) {
 				let newNode = NodeManager.splitNode()
-				let newRange = SelectionManager.createRange(newNode, 0, newNode, 0)
+				let newRange = new PVMRange({
+					startNode: newNode,
+					startOffset: 0,
+					endNode: newNode,
+					endOffset: 0
+				})
 				SelectionManager.setRange(newRange)
 				UndoManager.record({
 					type: "split",
@@ -837,7 +843,12 @@ export default class EventManager {
 				}
 				let nextNode = currentNode.nextSibling
 				NodeManager.insertChildBefore(newNode, nextNode)
-				let newRange = SelectionManager.createRange(newNode, 0, newNode, 0)
+				let newRange = new PVMRange({
+					startNode: newNode,
+					startOffset: 0,
+					endNode: newNode,
+					endOffset: 0
+				})
 				SelectionManager.setRange(newRange)
 				UndoManager.record({
 					type: "insert",
@@ -918,12 +929,12 @@ export default class EventManager {
 						let prvsOrgLen = prvs.textElement.textContent.length
 						let originalContents = prvs.textElement.innerHTML
 						NodeManager.mergeNodes(prvs, currentNode)
-						let newRange = SelectionManager.createRange(
-							prvs,
-							prvsOrgLen,
-							prvs,
-							prvsOrgLen
-						)
+						let newRange = new PVMRange({
+							startNode: prvs,
+							startOffset: prvsOrgLen,
+							endNode: prvs,
+							endOffset: prvsOrgLen
+						})
 						SelectionManager.setRange(newRange)
 						UndoManager.record({
 							type: "merge",
@@ -959,12 +970,12 @@ export default class EventManager {
 				if (prvs) {
 					let nextNode = currentNode.nextSibling
 					NodeManager.removeChild(currentNode)
-					let newRange = SelectionManager.createRange(
-						prvs,
-						prvs.textElement.textContent.length,
-						prvs,
-						prvs.textElement.textContent.length
-					)
+					let newRange = new PVMRange({
+						startNode: prvs,
+						startOffset: prvs.textElement.textContent.length,
+						endNode: prvs,
+						endOffset: prvs.textElement.textContent.length
+					})
 					SelectionManager.setRange(newRange)
 					UndoManager.record({
 						type: "remove",
@@ -1039,7 +1050,12 @@ export default class EventManager {
 				let nextNode = currentNode.nextSibling
 				if (nextNode) {
 					NodeManager.removeChild(currentNode)
-					let newRange = SelectionManager.createRange(nextNode, 0, nextNode, 0)
+					let newRange = new PVMRange({
+						startNode: nextNode,
+						startOffset: 0,
+						endNode: nextNode,
+						endOffset: 0
+					})
 					SelectionManager.setRange(newRange)
 					UndoManager.record({
 						type: "remove",
@@ -1066,7 +1082,7 @@ export default class EventManager {
 					;(<PVMImageNode> clickedNode).focusCaption()
 				} else {
 					SelectionManager.releaseNodeSelection()
-					;(<PVMImageNode> clickedNode).select()
+					;(<PVMImageNode> clickedNode).selectImage()
 				}	
 			}
 		}
@@ -1075,7 +1091,6 @@ export default class EventManager {
 	}
 
 	public static onSelectionChanged() {
-		console.log("Selection Changed")
 		// Smooth Cursor Implementation
 		// let jsRange: Range
 		// if (window.getSelection().rangeCount > 0) {
@@ -1091,18 +1106,18 @@ export default class EventManager {
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
 
-		if (
-			currentRange
-			&& !currentRange.itself
-			&& TypeChecker.isImage(currentRange.start.node.type)
-		) {
-			console.log("focused on caption")
-			;(<PVMImageNode> currentRange.start.node).focusCaption()
-		} else if (currentRange && !currentRange.itself) {
-			SelectionManager.releaseNodeSelection()
-		} else if (!currentRange) {
-			SelectionManager.releaseNodeSelection()
-		}
+		// if (
+		// 	currentRange
+		// 	&& !currentRange.itself
+		// 	&& TypeChecker.isImage(currentRange.start.node.type)
+		// ) {
+		// 	console.log("focused on caption")
+		// 	;(<PVMImageNode> currentRange.start.node).focusCaption()
+		// } else if (currentRange && !currentRange.itself) {
+		// 	SelectionManager.releaseNodeSelection()
+		// } else if (!currentRange) {
+		// 	SelectionManager.releaseNodeSelection()
+		// }
 
 		PopTool.togglePopTool()
 
