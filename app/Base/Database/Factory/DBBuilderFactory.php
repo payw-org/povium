@@ -10,6 +10,8 @@ namespace Readigm\Base\Database\Factory;
 
 use Readigm\Base\Factory\AbstractChildFactory;
 use Readigm\Base\Database\DBConnection;
+use Readigm\Base\Factory\MasterFactory;
+use Readigm\Loader\Database\SQLLoader;
 
 class DBBuilderFactory extends AbstractChildFactory
 {
@@ -18,10 +20,14 @@ class DBBuilderFactory extends AbstractChildFactory
 	 */
 	protected function prepareArgs()
 	{
+		$factory = new MasterFactory();
+
 		$conn = DBConnection::getInstance()->getConn();
+		$sql_loader = $factory->createInstance(SQLLoader::class);
 		$config = $this->configLoader->load('db_builder');
 
 		$this->args[] = $conn;
+		$this->args[] = $sql_loader;
 		$this->args[] = $config;
 	}
 }

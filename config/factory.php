@@ -53,6 +53,7 @@ return [
 	\Readigm\Http\Middleware\User\ProfileViewMiddleware::class => \Readigm\Http\Middleware\Factory\ProfileViewMiddlewareFactory::class,
 	\Readigm\Http\Middleware\Error\HttpErrorViewMiddleware::class => \Readigm\Http\Middleware\Factory\HttpErrorViewMiddlewareFactory::class,
 
+	\Readigm\Loader\Database\SQLLoader::class => \Readigm\Loader\Database\Factory\SQLLoaderFactory::class,
 	\Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader::class => \Readigm\Loader\Module\Factory\GlobalNavigationModuleLoaderFactory::class,
 	\Readigm\Loader\Module\Profile\ProfileInfoModuleLoader::class => \Readigm\Loader\Module\Factory\ProfileInfoModuleLoaderFactory::class,
 

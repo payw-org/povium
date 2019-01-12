@@ -3,10 +3,12 @@
  * Database builder.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Povium
  */
 
 namespace Readigm\Base\Database;
+
+use Readigm\Loader\Database\SQLLoader;
 
 class DBBuilder
 {
@@ -23,17 +25,27 @@ class DBBuilder
 	protected $conn;
 
 	/**
+	 * @var SQLLoader
+	 */
+	protected $sqlLoader;
+
+	/**
 	 * @var array
 	 */
 	private $config;
 
 	/**
-	 * @param \PDO 	$conn
-	 * @param array $config
+	 * @param \PDO 		$conn
+	 * @param SQLLoader $sql_loader
+	 * @param array 	$config
 	 */
-	public function __construct(\PDO $conn, array $config)
-	{
+	public function __construct(
+		\PDO $conn,
+		SQLLoader $sql_loader,
+		array $config
+	) {
 		$this->conn = $conn;
+		$this->sqlLoader = $sql_loader;
 		$this->config = $config;
 	}
 
@@ -110,7 +122,9 @@ class DBBuilder
 	private function createAllTables()
 	{
 		foreach ($this->config['table_list'] as $table) {
-			$this->conn->exec($table->getCreateSQL());
+			$sql = $this->sqlLoader->loadCreateSQL($table);
+
+			$this->conn->exec($sql);
 		}
 	}
 }
