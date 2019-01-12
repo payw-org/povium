@@ -463,8 +463,13 @@ export default class NodeManager {
 			return
 		}
 
+		if (list1.isSameNode(list2)) {
+			// Skip merging same nodes
+			return
+		}
+
 		let node
-		while ((node = list2.firstElementChild)) {
+		while (node = list2.firstElementChild) {
 			list1.appendChild(node)
 		}
 
