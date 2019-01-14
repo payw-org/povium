@@ -11,10 +11,10 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes If Not A Folder...
+    # Remove Trailing Slash
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
+    RewriteRule ^ %1 [R=301,L]
 
 	# Force non-www
 	RewriteCond %{HTTP_HOST} ^www\.
@@ -22,7 +22,15 @@
 	RewriteCond http%1://%{HTTP_HOST} ^(https?://)(www\.)?(.+)$
 	RewriteRule ^ %1%3%{REQUEST_URI} [R=301,L]
 
-    # Handle Front Controller...
+    # Prevent direct url access to existing file or directory
+    RewriteCond %{HTTP_REFERER} !^http://(www\.)?readigm.local [NC]
+    RewriteCond %{HTTP_REFERER} !^http://(www\.)?readigm.local.*$ [NC]
+    RewriteCond %{REQUEST_FILENAME} -s [OR]
+    RewriteCond %{REQUEST_FILENAME} -l [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ index.php [L]
+
+    # Redirect to index
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
