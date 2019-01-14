@@ -40,13 +40,13 @@
 		align-items: center;
 		overflow: hidden;
 		transition: all @pvm-animation;
-		z-index: -1;
+		z-index: 1;
 		box-shadow: none;
 
 		.mobile-menu-active & {
 			display: flex;
 			// height: 200px;
-			box-shadow: 0 2px 5px rgba(0,0,0,.2);
+			// box-shadow: 0 2px 5px rgba(0,0,0,.2);
 		}
 
 		.gn-m-item {
@@ -384,7 +384,9 @@
 	transition: all .5s ease;
 }
 
-.search-active #gn-search-backface {
+.search-active #gn-search-backface,
+.mobile-menu-active #gn-search-backface
+{
 	visibility: visible;
 	opacity: 1;
 }

@@ -5,8 +5,8 @@ class GlobalNavView {
 		this.gnInputDOM = document.querySelector("#gn-search-input")
 
 		// Attatch event listeners
-		window.addEventListener("mousedown", e => this.handleWindowClickEvent(e))
-		window.addEventListener("touchstart", e => this.handleWindowClickEvent(e))
+		// window.addEventListener("mousedown", e => this.handleWindowClickEvent(e))
+		// window.addEventListener("touchstart", e => this.handleWindowClickEvent(e))
 
 		document.querySelector("#globalnav .magnifier").addEventListener("click", e => {
 				this.handleMagnifierEvent()
@@ -28,6 +28,11 @@ class GlobalNavView {
 
 		window.addEventListener("resize", e => {
 			this.foldMobileMenu()
+		})
+
+		this.gnDOM.querySelector("#gn-search-backface").addEventListener("click", e => {
+			this.foldMobileMenu()
+			this.foldSearchInput()
 		})
 	}
 
@@ -67,12 +72,6 @@ class GlobalNavView {
 	}
 
 	handleWindowClickEvent(e) {
-		if (
-			!document.querySelector("#gn-search-ui").contains(e.target) &&
-			!document.querySelector("#gn-search-result-view").contains(e.target)
-		) {
-			this.foldSearchInput()
-		}
 	}
 }
 
