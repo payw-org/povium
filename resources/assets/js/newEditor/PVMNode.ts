@@ -1,5 +1,6 @@
 import { AT } from "./AvailableTypes"
 import SelectionManager from "./SelectionManager"
+import TypeChecker from "./TypeChecker"
 
 export default class PVMNode {
 	id: number
@@ -41,8 +42,10 @@ export default class PVMNode {
 
 	replaceElement(elm: HTMLElement) {
 		this.element = elm
-		if (AT.textContained.includes(this.type)) {
+		if (TypeChecker.isTextContained(this.type)) {
 			this.textElement = elm
+		} else {
+			console.error("Type is not registered")
 		}
 	}
 
