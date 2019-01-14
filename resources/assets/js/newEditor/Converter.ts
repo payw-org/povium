@@ -3,7 +3,7 @@ import NodeManager from "./NodeManager"
 import PVMNode from "./PVMNode"
 import { AT } from "./AvailableTypes"
 import TypeChecker from "./TypeChecker"
-import PVMImageNode from "./PVMImageNode";
+import PVMImageNode from "./PVMImageNode"
 
 export default class Converter {
 	static parse(frame: PostData.Frame): PVMNode[] {
@@ -174,6 +174,8 @@ export default class Converter {
 		body = ""
 
 		editorNodes.forEach(pvmNode => {
+			NodeManager.normalize(pvmNode.textElement)
+			
 			if (TypeChecker.isTextOnly(pvmNode.type)) {
 				let block: PostData.TextBlock = {
 					type: pvmNode.type,
@@ -216,7 +218,7 @@ export default class Converter {
 		let textData: Array<PostData.StyledText | PostData.RawText> = []
 
 		while (travelNode) {
-			if (travelNode.nodeType === 3) {
+			if (travelNode.nodeType === 3 && travelNode.textContent.length > 0) {
 				let rawTextData: PostData.RawText = {
 					type: "rawText",
 					data: travelNode.textContent
@@ -224,10 +226,16 @@ export default class Converter {
 				
 				textData.push(rawTextData)
 			} else {
-				if (!this.verifyStyleTag(travelNode.nodeName)) {
-					continue
-				}
-				textData.push(this.buildStyledTextData(<HTMLElement> travelNode))
+				if (this.verifyStyleTag(travelNode.nodeName)) {
+					textData.push(this.buildStyledTextData(<HTMLElement> travelNode))
+				} else if (travelNode.nodeName.toLocaleLowerCase() === "br" || travelNode.textContent.length > 0) {
+					let rawTextData: PostData.RawText = {
+						type: "rawText",
+						data: travelNode.textContent
+					}
+
+					textData.push(rawTextData)
+				}				
 			}
 
 			travelNode = travelNode.nextSibling
