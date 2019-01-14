@@ -2,14 +2,14 @@ import PVMNode from "../PVMNode"
 import { AT } from "../AvailableTypes"
 
 export interface StyledText {
-	type: string
+	type: "styledText"
 	data: Array<StyledText | RawText>
 	style: string
 	url?: string
 }
 
 export interface RawText {
-	type: string
+	type: "rawText"
 	data: string
 }
 
