@@ -13,6 +13,9 @@ export const dbg = function() {
 	d.querySelector(".gcpr").addEventListener("click", e => {
 		console.log(SelectionManager.getCurrentRange())
 	})
+	d.querySelector(".gnir").addEventListener("click", e => {
+		console.log(SelectionManager.getAllNodesInSelection())
+	})
 	d.querySelector(".gcnl").addEventListener("click", e => {
 		console.log(EditSession.nodeList)
 	})

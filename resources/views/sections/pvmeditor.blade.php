@@ -13,11 +13,12 @@
 		</div>
 
 		<div class="debug" style="position:fixed;z-index:9999;top:0;right:0;">
-			<button class="gcn">Get Current Node</button>
-			<button class="gcs">Get Current JS Range</button>
-			<button class="gcpr">Get Current PVMRange</button>
-			<button class="gcnl">Get Current Node List</button>
-			<button class="converter-stringify">Convert to json</button>
+			<button class="gcn">Get current node</button>
+			<button class="gcs">Get current JS range</button>
+			<button class="gcpr">Get current PVMRange</button>
+			<button class="gnir">Get Nodes in range</button>
+			<button class="gcnl">Get all nodes' list</button>
+			<button class="converter-stringify">Convert to JSON</button>
 		</div>
 
 		<div id="editor-toolbar">
@@ -92,7 +93,7 @@
 			<button id="fit"></button>
 			<button id="float-left"></button>
 		</div>
-		<div id="editor-body" contenteditable="true" autocomplete="off" spellcheck="false"><ul><li data-ni="9">aa</li></ul><h1 data-ni="1">Did History <b>Really Happen?</b></h1><ol><li data-ni="17">haha</li><li data-ni="18">haha</li></ol><figure class="image caption-enabled full" data-ni="2"><div class="image-wrapper" contenteditable="false"><img src="/assets/images/sets/ex.jpeg" alt=""></div><figcaption contenteditable="true">Frederick Dielman, “History” (1896)</figcaption></figure><blockquote data-ni="3">This article is part of the Boundary Hunter column.</blockquote><ul><li data-ni="4">hihi</li><li data-ni="5">hoho</li></ul><p data-ni="6">The biggest revolution in the field of history, these last four decades, has been the recognition that traditional histories — historical narratives — are as much narrative as they are history, and that that distinction matters.</p><figure class="image" data-ni="7"><div class="image-wrapper" contenteditable="false"><img src="/assets/images/sets/separator.png" alt=""></div><figcaption contenteditable="true"></figcaption></figure><p data-ni="8">When you are digging in the earth, no one ever announces “chapter two.”</p><ul><li data-ni="10">hello</li><li data-ni="11">world</li><li data-ni="15">eifhwih</li></ul><p data-ni="12">interception</p><ul><li data-ni="13">안녕</li><li data-ni="14">세상</li><li data-ni="16">ㅇㅎ</li></ul></div>
+		<div id="editor-body" contenteditable="true" autocomplete="off" spellcheck="false"></div>
 
 		<div id="paste-area" contenteditable="true"></div>
 	</div>
