@@ -20,6 +20,7 @@ export default class SelectionManager {
 		let startNodePVMN = pvmRange.start.node
 		let startNodeDOM = startNodePVMN.textElement
 		let startNodeOffset = pvmRange.start.offset
+		let startState = pvmRange.start.state
 
 		// Calculate start
 		let travelNode: Node = startNodeDOM.firstChild
@@ -29,45 +30,47 @@ export default class SelectionManager {
 		rangeStartContainer = startNodeDOM
 		rangeStartOffset = 0
 
-		// if (startNodeOffset === -1) {
-		// 	startNodeOffset = startNodeDOM.textContent.length
-		// }
-
-		while (1) {
-			if (!travelNode) break
-
-			if (travelNode.nodeType === 3) {
-				if (length + travelNode.textContent.length >= startNodeOffset) {
-					rangeStartContainer = travelNode
-					rangeStartOffset = startNodeOffset - length
-					break
-				} else {
-					length += travelNode.textContent.length
-				}
-			}
-
-			if (travelNode.firstChild) {
-				travelNode = travelNode.firstChild
-			} else if (travelNode.nextSibling) {
-				travelNode = travelNode.nextSibling
-			} else {
-				travelNode = travelNode.parentNode
-
-				while (1) {
-					if (travelNode.isEqualNode(startNodeDOM)) {
-						loopDone = true
-						break
-					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling
+		if (startState === 5) {
+			let sb =pvmRange.start.node.element.querySelectorAll(".selection-break")[pvmRange.start.offset]
+			rangeStartContainer = sb
+			rangeStartOffset = 0
+		} else {
+			while (1) {
+				if (!travelNode) break
+			
+				if (travelNode.nodeType === 3) {
+					if (length + travelNode.textContent.length >= startNodeOffset) {
+						rangeStartContainer = travelNode
+						rangeStartOffset = startNodeOffset - length
 						break
 					} else {
-						travelNode = travelNode.parentNode
+						length += travelNode.textContent.length
 					}
 				}
-			}
-
-			if (loopDone) {
-				break
+			
+				if (travelNode.firstChild) {
+					travelNode = travelNode.firstChild
+				} else if (travelNode.nextSibling) {
+					travelNode = travelNode.nextSibling
+				} else {
+					travelNode = travelNode.parentNode
+			
+					while (1) {
+						if (travelNode.isEqualNode(startNodeDOM)) {
+							loopDone = true
+							break
+						} else if (travelNode.nextSibling) {
+							travelNode = travelNode.nextSibling
+							break
+						} else {
+							travelNode = travelNode.parentNode
+						}
+					}
+				}
+			
+				if (loopDone) {
+					break
+				}
 			}
 		}
 
@@ -76,6 +79,7 @@ export default class SelectionManager {
 		let endNodePVMN = pvmRange.end.node
 		let endNodeDOM = endNodePVMN.textElement
 		let endNodeOffset = pvmRange.end.offset
+		let endState = pvmRange.end.state
 
 		// Calculate end
 		travelNode = endNodeDOM.firstChild
@@ -85,45 +89,47 @@ export default class SelectionManager {
 		rangeEndContainer = endNodeDOM
 		rangeEndOffset = 0
 
-		// if (endNodeOffset === -1) {
-		// 	endNodeOffset = endNodeDOM.textContent.length
-		// }
-
-		while (1) {
-			if (!travelNode) break
-
-			if (travelNode.nodeType === 3) {
-				if (length + travelNode.textContent.length >= endNodeOffset) {
-					rangeEndContainer = travelNode
-					rangeEndOffset = endNodeOffset - length
-					break
-				} else {
-					length += travelNode.textContent.length
-				}
-			}
-
-			if (travelNode.firstChild) {
-				travelNode = travelNode.firstChild
-			} else if (travelNode.nextSibling) {
-				travelNode = travelNode.nextSibling
-			} else {
-				travelNode = travelNode.parentNode
-
-				while (1) {
-					if (travelNode.isEqualNode(endNodeDOM)) {
-						loopDone = true
-						break
-					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling
+		if (endState === 5) {
+			let sb =pvmRange.end.node.element.querySelectorAll(".selection-break")[pvmRange.end.offset]
+			rangeEndContainer = sb
+			rangeEndOffset = 0
+		} else {
+			while (1) {
+				if (!travelNode) break
+			
+				if (travelNode.nodeType === 3) {
+					if (length + travelNode.textContent.length >= endNodeOffset) {
+						rangeEndContainer = travelNode
+						rangeEndOffset = endNodeOffset - length
 						break
 					} else {
-						travelNode = travelNode.parentNode
+						length += travelNode.textContent.length
 					}
 				}
-			}
-
-			if (loopDone) {
-				break
+			
+				if (travelNode.firstChild) {
+					travelNode = travelNode.firstChild
+				} else if (travelNode.nextSibling) {
+					travelNode = travelNode.nextSibling
+				} else {
+					travelNode = travelNode.parentNode
+			
+					while (1) {
+						if (travelNode.isEqualNode(endNodeDOM)) {
+							loopDone = true
+							break
+						} else if (travelNode.nextSibling) {
+							travelNode = travelNode.nextSibling
+							break
+						} else {
+							travelNode = travelNode.parentNode
+						}
+					}
+				}
+			
+				if (loopDone) {
+					break
+				}
 			}
 		}
 
@@ -132,6 +138,7 @@ export default class SelectionManager {
 		window.getSelection().removeAllRanges()
 		window.getSelection().addRange(range)
 
+		// Trigger selectionChange event callback function
 		EventManager.onSelectionChanged()
 	}
 
@@ -196,6 +203,8 @@ export default class SelectionManager {
 						break
 					}
 				}
+			} else {
+				return undefined
 			}
 		}
 
@@ -237,6 +246,8 @@ export default class SelectionManager {
 						break
 					}
 				}
+			} else {
+				return undefined
 			}
 		}
 
