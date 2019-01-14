@@ -1,4 +1,4 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
 import EditSession from "./EditSession"
 import NodeManager from "./NodeManager"
 import PVMRange from "./PVMRange"
@@ -267,7 +267,7 @@ export default class PopTool {
 				isAllAlreaySet = false
 				// chunks[i].transformTo(tagName)
 				let originalType = chunks[i].type
-				let originalParentType = chunks[i].parentType
+				let originalParentType = chunks[i].kind
 				NodeManager.transformNode(chunks[i], tagName)
 				actions.push({
 					type: "transform",
@@ -286,7 +286,7 @@ export default class PopTool {
 			for (let i = 0; i < chunks.length; i++) {
 				// chunks[i].transformTo("p")
 				let originalType = chunks[i].type
-				let originalParentType = chunks[i].parentType
+				let originalParentType = chunks[i].kind
 				NodeManager.transformNode(chunks[i], "p")
 				actions.push({
 					type: "transform",
@@ -333,27 +333,47 @@ export default class PopTool {
 		UndoManager.record(actions)
 	}
 
+	/**
+	 * @param imageBlock ".image-wrapper"
+	 */
 	public static showImageTool(imageBlock: HTMLElement) {
 		if (!imageBlock) {
 			this.hideImageTool()
 			return
 		}
 		let editorBody = EditSession.editorBody
+		let imageFig = imageBlock.closest("figure.image")
 
-		PopTool.imageTool.classList.add("active")
+		this.imageTool.classList.add("active")
 
-		PopTool.imageTool.style.left =
-			imageBlock.getBoundingClientRect().left +
-			imageBlock.getBoundingClientRect().width / 2 -
-			PopTool.imageTool.getBoundingClientRect().width / 2 +
+		let img =  imageBlock.querySelector("img")
+
+		this.imageTool.style.left =
+			img.getBoundingClientRect().left +
+			img.getBoundingClientRect().width / 2 -
+			this.imageTool.getBoundingClientRect().width / 2 +
 			"px"
 
-		PopTool.imageTool.style.top =
+		this.imageTool.style.top =
 			-editorBody.getBoundingClientRect().top +
-			imageBlock.getBoundingClientRect().top +
-			imageBlock.getBoundingClientRect().height / 2 -
-			PopTool.imageTool.getBoundingClientRect().height / 2 +
+			img.getBoundingClientRect().top +
+			img.getBoundingClientRect().height / 2 -
+			this.imageTool.getBoundingClientRect().height / 2 +
 			"px"
+		
+
+		this.imageTool.querySelectorAll("button").forEach(btn => {
+			btn.classList.remove("is-applied")
+		})
+		if (imageFig.classList.contains("full")) {
+			this.imageTool.querySelector("#full").classList.add("is-applied")
+		} else if (imageFig.classList.contains("large")) {
+			this.imageTool.querySelector("#large").classList.add("is-applied")
+		} else if (imageFig.classList.contains("float-left")) {
+			this.imageTool.querySelector("#float-left").classList.add("is-applied")
+		} else {
+			this.imageTool.querySelector("#fit").classList.add("is-applied")
+		}
 
 		// PopTool.imageTool.style.top = imageBlock.getBoundingClientRect().top - this.editor.getBoundingClientRect().top + "px"
 	}

@@ -1,18 +1,23 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
 import EditSession from "./EditSession"
 import NodeManager from "./NodeManager"
 import PopTool from "./PopTool"
 import PVMRange from "./PVMRange"
 import SelectionManager from "./SelectionManager"
 import UndoManager from "./UndoManager"
-import TypeChecker from "./TypeChecker";
+import TypeChecker from "./TypeChecker"
+import PVMImageNode from "./PVMImageNode"
+import PVMNode from "./PVMNode"
+
+export interface SelectionChangeEvent extends Event {
+	currentRange: PVMRange
+}
 
 export default class EventManager {
 	public static mouseDownStart: boolean
 	private static linkRange: Range
 	private static charKeyDownLocked: boolean
 	private static multipleSpaceLocked: boolean
-	private static selectedAll: boolean
 	private static isBackspaceKeyPressed: boolean
 	private static tempLinkRange: PVMRange
 
@@ -26,16 +31,10 @@ export default class EventManager {
 		this.linkRange = document.createRange()
 		this.charKeyDownLocked = false
 		this.multipleSpaceLocked = false
-		this.selectedAll = false
 
 		// Event Listeners
 		window.addEventListener("click", e => {
-			// console.log(e.target)
-			// if (e.target.nodeName === "INPUT" && e.target.parentNode.classList.contains("pack")) {
-			// 	return
-			// } else {
-			// 	this.onSelectionChanged()
-			// }
+			this.onWindowClick(e)
 		})
 		;["mousedown", "touchstart"].forEach(eventName => {
 			window.addEventListener(eventName, e => {
@@ -45,22 +44,10 @@ export default class EventManager {
 				}
 			})
 		})
-		;["mouseup", "touchend"].forEach(eventName => {
-			EditSession.editorBody.addEventListener(eventName, e => {
-				this.onSelectionChanged()
-			})
-		})
-		;["mouseup", "touchend"].forEach(eventName => {
-			window.addEventListener(eventName, e => {
-				if (
-					this.mouseDownStart &&
-					!(<Element>e.target).closest("#editor-body")
-				) {
-					this.mouseDownStart = false
-					this.onSelectionChanged()
-				}
-			})
-		})
+
+		// document.addEventListener("selectionchange", e => {
+		// 	this.onSelectionChanged()
+		// })
 
 		EditSession.editorBody.addEventListener("dragstart", e => {
 			e.preventDefault()
@@ -71,42 +58,36 @@ export default class EventManager {
 
 		this.isBackspaceKeyPressed = false
 
-		window.addEventListener("keydown", e => {
-			let currentRange = EditSession.currentState.range
-			if (e.keyCode === 8 || e.keyCode === 46) {
-				if (EditSession.editorBody.querySelector(".image-selected")) {
-					console.log("image should be deleted")
-					let imageNode = NodeManager.getNodeByID(
-						NodeManager.getNodeID(
-							EditSession.editorBody.querySelector(".image-selected")
-						)
-					)
-					let nextNode = imageNode.nextSibling
-					NodeManager.removeChild(imageNode)
-					PopTool.hideImageTool()
-					UndoManager.record({
-						type: "remove",
-						targetNode: imageNode,
-						nextNode: nextNode,
-						previousRange: currentRange,
-						nextRange: currentRange
-					})
-				}
-			}
-		})
+		// window.addEventListener("keydown", e => {
+		// 	let currentRange = EditSession.currentState.range
+		// 	if (e.keyCode === 8 || e.keyCode === 46) {
+		// 		if (EditSession.editorBody.querySelector(".node-selected")) {
+		// 			let imageNode = NodeManager.getNodeByID(
+		// 				NodeManager.getNodeID(EditSession.editorBody.querySelector(".node-selected"))
+		// 			)
+		// 			let nextNode = imageNode.nextSibling
+		// 			NodeManager.removeChild(imageNode)
+		// 			PopTool.hideImageTool()
+		// 			UndoManager.record({
+		// 				type: "remove",
+		// 				targetNode: imageNode,
+		// 				nextNode: nextNode,
+		// 				previousRange: currentRange,
+		// 				nextRange: currentRange
+		// 			})
+		// 		}
+		// 	}
+		// })
 
 		EditSession.editorBody.addEventListener("input", e => {
 			// console.log(e)
 		})
 
 		EditSession.editorBody.addEventListener("compositionupdate", e => {
-			// console.log("compositioning")
-			console.log(e)
 			let currentNode = SelectionManager.getCurrentNode()
 
 			setTimeout(() => {
 				let modifiedContents = currentNode.textElement.innerHTML
-				console.log(modifiedContents)
 				let newRange = SelectionManager.getCurrentRange()
 				
 				let latestAction = UndoManager.getLatestAction()
@@ -137,129 +118,64 @@ export default class EventManager {
 		})
 
 		EditSession.editorBody.addEventListener("keydown", e => {
-			EventManager.onKeyDown(e)
-			if (e.which >= 37 && e.which <= 40) {
-				// this.onSelectionChanged()
-			}
-			if (e.which === 65 && e.ctrlKey) {
-				this.selectedAll = true
-			}
+			this.onKeyDown(e)
+
 			if (!(<Element>e.target).closest("#poptool")) {
 				PopTool.hidePopTool()
 			}
+
+			setTimeout(() => {
+				this.onSelectionChanged()
+			}, 0)
 		})
 
 		EditSession.editorBody.addEventListener("keyup", e => {
-			EventManager.onKeyUp(e)
-			this.onSelectionChanged()
-
-			if (this.selectedAll) {
-				this.selectedAll = false
-				this.onSelectionChanged()
-			}
+			this.onKeyUp(e)
+			// this.onSelectionChanged()
 		})
 
 		EditSession.editorBody.addEventListener("paste", e => {
 			// this.onPaste(e)
 		})
 
-		// Image click event
+		// Packed with all window click events.
 		window.addEventListener("click", e => {
-			let target = <HTMLElement>e.target
+			let target = <HTMLElement> e.target
 
-			if (target.classList.contains("image-wrapper")) {
-				e.preventDefault()
-
-				var selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
-				)
-				if (selectedFigure) {
-					selectedFigure.classList.remove("image-selected")
+			if (target.id === "full" && target.nodeName === "BUTTON") {
+				let currentNode = SelectionManager.getCurrentNode()
+				if (currentNode instanceof PVMImageNode) {
+					currentNode.setKind("full")
 				}
-
-				var figure = target.parentElement
-				figure.classList.remove("caption-selected")
-				figure.classList.add("image-selected")
-				figure.classList.add("node-focused")
-				PopTool.showImageTool(target)
-
-				if (figure.querySelector("FIGCAPTION").textContent.length === 0) {
-					figure.querySelector("FIGCAPTION").innerHTML = "이미지 설명"
-				}
-
-				window.getSelection().removeAllRanges()
-			} else if (target.id === "full" && target.nodeName === "BUTTON") {
-				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
-				)
-				selectedFigure.className = "image image-selected"
-				selectedFigure.classList.add("full")
-				PopTool.hideImageTool()
-				setTimeout(() => {
-					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
-				}, 500)
 			} else if (target.id === "fit" && target.nodeName === "BUTTON") {
-				var selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
-				)
-				selectedFigure.className = "image image-selected"
-				PopTool.hideImageTool()
-				setTimeout(() => {
-					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
-				}, 500)
+				let currentNode = SelectionManager.getCurrentNode()
+				if (currentNode instanceof PVMImageNode) {
+					currentNode.setKind("fit")
+				}			
 			} else if (target.id === "large" && target.nodeName === "BUTTON") {
-				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
-				)
-				selectedFigure.className = "image image-selected"
-				selectedFigure.classList.add("large")
-				PopTool.hideImageTool()
-				setTimeout(() => {
-					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
-				}, 500)
-			} else if (target.id === "float-left" && target.nodeName === "BUTTON") {
-				let selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected"
-				)
-				selectedFigure.className = "image image-selected"
-				selectedFigure.classList.add("float-left")
-				PopTool.hideImageTool()
-				setTimeout(() => {
-					PopTool.showImageTool(selectedFigure.querySelector(".image-wrapper"))
-				}, 500)
-			} else if (target.nodeName === "FIGCAPTION") {
-				target.parentElement.classList.add("caption-selected")
-				target.parentElement.classList.remove("image-selected")
-				PopTool.hideImageTool()
-				if (!target.parentElement.classList.contains("caption-enabled")) {
-					target.innerHTML = "<br>"
+				let currentNode = SelectionManager.getCurrentNode()
+				if (currentNode instanceof PVMImageNode) {
+					currentNode.setKind("large")
 				}
+			} else if (target.id === "float-left" && target.nodeName === "BUTTON") {
+				let currentNode = SelectionManager.getCurrentNode()
+				if (currentNode instanceof PVMImageNode) {
+					currentNode.setKind("float-left")
+				}
+			} else if (target.nodeName === "FIGCAPTION") {
+				// target.parentElement.classList.add("caption-focused")
+				// target.parentElement.classList.remove("node-selected")
+				// PopTool.hideImageTool()
+				// if (!target.parentElement.classList.contains("caption-enabled")) {
+				// 	target.innerHTML = "<br>"
+				// }
 			} else if (
 				target.nodeName === "INPUT" &&
 				target.parentElement.classList.contains("pack")
 			) {
 				// console.log("clicked poptool input")
 			} else {
-				var selectedFigure = EditSession.editorBody.querySelector(
-					"figure.image-selected, figure.caption-selected"
-				)
-				if (selectedFigure) {
-					selectedFigure.classList.remove("image-selected")
-					selectedFigure.classList.remove("node-focused")
-					selectedFigure.classList.remove("caption-selected")
-				}
 
-				PopTool.hideImageTool()
-			}
-
-			this.onSelectionChanged()
-		})
-
-		window.addEventListener("mousedown", e => {
-			let target = <Element>e.target
-			if (target.classList.contains("image-wrapper")) {
-				window.getSelection().removeAllRanges()
-				e.preventDefault()
 			}
 		})
 
@@ -275,18 +191,12 @@ export default class EventManager {
 	public static attachPopToolEvents() {
 		let self = this
 
-		window.addEventListener("mousedown", e => {
-			let target = <Element>e.target
-			if (
-				!target.classList.contains("operation") &&
-				!target.closest("button .operation")
-			) {
-				PopTool.hidePopTool()
-			}
+		window.addEventListener("click", e => {
+			PopTool.showPopTool()
 		})
 
 		window.addEventListener("resize", e => {
-			PopTool.showImageTool(document.querySelector(".image.image-selected img"))
+			PopTool.showImageTool(document.querySelector(".image.node-selected"))
 			PopTool.showPopTool()
 		})
 
@@ -576,14 +486,30 @@ export default class EventManager {
 	 * @param {KeyboardEvent} e
 	 */
 	public static onKeyDown(e: KeyboardEvent) {
+		let currentRange = SelectionManager.getCurrentRange()
+		if (!currentRange) return
+		let currentNode = currentRange.start.node
+
+		// console.log("keydown")
 		let keyCode = e.keyCode
 		let physKeyCode = e.code
 		// Prevent Hangul compositionEnd + spacebar
 		if (physKeyCode === "Space" && e.key === "Process") return
 
-		let currentRange = SelectionManager.getCurrentRange()
-		let currentNode = SelectionManager.getCurrentNode()
-		if (!currentNode) return
+		// Select all (command + a or control + a)
+		if (physKeyCode === "KeyA" && (e.metaKey || e.ctrlKey)) {
+			let pvmRange = new PVMRange({
+				startNode: EditSession.nodeList[0],
+				startOffset: 0,
+				endNode: EditSession.nodeList[EditSession.nodeList.length - 1],
+				endOffset: EditSession.nodeList[EditSession.nodeList.length - 1].getTextContent().length
+			})
+			SelectionManager.setRange(pvmRange)
+			console.log("selected all")
+			console.log(pvmRange)
+			e.preventDefault()
+			return
+		}
 
 		// This flag determines the availability of
 		// changing text.
@@ -685,9 +611,11 @@ export default class EventManager {
 				}
 			}, 1)
 
+			// console.log(currentRange)
+
 			if (
 				currentRange &&
-				currentRange.isCollapsed() &&
+				currentRange.collapsed &&
 				(currentRange.start.state !== 1 && currentRange.start.state !== 4)
 			) {
 				enableTextChangeRecord = true
@@ -742,10 +670,11 @@ export default class EventManager {
 
 				let latestAction = UndoManager.getLatestAction()
 				if (
-					latestAction &&
-					!Array.isArray(latestAction) &&
-					latestAction.type === "textChange" &&
-					latestAction.key === key
+					latestAction
+					&& !Array.isArray(latestAction)
+					&& latestAction.type === "textChange"
+					&& latestAction.key === key
+					&& latestAction.targetNode.isSameAs(currentNode)
 					// && physKeyCode !== "Space"
 				) {
 					latestAction.nextHTML = modifiedContents
@@ -772,17 +701,6 @@ export default class EventManager {
 			}, 4)
 		} else {
 		}
-
-		// Image block controlling
-		setTimeout(() => {
-			if (currentNode.type === "image") {
-				if (currentNode.getTextContent() === "") {
-					currentNode.element.classList.remove("caption-enabled")
-				} else {
-					currentNode.element.classList.add("caption-enabled")
-				}
-			}
-		}, 4)
 	}
 
 	/**
@@ -817,31 +735,36 @@ export default class EventManager {
 			TypeChecker.isParagraph(currentNode.type) &&
 			currentNode &&
 			(currentNode.getTextContent().match(/^- /) ||
-				currentNode.getTextContent().match(/^1\. /))
+				currentNode.getTextContent().match(/^1\. /)) ||
+				currentNode.getTextContent().match(/^```/)
 		) {
-			console.log("here")
-			let parentType = "ul"
+			let type = "li"
+			let kind = "ul"
 			if (currentNode.getTextContent().match(/^1\. /)) {
-				parentType = "ol"
+				kind = "ol"
+			} else if (currentNode.getTextContent().match(/^```/)) {
+				type = "code"
+				kind = undefined
 			}
+
 			let originalType = currentNode.type
-			let originalParentType = currentNode.parentType
-			NodeManager.transformNode(currentNode, "li", parentType)
+			let originalParentType = currentNode.kind
+			NodeManager.transformNode(currentNode, type, kind)
 			currentNode.fixEmptiness()
-			let newRange = SelectionManager.createRange(
-				currentNode,
-				0,
-				currentNode,
-				0
-			)
+			let newRange = new PVMRange({
+				startNode: currentNode,
+				startOffset: 0,
+				endNode: currentNode,
+				endOffset: 0
+			})
 			SelectionManager.setRange(newRange)
 			UndoManager.record({
 				type: "transform",
 				targetNode: currentNode,
 				previousType: originalType,
 				previousParentType: originalParentType,
-				nextType: "li",
-				nextParentType: parentType,
+				nextType: type,
+				nextParentType: kind,
 				previousRange: newRange,
 				nextRange: newRange
 			})
@@ -854,13 +777,20 @@ export default class EventManager {
 		let currentRange = SelectionManager.getCurrentRange()
 		let currentNode = SelectionManager.getCurrentNode()
 
-		if (currentRange && currentRange.isCollapsed()) {
+		if (currentRange && currentRange.collapsed) {
 			// Selection is collapsed
 
 			let state = currentRange.start.state
 
 			if (state === 1) {
-				let newNode = NodeManager.createNode(currentNode.type)
+				let newNode: PVMNode
+				if (TypeChecker.isListItem(currentNode.type)) {
+					newNode = NodeManager.createNode("li", {
+						kind: currentNode.kind
+					})
+				} else {
+					newNode = NodeManager.createNode(currentNode.type)
+				}
 				NodeManager.insertChildBefore(newNode, currentNode)
 				UndoManager.record({
 					type: "insert",
@@ -872,7 +802,12 @@ export default class EventManager {
 				})
 			} else if (state === 2) {
 				let newNode = NodeManager.splitNode()
-				let newRange = SelectionManager.createRange(newNode, 0, newNode, 0)
+				let newRange = new PVMRange({
+					startNode: newNode,
+					startOffset: 0,
+					endNode: newNode,
+					endOffset: 0
+				})
 				SelectionManager.setRange(newRange)
 				UndoManager.record({
 					type: "split",
@@ -886,12 +821,12 @@ export default class EventManager {
 				let newNode
 				if (currentNode.type === "li") {
 					if (state === 3) {
-						newNode = NodeManager.createNode("LI", {
-							parentType: currentNode.parentType
+						newNode = NodeManager.createNode("li", {
+							kind: currentNode.kind
 						})
 					} else if (state === 4) {
 						let originalType = currentNode.type
-						let originalParentType = currentNode.parentType
+						let originalParentType = currentNode.kind
 						NodeManager.transformNode(currentNode, "p")
 						SelectionManager.setRange(currentRange)
 						UndoManager.record({
@@ -909,7 +844,7 @@ export default class EventManager {
 				} else if (currentNode.type === "blockquote") {
 					if (state === 4) {
 						let originalType = currentNode.type
-						let originalParentType = currentNode.parentType
+						let originalParentType = currentNode.kind
 						NodeManager.transformNode(currentNode, "p")
 						SelectionManager.setRange(currentRange)
 						UndoManager.record({
@@ -931,7 +866,12 @@ export default class EventManager {
 				}
 				let nextNode = currentNode.nextSibling
 				NodeManager.insertChildBefore(newNode, nextNode)
-				let newRange = SelectionManager.createRange(newNode, 0, newNode, 0)
+				let newRange = new PVMRange({
+					startNode: newNode,
+					startOffset: 0,
+					endNode: newNode,
+					endOffset: 0
+				})
 				SelectionManager.setRange(newRange)
 				UndoManager.record({
 					type: "insert",
@@ -969,7 +909,7 @@ export default class EventManager {
 			if (state === 1) {
 				if (currentNode.type === "li") {
 					let originalType = currentNode.type
-					let originalParentType = currentNode.parentType
+					let originalParentType = currentNode.kind
 					NodeManager.transformNode(currentNode, "p")
 					SelectionManager.setRange(currentRange)
 					UndoManager.record({
@@ -1012,12 +952,12 @@ export default class EventManager {
 						let prvsOrgLen = prvs.textElement.textContent.length
 						let originalContents = prvs.textElement.innerHTML
 						NodeManager.mergeNodes(prvs, currentNode)
-						let newRange = SelectionManager.createRange(
-							prvs,
-							prvsOrgLen,
-							prvs,
-							prvsOrgLen
-						)
+						let newRange = new PVMRange({
+							startNode: prvs,
+							startOffset: prvsOrgLen,
+							endNode: prvs,
+							endOffset: prvsOrgLen
+						})
 						SelectionManager.setRange(newRange)
 						UndoManager.record({
 							type: "merge",
@@ -1032,7 +972,7 @@ export default class EventManager {
 			} else if (state === 4) {
 				if (currentNode.type === "li") {
 					let originalType = currentNode.type
-					let originalParentType = currentNode.parentType
+					let originalParentType = currentNode.kind
 					NodeManager.transformNode(currentNode, "p")
 					SelectionManager.setRange(currentRange)
 					UndoManager.record({
@@ -1053,12 +993,12 @@ export default class EventManager {
 				if (prvs) {
 					let nextNode = currentNode.nextSibling
 					NodeManager.removeChild(currentNode)
-					let newRange = SelectionManager.createRange(
-						prvs,
-						prvs.textElement.textContent.length,
-						prvs,
-						prvs.textElement.textContent.length
-					)
+					let newRange = new PVMRange({
+						startNode: prvs,
+						startOffset: prvs.textElement.textContent.length,
+						endNode: prvs,
+						endOffset: prvs.textElement.textContent.length
+					})
 					SelectionManager.setRange(newRange)
 					UndoManager.record({
 						type: "remove",
@@ -1133,7 +1073,12 @@ export default class EventManager {
 				let nextNode = currentNode.nextSibling
 				if (nextNode) {
 					NodeManager.removeChild(currentNode)
-					let newRange = SelectionManager.createRange(nextNode, 0, nextNode, 0)
+					let newRange = new PVMRange({
+						startNode: nextNode,
+						startOffset: 0,
+						endNode: nextNode,
+						endOffset: 0
+					})
 					SelectionManager.setRange(newRange)
 					UndoManager.record({
 						type: "remove",
@@ -1151,151 +1096,78 @@ export default class EventManager {
 		}
 	}
 
+	public static onWindowClick(e: MouseEvent) {
+
+		let clickedNode = NodeManager.getNodeByChild(e.target)
+		if (clickedNode) {
+			if (TypeChecker.isImage(clickedNode.type)) {
+				if ((<Element> e.target).closest("figcaption")) {
+					;(<PVMImageNode> clickedNode).focusCaption()
+				} else {
+					SelectionManager.releaseNodeSelection()
+					;(<PVMImageNode> clickedNode).selectImage()
+				}	
+			}
+		}
+
+		this.onSelectionChanged()
+	}
+
 	public static onSelectionChanged() {
-		if (window.getSelection().rangeCount === 0) {
-			return
-		}
-
-		// Fix selection
-		let jsRange = window.getSelection().getRangeAt(0)
-		let newStartContainer, newEndContainer, newStartOffset, newEndOffset
-		let needsFix = false
-
-		let pvmRange = SelectionManager.getCurrentRange()
-		if (pvmRange.start.node.type === "image") {
-			pvmRange.start.node.element.classList.add("image-selected")
-		}
-
-		// console.log(jsRange)
-		// console.log(SelectionManager.getCurrentRange())
-
-		// console.log(pvmRange)
-		// console.log(pvmRange.isCollapsed())
-
-		// set new start
-		if (
-			jsRange.startContainer.nodeType !== 3 &&
-			jsRange.startContainer.childNodes.length > 0
-		) {
-			needsFix = true
-
-			newStartContainer = jsRange.startContainer.childNodes[jsRange.startOffset]
-			newStartOffset = 0
-
-			while (1) {
-				if (!newStartContainer) {
-					break
-				}
-				if (newStartContainer.firstChild) {
-					if (newStartContainer.firstChild.nodeType === 3) {
-						newStartContainer = newStartContainer.firstChild
-						break
-					} else {
-						newStartContainer = newStartContainer.firstChild
-						newStartOffset = newStartContainer.childNodes.length
-					}
-				} else {
-					break
-				}
-			}
-
-			if (newStartContainer.nodeName === "BR") {
-				jsRange.setStartBefore(newStartContainer)
-			} else {
-				jsRange.setStart(newStartContainer, newStartOffset)
-			}
-
-			// If <br> tag is set
-			// setstartbefore occurs an error
-			// so reset it.
-			// if (jsRange.startContainer.nodeType === 3) {
-			// 	jsRange.setStart(jsRange.startContainer, 0)
-			// }
-		}
-
-		// set new end
-		if (
-			jsRange.endContainer.nodeType !== 3 &&
-			jsRange.endContainer.childNodes.length > 0
-		) {
-			needsFix = true
-
-			let ofs = jsRange.endOffset - 1
-			// console.log(jsRange.endOffset)
-			if (ofs < 0) {
-				ofs = 0
-				newEndContainer = jsRange.endContainer.childNodes[ofs]
-				newEndOffset = 0
-			} else {
-				newEndContainer = jsRange.endContainer.childNodes[ofs]
-				newEndOffset = newEndContainer.childNodes.length
-			}
-
-			// console.log(newEndOffset)
-
-			while (1) {
-				if (!newEndContainer) {
-					break
-				}
-				if (newEndContainer.lastChild) {
-					if (newEndContainer.lastChild.nodeType === 3) {
-						newEndContainer = newEndContainer.lastChild
-						newEndOffset = newEndContainer.textContent.length
-						if (jsRange.endOffset === 0) {
-							newEndOffset = 0
-						}
-						break
-					} else {
-						newEndContainer = newEndContainer.lastChild
-						newEndOffset = newEndContainer.childNodes.length
-						if (jsRange.endOffset === 0) {
-							newEndOffset = 0
-						}
-					}
-				} else {
-					break
-				}
-			}
-
-			// if (newEndContainer.nodeName === "BR") {
-			// 	jsRange.setEndBefore(newEndContainer)
-			// } else {
-			// 	jsRange.setEnd(newEndContainer, newEndOffset)
-			// }
-
-			// If <br> tag is set
-			// setstartbefore occurs an error
-			// so reset it.
-			// if (jsRange.endContainer.nodeType === 3) {
-			// 	jsRange.setEnd(jsRange.endContainer, jsRange.endContainer.textContent.length)
-			// }
-		}
-
-		if (needsFix) {
-			window.getSelection().removeAllRanges()
-			window.getSelection().addRange(jsRange)
-		}
-
-		// if (!pvmRange.isCollapsed()) {
-		// 	if (pvmRange.start.state === 3 || pvmRange.start.state === 4) {
-		// 		pvmRange.setStart(pvmRange.start.node.nextSibling, 0)
-		// 	}
-		// 	if (pvmRange.end.state === 1 || pvmRange.end.state === 4) {
-		// 		pvmRange.setEnd(pvmRange.end.node.previousSibling, pvmRange.end.node.previousSibling.getTextContent().length)
-		// 	}
-		// 	console.log("here")
-		// 	SelectionManager.setRange(pvmRange)
+		// Smooth Cursor Implementation
+		// let jsRange: Range
+		// if (window.getSelection().rangeCount > 0) {
+		// 	jsRange = window.getSelection().getRangeAt(0)
+		// 	let left = jsRange.getClientRects()[0].left
+		// 	let top = jsRange.getClientRects()[0].top
+		// 	let caret = <HTMLElement> document.querySelector("#caret")
+		// 	caret.style.left = left + "px"
+		// 	caret.style.top = top + "px"
+		// 	caret.classList.add("stay")
 		// }
 
 		let currentRange = SelectionManager.getCurrentRange()
-		let currentNode = SelectionManager.getCurrentNode()
+		if (!currentRange || !currentRange.start.node) return
+		let currentNode = currentRange.start.node
+
+		if (currentRange.collapsed) {
+			if (currentRange.start.state === 5) {
+				if (
+					currentRange.start.node.type === "image" ||
+					currentRange.start.node.type === "gallery"
+				) {
+					;(currentRange.start.node as PVMImageNode).selectImage(currentRange.start.offset)
+				}
+			} else if (
+				currentRange.start.node.type === "image" ||
+				currentRange.start.node.type === "gallery"
+			) {
+				SelectionManager.releaseNodeSelection()
+				;(currentRange.start.node as PVMImageNode).focusCaption()
+			} else {
+				SelectionManager.releaseNodeSelection()
+			}
+		}
 
 		PopTool.togglePopTool()
 
+		// Update current state 
 		EditSession.currentState.node = currentNode
 		EditSession.currentState.range = currentRange
 		if (currentNode && currentNode.textElement) {
 			EditSession.currentState.textHTML = currentNode.textElement.innerHTML
 		}
+
+		let selectionChangeEvent = new CustomEvent(
+			"selectionChanged",
+			{
+				detail: {
+					currentRange: currentRange
+				},
+				bubbles: false,
+				cancelable: false
+			}
+		)
+		document.dispatchEvent(selectionChangeEvent)
 	}
 }

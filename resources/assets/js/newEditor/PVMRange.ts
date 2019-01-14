@@ -4,31 +4,40 @@ import SelectionManager from "./SelectionManager"
 interface RangePoint {
 	node: PVMNode
 	offset: number
+
+	// 1: start of paragraph
+	// 2: middle of paragraph
+	// 3: end of paragraph
+	// 4: empty paragraph
+	// 5: medea select
 	state: number
 }
 
 export default class PVMRange {
+	collapsed: boolean
 	start: RangePoint = {
 		node: undefined,
 		offset: undefined,
-		state: 2
+		state: undefined
 	}
 	end: RangePoint = {
 		node: undefined,
 		offset: undefined,
-		state: 2
+		state: undefined
 	}
 
-	constructor(
+	constructor(args: {
 		startNode: PVMNode,
 		startOffset: number,
+		startState?: number,
 		endNode: PVMNode,
-		endOffset: number
-	) {
+		endOffset: number,
+		endState?: number
+	}) {
 		// Properties
-
-		this.setStart(startNode, startOffset)
-		this.setEnd(endNode, endOffset)
+		this.setStart(args.startNode, args.startOffset, args.startState)
+		this.setEnd(args.endNode, args.endOffset, args.endState)
+		this.collapsed = this.isCollapsed()
 	}
 
 	// Methods
@@ -52,12 +61,19 @@ export default class PVMRange {
 
 	// Setters
 
-	setStart(startNode: PVMNode, startOffset: number) {
-		this.start.node = startNode
-		this.start.offset = startOffset
+	setStart(startNode: PVMNode, startOffset: number, startState?: number) {
 		if (!startNode) {
 			return
 		}
+
+		this.start.node = startNode
+		this.start.offset = startOffset
+
+		if (startState) {
+			this.start.state = startState
+			return
+		}
+
 		if (startNode.getTextContent().length === startOffset) {
 			if (startNode.getTextContent().length === 0) {
 				this.start.state = 4
@@ -71,12 +87,19 @@ export default class PVMRange {
 		}
 	}
 
-	setEnd(endNode: PVMNode, endOffset: number) {
-		this.end.node = endNode
-		this.end.offset = endOffset
+	setEnd(endNode: PVMNode, endOffset: number, endState?: number) {
 		if (!endNode) {
 			return
 		}
+
+		this.end.node = endNode
+		this.end.offset = endOffset
+
+		if (endState) {
+			this.end.state = endState
+			return
+		}
+
 		if (endNode.getTextContent().length === endOffset) {
 			if (endNode.getTextContent().length === 0) {
 				this.end.state = 4
@@ -86,7 +109,7 @@ export default class PVMRange {
 		} else if (endOffset === 0) {
 			this.end.state = 1
 		} else {
-			this.start.state = 2
+			this.end.state = 2
 		}
 	}
 
@@ -98,12 +121,14 @@ export default class PVMRange {
 
 	clone() {
 		let sel = new SelectionManager()
-		let range = SelectionManager.createRange(
-			this.start.node,
-			this.start.offset,
-			this.end.node,
-			this.end.offset
-		)
+		let range = new PVMRange({
+			startNode: this.start.node,
+			startOffset: this.start.offset,
+			startState: this.start.state,
+			endNode: this.end.node,
+			endOffset: this.end.offset,
+			endState: this.end.state
+		})
 		return range
 	}
 

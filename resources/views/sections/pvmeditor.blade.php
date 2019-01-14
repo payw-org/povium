@@ -12,6 +12,15 @@
 			<div class="banner">에러가 발생했습니다.</div>
 		</div>
 
+		<div class="debug" style="position:fixed;z-index:9999;top:0;right:0;">
+			<button class="gcn">Get current node</button>
+			<button class="gcs">Get current JS range</button>
+			<button class="gcpr">Get current PVMRange</button>
+			<button class="gnir">Get Nodes in range</button>
+			<button class="gcnl">Get all nodes' list</button>
+			<button class="converter-stringify">Convert to JSON</button>
+		</div>
+
 		<div id="editor-toolbar">
 
 			<div class="et-items">

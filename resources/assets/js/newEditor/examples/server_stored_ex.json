@@ -1,0 +1,122 @@
+{
+	"seriesId": null,
+	"contents": [
+		{
+			"type": "p",
+			"nodeId": 1,
+			"role": "title",
+			"data": [
+				{
+					"type": "text",
+					"data":
+						"\"Blockchain\" this, \"blockchain\" that. It's a concept so momentous that it has even managed to shed its article. "
+				},
+				{
+					"type": "text",
+					"data": "Proponents don’t speak of “the” blockchain or “a” blockchain.",
+					"style": "bold"
+				},
+				{
+					"type": "text",
+					"data":
+						" Instead, they reverently preach Blockchain: the solution to all enterprise needs ("
+				},
+				{
+					"type": "text",
+					"data": "in particular, supply chain management",
+					"style": "italic"
+				},
+				{
+					"type": "text",
+					"data": ")."
+				},
+				{
+					"type": "text",
+					"data": " first mering bold part first ",
+					"style": "bold"
+				}
+			]
+		},
+		{
+			"type": "image",
+			"nodeId": 2,
+			"role": "thumbnail",
+			"size": "",
+			"url": "/assets/images/post-test-img-4.jpg",
+			"caption": null
+		},
+		{
+			"type": "p",
+			"nodeId": 3,
+			"role": "subtitle",
+			"data": [
+				{
+					"type": "text",
+					"data": "second mering bold part second ",
+					"style": "bold"
+				},
+				{
+					"type": "text",
+					"data":
+						"\"Blockchain\" this, \"blockchain\" that. It's a concept so momentous that it has even managed to shed its article. "
+				},
+				{
+					"type": "text",
+					"data": "Proponents don’t speak of “the” blockchain or “a” blockchain.",
+					"style": "bold"
+				},
+				{
+					"type": "text",
+					"data":
+						" Instead, they reverently preach Blockchain: the solution to all enterprise needs ("
+				},
+				{
+					"type": "text",
+					"data": "in particular, supply chain management",
+					"style": "italic"
+				},
+				{
+					"type": "text",
+					"data": ")."
+				}
+			]
+		},
+		{
+			"type": "image",
+			"nodeId": 4,
+			"size": "",
+			"url": "/assets/images/post-test-img.gif",
+			"caption": {
+				"data": [
+					{
+						"type": "text",
+						"data": "This is an image caption."
+					}
+				]
+			}
+		},
+		{
+			"type": "p",
+			"nodeId": 5,
+			"data": [
+				{
+					"type": "text",
+					"data": "A short sentence."
+				}
+			]
+		},
+		{
+			"type": "blockquote",
+			"nodeId": 6,
+			"data": [
+				{
+					"type": "text",
+					"data":
+						"The reason “blockchain” is such seductive marketing… is the subtle implication that the data structure alone — absent proof of work or open validation — could convey the same benefits as bitcoin."
+				}
+			],
+			"mode": "default"
+		}
+	],
+	"isPremium": true
+}

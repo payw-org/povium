@@ -4,7 +4,8 @@ import { Example } from "./examples/example1"
 import * as PostData from "./interfaces/PostData"
 import NodeManager from "./NodeManager"
 import PopTool from "./PopTool"
-import Converter from "./Converter";
+import Converter from "./Converter"
+import SelectionManager from "./SelectionManager";
 
 export default class PVMEditor {
 	/**
@@ -19,6 +20,8 @@ export default class PVMEditor {
 		this.loadData()
 
 		EditSession.validateData()
+
+		this.attachEventListeners()
 	}
 
 	loadData() {
@@ -30,5 +33,8 @@ export default class PVMEditor {
 		pvmNodes.forEach(node => {
 			NodeManager.appendChild(node)
 		})
+	}
+
+	attachEventListeners() {
 	}
 }

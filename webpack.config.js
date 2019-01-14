@@ -25,12 +25,47 @@ module.exports = {
 			{
 				test: [/\.tsx?$/],
 				exclude: /(node_modules|bower_components)/,
-				loaders: ['babel-loader', 'ts-loader']
+				use: [
+					{
+						loader: 'babel-loader',
+						options: {
+							presets: ['@babel/preset-env']
+						}
+					},
+					'ts-loader'
+				]
 			},
 			{
 				test: [/\.js$/],
 				exclude: /(node_modules|bower_components)/,
-				loaders: ['babel-loader']
+				use: [
+					{
+						loader: 'babel-loader',
+						options: {
+							presets: ['@babel/preset-env']
+						}
+					},
+					'ts-loader'
+				]
+			},
+			{
+				test: /\.less$/,
+				use: [
+					'style-loader',
+					'css-loader',
+					{
+						loader: 'postcss-loader',
+						options: {
+							plugins: () => [
+								require('autoprefixer')
+								({
+									'browsers': ['> 1%', 'last 2 versions']
+								})
+							]
+						}
+					},
+					'less-loader'
+				]
 			}
 		]
 	},

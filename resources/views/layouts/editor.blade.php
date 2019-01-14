@@ -11,11 +11,12 @@
 		@include('global-inclusion.global-css')
 
 		@yield('css_sub')
+
+		@include('global-inclusion.global-script')
 	</head>
 
 	<body>
 		@yield('content')
-		@include('global-inclusion.global-script')
 	</body>
 
 </html>

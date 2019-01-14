@@ -1,10 +1,11 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
 import EventManager from "./EventManager"
 import NodeManager from "./NodeManager"
 import PVMNode from "./PVMNode"
 import PVMRange from "./PVMRange"
 import UndoManager from "./UndoManager"
-import EditSession from "./EditSession";
+import EditSession from "./EditSession"
+import PopTool from "./PopTool"
 
 export default class SelectionManager {
 	constructor() {}
@@ -12,13 +13,14 @@ export default class SelectionManager {
 	// Setters
 
 	public static setRange(pvmRange: PVMRange) {
-		if (!pvmRange) return
+		if (!pvmRange || !pvmRange.start.node || !pvmRange.end.node) return
 
 		let range = document.createRange() // JS Range
 		let rangeStartContainer, rangeStartOffset, rangeEndContainer, rangeEndOffset
 		let startNodePVMN = pvmRange.start.node
 		let startNodeDOM = startNodePVMN.textElement
 		let startNodeOffset = pvmRange.start.offset
+		let startState = pvmRange.start.state
 
 		// Calculate start
 		let travelNode: Node = startNodeDOM.firstChild
@@ -28,45 +30,47 @@ export default class SelectionManager {
 		rangeStartContainer = startNodeDOM
 		rangeStartOffset = 0
 
-		// if (startNodeOffset === -1) {
-		// 	startNodeOffset = startNodeDOM.textContent.length
-		// }
-
-		while (1) {
-			if (!travelNode) break
-
-			if (travelNode.nodeType === 3) {
-				if (length + travelNode.textContent.length >= startNodeOffset) {
-					rangeStartContainer = travelNode
-					rangeStartOffset = startNodeOffset - length
-					break
-				} else {
-					length += travelNode.textContent.length
-				}
-			}
-
-			if (travelNode.firstChild) {
-				travelNode = travelNode.firstChild
-			} else if (travelNode.nextSibling) {
-				travelNode = travelNode.nextSibling
-			} else {
-				travelNode = travelNode.parentNode
-
-				while (1) {
-					if (travelNode.isEqualNode(startNodeDOM)) {
-						loopDone = true
-						break
-					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling
+		if (startState === 5) {
+			let sb =pvmRange.start.node.element.querySelectorAll(".selection-break")[pvmRange.start.offset]
+			rangeStartContainer = sb
+			rangeStartOffset = 0
+		} else {
+			while (1) {
+				if (!travelNode) break
+			
+				if (travelNode.nodeType === 3) {
+					if (length + travelNode.textContent.length >= startNodeOffset) {
+						rangeStartContainer = travelNode
+						rangeStartOffset = startNodeOffset - length
 						break
 					} else {
-						travelNode = travelNode.parentNode
+						length += travelNode.textContent.length
 					}
 				}
-			}
-
-			if (loopDone) {
-				break
+			
+				if (travelNode.firstChild) {
+					travelNode = travelNode.firstChild
+				} else if (travelNode.nextSibling) {
+					travelNode = travelNode.nextSibling
+				} else {
+					travelNode = travelNode.parentNode
+			
+					while (1) {
+						if (travelNode.isEqualNode(startNodeDOM)) {
+							loopDone = true
+							break
+						} else if (travelNode.nextSibling) {
+							travelNode = travelNode.nextSibling
+							break
+						} else {
+							travelNode = travelNode.parentNode
+						}
+					}
+				}
+			
+				if (loopDone) {
+					break
+				}
 			}
 		}
 
@@ -75,6 +79,7 @@ export default class SelectionManager {
 		let endNodePVMN = pvmRange.end.node
 		let endNodeDOM = endNodePVMN.textElement
 		let endNodeOffset = pvmRange.end.offset
+		let endState = pvmRange.end.state
 
 		// Calculate end
 		travelNode = endNodeDOM.firstChild
@@ -84,45 +89,47 @@ export default class SelectionManager {
 		rangeEndContainer = endNodeDOM
 		rangeEndOffset = 0
 
-		// if (endNodeOffset === -1) {
-		// 	endNodeOffset = endNodeDOM.textContent.length
-		// }
-
-		while (1) {
-			if (!travelNode) break
-
-			if (travelNode.nodeType === 3) {
-				if (length + travelNode.textContent.length >= endNodeOffset) {
-					rangeEndContainer = travelNode
-					rangeEndOffset = endNodeOffset - length
-					break
-				} else {
-					length += travelNode.textContent.length
-				}
-			}
-
-			if (travelNode.firstChild) {
-				travelNode = travelNode.firstChild
-			} else if (travelNode.nextSibling) {
-				travelNode = travelNode.nextSibling
-			} else {
-				travelNode = travelNode.parentNode
-
-				while (1) {
-					if (travelNode.isEqualNode(endNodeDOM)) {
-						loopDone = true
-						break
-					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling
+		if (endState === 5) {
+			let sb =pvmRange.end.node.element.querySelectorAll(".selection-break")[pvmRange.end.offset]
+			rangeEndContainer = sb
+			rangeEndOffset = 0
+		} else {
+			while (1) {
+				if (!travelNode) break
+			
+				if (travelNode.nodeType === 3) {
+					if (length + travelNode.textContent.length >= endNodeOffset) {
+						rangeEndContainer = travelNode
+						rangeEndOffset = endNodeOffset - length
 						break
 					} else {
-						travelNode = travelNode.parentNode
+						length += travelNode.textContent.length
 					}
 				}
-			}
-
-			if (loopDone) {
-				break
+			
+				if (travelNode.firstChild) {
+					travelNode = travelNode.firstChild
+				} else if (travelNode.nextSibling) {
+					travelNode = travelNode.nextSibling
+				} else {
+					travelNode = travelNode.parentNode
+			
+					while (1) {
+						if (travelNode.isEqualNode(endNodeDOM)) {
+							loopDone = true
+							break
+						} else if (travelNode.nextSibling) {
+							travelNode = travelNode.nextSibling
+							break
+						} else {
+							travelNode = travelNode.parentNode
+						}
+					}
+				}
+			
+				if (loopDone) {
+					break
+				}
 			}
 		}
 
@@ -131,123 +138,163 @@ export default class SelectionManager {
 		window.getSelection().removeAllRanges()
 		window.getSelection().addRange(range)
 
+		// Trigger selectionChange event callback function
 		EventManager.onSelectionChanged()
 	}
 
 	public static getCurrentRange() {
-		if (document.getSelection().rangeCount === 0) {
-			return null
+		// If there is no text selection
+		// return range with selected image or other media elements.
+		let selectedElm = EditSession.editorBody.querySelector(".node-selected")
+		if (selectedElm && window.getSelection().rangeCount === 0) {
+			let selectedNode = NodeManager.getNodeByID(NodeManager.getNodeID(selectedElm))
+			let r = new PVMRange({
+				startNode: selectedNode,
+				startOffset: 0,
+				endNode: selectedNode,
+				endOffset: 0
+			})
+			return r
 		}
-
+		
+		let sel = window.getSelection()
+		if (
+			sel.rangeCount === 0
+			|| (sel.rangeCount > 0 && !EditSession.editorBody.contains(sel.getRangeAt(0).startContainer))
+		) {
+			return
+		}
+		
 		let range = document.getSelection().getRangeAt(0)
+		let sc = range.startContainer, ec = range.endContainer
 		let closestTarget: Element
 
 		let startNode, endNode
-		let startOffset = 0,
-			endOffset = 0
+		let startOffset = 0, endOffset = 0
+		let startState = undefined, endState = undefined
 
-		for (let i = 0; i < AT.topTags.length; i++) {
-			if (range.startContainer.nodeType !== 3) {
-				closestTarget = <Element>range.startContainer
-			} else {
-				closestTarget = range.startContainer.parentElement
+		if (
+			sc.nodeType === 3 ||
+			AT.textContainedTags.includes(sc.nodeName.toLocaleLowerCase())
+		) {
+			for (let i = 0; i < AT.topTags.length; i++) {
+				if (sc.nodeType !== 3) {
+					closestTarget = <Element> sc
+				} else {
+					closestTarget = sc.parentElement
+				}
+
+				if (closestTarget.closest(AT.topTags[i])) {
+					let startElm = closestTarget.closest(AT.topTags[i])
+					startNode = NodeManager.getNodeByID(NodeManager.getNodeID(startElm))
+					startOffset = this.getTextOffset(startElm, sc, range.startOffset)
+					break
+				}
 			}
-
-			if (closestTarget.closest(AT.topTags[i])) {
-				let startElm = closestTarget.closest(AT.topTags[i])
-				startNode = NodeManager.getNodeByID(NodeManager.getNodeID(startElm))
-				let n,
-					walk = document.createTreeWalker(
-						startElm,
-						NodeFilter.SHOW_TEXT,
-						null,
-						false
-					)
-				while ((n = walk.nextNode())) {
-					if (n.isSameNode(range.startContainer)) {
-						startOffset += range.startOffset
+		} else {
+			let focusedNode = NodeManager.getNodeByChild(sc)
+			let selectionBreaks = focusedNode.element.querySelectorAll(".selection-break")
+			if (selectionBreaks.length > 0) {
+				for (let i = 0; i < selectionBreaks.length; i++) {
+					if (selectionBreaks[i].contains(sc)) {
+						startNode = focusedNode
+						startOffset = i
+						startState = 5
 						break
 					}
-					startOffset += n.textContent.length
 				}
-				break
+			} else {
+				return undefined
 			}
 		}
 
 		if (range.collapsed) {
-			;(endNode = startNode), (endOffset = startOffset)
-		} else {
+			endNode = startNode
+			endOffset = startOffset
+			endState = startState
+		} else if (
+			ec.nodeType === 3 ||
+			AT.textContainedTags.includes(ec.nodeName.toLocaleLowerCase())
+		) {
 			for (let i = 0; i < AT.topTags.length; i++) {
-				if (range.endContainer.nodeType !== 3) {
-					closestTarget = <Element>range.endContainer
+				if (ec.nodeType !== 3) {
+					closestTarget = <Element>ec
 				} else {
-					closestTarget = range.endContainer.parentElement
+					closestTarget = ec.parentElement
 				}
 
 				if (closestTarget.closest(AT.topTags[i])) {
 					let endElm = closestTarget.closest(AT.topTags[i])
 					endNode = NodeManager.getNodeByID(NodeManager.getNodeID(endElm))
-					let n,
-						walk = document.createTreeWalker(
-							endElm,
-							NodeFilter.SHOW_TEXT,
-							null,
-							false
-						)
-					while ((n = walk.nextNode())) {
-						if (n.isSameNode(range.endContainer)) {
-							endOffset += range.endOffset
-							break
-						}
-						endOffset += n.textContent.length
-					}
+					endOffset = this.getTextOffset(endElm, ec, range.endOffset)
 					break
 				}
 			}
 
-			if (range.endContainer.nodeType !== 3) {
+			if (ec.nodeType !== 3) {
 				endOffset = range.endOffset
+			}
+		} else {
+			let focusedNode = NodeManager.getNodeByChild(ec)
+			let selectionBreaks = focusedNode.element.querySelectorAll(".selection-break")
+			if (selectionBreaks.length > 0) {
+				for (let i = 0; i < selectionBreaks.length; i++) {
+					if (selectionBreaks[i].contains(ec)) {
+						endNode = focusedNode
+						endOffset = i
+						endState = 5
+						break
+					}
+				}
+			} else {
+				return undefined
 			}
 		}
 
-		return new PVMRange(startNode, startOffset, endNode, endOffset)
+		return new PVMRange({
+			startNode: startNode,
+			startOffset: startOffset,
+			startState: startState,
+			endNode: endNode,
+			endOffset: endOffset,
+			endState: endState
+		})
+	}
+
+	private static getTextOffset(elm: Element, stopContainer: Node, givenOffset: number): number {
+		let n, walk = document.createTreeWalker(elm, NodeFilter.SHOW_TEXT, null, false)
+		let offset = 0
+
+		while (n = walk.nextNode()) {
+			if (n.isSameNode(stopContainer)) {
+				offset += givenOffset
+				break
+			} else {
+				offset += n.textContent.length
+			}
+		}
+
+		return offset
 	}
 
 	public static getCurrentNode(): PVMNode {
 		let sel = window.getSelection()
-		if (sel.rangeCount === 0) {
-			let node = EditSession.editorBody.querySelector(".node-focused")
-			if (!node) {
-				return null
-			} else {
-				return NodeManager.getNodeByID(NodeManager.getNodeID(node))
-			}
+
+		let nodeSelected = EditSession.editorBody.querySelector(".node-selected")
+		if (nodeSelected) {
+			return NodeManager.getNodeByElement(nodeSelected)
 		}
+
+		// If there is no range
+		// return null
+		if (sel.rangeCount === 0) return null
 
 		let range = sel.getRangeAt(0)
 		let startNode = range.startContainer
 
 		let node: Element = null
 
-		for (let i = 0; i < AT.topTags.length; i++) {
-			if (startNode.nodeType === 3) {
-				node = startNode.parentElement.closest(AT.topTags[i])
-			} else {
-				node = (<Element>startNode).closest(AT.topTags[i])
-			}
-
-			if (node) break
-		}
-
-		if (!node) {
-			return null
-		}
-
-		let nodeID = Number(node.getAttribute("data-ni"))
-
-		let pvmNode = NodeManager.getNodeByID(nodeID)
-
-		return pvmNode
+		return NodeManager.getNodeByChild(startNode)
 	}
 
 	public static getAllNodesInSelection(type?: string): PVMNode[] {
@@ -304,64 +351,55 @@ export default class SelectionManager {
 	 */
 	public static getCursorState() {}
 
-	public static getTextOffset(
-		node: Node,
-		container: Node,
-		rangeOffset: number
-	): number {
-		let travelNode: Node = node.firstChild
-		let length: number = 0
-		let loopDone: boolean = false
+	// Deprecated
+	// public static getTextOffset(
+	// 	node: Node,
+	// 	container: Node,
+	// 	rangeOffset: number
+	// ): number {
+	// 	let travelNode: Node = node.firstChild
+	// 	let length: number = 0
+	// 	let loopDone: boolean = false
 
-		while (1) {
-			if (travelNode.nodeType === 3) {
-				if (travelNode.isEqualNode(container)) {
-					length += rangeOffset
-					break
-				} else {
-					length += travelNode.textContent.length
-				}
-			}
+	// 	while (1) {
+	// 		if (travelNode.nodeType === 3) {
+	// 			if (travelNode.isEqualNode(container)) {
+	// 				length += rangeOffset
+	// 				break
+	// 			} else {
+	// 				length += travelNode.textContent.length
+	// 			}
+	// 		}
 
-			if (travelNode.firstChild) {
-				travelNode = travelNode.firstChild
-			} else if (travelNode.nextSibling) {
-				travelNode = travelNode.nextSibling
-			} else {
-				travelNode = travelNode.parentNode
+	// 		if (travelNode.firstChild) {
+	// 			travelNode = travelNode.firstChild
+	// 		} else if (travelNode.nextSibling) {
+	// 			travelNode = travelNode.nextSibling
+	// 		} else {
+	// 			travelNode = travelNode.parentNode
 
-				while (1) {
-					if (travelNode.isEqualNode(node)) {
-						loopDone = true
-						break
-					} else if (travelNode.nextSibling) {
-						travelNode = travelNode.nextSibling
-						break
-					} else {
-						travelNode = travelNode.parentNode
-					}
-				}
-			}
+	// 			while (1) {
+	// 				if (travelNode.isEqualNode(node)) {
+	// 					loopDone = true
+	// 					break
+	// 				} else if (travelNode.nextSibling) {
+	// 					travelNode = travelNode.nextSibling
+	// 					break
+	// 				} else {
+	// 					travelNode = travelNode.parentNode
+	// 				}
+	// 			}
+	// 		}
 
-			if (loopDone) {
-				break
-			}
-		}
+	// 		if (loopDone) {
+	// 			break
+	// 		}
+	// 	}
 
-		return length
-	}
+	// 	return length
+	// }
 
 	// Actions
-
-	public static createRange(
-		startNode: PVMNode,
-		startOffset: number,
-		endNode: PVMNode,
-		endOffset: number
-	) {
-		let range = new PVMRange(startNode, startOffset, endNode, endOffset)
-		return range
-	}
 
 	public static focusAt(node: PVMNode, offset: number) {}
 
@@ -373,12 +411,10 @@ export default class SelectionManager {
 		let jsRange = window.getSelection().getRangeAt(0)
 		let pvmRange = this.getCurrentRange()
 		let nodes = this.getAllNodesInSelection()
+		console.log(nodes)
+		// return
 
-		let extraBackspace = true,
-			extraEnter = false
-
-		// console.log(pvmRange)
-		// console.log(jsRange)
+		let extraBackspace = true, extraEnter = false
 
 		let actions = []
 
@@ -416,10 +452,7 @@ export default class SelectionManager {
 				let originalContents = nodes[i].textElement.innerHTML
 				newRange.setEnd(nodes[i], nodes[i].textElement.textContent.length)
 				this.setRange(newRange)
-				window
-					.getSelection()
-					.getRangeAt(0)
-					.deleteContents()
+				window.getSelection().getRangeAt(0).deleteContents()
 				newRange.setStart(nodes[i], nodes[i].getTextContent().length)
 				newRange.setEnd(nodes[i], nodes[i].getTextContent().length)
 				this.setRange(newRange)
@@ -442,10 +475,7 @@ export default class SelectionManager {
 				let originalContents = nodes[i].textElement.innerHTML
 				newRange.setStart(nodes[i], 0)
 				this.setRange(newRange)
-				window
-					.getSelection()
-					.getRangeAt(0)
-					.deleteContents()
+				window.getSelection().getRangeAt(0).deleteContents()
 				newRange.setStart(nodes[i], 0)
 				newRange.setEnd(nodes[i], 0)
 				this.setRange(newRange)
@@ -491,5 +521,19 @@ export default class SelectionManager {
 			// 	EventManager.onPressEnter(ke, true)
 			// }, 0)
 		}
+	}
+
+	// Remove all selections from the editor
+	public static releaseNodeSelection() {
+		// Remove media selected
+		let elms = EditSession.editorBody.querySelectorAll(".node-selected, .caption-focused, .is-selected")
+		if (elms.length > 0) {
+			elms.forEach(elm => {
+				elm.classList.remove("node-selected")
+				elm.classList.remove("caption-focused")
+				elm.classList.remove("is-selected")
+			})
+		}
+		PopTool.hideImageTool()
 	}
 }

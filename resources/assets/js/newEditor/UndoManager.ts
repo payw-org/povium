@@ -3,6 +3,7 @@ import EventManager from "./EventManager"
 import { Action } from "./interfaces/Action"
 import NodeManager from "./NodeManager"
 import SelectionManager from "./SelectionManager"
+import PVMImageNode from "./PVMImageNode";
 
 export default class UndoManager {
 	private static actionStack: Array<Action | Array<Action>> = []
@@ -112,7 +113,11 @@ export default class UndoManager {
 		}
 
 		if (action.type === "textChange") {
-			action.targetNode.textElement.innerHTML = action.previousHTML
+			if (action.targetNode instanceof PVMImageNode) {
+				action.targetNode.setCaption(action.previousHTML)
+			} else {
+				action.targetNode.textElement.innerHTML = action.previousHTML
+			}
 		}
 
 		if (action.type === "transform") {

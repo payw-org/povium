@@ -1,8 +1,9 @@
 import * as PostData from "./interfaces/PostData"
 import NodeManager from "./NodeManager"
-import PVMNode from "./PVMNode";
-import { AT } from "./config/AvailableTypes";
-import TypeChecker from "./TypeChecker";
+import PVMNode from "./PVMNode"
+import { AT } from "./AvailableTypes"
+import TypeChecker from "./TypeChecker"
+import PVMImageNode from "./PVMImageNode"
 
 export default class Converter {
 	static parse(frame: PostData.Frame): PVMNode[] {
@@ -16,66 +17,33 @@ export default class Converter {
 		for (let i = 0; i < contents.length; i++) {
 			let block = contents[i]
 
-			let parentType = null
-			if ((<PostData.TextBlock>block).parentType) {
-				parentType = (<PostData.TextBlock>block).parentType
-			}
-
 			let node
 
 			if (PostData.isTextOnlyBlock(block)) {
-				let html = ""
+				let html = "", kind = undefined
 
-				for (let j = 0; j < block.data.length; j++) {
-					let text = block.data[j].data
-					let htmlPart = text
-					let style = block.data[j].style
-
-					if (style === "bold") {
-						htmlPart = "<b>" + text + "</b>"
-					} else if (style === "italic") {
-						htmlPart = "<i>" + text + "</i>"
-					} else if (style === "strikethrough") {
-						htmlPart = "<strikethrough>" + text + "</strikethrough>"
-					} else if (style === "underline") {
-						htmlPart = "<u>" + text + "</u>"
-					}
-
-					html += htmlPart
+				if (block.hasOwnProperty("kind")) {
+					kind = block.kind
 				}
 
+				html = this.extractHtmlFromTextData(block.data)
+
 				node = NodeManager.createNode(block.type, {
-					parentType: parentType,
+					kind: kind,
 					html: html
 				})
 
 			} else if (PostData.isImageBlock(block)) {
 				let html = ""
 
-				if (block.caption) {
-					for (let j = 0; j < block.caption.data.length; j++) {
-						let text = block.caption.data[j].data
-						let htmlPart = text
-						let style = block.caption.data[j].style
-
-						if (style === "bold") {
-							htmlPart = "<b>" + text + "</b>"
-						} else if (style === "italic") {
-							htmlPart = "<i>" + text + "</i>"
-						} else if (style === "strikethrough") {
-							htmlPart = "<strikethrough>" + text + "</strikethrough>"
-						} else if (style === "underline") {
-							htmlPart = "<u>" + text + "</u>"
-						}
-
-						html += htmlPart
-					}
+				if (block.captionEnabled) {
+					html = this.extractHtmlFromTextData(block.caption.data)
 				}
 
 				node = NodeManager.createNode(block.type, {
 					url: block.url,
 					html: html,
-					size: block.size
+					kind: block.kind
 				})
 			}
 
@@ -84,7 +52,112 @@ export default class Converter {
 		}
 
 		return pvmNodes
+	}
 
+	static extractHtmlFromTextData(data: Array<PostData.StyledText | PostData.RawText>) {
+		let html = ""
+
+		data.forEach(datum => {
+			if (datum.type === "styledText") {
+				datum = datum as PostData.StyledText
+				html += this.extractHtmlFromStyledText(datum)
+			} else if (datum.type === "rawText") {
+				datum = datum as PostData.RawText
+				html += datum.data
+			}
+		})
+
+		return html
+	}
+
+	static extractHtmlFromStyledText(st: PostData.StyledText) {
+		let producedHtml = ""
+		let tag = this.style2Tag(st.style)
+		producedHtml += "<" + tag + ">"
+
+		st.data.forEach(datum => {
+			if (datum.type === "styledText") {
+				datum = datum as PostData.StyledText
+				producedHtml += this.extractHtmlFromStyledText(datum)
+			} else if (datum.type === "rawText") {
+				datum = datum as PostData.RawText
+				producedHtml += this.escapeHtml(datum.data)
+			}
+		})
+
+		producedHtml += "</" + tag + ">"
+
+		return producedHtml
+	}
+
+	static tag2Style(tag: string): string {
+		tag = tag.toLocaleLowerCase()
+		let style: string
+
+		if (tag === "b" || tag === "strong") {
+			style = "bold"
+		} else if (tag === "em" || tag === "i") {
+			style = "italic"
+		} else if (tag === "u") {
+			style = "underline"
+		} else if (tag === "strike") {
+			style = "strike"
+		}
+
+		return style
+	}
+
+	static style2Tag(style: string): string {
+		style = style.toLocaleLowerCase()
+		let tag: string
+
+		if (style === "bold") {
+			tag = "strong"
+		} else if (style === "italic") {
+			tag = "em"
+		} else if (style === "underline") {
+			tag = "u"
+		} else if (style === "strike") {
+			tag = "strike"
+		}
+
+		return tag
+	}
+
+	static verifyStyleTag(tag: string): boolean {
+		tag = tag.toLocaleLowerCase()
+		if (
+			tag === "b" ||
+			tag === "strong" ||
+			tag === "i" ||
+			tag === "em" ||
+			tag === "u" ||
+			tag === "strike"
+		) {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	static escapeHtml(html: string) {
+		interface map {
+			[key: string]: string
+		}
+		let entityMap: map = {
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#39;',
+			'/': '&#x2F;',
+			'`': '&#x60;',
+			'=': '&#x3D;'
+		}
+
+		return String(html).replace(/[&<>"'`=\/]/g, s => {
+			return entityMap[s];
+		})
 	}
 
 	static stringify(editorNodes: PVMNode[]) {
@@ -101,13 +174,111 @@ export default class Converter {
 		body = ""
 
 		editorNodes.forEach(pvmNode => {
+			NodeManager.normalize(pvmNode.textElement)
+			
+			if (TypeChecker.isTextOnly(pvmNode.type)) {
+				let block: PostData.TextBlock = {
+					type: pvmNode.type,
+					data: this.buildTextDataFromHtml(pvmNode.element)
+				}
+				// Align
+				//
 
-			let block: PostData.Block = {
-				type: pvmNode.type
-
+				// Kind
+				if (pvmNode.kind) {
+					block.kind = pvmNode.kind
+				}
+				dataObj.contents.push(block)
+			} else if (TypeChecker.isImage(pvmNode.type)) {
+				let n = pvmNode as PVMImageNode
+				let block: PostData.ImageBlock = {
+					type: "image",
+					kind: n.kind,
+					url: n.url,
+					captionEnabled: n.captionEnabled
+				}
+				if (block.captionEnabled) {
+					block.caption = {
+						data: this.buildTextDataFromHtml(n.textElement)
+					}
+					// Align
+					//
+				}
+				dataObj.contents.push(block)
 			}
 		})
 
+		console.log(dataObj)
+
 		return JSON.stringify(dataObj)
+	}
+
+	static buildTextDataFromHtml(elm: HTMLElement): Array<PostData.StyledText | PostData.RawText> {
+		let travelNode: Node = elm.firstChild
+		let textData: Array<PostData.StyledText | PostData.RawText> = []
+
+		while (travelNode) {
+			if (travelNode.nodeType === 3 && travelNode.textContent.length > 0) {
+				let rawTextData: PostData.RawText = {
+					type: "rawText",
+					data: travelNode.textContent
+				}
+				
+				textData.push(rawTextData)
+			} else {
+				if (this.verifyStyleTag(travelNode.nodeName)) {
+					textData.push(this.buildStyledTextData(<HTMLElement> travelNode))
+				} else if (travelNode.nodeName.toLocaleLowerCase() === "br" || travelNode.textContent.length > 0) {
+					let rawTextData: PostData.RawText = {
+						type: "rawText",
+						data: travelNode.textContent
+					}
+
+					textData.push(rawTextData)
+				}				
+			}
+
+			travelNode = travelNode.nextSibling
+			if (!travelNode) {
+				console.log("no more travelnode")
+			} else {
+				console.log(travelNode)
+			}
+		}
+
+		return textData
+	}
+
+	static buildStyledTextData(styledElm: HTMLElement): PostData.StyledText {
+		if (!this.verifyStyleTag(styledElm.nodeName)) {
+			return
+		}
+
+		let style = this.tag2Style(styledElm.nodeName)
+
+		let superStyledTextData: PostData.StyledText = {
+			type: "styledText",
+			style: style,
+			data: []
+		}
+
+		let travelNode: Node = styledElm.firstChild
+
+		while (travelNode) {
+			if (travelNode.nodeType === 3) {
+				let rawTextData: PostData.RawText = {
+					type: "rawText",
+					data: travelNode.textContent
+				}
+
+				superStyledTextData.data.push(rawTextData)
+			} else {
+				superStyledTextData.data.push(this.buildStyledTextData(<HTMLElement> travelNode))
+			}
+			
+			travelNode = travelNode.nextSibling
+		}
+
+		return superStyledTextData
 	}
 }

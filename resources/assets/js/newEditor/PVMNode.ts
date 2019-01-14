@@ -1,9 +1,12 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
+import SelectionManager from "./SelectionManager"
+import TypeChecker from "./TypeChecker"
 
 export default class PVMNode {
 	id: number
 	type: string
-	parentType: string
+	kind?: string
+	align?: string
 	nextSibling: PVMNode
 	previousSibling: PVMNode
 	isConnected: boolean = false
@@ -19,6 +22,14 @@ export default class PVMNode {
 		this.textElement.innerHTML = html
 	}
 
+	setElement(elm: HTMLElement) {
+		this.element = elm
+		this.attachEventListeners()
+	}
+
+	attachEventListeners() {
+	}
+
 	fixEmptiness() {
 		if (this.textElement.textContent === "") {
 			this.textElement.innerHTML = "<br>"
@@ -31,8 +42,10 @@ export default class PVMNode {
 
 	replaceElement(elm: HTMLElement) {
 		this.element = elm
-		if (AT.textContained.includes(this.type)) {
+		if (TypeChecker.isTextContained(this.type)) {
 			this.textElement = elm
+		} else {
+			console.error("Type is not registered")
 		}
 	}
 

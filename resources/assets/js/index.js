@@ -1,10 +1,11 @@
-import { globalscript } from "./globalscript"
-import { globalnav } from "./globalnav"
-// import { home } from "./home"
-import { homeController } from "./home/homeController"
-import { profile } from "./profile/profile-home"
-import { login } from "./login"
-import { register } from "./register/register"
+require("../less/povium.style.less")
+
+require("./globalscript")
+require("./globalnav")
+require("./home/homeController")
+require("./profile/profile-home")
+require("./login")
+require("./register/register")
 import Pjax from "pjax"
 import topbar from "./topbar"
 
@@ -25,3 +26,4 @@ topbar.config({
 })
 document.addEventListener('pjax:send', topbar.show)
 document.addEventListener('pjax:complete', topbar.hide)
+

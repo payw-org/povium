@@ -1,8 +1,10 @@
-import { AT } from "./config/AvailableTypes"
+import { AT } from "./AvailableTypes"
 import EditSession from "./EditSession"
 import PVMNode from "./PVMNode"
+import PVMImageNode from "./PVMImageNode"
 import SelectionManager from "./SelectionManager"
-import TypeChecker from "./TypeChecker";
+import TypeChecker from "./TypeChecker"
+import PVMRange from "./PVMRange"
 
 export default class NodeManager {
 	constructor() {}
@@ -40,11 +42,11 @@ export default class NodeManager {
 		if (TypeChecker.isListItem(insertingChild.type)) {
 			// Referenced node is a list item
 			if (TypeChecker.isListItem(refChild.type)) {
-				if (refChild.parentType === insertingChild.parentType) {
+				if (refChild.kind === insertingChild.kind) {
 					if (
 						previousChild &&
 						previousChild.type === "li" &&
-						previousChild.parentType === refChild.parentType
+						previousChild.kind === refChild.kind
 					) {
 						this.mergeLists(
 							previousChild.element.parentElement,
@@ -62,31 +64,31 @@ export default class NodeManager {
 					)
 
 					if (previousChild && TypeChecker.isListItem(previousChild.type)) {
-						if (previousChild.parentType === insertingChild.parentType) {
+						if (previousChild.kind === insertingChild.kind) {
 							previousChild.element.parentElement.insertBefore(
 								insertingChild.element,
 								previousChild.element.nextElementSibling
 							)
 						} else {
-							let wrapper = document.createElement(insertingChild.parentType)
+							let wrapper = document.createElement(insertingChild.kind)
 							wrapper.appendChild(insertingChild.element)
 							abc.parentElement.insertBefore(wrapper, abc)
 						}
 					} else {
-						let wrapper = document.createElement(insertingChild.parentType)
+						let wrapper = document.createElement(insertingChild.kind)
 						wrapper.appendChild(insertingChild.element)
 						abc.parentElement.insertBefore(wrapper, abc)
 					}
 				}
 			} else {
 				if (previousChild && TypeChecker.isListItem(previousChild.type)) {
-					if (previousChild.parentType === insertingChild.parentType) {
+					if (previousChild.kind === insertingChild.kind) {
 						previousChild.element.parentElement.insertBefore(
 							insertingChild.element,
 							previousChild.element.nextElementSibling
 						)
 					} else {
-						let wrapper = document.createElement(insertingChild.parentType)
+						let wrapper = document.createElement(insertingChild.kind)
 						wrapper.appendChild(insertingChild.element)
 						refChild.element.parentElement.insertBefore(
 							wrapper,
@@ -94,7 +96,7 @@ export default class NodeManager {
 						)
 					}
 				} else {
-					let wrapper = document.createElement(insertingChild.parentType)
+					let wrapper = document.createElement(insertingChild.kind)
 					wrapper.appendChild(insertingChild.element)
 					refChild.element.parentElement.insertBefore(wrapper, refChild.element)
 				}
@@ -131,13 +133,13 @@ export default class NodeManager {
 
 		// Render dom
 		if (child.type === "li") {
-			let wrapper = document.createElement(child.parentType)
+			let wrapper = document.createElement(child.kind)
 			wrapper.appendChild(child.element)
 			EditSession.editorBody.appendChild(wrapper)
 			if (
 				child.previousSibling &&
 				child.previousSibling.type === "li" &&
-				child.previousSibling.parentType === child.parentType
+				child.previousSibling.kind === child.kind
 			) {
 				this.mergeLists(
 					child.previousSibling.element.parentElement,
@@ -164,9 +166,31 @@ export default class NodeManager {
 		})
 	}
 
+	public static getNodeByElement(elm: Element): PVMNode {
+		return this.getNodeByID(this.getNodeID(elm))
+	}
+
+	public static getNodeByChild(target: Node|Element|EventTarget): PVMNode {
+		if ((<Element> target).closest) {
+			for (let i = 0; i < AT.topTags.length; i++) {
+				if ((<Element> target).closest(AT.topTags[i])) {
+					return this.getNodeByElement((<Element> target).closest(AT.topTags[i]))
+				}
+			}
+		} else {
+			let targetParent = (<Node> target).parentElement
+			for (let i = 0; i < AT.topTags.length; i++) {
+				if (targetParent.closest(AT.topTags[i])) {
+					return this.getNodeByElement(targetParent.closest(AT.topTags[i]))
+				}
+			}
+		}
+	}
+
 	public static getNodeID(element: Element): number {
 		if (!element) {
-			console.error("Could not find element.")
+			console.error("Could not find element.", element)
+			return
 		}
 		let id = Number(element.getAttribute("data-ni"))
 		if (!id) {
@@ -182,37 +206,31 @@ export default class NodeManager {
 		element.setAttribute("data-ni", String(id))
 	}
 
-	/**
-	 * @param {string} type
-	 * @param {object=} options
-	 * @param {string} options.parentType
-	 * @param {string} options.html
-	 * @param {string} options.url
-	 * @param {string} options.mode
-	 * @return {PVMNode}
-	 */
 	public static createNode(
 		type: string,
 		options?: {
 			nodeID?: number
-			parentType?: string
+			kind?: string
 			html?: string
 			url?: string
-			mode?: string
-			size?: string
 		}
 	): PVMNode {
 		type = type.toLowerCase()
 
 		if (
-			(type === "li" && options && !("parentType" in options)) ||
+			(type === "li" && options && !("kind" in options)) ||
 			(type === "li" && !options)
 		) {
 			console.error(`"li" node must be created with parent tag.`)
 			return
 		}
 
-		let newNode = new PVMNode()
+		let newNode: PVMNode
+		if (type === "image") {
+			newNode = new PVMImageNode()
+		} else {
+			newNode = new PVMNode()
+		}
 
 		// Set an unique auto incremental node ID
 		if (options && options.nodeID) {
@@ -222,8 +240,8 @@ export default class NodeManager {
 		}
 
 		newNode.type = type
-		if (options && "parentType" in options) {
-			newNode.parentType = options.parentType
+		if (options && "kind" in options) {
+			newNode.kind = options.kind
 		}
 
 		let dom
@@ -238,31 +256,52 @@ export default class NodeManager {
 					dom.innerHTML = "<br>"
 				}
 			}
-			newNode.element = dom
+			// newNode.element = dom
+			newNode.setElement(dom)
 			newNode.textElement = dom
 		} else if (newNode.type === "image") {
+			let n = newNode as PVMImageNode
+
 			// Image node
 			dom = document.createElement("figure")
 			dom.classList.add("image")
-			if (options.size) {
-				dom.classList.add(options.size)
-			}
+			dom.contentEditable = "false"
+
 			let imgWrapper = document.createElement("div")
 			imgWrapper.className = "image-wrapper"
-			// imgWrapper.contentEditable = "false"
-			// imgWrapper.contentEditable = "true"
+
+			// dummy contenteditable div for image selection
+			let selectionBreak = document.createElement("div")
+			selectionBreak.contentEditable = "true"
+			selectionBreak.className = "selection-break"
+			selectionBreak.innerHTML = "<br>"
+			imgWrapper.appendChild(selectionBreak)
+
 			let imgDOM = document.createElement("img")
-			imgDOM.src = options.url
 			imgWrapper.appendChild(imgDOM)
+
 			let captionDOM = document.createElement("figcaption")
-			captionDOM.innerHTML = options.html
-			if (options.html.length > 0) {
-				dom.classList.add("caption-enabled")
-			}
+			captionDOM.contentEditable = "true"
+			captionDOM.innerHTML = ""
+
 			dom.appendChild(imgWrapper)
 			dom.appendChild(captionDOM)
-			newNode.element = dom
-			newNode.textElement = captionDOM
+			// newNode.element = dom
+			n.textElement = captionDOM
+			n.setElement(dom)
+
+			// Set image url(src)
+			n.setUrl(options.url)
+
+			// Set image size
+			if (options.kind) {
+				dom.classList.add(options.kind)
+			}
+
+			// Caption exists
+			if (options.html && options.html.length > 0) {
+				;(<PVMImageNode> newNode).setCaption(options.html)
+			}
 		}
 
 		dom.setAttribute("data-ni", String(newNode.id))
@@ -319,12 +358,12 @@ export default class NodeManager {
 		let bugSolver = document.createTextNode(" ")
 		currentNode.textElement.appendChild(bugSolver)
 
-		let newRange = SelectionManager.createRange(
-			currentNode,
-			currentRange.start.offset,
-			currentNode,
-			currentNode.getTextContent().length
-		)
+		let newRange = new PVMRange({
+			startNode: currentNode,
+			startOffset: currentRange.start.offset,
+			endNode: currentNode,
+			endOffset: currentNode.getTextContent().length
+		})
 
 		SelectionManager.setRange(newRange)
 
@@ -333,7 +372,7 @@ export default class NodeManager {
 		let extractedContents = range.extractContents()
 
 		let newNode = this.createNode(currentNode.type, {
-			parentType: currentNode.parentType,
+			kind: currentNode.kind,
 			nodeID: newNodeID
 		})
 		let n
@@ -424,8 +463,13 @@ export default class NodeManager {
 			return
 		}
 
+		if (list1.isSameNode(list2)) {
+			// Skip merging same nodes
+			return
+		}
+
 		let node
-		while ((node = list2.firstElementChild)) {
+		while (node = list2.firstElementChild) {
 			list1.appendChild(node)
 		}
 
@@ -438,10 +482,10 @@ export default class NodeManager {
 	public static normalize(element: HTMLElement) {
 		let currentRange = SelectionManager.getCurrentRange()
 		while (1) {
-			if (!element.innerHTML.match(/<\/(.)><\1 ?.*?>/gi)) {
+			if (!element.innerHTML.match(/<\/(.*)><\1 ?.*?>/gi)) {
 				break
 			} else {
-				element.innerHTML = element.innerHTML.replace(/<\/(.)><\1 ?.*?>/gi, "")
+				element.innerHTML = element.innerHTML.replace(/<\/(.*)><\1 ?.*?>/gi, "")
 			}
 		}
 		element.childNodes.forEach(child => {
@@ -512,12 +556,12 @@ export default class NodeManager {
 	public static transformNode(
 		node: PVMNode,
 		newType: string,
-		newParentType?: string
+		newKind?: string
 	) {
 		// If the original node type and
 		// the new type is same, do nothing.
 		newType = newType.toLowerCase()
-		if (node.type === newType && node.parentType === newParentType) return
+		if (node.type === newType && node.kind === newKind) return
 
 		let oldElm = node.element
 
@@ -529,23 +573,30 @@ export default class NodeManager {
 
 		this.copySoul(node.element, newElm)
 		node.type = newType
-		node.parentType = newParentType
+		node.kind = newKind
 		node.replaceElement(newElm)
 
 		if (newType === "li") {
-			if (newParentType === "ol") {
+			if (newKind === "ol") {
 				node.textElement.innerHTML = node.textElement.innerHTML.replace(
 					/^(<.* ?.*?)?1. /,
 					"$1"
 				)
 				node.fixEmptiness()
-			} else if (newParentType === "ul") {
+			} else if (newKind === "ul") {
 				node.textElement.innerHTML = node.textElement.innerHTML.replace(
 					/^(<.* ?.*?)?- /,
 					"$1"
 				)
 				node.fixEmptiness()
 			}
+		} else if (newType === "code") {
+			// node.textElement.innerHTML = node.textElement.textContent
+			node.textElement.innerHTML = node.textElement.innerHTML.replace(
+				/^(<.* ?.*?)?```/,
+				"$1"
+			)
+			node.fixEmptiness()
 		}
 
 		this.insertChildBefore(node, nextNode)

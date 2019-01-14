@@ -1,28 +1,35 @@
 import PVMNode from "../PVMNode"
-import { AT } from "../config/AvailableTypes"
+import { AT } from "../AvailableTypes"
 
-export interface Block {
+export interface StyledText {
+	type: "styledText"
+	data: Array<StyledText | RawText>
+	style: string
+	url?: string
+}
+
+export interface RawText {
+	type: "rawText"
+	data: string
+}
+
+export interface Block extends Object {
 	type: string
+	role?: string
 }
 
 export interface TextBlock extends Block {
-	data: TextFragment[]
+	data: Array<StyledText | RawText>
 	align?: string
-	mode?: string // For blockquotes
-	parentType?: string // For list items
-}
-
-export interface TextFragment {
-	type: string
-	data: string
-	style?: string
+	kind?: string // For blockquotes and list items
 }
 
 export interface ImageBlock extends Block {
-	size: string
+	kind: string
 	url: string
-	caption: {
-		data: TextFragment[]
+	captionEnabled: boolean
+	caption?: {
+		data: Array<StyledText | RawText>
 		align?: string
 	}
 }
