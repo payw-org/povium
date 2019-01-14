@@ -1,8 +1,9 @@
 import PVMNode from "./PVMNode"
 import SelectionManager from "./SelectionManager"
-import PopTool from "./PopTool";
-import EditSession from "./EditSession";
-import EventManager from "./EventManager";
+import PopTool from "./PopTool"
+import EditSession from "./EditSession"
+import EventManager from "./EventManager"
+import { SelectionChangeEvent } from "./EventManager"
 
 export default class PVMImageNode extends PVMNode {
 	captionEnabled: boolean = false
@@ -23,6 +24,9 @@ export default class PVMImageNode extends PVMNode {
 			setTimeout(() => {
 				this.setCaption()
 			}, 0)
+		})
+		document.addEventListener("selectionChanged", (e: SelectionChangeEvent) => {
+			
 		})
 	}
 
