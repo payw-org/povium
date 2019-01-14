@@ -7,7 +7,11 @@ import SelectionManager from "./SelectionManager"
 import UndoManager from "./UndoManager"
 import TypeChecker from "./TypeChecker"
 import PVMImageNode from "./PVMImageNode"
-import PVMNode from "./PVMNode";
+import PVMNode from "./PVMNode"
+
+export interface SelectionChangeEvent extends Event {
+	currentRange: PVMRange
+}
 
 export default class EventManager {
 	public static mouseDownStart: boolean
@@ -40,6 +44,10 @@ export default class EventManager {
 				}
 			})
 		})
+
+		// document.addEventListener("selectionchange", e => {
+		// 	this.onSelectionChanged()
+		// })
 
 		EditSession.editorBody.addEventListener("dragstart", e => {
 			e.preventDefault()
@@ -479,8 +487,8 @@ export default class EventManager {
 	 */
 	public static onKeyDown(e: KeyboardEvent) {
 		let currentRange = SelectionManager.getCurrentRange()
-		let currentNode = SelectionManager.getCurrentNode()
-		if (!currentNode) return
+		if (!currentRange) return
+		let currentNode = currentRange.start.node
 
 		// console.log("keydown")
 		let keyCode = e.keyCode
@@ -603,9 +611,11 @@ export default class EventManager {
 				}
 			}, 1)
 
+			// console.log(currentRange)
+
 			if (
 				currentRange &&
-				currentRange.isCollapsed() &&
+				currentRange.collapsed &&
 				(currentRange.start.state !== 1 && currentRange.start.state !== 4)
 			) {
 				enableTextChangeRecord = true
@@ -725,16 +735,21 @@ export default class EventManager {
 			TypeChecker.isParagraph(currentNode.type) &&
 			currentNode &&
 			(currentNode.getTextContent().match(/^- /) ||
-				currentNode.getTextContent().match(/^1\. /))
+				currentNode.getTextContent().match(/^1\. /)) ||
+				currentNode.getTextContent().match(/^```/)
 		) {
-			console.log("here")
-			let parentType = "ul"
+			let type = "li"
+			let kind = "ul"
 			if (currentNode.getTextContent().match(/^1\. /)) {
-				parentType = "ol"
+				kind = "ol"
+			} else if (currentNode.getTextContent().match(/^```/)) {
+				type = "code"
+				kind = undefined
 			}
+
 			let originalType = currentNode.type
 			let originalParentType = currentNode.kind
-			NodeManager.transformNode(currentNode, "li", parentType)
+			NodeManager.transformNode(currentNode, type, kind)
 			currentNode.fixEmptiness()
 			let newRange = new PVMRange({
 				startNode: currentNode,
@@ -748,8 +763,8 @@ export default class EventManager {
 				targetNode: currentNode,
 				previousType: originalType,
 				previousParentType: originalParentType,
-				nextType: "li",
-				nextParentType: parentType,
+				nextType: type,
+				nextParentType: kind,
 				previousRange: newRange,
 				nextRange: newRange
 			})
@@ -1142,5 +1157,17 @@ export default class EventManager {
 		if (currentNode && currentNode.textElement) {
 			EditSession.currentState.textHTML = currentNode.textElement.innerHTML
 		}
+
+		let selectionChangeEvent = new CustomEvent(
+			"selectionChanged",
+			{
+				detail: {
+					currentRange: currentRange
+				},
+				bubbles: false,
+				cancelable: false
+			}
+		)
+		document.dispatchEvent(selectionChangeEvent)
 	}
 }
