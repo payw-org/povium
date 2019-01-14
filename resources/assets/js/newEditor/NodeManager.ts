@@ -4,7 +4,7 @@ import PVMNode from "./PVMNode"
 import PVMImageNode from "./PVMImageNode"
 import SelectionManager from "./SelectionManager"
 import TypeChecker from "./TypeChecker"
-import PVMRange from "./PVMRange";
+import PVMRange from "./PVMRange"
 
 export default class NodeManager {
 	constructor() {}
@@ -482,10 +482,10 @@ export default class NodeManager {
 	public static normalize(element: HTMLElement) {
 		let currentRange = SelectionManager.getCurrentRange()
 		while (1) {
-			if (!element.innerHTML.match(/<\/(.)><\1 ?.*?>/gi)) {
+			if (!element.innerHTML.match(/<\/(.*)><\1 ?.*?>/gi)) {
 				break
 			} else {
-				element.innerHTML = element.innerHTML.replace(/<\/(.)><\1 ?.*?>/gi, "")
+				element.innerHTML = element.innerHTML.replace(/<\/(.*)><\1 ?.*?>/gi, "")
 			}
 		}
 		element.childNodes.forEach(child => {
@@ -556,12 +556,12 @@ export default class NodeManager {
 	public static transformNode(
 		node: PVMNode,
 		newType: string,
-		newParentType?: string
+		newKind?: string
 	) {
 		// If the original node type and
 		// the new type is same, do nothing.
 		newType = newType.toLowerCase()
-		if (node.type === newType && node.kind === newParentType) return
+		if (node.type === newType && node.kind === newKind) return
 
 		let oldElm = node.element
 
@@ -573,23 +573,30 @@ export default class NodeManager {
 
 		this.copySoul(node.element, newElm)
 		node.type = newType
-		node.kind = newParentType
+		node.kind = newKind
 		node.replaceElement(newElm)
 
 		if (newType === "li") {
-			if (newParentType === "ol") {
+			if (newKind === "ol") {
 				node.textElement.innerHTML = node.textElement.innerHTML.replace(
 					/^(<.* ?.*?)?1. /,
 					"$1"
 				)
 				node.fixEmptiness()
-			} else if (newParentType === "ul") {
+			} else if (newKind === "ul") {
 				node.textElement.innerHTML = node.textElement.innerHTML.replace(
 					/^(<.* ?.*?)?- /,
 					"$1"
 				)
 				node.fixEmptiness()
 			}
+		} else if (newType === "code") {
+			// node.textElement.innerHTML = node.textElement.textContent
+			node.textElement.innerHTML = node.textElement.innerHTML.replace(
+				/^(<.* ?.*?)?```/,
+				"$1"
+			)
+			node.fixEmptiness()
 		}
 
 		this.insertChildBefore(node, nextNode)
