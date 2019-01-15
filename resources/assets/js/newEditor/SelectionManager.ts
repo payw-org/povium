@@ -142,21 +142,7 @@ export default class SelectionManager {
 		EventManager.onSelectionChanged()
 	}
 
-	public static getCurrentRange() {
-		// If there is no text selection
-		// return range with selected image or other media elements.
-		let selectedElm = EditSession.editorBody.querySelector(".node-selected")
-		if (selectedElm && window.getSelection().rangeCount === 0) {
-			let selectedNode = NodeManager.getNodeByID(NodeManager.getNodeID(selectedElm))
-			let r = new PVMRange({
-				startNode: selectedNode,
-				startOffset: 0,
-				endNode: selectedNode,
-				endOffset: 0
-			})
-			return r
-		}
-		
+	public static getCurrentRange() {		
 		let sel = window.getSelection()
 		if (
 			sel.rangeCount === 0
@@ -195,14 +181,17 @@ export default class SelectionManager {
 			let focusedNode = NodeManager.getNodeByChild(sc)
 			let selectionBreaks = focusedNode.element.querySelectorAll(".selection-break")
 			if (selectionBreaks.length > 0) {
+				let set = false
 				for (let i = 0; i < selectionBreaks.length; i++) {
 					if (selectionBreaks[i].contains(sc)) {
 						startNode = focusedNode
 						startOffset = i
 						startState = 5
+						set = true
 						break
 					}
 				}
+				if (!set) return undefined
 			} else {
 				return undefined
 			}
@@ -238,14 +227,17 @@ export default class SelectionManager {
 			let focusedNode = NodeManager.getNodeByChild(ec)
 			let selectionBreaks = focusedNode.element.querySelectorAll(".selection-break")
 			if (selectionBreaks.length > 0) {
+				let set = false
 				for (let i = 0; i < selectionBreaks.length; i++) {
 					if (selectionBreaks[i].contains(ec)) {
 						endNode = focusedNode
 						endOffset = i
 						endState = 5
+						set = true
 						break
 					}
 				}
+				if (!set) return undefined
 			} else {
 				return undefined
 			}
