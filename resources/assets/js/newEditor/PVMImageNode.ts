@@ -25,9 +25,36 @@ export default class PVMImageNode extends PVMNode {
 				this.setCaption()
 			}, 0)
 		})
-		document.addEventListener("selectionChanged", (e: SelectionChangeEvent) => {
-			
+		this.element.addEventListener("click", e => {
+			if (e.target instanceof Element) {
+				if (e.target.querySelector("img")) {
+					this.selectImage(e.target.querySelector("img"))
+				}
+			}
 		})
+		document.addEventListener("selectionChanged", (e: SelectionChangeEvent) => {
+			let range = e.detail.currentRange
+			if (range.collapsed && range.start.node.isSameAs(this)) {
+				if (range.start.state === 5) {
+					this.selectImage(range.start.offset)
+				} else {
+					this.focusCaption()
+				}
+			} else if (range.start.node.isSameAs(this) && range.end.node.isSameAs(this)) {
+				this.focusCaption()
+			} else {
+				this.release()
+			}
+		})
+	}
+
+	release() {
+		this.element.querySelectorAll(".is-selected").forEach(elm => {
+			elm.classList.remove("is-selected")
+		})
+		this.element.classList.remove("node-selected")
+		this.element.classList.remove("caption-focused")
+		PopTool.hideImageTool()
 	}
 
 	selectImage(imgElm?: Element | number) {
@@ -67,7 +94,7 @@ export default class PVMImageNode extends PVMNode {
 	}
 
 	focusCaption() {
-		this.element.classList.remove("node-selected")
+		this.release()
 		this.element.classList.add("caption-focused")
 		PopTool.hideImageTool()
 

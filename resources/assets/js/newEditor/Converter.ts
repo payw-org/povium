@@ -102,6 +102,8 @@ export default class Converter {
 			style = "underline"
 		} else if (tag === "strike") {
 			style = "strike"
+		} else if (tag === "a") {
+			style = "link"
 		}
 
 		return style
@@ -119,6 +121,8 @@ export default class Converter {
 			tag = "u"
 		} else if (style === "strike") {
 			tag = "strike"
+		} else if (style === "link") {
+			tag = "a"
 		}
 
 		return tag
@@ -132,7 +136,8 @@ export default class Converter {
 			tag === "i" ||
 			tag === "em" ||
 			tag === "u" ||
-			tag === "strike"
+			tag === "strike" ||
+			tag === "a"
 		) {
 			return true
 		} else {
@@ -203,6 +208,11 @@ export default class Converter {
 					}
 					// Align
 					//
+
+					// kind
+					if (n.kind) {
+						block.kind = n.kind
+					}
 				}
 				dataObj.contents.push(block)
 			}
@@ -226,32 +236,22 @@ export default class Converter {
 				
 				textData.push(rawTextData)
 			} else {
-				if (this.verifyStyleTag(travelNode.nodeName)) {
-					textData.push(this.buildStyledTextData(<HTMLElement> travelNode))
-				} else if (travelNode.nodeName.toLocaleLowerCase() === "br" || travelNode.textContent.length > 0) {
-					let rawTextData: PostData.RawText = {
-						type: "rawText",
-						data: travelNode.textContent
-					}
-
-					textData.push(rawTextData)
-				}				
+				textData.push(this.buildStyledTextData(<HTMLElement> travelNode))
 			}
 
 			travelNode = travelNode.nextSibling
-			if (!travelNode) {
-				console.log("no more travelnode")
-			} else {
-				console.log(travelNode)
-			}
 		}
 
 		return textData
 	}
 
-	static buildStyledTextData(styledElm: HTMLElement): PostData.StyledText {
+	static buildStyledTextData(styledElm: HTMLElement): PostData.StyledText | PostData.RawText {
 		if (!this.verifyStyleTag(styledElm.nodeName)) {
-			return
+			let rawTextData: PostData.RawText = {
+				type: "rawText",
+				data: styledElm.textContent
+			}
+			return rawTextData
 		}
 
 		let style = this.tag2Style(styledElm.nodeName)
@@ -260,6 +260,10 @@ export default class Converter {
 			type: "styledText",
 			style: style,
 			data: []
+		}
+
+		if ((<HTMLAnchorElement> styledElm).href) {
+			superStyledTextData.url = (<HTMLAnchorElement> styledElm).href
 		}
 
 		let travelNode: Node = styledElm.firstChild
