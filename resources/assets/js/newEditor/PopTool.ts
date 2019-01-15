@@ -8,7 +8,7 @@ import UndoManager from "./UndoManager"
 export default class PopTool {
 	public static pt: HTMLElement
 	public static imageTool: HTMLElement
-	tempLinkRange: PVMRange
+	private static tempLinkRange: PVMRange
 
 	constructor() {}
 
@@ -17,9 +17,140 @@ export default class PopTool {
 		this.imageTool = EditSession.editorDOM.querySelector(
 			"#image-preference-view"
 		)
+
+		this.attachPopToolEvents()
 	}
 
-	// Methods
+	public static attachPopToolEvents() {
+		let self = this
+	
+		window.addEventListener("resize", e => {
+			this.showImageTool(document.querySelector(".image.node-selected"))
+			this.showPopTool()
+		})
+	
+		EditSession.editorBody.addEventListener("mouseup", e => {
+			setTimeout(() => {
+				this.togglePopTool()
+			}, 0)
+		})
+	
+		EditSession.editorBody.addEventListener("keyup", e => {
+			let keyCode = e.which
+			if (
+				keyCode === 37 ||
+				keyCode === 38 ||
+				keyCode === 39 ||
+				keyCode === 40
+			) {
+				this.togglePopTool()
+			}
+		})
+	
+		this.pt.querySelectorAll("button").forEach(elm => {
+			elm.addEventListener("click", () => {
+				let currentRange = SelectionManager.getCurrentRange()
+				if (!currentRange.start.node && !currentRange.end.node) {
+					this.hidePopTool()
+				}
+			})
+		})
+	
+		// this.pt.querySelector("#pt-p").addEventListener('click', (e) => { this.postEditor.selManager.heading('P') })
+		this.pt.querySelector("#pt-h1").addEventListener("click", e => {
+			this.transformNodes("h1")
+		})
+		this.pt.querySelector("#pt-h2").addEventListener("click", e => {
+			this.transformNodes("h2")
+		})
+		this.pt.querySelector("#pt-h3").addEventListener("click", e => {
+			this.transformNodes("h3")
+		})
+		this.pt.querySelector("#pt-bold").addEventListener("click", e => {
+			this.changeTextStyle("bold")
+		})
+		this.pt.querySelector("#pt-italic").addEventListener("click", e => {
+			this.changeTextStyle("italic")
+		})
+		this.pt.querySelector("#pt-underline").addEventListener("click", e => {
+			this.changeTextStyle("underline")
+		})
+		this.pt.querySelector("#pt-strike").addEventListener("click", e => {
+			this.changeTextStyle("strikethrough")
+		})
+		this.pt.querySelector("#pt-alignleft").addEventListener("click", e => {
+			this.align("left")
+		})
+		this.pt.querySelector("#pt-alignmiddle").addEventListener("click", e => {
+			this.align("center")
+		})
+		this.pt.querySelector("#pt-alignright").addEventListener("click", e => {
+			this.align("right")
+		})
+	
+		this.pt.querySelector("#pt-title-pack").addEventListener("click", e => {
+			this.pt.querySelector(".top-categories").classList.add("hidden")
+			this.pt.querySelector(".title-style").classList.remove("hidden")
+			this.showPopTool()
+		})
+	
+		this.pt
+			.querySelector("#pt-textstyle-pack")
+			.addEventListener("click", e => {
+				this.pt.querySelector(".top-categories").classList.add("hidden")
+				this.pt.querySelector(".text-style").classList.remove("hidden")
+				this.showPopTool()
+			})
+	
+		this.pt.querySelector("#pt-align-pack").addEventListener("click", e => {
+			this.pt.querySelector(".top-categories").classList.add("hidden")
+			this.pt.querySelector(".align").classList.remove("hidden")
+			this.showPopTool()
+		})
+	
+		this.pt.querySelector("#pt-link").addEventListener("click", e => {
+			this.pt.querySelector(".top-categories").classList.add("hidden")
+			this.pt.querySelector(".input").classList.remove("hidden")
+			this.showPopTool()
+	
+			this.tempLinkRange = SelectionManager.getCurrentRange()
+	
+			setTimeout(() => {
+				(this.pt.querySelector(".pack.input input") as HTMLElement).focus()
+			}, 0)
+		})
+	
+		this.pt.querySelector(".pack.input input").addEventListener("keydown", function (e: KeyboardEvent) {
+			if (e.keyCode === 13) {
+				e.preventDefault()
+				let url: string = this.value
+				url = self.fixUrl(url)
+				self.link(url)
+				setTimeout(() => {
+					this.value = ""
+				}, 200);
+			}
+		})
+	
+		this.pt.querySelector("#pt-blockquote").addEventListener("click", e => {
+			this.transformNodes("blockquote")
+		})
+	
+		this.pt.querySelectorAll(".pack button").forEach(elm => {
+			elm.addEventListener("click", () => {
+				this.showPopTool()
+			})
+		})
+	}
+
+	public static fixUrl(url: string): string {
+		if (url.match(/^https?:\/\//g)) {
+			alert("alright")
+		} else {
+			url = "http://" + url
+		}
+		return url
+	}
 
 	public static togglePopTool() {
 		if (document.getSelection().rangeCount === 0) {
@@ -41,7 +172,12 @@ export default class PopTool {
 		let range = document.getSelection().getRangeAt(0)
 
 		let currentRange = SelectionManager.getCurrentRange()
-		let currentNode = SelectionManager.getCurrentNode()
+
+		if (!currentRange) {
+			return
+		}
+
+		let currentNode = currentRange.start.node
 
 		if (!currentNode || currentRange.isCollapsed()) {
 			this.hidePopTool()
@@ -94,7 +230,7 @@ export default class PopTool {
 			config.blockquote = false
 		}
 
-		PopTool.setPopToolMenu(config)
+		this.setPopToolMenu(config)
 
 		let left =
 			range.getBoundingClientRect().left -
@@ -333,6 +469,12 @@ export default class PopTool {
 		UndoManager.record(actions)
 	}
 
+	public static link(url: string) {
+		SelectionManager.setRange(this.tempLinkRange)
+		document.execCommand("createLink", false, url)
+		this.hidePopTool()
+	}
+
 	/**
 	 * @param imageBlock ".image-wrapper"
 	 */
@@ -375,10 +517,10 @@ export default class PopTool {
 			this.imageTool.querySelector("#fit").classList.add("is-applied")
 		}
 
-		// PopTool.imageTool.style.top = imageBlock.getBoundingClientRect().top - this.editor.getBoundingClientRect().top + "px"
+		// this.imageTool.style.top = imageBlock.getBoundingClientRect().top - this.editor.getBoundingClientRect().top + "px"
 	}
 
 	public static hideImageTool() {
-		PopTool.imageTool.classList.remove("active")
+		this.imageTool.classList.remove("active")
 	}
 }
