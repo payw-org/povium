@@ -9,8 +9,10 @@ import TypeChecker from "./TypeChecker"
 import PVMImageNode from "./PVMImageNode"
 import PVMNode from "./PVMNode"
 
-export interface SelectionChangeEvent extends Event {
-	currentRange: PVMRange
+export interface SelectionChangeEvent extends CustomEvent {
+	detail: {
+		currentRange: PVMRange
+	}
 }
 
 export default class EventManager {
@@ -135,7 +137,7 @@ export default class EventManager {
 		})
 
 		EditSession.editorBody.addEventListener("paste", e => {
-			// this.onPaste(e)
+			this.onPaste(e)
 		})
 
 		// Packed with all window click events.
@@ -184,303 +186,44 @@ export default class EventManager {
 		// for (var i = 0 i < imgs.length ++i) {
 		// 			imgs[i].contentEditable = false
 		// }
-
-		this.attachPopToolEvents()
 	}
 
-	public static attachPopToolEvents() {
-		let self = this
+	public static onPaste(e: ClipboardEvent) {
+		let pasteArea = EditSession.editorDOM.querySelector("#paste-area")
+		pasteArea.innerHTML = ""
+		
+		let currentRange = EditSession.currentState.range
 
-		window.addEventListener("click", e => {
-			PopTool.showPopTool()
-		})
+		if (!currentRange.collapsed) {
+			SelectionManager.removeSelection()
+		}
 
-		window.addEventListener("resize", e => {
-			PopTool.showImageTool(document.querySelector(".image.node-selected"))
-			PopTool.showPopTool()
-		})
+		let range = document.createRange()
+		range.setStart(pasteArea, 0)
+		range.collapse(true)
 
-		EditSession.editorBody.addEventListener("mouseup", e => {
-			setTimeout(() => {
-				PopTool.togglePopTool()
-			}, 0)
-		})
+		window.getSelection().removeAllRanges()
+		window.getSelection().addRange(range)
 
-		EditSession.editorBody.addEventListener("keyup", e => {
-			let keyCode = e.which
-			if (
-				keyCode === 37 ||
-				keyCode === 38 ||
-				keyCode === 39 ||
-				keyCode === 40
-			) {
-				PopTool.togglePopTool()
+		setTimeout(() => {
+			let travelNode = pasteArea.firstChild
+
+			// Loop all node and analyze
+			while (1) {
+				if (!travelNode) {
+					break
+				}
+
+				if (travelNode.firstChild) {
+
+				} else if (travelNode.nextSibling) {
+
+				} else {
+					
+				}
 			}
-		})
-
-		PopTool.pt.querySelectorAll("button").forEach(elm => {
-			elm.addEventListener("click", () => {
-				let currentRange = SelectionManager.getCurrentRange()
-				if (!currentRange.start.node && !currentRange.end.node) {
-					PopTool.hidePopTool()
-				}
-			})
-		})
-
-		// PopTool.pt.querySelector("#pt-p").addEventListener('click', (e) => { this.postEditor.selManager.heading('P') })
-		PopTool.pt.querySelector("#pt-h1").addEventListener("click", e => {
-			PopTool.transformNodes("h1")
-		})
-		PopTool.pt.querySelector("#pt-h2").addEventListener("click", e => {
-			PopTool.transformNodes("h2")
-		})
-		PopTool.pt.querySelector("#pt-h3").addEventListener("click", e => {
-			PopTool.transformNodes("h3")
-		})
-		PopTool.pt.querySelector("#pt-bold").addEventListener("click", e => {
-			PopTool.changeTextStyle("bold")
-		})
-		PopTool.pt.querySelector("#pt-italic").addEventListener("click", e => {
-			PopTool.changeTextStyle("italic")
-		})
-		PopTool.pt.querySelector("#pt-underline").addEventListener("click", e => {
-			PopTool.changeTextStyle("underline")
-		})
-		PopTool.pt.querySelector("#pt-strike").addEventListener("click", e => {
-			PopTool.changeTextStyle("strikethrough")
-		})
-		PopTool.pt.querySelector("#pt-alignleft").addEventListener("click", e => {
-			PopTool.align("left")
-		})
-		PopTool.pt.querySelector("#pt-alignmiddle").addEventListener("click", e => {
-			PopTool.align("center")
-		})
-		PopTool.pt.querySelector("#pt-alignright").addEventListener("click", e => {
-			PopTool.align("right")
-		})
-
-		PopTool.pt.querySelector("#pt-title-pack").addEventListener("click", e => {
-			PopTool.pt.querySelector(".top-categories").classList.add("hidden")
-			PopTool.pt.querySelector(".title-style").classList.remove("hidden")
-			PopTool.showPopTool()
-		})
-
-		PopTool.pt
-			.querySelector("#pt-textstyle-pack")
-			.addEventListener("click", e => {
-				PopTool.pt.querySelector(".top-categories").classList.add("hidden")
-				PopTool.pt.querySelector(".text-style").classList.remove("hidden")
-				PopTool.showPopTool()
-			})
-
-		PopTool.pt.querySelector("#pt-align-pack").addEventListener("click", e => {
-			PopTool.pt.querySelector(".top-categories").classList.add("hidden")
-			PopTool.pt.querySelector(".align").classList.remove("hidden")
-			PopTool.showPopTool()
-		})
-
-		PopTool.pt.querySelector("#pt-link").addEventListener("click", e => {
-			PopTool.pt.querySelector(".top-categories").classList.add("hidden")
-			PopTool.pt.querySelector(".input").classList.remove("hidden")
-			PopTool.showPopTool()
-
-			this.tempLinkRange = SelectionManager.getCurrentRange()
-
-			setTimeout(() => {
-				;(<HTMLElement>document.querySelector(".pack.input input")).focus()
-			}, 0)
-		})
-
-		PopTool.pt
-			.querySelector(".pack.input input")
-			.addEventListener("keydown", function(e: KeyboardEvent) {
-				if (e.keyCode === 13) {
-					e.preventDefault()
-					PopTool.hidePopTool()
-					// self.sel.setRange(self.tempLinkRange)
-					// self.postEditor.selManager.link(this.value)
-					setTimeout(() => {
-						this.value = ""
-					}, 200)
-				}
-			})
-
-		PopTool.pt.querySelector("#pt-blockquote").addEventListener("click", e => {
-			PopTool.transformNodes("blockquote")
-		})
-
-		PopTool.pt.querySelectorAll(".pack button").forEach(elm => {
-			elm.addEventListener("click", () => {
-				PopTool.showPopTool()
-			})
-		})
+		}, 1)
 	}
-
-	// Events
-
-	/**
-	 *
-	 * @param {KeyboardEvent} e
-	 */
-	// onPaste(e: KeyboardEvent) {
-
-	// 	let originalRange = this.postEditor.selManager.getRange()
-	// 	if (!originalRange) {
-	// 		return
-	// 	}
-
-	// 	let pasteArea = EditSession.editorDOM.querySelector("#paste-area")
-	// 	// let pasteArea = document.createElement("div")
-
-	// 	pasteArea.innerHTML = ""
-
-	// 	let range = document.createRange()
-	// 	range.setStart(pasteArea, 0)
-	// 	range.collapse(true)
-
-	// 	window.getSelection().removeAllRanges()
-	// 	window.getSelection().addRange(range)
-
-	// 	setTimeout(() => {
-
-	// 		window.getSelection().removeAllRanges()
-	// 		window.getSelection().addRange(originalRange)
-	// 		this.postEditor.selManager.removeSelection("start")
-
-	// 		// let originalCurrentNode = this.postEditor.selManager.getNodeInSelection()
-	// 		let originalCurrentNode = SelectionManager.getno
-	// 		let lastPastedNode      = originalCurrentNode
-
-	// 		var node, travelNode, nextNode
-	// 		node       = pasteArea.firstChild
-	// 		travelNode = pasteArea.firstChild
-
-	// 		var metTop    = false
-	// 		let firstNode = true
-
-	// 		// Loop all node and analyze
-	// 		while (1) {
-	// 			// if (!node) {
-	// 			// 	return
-	// 			// }
-	// 			// for (var i = node.attributes.length - 1 i >= 0 i--){
-	// 			// 	node.removeAttribute(node.attributes[i].name)
-	// 			// }
-	// 			// node = node.nextSibling
-
-	// 			if (!travelNode) {
-	// 				break
-	// 			} else {
-
-	// 				// console.log(travelNode)
-
-	// 				let clonedTravelNode = travelNode.cloneNode(true)
-
-	// 				// console.log(lastPastedNode)
-
-	// 				// If the node is available node, paste it into the editor
-	// 				if (
-	// 					this.postEditor.selManager.isParagraph(travelNode) ||
-	// 					this.postEditor.selManager.isHeading(travelNode) ||
-	// 					this.postEditor.selManager.isBlockquote(travelNode) ||
-	// 					this.postEditor.selManager.isList(travelNode)
-	// 				) {
-
-	// 					if (firstNode) {
-
-	// 						                        firstNode = false
-	// 						                    let tn        = document.createTextNode(clonedTravelNode.textContent)
-	// 						originalRange.insertNode(tn)
-
-	// 						let range = document.createRange()
-	// 						range.setStartAfter(tn)
-	// 						window.getSelection().removeAllRanges()
-	// 						window.getSelection().addRange(range)
-
-	// 					} else {
-
-	// 						EditSession.editorBody.insertBefore(clonedTravelNode, lastPastedNode.nextSibling)
-	// 						lastPastedNode = clonedTravelNode
-
-	// 						let range = document.createRange()
-	// 						range.setStartAfter(clonedTravelNode)
-	// 						window.getSelection().removeAllRanges()
-	// 						window.getSelection().addRange(range)
-
-	// 					}
-
-	// 					// No need to loop through the node
-	// 					travelNode = travelNode.nextSibling
-	// 					continue
-
-	// 				} else if (travelNode.nodeType === 3) { // Reached the textNode in the deepest node
-
-	// 					if (firstNode) {
-
-	// 						                        firstNode = false
-	// 						                    let tn        = document.createTextNode(clonedTravelNode.textContent)
-	// 						originalRange.insertNode(tn)
-
-	// 						let range = document.createRange()
-	// 						range.setStartAfter(tn)
-	// 						window.getSelection().removeAllRanges()
-	// 						window.getSelection().addRange(range)
-
-	// 					} else {
-
-	// 						let p           = EditSession.generateEmptyNode("p")
-	// 						    p.innerHTML = travelNode.textContent
-	// 						EditSession.editorBody.insertBefore(p, lastPastedNode.nextSibling)
-
-	// 						let range = document.createRange()
-	// 						range.setStartAfter(p)
-	// 						window.getSelection().removeAllRanges()
-	// 						window.getSelection().addRange(range)
-
-	// 					}
-
-	// 				}
-
-	// 				if (travelNode.attributes) {
-	// 					for (var i = travelNode.attributes.length - 1; i >= 0; i--) {
-	// 						if (
-	// 							travelNode.nodeName === "IMG" && travelNode.attributes[i].name === "src"
-	// 						) {
-	// 							continue
-	// 						}
-	// 						travelNode.removeAttribute(travelNode.attributes[i].name)
-	// 					}
-	// 				}
-
-	// 				if (travelNode.firstChild) {
-	// 					travelNode = travelNode.firstChild
-	// 				} else if (travelNode.nextSibling) {
-	// 					travelNode = travelNode.nextSibling
-	// 				} else {
-	// 					while (true) {
-	// 						travelNode = travelNode.parentNode
-	// 						if (travelNode === pasteArea) {
-	// 							metTop = true
-	// 						}
-	// 						if (travelNode.nextSibling) {
-	// 							travelNode = travelNode.nextSibling
-	// 							break
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-
-	// 			if (metTop) {
-	// 				break
-	// 			}
-
-	// 		}
-
-	// 		// pasteArea.innerHTML = ""
-
-	// 	}, 1)
-
-	// }
 
 	/**
 	 * @param {KeyboardEvent} e
@@ -1098,17 +841,17 @@ export default class EventManager {
 
 	public static onWindowClick(e: MouseEvent) {
 
-		let clickedNode = NodeManager.getNodeByChild(e.target)
-		if (clickedNode) {
-			if (TypeChecker.isImage(clickedNode.type)) {
-				if ((<Element> e.target).closest("figcaption")) {
-					;(<PVMImageNode> clickedNode).focusCaption()
-				} else {
-					SelectionManager.releaseNodeSelection()
-					;(<PVMImageNode> clickedNode).selectImage()
-				}	
-			}
-		}
+		// let clickedNode = NodeManager.getNodeByChild(e.target)
+		// if (clickedNode) {
+		// 	if (TypeChecker.isImage(clickedNode.type)) {
+		// 		if ((<Element> e.target).closest("figcaption")) {
+		// 			;(<PVMImageNode> clickedNode).focusCaption()
+		// 		} else {
+		// 			SelectionManager.releaseNodeSelection()
+		// 			;(<PVMImageNode> clickedNode).selectImage()
+		// 		}	
+		// 	}
+		// }
 
 		this.onSelectionChanged()
 	}
@@ -1129,25 +872,6 @@ export default class EventManager {
 		let currentRange = SelectionManager.getCurrentRange()
 		if (!currentRange || !currentRange.start.node) return
 		let currentNode = currentRange.start.node
-
-		if (currentRange.collapsed) {
-			if (currentRange.start.state === 5) {
-				if (
-					currentRange.start.node.type === "image" ||
-					currentRange.start.node.type === "gallery"
-				) {
-					;(currentRange.start.node as PVMImageNode).selectImage(currentRange.start.offset)
-				}
-			} else if (
-				currentRange.start.node.type === "image" ||
-				currentRange.start.node.type === "gallery"
-			) {
-				SelectionManager.releaseNodeSelection()
-				;(currentRange.start.node as PVMImageNode).focusCaption()
-			} else {
-				SelectionManager.releaseNodeSelection()
-			}
-		}
 
 		PopTool.togglePopTool()
 
