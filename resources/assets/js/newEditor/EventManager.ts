@@ -8,6 +8,7 @@ import UndoManager from "./UndoManager"
 import TypeChecker from "./TypeChecker"
 import PVMImageNode from "./PVMImageNode"
 import PVMNode from "./PVMNode"
+import Converter from "./Converter"
 
 export interface SelectionChangeEvent extends CustomEvent {
 	detail: {
@@ -34,19 +35,6 @@ export default class EventManager {
 		this.charKeyDownLocked = false
 		this.multipleSpaceLocked = false
 
-		// Event Listeners
-		window.addEventListener("click", e => {
-			this.onWindowClick(e)
-		})
-		;["mousedown", "touchstart"].forEach(eventName => {
-			window.addEventListener(eventName, e => {
-				if (!(<Element>e.target).closest("#poptool")) {
-					PopTool.hidePopTool()
-					this.mouseDownStart = true
-				}
-			})
-		})
-
 		// document.addEventListener("selectionchange", e => {
 		// 	this.onSelectionChanged()
 		// })
@@ -59,27 +47,6 @@ export default class EventManager {
 		})
 
 		this.isBackspaceKeyPressed = false
-
-		// window.addEventListener("keydown", e => {
-		// 	let currentRange = EditSession.currentState.range
-		// 	if (e.keyCode === 8 || e.keyCode === 46) {
-		// 		if (EditSession.editorBody.querySelector(".node-selected")) {
-		// 			let imageNode = NodeManager.getNodeByID(
-		// 				NodeManager.getNodeID(EditSession.editorBody.querySelector(".node-selected"))
-		// 			)
-		// 			let nextNode = imageNode.nextSibling
-		// 			NodeManager.removeChild(imageNode)
-		// 			PopTool.hideImageTool()
-		// 			UndoManager.record({
-		// 				type: "remove",
-		// 				targetNode: imageNode,
-		// 				nextNode: nextNode,
-		// 				previousRange: currentRange,
-		// 				nextRange: currentRange
-		// 			})
-		// 		}
-		// 	}
-		// })
 
 		EditSession.editorBody.addEventListener("input", e => {
 			// console.log(e)
@@ -189,6 +156,9 @@ export default class EventManager {
 	}
 
 	public static onPaste(e: ClipboardEvent) {
+		// e.preventDefault()
+		// console.log(e.clipboardData.getData("text/plain"))
+
 		let pasteArea = EditSession.editorDOM.querySelector("#paste-area")
 		pasteArea.innerHTML = ""
 		
@@ -206,23 +176,8 @@ export default class EventManager {
 		window.getSelection().addRange(range)
 
 		setTimeout(() => {
-			let travelNode = pasteArea.firstChild
-
-			// Loop all node and analyze
-			while (1) {
-				if (!travelNode) {
-					break
-				}
-
-				if (travelNode.firstChild) {
-
-				} else if (travelNode.nextSibling) {
-
-				} else {
-					
-				}
-			}
-		}, 1)
+			
+		}, 4)
 	}
 
 	/**
@@ -839,23 +794,6 @@ export default class EventManager {
 		}
 	}
 
-	public static onWindowClick(e: MouseEvent) {
-
-		// let clickedNode = NodeManager.getNodeByChild(e.target)
-		// if (clickedNode) {
-		// 	if (TypeChecker.isImage(clickedNode.type)) {
-		// 		if ((<Element> e.target).closest("figcaption")) {
-		// 			;(<PVMImageNode> clickedNode).focusCaption()
-		// 		} else {
-		// 			SelectionManager.releaseNodeSelection()
-		// 			;(<PVMImageNode> clickedNode).selectImage()
-		// 		}	
-		// 	}
-		// }
-
-		this.onSelectionChanged()
-	}
-
 	public static onSelectionChanged() {
 		// Smooth Cursor Implementation
 		// let jsRange: Range
@@ -872,8 +810,6 @@ export default class EventManager {
 		let currentRange = SelectionManager.getCurrentRange()
 		if (!currentRange || !currentRange.start.node) return
 		let currentNode = currentRange.start.node
-
-		PopTool.togglePopTool()
 
 		// Update current state 
 		EditSession.currentState.node = currentNode
