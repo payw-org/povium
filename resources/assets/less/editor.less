@@ -117,13 +117,20 @@
 		transition: transform 0.1s ease, opacity 0.1s ease, left 0.1s ease;
 	}
 
+	.operation-wrapper {
+		display: inline-block;
+		width: 2.2rem;
+		height: 2.2rem;
+		position: relative;
+	}
+
 	button.operation {
 		display: inline-block;
 		color: #fff;
 		font-weight: 400;
 		font-size: 1rem;
 		width: 2.2rem;
-		height: 100%;
+		height: 2.2rem;
 		margin: 0 0.1rem;
 		border-radius: 0.5rem;
 		transition: background-color 0.1s ease, transform 0.1s ease;
@@ -208,7 +215,6 @@
 
 	.pack {
 		transition: opacity 0.1s ease;
-		overflow: hidden;
 		white-space: nowrap;
 		height: 100%;
 
@@ -230,6 +236,31 @@
 			font-size: 1rem;
 			padding: 0 0.7rem;
 			text-align: left;
+		}
+	}
+
+	.subpack {
+		display: flex;
+		flex-wrap: wrap;
+		position: absolute;
+		left: -0.1rem;
+		top: 0;
+		width: 2.4rem;
+		white-space: pre-wrap;
+		background-color: #fff;
+		border-radius: 0.5rem;
+		box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.2);
+		transition: all .2s ease;
+		transform: none;
+
+		.operation {
+			margin: 0.1rem;
+		}
+
+		&.hidden {
+			opacity: 0;
+			pointer-events: none;
+			transform: scale(0.8);
 		}
 	}
 }
@@ -584,7 +615,7 @@
 	// opacity: 0;
 	right: 0;
 	bottom: 0;
-	width: 400px;
+	width: 100%;
 	height: 200px;
 	background: rgba(0, 0, 0, 0.8);
 	color: #fff;
@@ -593,6 +624,20 @@
 	outline: none;
 	& * {
 		color: #fff !important;
-		font-size: 0.6rem;
+		font-size: 0.8rem;
 	}
+}
+
+.paste-textarea {
+	resize: none;
+	outline: none;
+	color: #fff !important;
+	font-size: 0.8rem;
+	position: fixed;
+	right: 0;
+	bottom: 200px;
+	width: 100%;
+	height: 200px;
+	background: rgba(0, 0, 0, 0.8);
+	padding: 1rem;
 }
