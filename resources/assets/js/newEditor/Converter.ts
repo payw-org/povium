@@ -4,6 +4,7 @@ import PVMNode from "./PVMNode"
 import { AT } from "./AvailableTypes"
 import TypeChecker from "./TypeChecker"
 import PVMImageNode from "./PVMImageNode"
+import EditSession from "./EditSession"
 
 export default class Converter {
 	static parse(frame: PostData.Frame): PVMNode[] {
@@ -284,5 +285,64 @@ export default class Converter {
 		}
 
 		return superStyledTextData
+	}
+
+	static fixPasteArea() {
+		let pasteArea: HTMLElement = EditSession.editorDOM.querySelector("#paste-area")
+
+		let travelNode: Node = pasteArea.firstChild
+		let nextNode = travelNode.nextSibling
+
+		while (travelNode) {
+			if (travelNode instanceof Text) {
+
+			} else if (travelNode instanceof HTMLElement) {
+				this.convertToPVMElm(travelNode)
+			}
+
+			travelNode = nextNode
+			if (travelNode.nextSibling) {
+				nextNode = travelNode.nextSibling
+			}
+		}
+		
+		this.convertToPVMElm(pasteArea)
+	}
+
+	static convertToPVMElm(elm: HTMLElement) {
+		let travelNode: Node = elm.firstChild
+
+		for (let i = 0; i < elm.attributes.length; i++) {
+			elm.removeAttribute(elm.attributes[i].name)
+		}
+
+		let displayStyle: string
+		if (window.getComputedStyle) {
+			displayStyle = window.getComputedStyle(elm, null).getPropertyValue("display")
+		} else {
+			displayStyle = (<any> elm).currentStyle.display
+		}
+		
+		if (!AT.availableTags.includes(elm.nodeName.toLowerCase())) {
+			let frag = document.createDocumentFragment(), n
+			if (elm.firstChild) {
+				while (n = elm.firstChild) {
+					frag.appendChild(n)
+				}
+				elm.parentNode.replaceChild(frag, elm)
+			} else {
+				elm.parentNode.removeChild(elm)
+			}
+		}
+
+		while (travelNode) {
+			if (travelNode instanceof Text) {
+
+			} else if (travelNode instanceof HTMLElement) {
+				this.convertToPVMElm(travelNode)
+			}
+
+			travelNode = travelNode.nextSibling
+		}
 	}
 }
