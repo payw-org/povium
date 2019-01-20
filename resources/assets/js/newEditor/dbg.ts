@@ -22,4 +22,7 @@ export const dbg = function() {
 	d.querySelector(".converter-stringify").addEventListener("click", e => {
 		console.log(Converter.stringify(EditSession.nodeList))
 	})
+	d.querySelector(".fpa").addEventListener("click", e => {
+		Converter.fixPasteArea()
+	})
 }
