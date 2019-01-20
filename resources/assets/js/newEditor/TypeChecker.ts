@@ -67,4 +67,13 @@ export default class TypeChecker {
 		type = type.toLowerCase()
 		return type === "li"
 	}
+
+	static isAvailbaleTag(tag: string) {
+		tag = tag.toLowerCase()
+		if (AT.availableTags.includes(tag)) {
+			return true
+		} else {
+			return false
+		}
+	}
 }
