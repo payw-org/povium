@@ -1,7 +1,7 @@
 module.exports = {
 
 	entry: {
-		povium: [
+		readigm: [
 			'./resources/assets/js/index.js'
 		],
 		"editor.new": [
@@ -10,7 +10,8 @@ module.exports = {
 	},
 
 	mode: 'development',
-	devtool: 'source-map',
+	devtool: 'inline-source-map',
+
 	output : {
 		path: __dirname + '/public_html/build/js',
 		filename: '[name].built.js'
