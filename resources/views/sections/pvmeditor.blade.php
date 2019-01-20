@@ -19,45 +19,11 @@
 			<button class="gnir">Get Nodes in range</button>
 			<button class="gcnl">Get all nodes' list</button>
 			<button class="converter-stringify">Convert to JSON</button>
+			<button class="fpa">Fix paste area</button>
 		</div>
 
-		<div id="editor-toolbar">
-
-			<div class="et-items">
-				<button id="p" type="button" title="본문"></button>
-				<button id="h1" type="button" title="제목1"></button>
-				<button id="h2" type="button" title="제목2"></button>
-				<button id="h3" type="button" title="제목3"></button>
-
-				<button id="bold" type="button" title="굵게"></button>
-				<button id="italic" type="button" title="기울임"></button>
-				<button id="underline" type="button" title="밑줄"></button>
-				<button id="strike" type="button" title="취소선"></button>
-
-				<button id="align-left" title="왼쪽 정렬"></button>
-				<button id="align-center" title="가운데 정렬"></button>
-				<button id="align-right" title="오른쪽 정렬"></button>
-
-				<button id="ol" title="순서 있는 목록"></button>
-				<button id="ul" title="순서 없는 목록"></button>
-				<button id="link" title="링크"></button>
-				<button id="blockquote" title="인용구"></button>
-
-				<!-- <div style="display: none;"> -->
-					<button id="log-range"></button>
-					<button id="nodes-in-selection"></button>
-					<button id="separate"></button>
-					<button id="split-text"></button>
-
-					<button id="get-sel-pos"></button>
-					<button id="get-sel-pos-par"></button>
-				<!-- </div> -->
-			</div>
-
-
-
-		</div>
 		<div id="caret"></div>
+
 		<aside id="poptool">
 			<div class="pack top-categories">
 				<button class="operation" id="pt-title-pack"></button>
@@ -87,6 +53,7 @@
 				<input type="text" placeholder="url">
 			</div>
 		</aside>
+
 		<div id="image-preference-view">
 			<button id="full"></button>
 			<button id="large"></button>
@@ -96,6 +63,7 @@
 		<div id="editor-body" contenteditable="true" autocomplete="off" spellcheck="false"></div>
 
 		<div id="paste-area" contenteditable="true"></div>
+		{{-- <textarea class="paste-textarea"></textarea> --}}
 	</div>
 
 	<script src="/build/js/editor.new.built.js"></script>
