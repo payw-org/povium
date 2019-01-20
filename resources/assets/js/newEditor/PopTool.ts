@@ -4,6 +4,7 @@ import NodeManager from "./NodeManager"
 import PVMRange from "./PVMRange"
 import SelectionManager from "./SelectionManager"
 import UndoManager from "./UndoManager"
+import { SelectionChangeEvent } from "./EventManager"
 
 export default class PopTool {
 	public static pt: HTMLElement
@@ -14,6 +15,7 @@ export default class PopTool {
 
 	public static init() {
 		this.pt = EditSession.editorDOM.querySelector("#poptool")
+		// this.pt = EditSession.editorDOM.querySelector(".poptool-beta")
 		this.imageTool = EditSession.editorDOM.querySelector(
 			"#image-preference-view"
 		)
@@ -22,6 +24,18 @@ export default class PopTool {
 	}
 
 	public static attachPopToolEvents() {
+
+		document.addEventListener("selectionChanged", (e: SelectionChangeEvent) => {
+			if (e.detail.currentRange.collapsed) {
+				this.hidePopTool()
+			} else {
+				this.showPopTool()
+			}
+		})
+
+		document.addEventListener("selectionChanged", (e) => {
+			this.togglePopTool()
+		})
 		let self = this
 	
 		window.addEventListener("resize", e => {
@@ -93,6 +107,7 @@ export default class PopTool {
 			this.pt.querySelector(".title-style").classList.remove("hidden")
 			this.showPopTool()
 		})
+		
 	
 		this.pt
 			.querySelector("#pt-textstyle-pack")
