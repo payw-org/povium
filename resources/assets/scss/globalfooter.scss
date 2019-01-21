@@ -1,0 +1,23 @@
+@import "global-variables";
+@import "global-mixins";
+
+#globalfooter {
+	background: $white-blue;
+	// margin-top: 5rem;
+	text-align: center;
+
+	img {
+		width: 2rem;
+		padding-top: 5rem;
+	}
+
+	.copyright {
+		display: block;
+		text-align: center;
+		font-size: 14px;
+		font-weight: 400;
+		padding-bottom: 5rem;
+		margin-top: 0.5rem;
+		color: #999999;
+	}
+}

@@ -1,4 +1,4 @@
-require("../less/povium.style.less")
+// require("../less/povium.style.less")
 
 require("./globalscript")
 require("./globalnav")

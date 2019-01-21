@@ -1,0 +1,424 @@
+@import "global-variables";
+@import "global-mixins";
+
+// Home
+#home-main {
+	// New Popular
+	#popular {
+		position: relative;
+		margin-top: 2rem;
+		height: 16vw;
+		overflow-y: hidden;
+
+		$threshold--1: 700px;
+		$threshold--2: 1100px;
+		$threshold--3: 1600px;
+
+		@include when-smaller-than($threshold--2) {
+			height: 25vw;
+		}
+		@include when-smaller-than($threshold--1) {
+			height: 50vw;
+		}
+		@include when-smaller-than($threshold--3) {
+			height: 12.5vw;
+		}
+
+		&:hover .scroll-btn {
+			opacity: 0.7;
+			visibility: visible;
+		}
+ 
+		.scroll-btn {
+			cursor: pointer;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 3.4rem;
+			height: 3.4rem;
+			position: absolute;
+			opacity: 0.7;
+			border-radius: 50%;
+			z-index: 100;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity .2s ease, visibility .2s ease, background-color .2s ease, filter .2s ease;
+			background-repeat: no-repeat;
+			background-size: 100%;
+			background-position: center;
+ 
+			&:active {
+				filter: brightness(1.3);
+			}
+ 
+			&:hover {
+				background-color: $white-blue;
+				opacity: 1;
+			}
+ 
+			&.left {
+				background-image: url("/assets/images/povium/home/left.svg");
+				left: 2rem;
+
+				@include responsive-small {
+					left: 1rem;
+				}
+			}
+			&.right {
+				background-image: url("/assets/images/povium/home/right.svg");
+				right: 2rem;
+
+				@include responsive-small {
+					right: 1rem;
+				}
+			}
+		}
+
+		.post-container {
+			padding: 0;
+			padding-right: 0; // Firefox: ignores padding-right or padding-bottom on overflow: scroll
+			// display: flex;
+			padding-bottom: 50px;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			overflow-y: hidden;
+			white-space: nowrap;
+			font-size: 0;
+			user-select: none;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			&.snapping {
+				scroll-snap-type: x mandatory;
+			}
+
+			&.snapping .scroll-item {
+				scroll-snap-align: start;
+				scroll-snap-margin-left: 2rem; // Safari
+				scroll-margin-left: 2rem; // Default Spec
+			}
+
+			.scroll-item {
+				width: calc(33.33333333% - 2rem); // x% - (total_margin / (100/x))rem
+				height: 16vw;
+				display: inline-block;
+				margin-right: 1rem;
+
+				@include when-smaller-than($threshold--2) {
+					width: calc(50% - 2.5rem);
+					height: 25vw;
+				}
+				@include when-smaller-than($threshold--1) {
+					width: calc(100% - 4rem);
+					height: 50vw;
+				}
+				@include when-larger-than($threshold--3) {
+					width: calc(25% - 1.75rem);
+					height: 12.5vw;
+				}
+
+				&:first-child {
+					margin-left: 2rem;
+				}
+				&:last-child {
+					margin-right: 2rem;
+				}
+				
+				.post {
+					width: 100%;
+					height: 100%;
+					margin: auto;
+					border-radius: 1rem;
+					overflow: hidden;
+					// -webkit-mask-image: -webkit-radial-gradient(white, black);
+					position: relative;
+					cursor: pointer;
+					transition: transform .2s ease;
+					will-change: transform;
+
+					&:active {
+						transform: scale(0.95);
+					}
+
+					.thumb {
+						position: absolute;
+						top: 0;
+						right: 0;
+						bottom: 0;
+						left: 0;
+						img {
+							width: 100%;
+							height: 100%;
+							object-fit: cover;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.subjects-bar-wrapper {
+		margin: 3rem 0 0;
+		.subjects-bar {
+			padding: 0 1rem;
+			max-width: 80rem;
+			margin: auto;
+			display: flex;
+			background-color: $white-blue;
+			background-color: #fff;
+			// background-color: $pvm-black;
+			border-top: 1px solid $white-blue;
+			justify-content: space-around;
+
+			.subject {
+				// color: #fff;
+				user-select: none;
+				// flex: 1;
+				text-align: center;
+				border-radius: 50px;
+				margin-top: 0.5rem;
+				padding: 0.5rem 0.7rem;
+				cursor: pointer;
+				transition: background-color 0.2s ease, color 0.2s ease;
+				&:hover {
+					color: $pvm-violet;
+					background-color: $white-blue;
+				}
+				&:active {
+					background-color: $dark-white-blue;
+				}
+			}
+		}
+	}
+
+	#subject-container {
+		width: calc(100% - 4rem);
+		max-width: 80rem;
+		margin: auto;
+		margin-top: 4rem;
+
+		@include responsive-small {
+			width: calc(100% - 2rem) ;
+		}
+		@include on-mobile {
+			width: 100%;
+		}
+
+		.subject {
+			.subject-title-wrapper {
+				padding-left: 1rem;
+				display: flex;
+				margin-bottom: 1.5rem;
+				.icon {
+					width: 2.5rem;
+					max-width: 2.5rem;
+					background-image: url("/assets/images/chip.svg");
+					background-repeat: no-repeat;
+					background-size: contain;
+					background-position: center;
+				}
+				.subject-title {
+					font-weight: 700;
+					font-size: 2.5rem;
+					color: inherit;
+					margin-left: 0.7rem;
+					// color: $pvm-aqua;
+					// -webkit-background-clip: text;
+					// -webkit-text-fill-color: transparent;
+				}
+				.more {
+					align-self: center;
+					font-size: 1rem;
+					margin-left: 1.2rem;
+					cursor: pointer;
+					&:hover {
+						color: $pvm-violet;
+					}
+				}
+			}
+
+			.subject-posts {
+				display: flex;
+				align-items: flex-start;
+				flex-wrap: wrap;
+
+				.featured {
+					flex: 1;
+					position: relative;
+					border-radius: 1rem;
+					overflow: hidden;
+					-webkit-mask-image: -webkit-radial-gradient(white, black);
+					margin-right: 1rem;
+
+					@media only screen and (max-width: 1000px) {
+						min-width: 100%;
+						margin: 0;
+					}
+
+					@include on-mobile {
+						border-radius: 0;
+					}
+
+					.thumb {
+						object-fit: cover;
+						width: 100%;
+						height: 100%;
+						position: absolute;
+						left: 0;
+						right: 0;
+						top: 0;
+						bottom: 0;
+						z-index: -1;
+					}
+
+					.preview {
+						// position: absolute;
+						right: 0;
+						top: 0;
+						height: 100%;
+						width: 100%;
+						padding: 2rem;
+						background-color: rgba(0, 0, 0, 0.7);
+						// backdrop-filter: blur(25px);
+
+						@include on-mobile {
+							padding: 2rem 1rem;
+						}
+
+						.header {
+							display: flex;
+							.icon {
+								display: block;
+								flex: 1;
+								// width: 2rem;
+								// min-width: 1.8rem;
+								max-width: 1.5rem;
+								background-image: url("/assets/images/star.svg");
+								background-repeat: no-repeat;
+								background-size: contain;
+								background-position: center;
+							}
+							.text {
+								display: block;
+								flex: 1;
+								color: #ffcf00;
+								font-size: 1.5rem;
+								margin-left: 0.5rem;
+							}
+						}
+
+						.editor {
+							color: #fff;
+							font-size: 1.1rem;
+							margin-top: 2rem;
+						}
+
+						.contents {
+							color: #fff;
+							margin-top: 0.3rem;
+							.title {
+								font-size: 2rem;
+								margin-bottom: 1rem;
+							}
+							.body {
+								font-size: 1.2rem;
+								line-height: 1.5;
+							}
+						}
+					}
+				}
+
+				.post-list-wrapper {
+					flex: 1;
+					background-color: $white-blue;
+					margin-left: 1rem;
+					border-radius: 1rem;
+					padding: 0rem;
+
+					@media only screen and (max-width: 1000px) {
+						margin: 1rem 0 0;
+					}
+
+					@include on-mobile {
+						border-radius: 0;
+					}
+
+					.item {
+						position: relative;
+						background-color: #fff;
+						border-radius: 0.5rem;
+						padding: 1rem;
+						margin: 1rem;
+						display: flex;
+						cursor: pointer;
+						transition: box-shadow 0.2s ease;
+
+						&:hover {
+							// box-shadow: 0 0 0 0.3rem fade($pvm-violet, 80%);
+							box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.15);
+						}
+
+						// &:last-child {
+						// 	margin-bottom: 0;
+						// }
+
+						.thumb {
+							min-width: 10rem;
+							max-width: 10rem;
+							margin-right: 1rem;
+							border-radius: 0.3rem;
+							overflow: hidden;
+							// background-image: url("/assets/images/post-test-img-2.jpg");
+							background-size: cover;
+							background-position: center;
+
+							@include on-mobile {
+								min-width: 6rem;
+								max-width: 6rem;
+								height: 6rem;
+								align-self: center;
+							}
+						}
+
+						.contents {
+							.title {
+								font-weight: 700;
+								font-size: 1.2rem;
+								margin-bottom: 0.3rem;
+							}
+							.sub-title {
+								font-size: 0.9rem;
+								color: #5c5c5c;
+								line-height: 1.2;
+							}
+							.editor {
+								display: flex;
+								align-items: center;
+								margin-top: 1.2rem;
+								.profile-image-wrapper {
+									display: inline-block;
+									border-radius: 0.3rem;
+									overflow: hidden;
+									width: 1.5rem;
+									height: 1.5rem;
+									margin-right: 0.5rem;
+									img {
+										object-fit: cover;
+										width: 100%;
+										height: 100%;
+									}
+								}
+								.name {
+									display: inline-block;
+									font-size: 1rem;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

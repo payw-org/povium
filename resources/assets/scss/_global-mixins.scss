@@ -1,0 +1,31 @@
+@import "global-variables";
+
+@mixin responsive-small {
+	@media only screen and (max-width: $responsive-width--small) {
+		@content;
+	}
+}
+
+@mixin responsive-large {
+	@media only screen and (min-width: $responsive-width--large) {
+		@content;
+	}
+}
+
+@mixin on-mobile {
+	@media only screen and (max-width: $mobile-width-threshold) {
+		@content;
+	}
+}
+
+@mixin when-smaller-than($width) {
+	@media only screen and (max-width: $width) {
+		@content;
+	}
+}
+
+@mixin when-larger-than($width) {
+	@media only screen and (min-width: $width) {
+		@content;
+	}
+}
