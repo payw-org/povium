@@ -37,15 +37,15 @@
     "webpack:build": "node_modules/.bin/webpack --config webpack.config.js",
     "webpack:watch": "node_modules/.bin/webpack --watch --config webpack.config.js",
     "autoprefix": "node_modules/.bin/postcss public_html/build/css/*.css --use autoprefixer -d public_html/build/css/",
-    "sass:build": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ --source-map true",
-    "sass:watch": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ -w --source-map true",
+    "sass:build": "node_modules/.bin/node-sass resources/assets/scss/readigm.scss -o public_html/build/css/ --source-map true",
+    "sass:watch": "node_modules/.bin/node-sass resources/assets/scss/readigm.scss -o public_html/build/css/ -w --source-map true",
     "less:build": "node_modules/.bin/lessc resources/assets/less/povium.style.less public_html/build/css/povium.style.css --source-map",
     "init": "npm run webpack:build && npm run less:build && npm run autoprefix",
     "frontend:watch": "node_modules/.bin/npm-run-all --parallel webpack:watch css:watch",
     "frontend:build": "node_modules/.bin/npm-run-all --parallel webpack:build css:build",
     "notify": "node notification.js hello world",
-    "css:watch": "node_modules/.bin/nodemon -e less -x \"npm run less:build && npm run autoprefix\"",
-    "css:build": "npm run less:build && npm run autoprefix"
+		"css:watch": "node_modules/.bin/nodemon -e scss -x \"npm run autoprefix\"",
+		"css:mix": "npx npm-run-all --parallel sass:watch css:watch"
   },
   "browserslist": [
     "> 5%",
