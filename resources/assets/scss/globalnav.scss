@@ -26,6 +26,7 @@ $search-font-size: floor($search-size / 2.5) + 1;
 	transition: height $pvm-animation;
 	// box-shadow: 0 0 5px rgba(0,0,0,.2);
 	overflow: hidden;
+	z-index: 1;
 
 	.mobile-menu {
 

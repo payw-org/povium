@@ -20,7 +20,7 @@
 		@include when-smaller-than($threshold--1) {
 			height: 50vw;
 		}
-		@include when-smaller-than($threshold--3) {
+		@include when-larger-than($threshold--3) {
 			height: 12.5vw;
 		}
 
