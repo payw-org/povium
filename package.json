@@ -8,7 +8,6 @@
     "detect-browser": "^4.0.3",
     "gsap": "^2.0.2",
     "highlight.js": "^9.13.1",
-    "node-notifier": "^5.3.0",
     "pjax": "^0.2.7",
     "vue": "^2.5.22"
   },
@@ -23,20 +22,20 @@
     "css-loader": "^2.1.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
+    "node-sass": "^4.11.0",
     "nodemon": "^1.18.9",
     "npm-run-all": "^4.1.5",
     "postcss-cli": "^6.1.1",
     "postcss-loader": "^3.0.0",
     "style-loader": "^0.23.1",
     "ts-loader": "^5.3.3",
-    "typescript": "^3.2.2",
+    "typescript": "^3.2.4",
     "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.1.14"
+    "webpack-cli": "^3.2.1"
   },
   "scripts": {
     "webpack:build": "node_modules/.bin/webpack --config webpack.config.js",
-		"webpack:watch": "node_modules/.bin/webpack --watch --config webpack.config.js",
+    "webpack:watch": "node_modules/.bin/webpack --watch --config webpack.config.js",
     "autoprefix": "node_modules/.bin/postcss public_html/build/css/*.css --use autoprefixer -d public_html/build/css/",
     "sass:build": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ --source-map true",
     "sass:watch": "node_modules/.bin/node-sass resources/assets/scss/ -o public_html/build/css/ -w --source-map true",
