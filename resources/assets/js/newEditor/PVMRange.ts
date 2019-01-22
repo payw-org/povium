@@ -10,7 +10,7 @@ interface RangePoint {
 	// 3: end of paragraph
 	// 4: empty paragraph
 	// 5: medea select
-	state: string
+	state: number
 }
 
 export default class PVMRange {
