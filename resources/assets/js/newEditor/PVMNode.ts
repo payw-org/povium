@@ -3,7 +3,7 @@ import SelectionManager from "./SelectionManager"
 import TypeChecker from "./TypeChecker"
 
 export default class PVMNode {
-	id: number
+	id: string
 	type: string
 	kind?: string
 	align?: string
