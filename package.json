@@ -45,7 +45,7 @@
     "frontend:build": "node_modules/.bin/npm-run-all --parallel webpack:build css:build",
     "notify": "node notification.js hello world",
 		"css:watch": "node_modules/.bin/nodemon -e scss -x \"npm run autoprefix\"",
-		"css:mix": "npx npm-run-all --parallel sass:watch css:watch"
+		"style:watch": "npx npm-run-all --parallel sass:watch css:watch"
   },
   "browserslist": [
     "> 5%",
