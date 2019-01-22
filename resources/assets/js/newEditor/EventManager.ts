@@ -146,6 +146,8 @@ export default class EventManager {
 			} else {
 
 			}
+
+			this.onSelectionChanged()
 		})
 
 		// disable images contenteditable false
@@ -378,12 +380,12 @@ export default class EventManager {
 					latestAction.nextHTML = modifiedContents
 					latestAction.nextRange = newRange
 					console.group("continue record")
-					// console.log(modifiedContents)
+					console.log(modifiedContents)
 					// console.log(newRange)
 					console.groupEnd()
 				} else {
 					console.group("new record")
-					// console.log(originalContents)
+					console.log(originalContents)
 					// console.log(originalRange)
 					console.groupEnd()
 					UndoManager.record({
@@ -806,6 +808,8 @@ export default class EventManager {
 		// 	caret.style.top = top + "px"
 		// 	caret.classList.add("stay")
 		// }
+
+		console.log("Selection has been changed")
 
 		let currentRange = SelectionManager.getCurrentRange()
 		if (!currentRange || !currentRange.start.node) return
