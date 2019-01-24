@@ -811,6 +811,8 @@ export default class EventManager {
 
 		console.log("Selection has been changed")
 
+		PopTool.togglePopTool()
+
 		let currentRange = SelectionManager.getCurrentRange()
 		if (!currentRange || !currentRange.start.node) return
 		let currentNode = currentRange.start.node
