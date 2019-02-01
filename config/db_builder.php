@@ -3,11 +3,11 @@
 * Config array for "DBBuilder".
 *
 * @author 		H.Chihoon
-* @copyright 	2019 Povium
+* @copyright 	2019 Payw
 */
 
 return [
-	'dbname' => 'readigm_local_db',
+	'dbname' => 'povium_local_db',
 
 	'table_list' => [
 		'auto_saved_post',

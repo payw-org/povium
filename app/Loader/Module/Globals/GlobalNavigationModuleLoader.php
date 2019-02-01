@@ -3,7 +3,7 @@
  * Loader for data in global navigation module.
  *
  * @author 		H.Chihoon
- * @copyright 	2019 Povium
+ * @copyright 	2019 Payw
  */
 
 namespace Readigm\Loader\Module\Globals;

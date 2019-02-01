@@ -5,7 +5,7 @@
 * $value : Fully qualified factory name
 *
 * @author 		H.Chihoon
-* @copyright 	2019 Povium
+* @copyright 	2019 Payw
 */
 
 return [

@@ -3,7 +3,7 @@
  * Validate attaching image in post.
  *
  * @author		H.Chihoon
- * @copyright	2019 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Publication\Validator\PostInfo;

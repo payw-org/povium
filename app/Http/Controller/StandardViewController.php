@@ -3,7 +3,7 @@
  * Abstract form for controller for standard view page.
  *
  * @author		H.Chihoon
- * @copyright	2019 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Http\Controller;

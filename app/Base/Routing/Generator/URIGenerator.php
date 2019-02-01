@@ -3,7 +3,7 @@
  * This can generate a URI for named routes based on the given arguments.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Base\Routing\Generator;

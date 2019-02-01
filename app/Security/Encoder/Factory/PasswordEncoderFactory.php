@@ -3,7 +3,7 @@
 * This factory is responsible for creating "PasswordEncoder" instance.
 *
 * @author		H.Chihoon
-* @copyright	2019 Povium
+* @copyright	2019 Payw
 */
 
 namespace Readigm\Security\Encoder\Factory;

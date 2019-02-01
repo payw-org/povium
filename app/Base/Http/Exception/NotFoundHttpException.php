@@ -3,7 +3,7 @@
  * Http exception for 404 Not Found.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Base\Http\Exception;

@@ -4,7 +4,7 @@
  * Given json array must follow the RDM contents format.
  *
  * @author		H.Chihoon
- * @copyright	2019 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Http\Controller\Extractor;

@@ -3,7 +3,7 @@
  * Sql for creating auto_saved_post table.
  *
  * @author 		H.Chihoon
- * @copyright 	2019 Povium
+ * @copyright 	2019 Payw
  */
 
 return [

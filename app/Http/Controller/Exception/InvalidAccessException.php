@@ -3,7 +3,7 @@
  * Exception thrown when access is invalid.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Http\Controller\Exception;

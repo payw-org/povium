@@ -3,7 +3,7 @@
  * This factory is responsible for creating "SQLLoader" instance.
  *
  * @author		H.Chihoon
- * @copyright	2019 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Loader\Database\Factory;

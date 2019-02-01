@@ -1,10 +1,10 @@
 {
 	"name": "payw/povium-web",
-	"description": "Readigm Website",
+	"description": "Povium Website",
 	"version": "v1.0.0",
 	"type": "project",
 	"keywords": [],
-	"homepage": "http://readigm.com/",
+	"homepage": "http://povium.com/",
 	"authors": [
 		{
 			"name": "J.Haemin",

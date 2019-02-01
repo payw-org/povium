@@ -3,7 +3,7 @@
  * Abstract form for factory which is responsible for creating record manager instance.
  *
  * @author		H.Chihoon
- * @copyright	2019 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Record\Factory;

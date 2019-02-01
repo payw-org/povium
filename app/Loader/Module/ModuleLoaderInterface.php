@@ -3,7 +3,7 @@
  * Interface for module loader.
  *
  * @author		H.Chihoon
- * @copyright	2019 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Loader\Module;

@@ -3,7 +3,7 @@
 * Interface for duplicate checker.
 *
 * @author		H.Chihoon
-* @copyright	2018 Povium
+* @copyright	2019 Payw
 */
 
 namespace Readigm\Validator;

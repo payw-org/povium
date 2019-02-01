@@ -3,7 +3,7 @@
  * Database builder.
  *
  * @author		H.Chihoon
- * @copyright	2019 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Base\Database;

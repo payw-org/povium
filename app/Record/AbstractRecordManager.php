@@ -3,7 +3,7 @@
  * Record manager which is responsible for managing(CRUD) table record.
  *
  * @author		H.Chihoon
- * @copyright	2019 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Record;

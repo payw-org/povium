@@ -3,15 +3,15 @@
 * Config array for "DBConnection".
 *
 * @author 		H.Chihoon
-* @copyright 	2018 Povium
+* @copyright 	2019 Payw
 */
 
 return [
 	'driver' => 'mysql',
 	'host' => '127.0.0.1',
-	'dbname' => 'readigm_local_db',
-	'username' => 'povium',
-	'password' => 'welovepovium2018',
+	'dbname' => 'povium_local_db',
+	'username' => 'payw',
+	'password' => 'welovepayw2019',
 	'opt' => [
 		\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
 		\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,

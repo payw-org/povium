@@ -3,7 +3,7 @@
  * Exception thrown when a parameter is not valid.
  *
  * @author		H.Chihoon
- * @copyright	2018 Povium
+ * @copyright	2019 Payw
  */
 
 namespace Readigm\Base\Routing\Exception;
