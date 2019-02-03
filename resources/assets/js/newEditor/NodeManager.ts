@@ -209,7 +209,7 @@ export default class NodeManager {
 	public static createNode(
 		type: string,
 		options?: {
-			nodeID?: number
+			nodeId?: number
 			kind?: string
 			html?: string
 			url?: string
@@ -233,8 +233,8 @@ export default class NodeManager {
 		}
 
 		// Set an unique auto incremental node ID
-		if (options && options.nodeID) {
-			newNode.id = options.nodeID
+		if (options && options.nodeId) {
+			newNode.id = options.nodeId
 		} else {
 			newNode.id = ++EditSession.lastNodeID
 		}
@@ -373,7 +373,7 @@ export default class NodeManager {
 
 		let newNode = this.createNode(currentNode.type, {
 			kind: currentNode.kind,
-			nodeID: newNodeID
+			nodeId: newNodeID
 		})
 		let n
 		newNode.textElement.innerHTML = ""
