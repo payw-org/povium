@@ -11,8 +11,11 @@ export const AT = {
 	textStyle: ["b", "strong", "em", "i", "u", "strike", "a"],
 	headings: ["h1", "h2", "h3"],
 	availableTags: [
-		"p", "h1", "h2", "h3", "li", "blockquote",
+		"p", "h1", "h2", "h3", "ul", "ol", "li", "blockquote",
 		"b", "strong", "i", "em", "u", "strike", "a",
 		"img"
+	],
+	topTagsForPaster: [
+		"p", "h1", "h2", "h3", "blockquote", "ol", "ul", "li", "figure", "code", "img"
 	]
 }
