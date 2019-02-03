@@ -20,6 +20,10 @@
 			<button class="gcnl">Get all nodes' list</button>
 			<button class="converter-stringify">Convert to JSON</button>
 			<button class="fpa">Fix paste area</button>
+			<button class="fpa-p1">Fix paste area phase 1</button>
+			<button class="fpa-p2">Fix paste area phase 2</button>
+			<button class="fpa-p3">Fix paste area phase 3</button>
+			<button class="fpa-p4">Fix paste area phase 4</button>
 		</div>
 
 		<div id="caret"></div>
