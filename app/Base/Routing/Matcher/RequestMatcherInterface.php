@@ -6,11 +6,11 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Routing\Matcher;
+namespace Povium\Base\Routing\Matcher;
 
-use Readigm\Base\Routing\Exception\NullPropertyException;
-use Readigm\Base\Routing\Exception\MethodNotAllowedException;
-use Readigm\Base\Routing\Exception\RouteNotFoundException;
+use Povium\Base\Routing\Exception\NullPropertyException;
+use Povium\Base\Routing\Exception\MethodNotAllowedException;
+use Povium\Base\Routing\Exception\RouteNotFoundException;
 
 interface RequestMatcherInterface
 {

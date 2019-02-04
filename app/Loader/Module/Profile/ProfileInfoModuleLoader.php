@@ -6,10 +6,10 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Loader\Module\Profile;
+namespace Povium\Loader\Module\Profile;
 
-use Readigm\Loader\Module\ModuleLoaderInterface;
-use Readigm\Security\User\UserManager;
+use Povium\Loader\Module\ModuleLoaderInterface;
+use Povium\Security\User\UserManager;
 
 class ProfileInfoModuleLoader implements ModuleLoaderInterface
 {

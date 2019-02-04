@@ -6,11 +6,11 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Routing\Generator;
+namespace Povium\Base\Routing\Generator;
 
-use Readigm\Base\Routing\RouteCollection;
-use Readigm\Base\Routing\Exception\NullPropertyException;
-use Readigm\Base\Routing\Exception\InvalidParameterException;
+use Povium\Base\Routing\RouteCollection;
+use Povium\Base\Routing\Exception\NullPropertyException;
+use Povium\Base\Routing\Exception\InvalidParameterException;
 
 class URIGenerator implements URIGeneratorInterface
 {

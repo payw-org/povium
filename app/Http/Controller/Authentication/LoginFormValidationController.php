@@ -6,11 +6,11 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Authentication;
+namespace Povium\Http\Controller\Authentication;
 
-use Readigm\Security\Validator\UserInfo\EmailValidator;
-use Readigm\Security\Validator\UserInfo\PasswordValidator;
-use Readigm\Security\Validator\UserInfo\ReadableIDValidator;
+use Povium\Security\Validator\UserInfo\EmailValidator;
+use Povium\Security\Validator\UserInfo\PasswordValidator;
+use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 
 class LoginFormValidationController
 {

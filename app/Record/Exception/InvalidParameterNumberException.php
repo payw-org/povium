@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Record\Exception;
+namespace Povium\Record\Exception;
 
 class InvalidParameterNumberException extends \RuntimeException implements ExceptionInterface
 {

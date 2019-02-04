@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Http\Exception;
+namespace Povium\Base\Http\Exception;
 
 class GoneHttpException extends HttpException
 {

@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\Validator\UserInfo;
+namespace Povium\Security\Validator\UserInfo;
 
-use Readigm\Security\User\UserManager;
+use Povium\Security\User\UserManager;
 
 class ReadableIDValidator extends UserInfoDuplicateValidator
 {

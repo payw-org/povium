@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Converter;
+namespace Povium\Http\Middleware\Converter;
 
 class CamelToSnakeConverter
 {

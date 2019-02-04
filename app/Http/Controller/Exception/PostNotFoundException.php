@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Exception;
+namespace Povium\Http\Controller\Exception;
 
 class PostNotFoundException extends \RuntimeException implements ExceptionInterface
 {

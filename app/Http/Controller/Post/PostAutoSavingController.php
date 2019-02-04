@@ -6,13 +6,13 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Post;
+namespace Povium\Http\Controller\Post;
 
-use Readigm\Http\Controller\Exception\InvalidAccessException;
-use Readigm\Http\Controller\Exception\PostNotFoundException;
-use Readigm\Publication\Post\AutoSavedPostManager;
-use Readigm\Publication\Post\PostManager;
-use Readigm\Security\User\User;
+use Povium\Http\Controller\Exception\InvalidAccessException;
+use Povium\Http\Controller\Exception\PostNotFoundException;
+use Povium\Publication\Post\AutoSavedPostManager;
+use Povium\Publication\Post\PostManager;
+use Povium\Security\User\User;
 
 class PostAutoSavingController
 {

@@ -6,13 +6,13 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Factory;
+namespace Povium\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Base\Routing\Router;
-use Readigm\Generator\RandomStringGenerator;
-use Readigm\Http\Controller\Setting\EmailAddController;
-use Readigm\MailSender\ActivationMailSender;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Routing\Router;
+use Povium\Generator\RandomStringGenerator;
+use Povium\Http\Controller\Setting\EmailAddController;
+use Povium\MailSender\ActivationMailSender;
 
 class EmailActivationRequestMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {

@@ -6,11 +6,11 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Factory;
+namespace Povium\Http\Controller\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Loader\Module\Globals\GlobalNavigationModuleLoader;
 
 class StandardViewControllerFactory extends AbstractChildFactory
 {

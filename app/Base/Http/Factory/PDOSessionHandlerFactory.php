@@ -6,10 +6,10 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Http\Factory;
+namespace Povium\Base\Http\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Database\DBConnection;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Database\DBConnection;
 
 class PDOSessionHandlerFactory extends AbstractChildFactory
 {

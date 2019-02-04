@@ -6,7 +6,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Routing\Redirector;
+namespace Povium\Base\Routing\Redirector;
 
 interface RedirectorInterface
 {

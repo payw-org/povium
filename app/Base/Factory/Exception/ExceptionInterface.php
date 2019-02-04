@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Factory\Exception;
+namespace Povium\Base\Factory\Exception;
 
 interface ExceptionInterface
 {

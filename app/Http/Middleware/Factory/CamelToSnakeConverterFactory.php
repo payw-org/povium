@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Factory;
+namespace Povium\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 
 class CamelToSnakeConverterFactory extends AbstractChildFactory
 {

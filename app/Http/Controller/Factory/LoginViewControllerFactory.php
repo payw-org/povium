@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Factory;
+namespace Povium\Http\Controller\Factory;
 
 class LoginViewControllerFactory extends StandardViewControllerFactory
 {

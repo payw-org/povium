@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Controller;
+namespace Povium\Http\Controller;
 
 abstract class AbstractViewController
 {

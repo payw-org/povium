@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Record;
+namespace Povium\Record;
 
-use Readigm\Record\Exception\InvalidParameterNumberException;
+use Povium\Record\Exception\InvalidParameterNumberException;
 
 interface RecordManagerInterface
 {

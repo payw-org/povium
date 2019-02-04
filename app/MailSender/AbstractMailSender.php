@@ -6,7 +6,7 @@
 * @copyright 	2019 Payw
 */
 
-namespace Readigm\MailSender;
+namespace Povium\MailSender;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

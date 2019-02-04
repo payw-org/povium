@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\Encoder\Factory;
+namespace Povium\Security\Encoder\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 
 class PasswordEncoderFactory extends AbstractChildFactory
 {

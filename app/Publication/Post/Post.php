@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Publication\Post;
+namespace Povium\Publication\Post;
 
 class Post extends PostFrame
 {

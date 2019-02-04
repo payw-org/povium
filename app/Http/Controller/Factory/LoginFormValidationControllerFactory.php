@@ -6,13 +6,13 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Factory;
+namespace Povium\Http\Controller\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Security\Validator\UserInfo\EmailValidator;
-use Readigm\Security\Validator\UserInfo\PasswordValidator;
-use Readigm\Security\Validator\UserInfo\ReadableIDValidator;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Security\Validator\UserInfo\EmailValidator;
+use Povium\Security\Validator\UserInfo\PasswordValidator;
+use Povium\Security\Validator\UserInfo\ReadableIDValidator;
 
 class LoginFormValidationControllerFactory extends AbstractChildFactory
 {

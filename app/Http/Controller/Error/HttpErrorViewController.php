@@ -6,11 +6,11 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Error;
+namespace Povium\Http\Controller\Error;
 
-use Readigm\Base\Http\Exception\HttpException;
-use Readigm\Http\Controller\StandardViewController;
-use Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader;
+use Povium\Base\Http\Exception\HttpException;
+use Povium\Http\Controller\StandardViewController;
+use Povium\Loader\Module\Globals\GlobalNavigationModuleLoader;
 
 class HttpErrorViewController extends StandardViewController
 {

@@ -6,11 +6,11 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Factory;
+namespace Povium\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Middleware\Converter\CamelToSnakeConverter;
 
 abstract class AbstractAjaxMiddlewareFactory extends AbstractChildFactory
 {

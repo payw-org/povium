@@ -6,10 +6,10 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Publication\Validator\PostInfo;
+namespace Povium\Publication\Validator\PostInfo;
 
-use Readigm\Security\Auth\Authorizer;
-use Readigm\Validator\ValidatorInterface;
+use Povium\Security\Auth\Authorizer;
+use Povium\Validator\ValidatorInterface;
 
 class IsPremiumValidator implements ValidatorInterface
 {

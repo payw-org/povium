@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Http\Factory;
+namespace Povium\Base\Http\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 
 class ClientFactory extends AbstractChildFactory
 {

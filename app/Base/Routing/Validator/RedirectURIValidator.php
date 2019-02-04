@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Routing\Validator;
+namespace Povium\Base\Routing\Validator;
 
-use Readigm\Validator\ValidatorInterface;
+use Povium\Validator\ValidatorInterface;
 
 class RedirectURIValidator implements ValidatorInterface
 {

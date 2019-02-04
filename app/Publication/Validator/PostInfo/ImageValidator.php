@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Publication\Validator\PostInfo;
+namespace Povium\Publication\Validator\PostInfo;
 
-use Readigm\Validator\ValidatorInterface;
+use Povium\Validator\ValidatorInterface;
 
 class ImageValidator implements ValidatorInterface
 {

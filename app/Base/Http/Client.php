@@ -6,7 +6,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Http;
+namespace Povium\Base\Http;
 
 class Client
 {

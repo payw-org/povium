@@ -7,7 +7,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Factory;
+namespace Povium\Base\Factory;
 
 interface FactoryInterface
 {

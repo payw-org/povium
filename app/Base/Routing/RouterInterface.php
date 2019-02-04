@@ -6,13 +6,13 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Routing;
+namespace Povium\Base\Routing;
 
-use Readigm\Base\Routing\Matcher\RequestMatcherInterface;
-use Readigm\Base\Routing\Generator\URIGeneratorInterface;
-use Readigm\Base\Routing\Redirector\RedirectorInterface;
-use Readigm\Base\Routing\Exception\NullPropertyException;
-use Readigm\Base\Routing\Exception\NamedRouteNotFoundException;
+use Povium\Base\Routing\Matcher\RequestMatcherInterface;
+use Povium\Base\Routing\Generator\URIGeneratorInterface;
+use Povium\Base\Routing\Redirector\RedirectorInterface;
+use Povium\Base\Routing\Exception\NullPropertyException;
+use Povium\Base\Routing\Exception\NamedRouteNotFoundException;
 
 interface RouterInterface extends
 	RequestMatcherInterface,

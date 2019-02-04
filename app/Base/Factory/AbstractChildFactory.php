@@ -7,9 +7,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Factory;
+namespace Povium\Base\Factory;
 
-use Readigm\Loader\ConfigLoader;
+use Povium\Loader\ConfigLoader;
 
 abstract class AbstractChildFactory implements FactoryInterface
 {

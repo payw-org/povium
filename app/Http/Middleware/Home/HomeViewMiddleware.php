@@ -6,10 +6,10 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Home;
+namespace Povium\Http\Middleware\Home;
 
-use Readigm\Http\Controller\Home\HomeViewController;
-use Readigm\Http\Middleware\AbstractViewMiddleware;
+use Povium\Http\Controller\Home\HomeViewController;
+use Povium\Http\Middleware\AbstractViewMiddleware;
 
 class HomeViewMiddleware extends AbstractViewMiddleware
 {

@@ -6,13 +6,13 @@
 * @copyright 	2019 Payw
 */
 
-namespace Readigm\Http\Controller\Authentication;
+namespace Povium\Http\Controller\Authentication;
 
-use Readigm\Http\Controller\Exception\RequestExpiredException;
-use Readigm\Http\Controller\Exception\RequestNotFoundException;
-use Readigm\Http\Controller\Exception\TokenNotMatchedException;
-use Readigm\Security\User\UserManager;
-use Readigm\Security\User\User;
+use Povium\Http\Controller\Exception\RequestExpiredException;
+use Povium\Http\Controller\Exception\RequestNotFoundException;
+use Povium\Http\Controller\Exception\TokenNotMatchedException;
+use Povium\Security\User\UserManager;
+use Povium\Security\User\User;
 
 class EmailActivationController
 {

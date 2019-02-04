@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Loader\Module\Factory;
+namespace Povium\Loader\Module\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 
 class GlobalNavigationModuleLoaderFactory extends AbstractChildFactory
 {

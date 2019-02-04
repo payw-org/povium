@@ -6,11 +6,11 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Factory;
+namespace Povium\Http\Controller\Factory;
 
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Loader\Module\Profile\ProfileInfoModuleLoader;
-use Readigm\Security\User\UserManager;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Loader\Module\Profile\ProfileInfoModuleLoader;
+use Povium\Security\User\UserManager;
 
 class ProfileViewControllerFactory extends StandardViewControllerFactory
 {

@@ -6,12 +6,12 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Http\Controller\Factory;
+namespace Povium\Http\Controller\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Base\Http\Session\SessionManager;
-use Readigm\Security\Auth\Authenticator;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Http\Session\SessionManager;
+use Povium\Security\Auth\Authenticator;
 
 class LogoutControllerFactory extends AbstractChildFactory
 {

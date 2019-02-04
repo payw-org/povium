@@ -7,7 +7,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Extractor;
+namespace Povium\Http\Controller\Extractor;
 
 interface ExtractorInterface
 {

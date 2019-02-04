@@ -6,9 +6,9 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Home;
+namespace Povium\Http\Controller\Home;
 
-use Readigm\Http\Controller\StandardViewController;
+use Povium\Http\Controller\StandardViewController;
 
 class HomeViewController extends StandardViewController
 {

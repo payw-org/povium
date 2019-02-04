@@ -6,10 +6,10 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\User;
+namespace Povium\Security\User;
 
-use Readigm\Record\AbstractRecordManager;
-use Readigm\Record\Exception\InvalidParameterNumberException;
+use Povium\Record\AbstractRecordManager;
+use Povium\Record\Exception\InvalidParameterNumberException;
 
 class UserManager extends AbstractRecordManager
 {

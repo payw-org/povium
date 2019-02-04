@@ -6,10 +6,10 @@
 * @copyright 	2019 Payw
 */
 
-namespace Readigm\Http\Controller\Setting;
+namespace Povium\Http\Controller\Setting;
 
-use Readigm\Security\Validator\UserInfo\EmailValidator;
-use Readigm\Security\User\User;
+use Povium\Security\Validator\UserInfo\EmailValidator;
+use Povium\Security\User\User;
 
 class EmailAddController
 {

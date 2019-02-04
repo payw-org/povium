@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Record;
+namespace Povium\Record;
 
 abstract class AbstractRecordManager implements RecordManagerInterface
 {

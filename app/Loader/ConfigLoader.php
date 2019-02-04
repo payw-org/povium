@@ -6,7 +6,7 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Loader;
+namespace Povium\Loader;
 
 class ConfigLoader
 {

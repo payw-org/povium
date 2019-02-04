@@ -6,7 +6,7 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Security\Auth;
+namespace Povium\Security\Auth;
 
 class Authorizer
 {

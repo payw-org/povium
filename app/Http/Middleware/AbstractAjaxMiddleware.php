@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware;
+namespace Povium\Http\Middleware;
 
-use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
+use Povium\Http\Middleware\Converter\CamelToSnakeConverter;
 
 abstract class AbstractAjaxMiddleware
 {

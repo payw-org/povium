@@ -6,12 +6,12 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\User;
+namespace Povium\Http\Middleware\User;
 
-use Readigm\Base\Http\Exception\NotFoundHttpException;
-use Readigm\Http\Controller\Exception\UserNotFoundException;
-use Readigm\Http\Controller\User\ProfileViewController;
-use Readigm\Http\Middleware\AbstractViewMiddleware;
+use Povium\Base\Http\Exception\NotFoundHttpException;
+use Povium\Http\Controller\Exception\UserNotFoundException;
+use Povium\Http\Controller\User\ProfileViewController;
+use Povium\Http\Middleware\AbstractViewMiddleware;
 
 class ProfileViewMiddleware extends AbstractViewMiddleware
 {

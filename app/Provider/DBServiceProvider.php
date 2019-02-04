@@ -6,10 +6,10 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Provider;
+namespace Povium\Provider;
 
-use Readigm\Base\Database\DBBuilder;
-use Readigm\Base\Database\DBConnection;
+use Povium\Base\Database\DBBuilder;
+use Povium\Base\Database\DBConnection;
 
 class DBServiceProvider extends AbstractServiceProvider
 {

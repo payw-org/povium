@@ -6,9 +6,9 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Loader\Module\Globals;
+namespace Povium\Loader\Module\Globals;
 
-use Readigm\Loader\Module\ModuleLoaderInterface;
+use Povium\Loader\Module\ModuleLoaderInterface;
 
 class GlobalNavigationModuleLoader implements ModuleLoaderInterface
 {

@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Provider;
+namespace Povium\Provider;
 
 use Philo\Blade\Blade;
 

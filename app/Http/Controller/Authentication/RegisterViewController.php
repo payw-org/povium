@@ -6,9 +6,9 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Authentication;
+namespace Povium\Http\Controller\Authentication;
 
-use Readigm\Http\Controller\StandardViewController;
+use Povium\Http\Controller\StandardViewController;
 
 class RegisterViewController extends StandardViewController
 {

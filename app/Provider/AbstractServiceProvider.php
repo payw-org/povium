@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Provider;
+namespace Povium\Provider;
 
-use Readigm\Base\Factory\MasterFactory;
+use Povium\Base\Factory\MasterFactory;
 
 abstract class AbstractServiceProvider
 {

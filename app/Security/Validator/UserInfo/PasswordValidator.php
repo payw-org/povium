@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\Validator\UserInfo;
+namespace Povium\Security\Validator\UserInfo;
 
-use Readigm\Validator\ValidatorInterface;
+use Povium\Validator\ValidatorInterface;
 use ZxcvbnPhp\Zxcvbn;
 
 class PasswordValidator implements ValidatorInterface

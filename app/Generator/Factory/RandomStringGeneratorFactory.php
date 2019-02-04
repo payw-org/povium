@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Generator\Factory;
+namespace Povium\Generator\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 
 class RandomStringGeneratorFactory extends AbstractChildFactory
 {

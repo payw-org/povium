@@ -6,10 +6,10 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Database;
+namespace Povium\Base\Database;
 
-use Readigm\Loader\ConfigLoader;
-use Readigm\Traits\SingletonTrait;
+use Povium\Loader\ConfigLoader;
+use Povium\Traits\SingletonTrait;
 
 class DBConnection
 {

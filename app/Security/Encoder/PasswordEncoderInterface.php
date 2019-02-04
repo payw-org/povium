@@ -6,7 +6,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\Encoder;
+namespace Povium\Security\Encoder;
 
 interface PasswordEncoderInterface
 {

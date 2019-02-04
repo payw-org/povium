@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\User\Factory;
+namespace Povium\Security\User\Factory;
 
-use Readigm\Record\Factory\AbstractRecordManagerFactory;
+use Povium\Record\Factory\AbstractRecordManagerFactory;
 
 class UserManagerFactory extends AbstractRecordManagerFactory
 {

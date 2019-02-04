@@ -6,10 +6,10 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Security\Auth\Factory;
+namespace Povium\Security\Auth\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Security\Auth\Authenticator;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Security\Auth\Authenticator;
 
 class AuthorizerFactory extends AbstractChildFactory
 {

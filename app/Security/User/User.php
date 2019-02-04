@@ -6,7 +6,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\User;
+namespace Povium\Security\User;
 
 class User
 {

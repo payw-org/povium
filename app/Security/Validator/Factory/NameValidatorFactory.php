@@ -6,7 +6,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\Validator\Factory;
+namespace Povium\Security\Validator\Factory;
 
 class NameValidatorFactory extends UserInfoDuplicateValidatorFactory
 {

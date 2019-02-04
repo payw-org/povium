@@ -23,8 +23,8 @@
 	RewriteRule ^ %1%3%{REQUEST_URI} [R=301,L]
 
     # Prevent direct url access to existing file or directory
-    RewriteCond %{HTTP_REFERER} !^http://(www\.)?readigm.local [NC]
-    RewriteCond %{HTTP_REFERER} !^http://(www\.)?readigm.local.*$ [NC]
+    RewriteCond %{HTTP_REFERER} !^http://(www\.)?povium.local [NC]
+    RewriteCond %{HTTP_REFERER} !^http://(www\.)?povium.local.*$ [NC]
     RewriteCond %{REQUEST_FILENAME} -s [OR]
     RewriteCond %{REQUEST_FILENAME} -l [OR]
     RewriteCond %{REQUEST_FILENAME} -d

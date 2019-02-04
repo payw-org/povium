@@ -6,10 +6,10 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Provider;
+namespace Povium\Provider;
 
-use Readigm\Security\Auth\Authenticator;
-use Readigm\Security\Auth\Authorizer;
+use Povium\Security\Auth\Authenticator;
+use Povium\Security\Auth\Authorizer;
 
 class AuthServiceProvider extends AbstractServiceProvider
 {

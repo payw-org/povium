@@ -6,12 +6,12 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Factory;
+namespace Povium\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Base\Routing\Router;
-use Readigm\Http\Controller\Authentication\LoginViewController;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Routing\Router;
+use Povium\Http\Controller\Authentication\LoginViewController;
 
 class LoginViewMiddlewareFactory extends AbstractChildFactory
 {

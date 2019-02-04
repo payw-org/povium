@@ -7,13 +7,13 @@
 * @copyright 	2019 Payw
 */
 
-namespace Readigm\Security\Auth;
+namespace Povium\Security\Auth;
 
-use Readigm\Generator\RandomStringGenerator;
-use Readigm\Base\Http\Client;
-use Readigm\Security\User\UserManager;
-use Readigm\Base\Http\Session\SessionManager;
-use Readigm\Security\User\User;
+use Povium\Generator\RandomStringGenerator;
+use Povium\Base\Http\Client;
+use Povium\Security\User\UserManager;
+use Povium\Base\Http\Session\SessionManager;
+use Povium\Security\User\User;
 
 class Authenticator
 {

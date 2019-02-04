@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Controller;
+namespace Povium\Http\Controller;
 
-use Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader;
+use Povium\Loader\Module\Globals\GlobalNavigationModuleLoader;
 
 abstract class StandardViewController extends AbstractViewController
 {

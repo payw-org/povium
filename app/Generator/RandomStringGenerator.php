@@ -6,7 +6,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Generator;
+namespace Povium\Generator;
 
 class RandomStringGenerator
 {

@@ -6,10 +6,10 @@
 * @copyright 	2019 Payw
 */
 
-namespace Readigm\Http\Controller\Authentication;
+namespace Povium\Http\Controller\Authentication;
 
-use Readigm\Base\Http\Session\SessionManager;
-use Readigm\Security\Auth\Authenticator;
+use Povium\Base\Http\Session\SessionManager;
+use Povium\Security\Auth\Authenticator;
 
 class LogoutController
 {

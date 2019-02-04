@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware;
+namespace Povium\Http\Middleware;
 
 interface AuthorityCheckerInterface
 {

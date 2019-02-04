@@ -6,12 +6,12 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Authentication;
+namespace Povium\Http\Middleware\Authentication;
 
-use Readigm\Base\Routing\Router;
-use Readigm\Http\Controller\Authentication\RegisterViewController;
-use Readigm\Http\Middleware\AbstractViewMiddleware;
-use Readigm\Http\Middleware\RefererCheckerInterface;
+use Povium\Base\Routing\Router;
+use Povium\Http\Controller\Authentication\RegisterViewController;
+use Povium\Http\Middleware\AbstractViewMiddleware;
+use Povium\Http\Middleware\RefererCheckerInterface;
 
 class RegisterViewMiddleware extends AbstractViewMiddleware implements RefererCheckerInterface
 {

@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\MailSender\Factory;
+namespace Povium\MailSender\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class ActivationMailSenderFactory extends AbstractChildFactory

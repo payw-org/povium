@@ -6,10 +6,10 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Post;
+namespace Povium\Http\Controller\Post;
 
-use Readigm\Publication\Post\AutoSavedPostManager;
-use Readigm\Security\User\User;
+use Povium\Publication\Post\AutoSavedPostManager;
+use Povium\Security\User\User;
 
 class TempPostCreationController
 {

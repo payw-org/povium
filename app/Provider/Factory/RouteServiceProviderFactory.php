@@ -6,12 +6,12 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Provider\Factory;
+namespace Povium\Provider\Factory;
 
 use Philo\Blade\Blade;
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Security\Auth\Authenticator;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Security\Auth\Authenticator;
 
 class RouteServiceProviderFactory extends AbstractChildFactory
 {

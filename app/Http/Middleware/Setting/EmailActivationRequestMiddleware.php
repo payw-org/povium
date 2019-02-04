@@ -6,15 +6,15 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Setting;
+namespace Povium\Http\Middleware\Setting;
 
-use Readigm\Generator\RandomStringGenerator;
-use Readigm\Http\Middleware\AbstractAjaxMiddleware;
-use Readigm\Http\Controller\Setting\EmailAddController;
-use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
-use Readigm\MailSender\ActivationMailSender;
-use Readigm\Base\Routing\Router;
-use Readigm\Security\User\User;
+use Povium\Generator\RandomStringGenerator;
+use Povium\Http\Middleware\AbstractAjaxMiddleware;
+use Povium\Http\Controller\Setting\EmailAddController;
+use Povium\Http\Middleware\Converter\CamelToSnakeConverter;
+use Povium\MailSender\ActivationMailSender;
+use Povium\Base\Routing\Router;
+use Povium\Security\User\User;
 
 class EmailActivationRequestMiddleware extends AbstractAjaxMiddleware
 {

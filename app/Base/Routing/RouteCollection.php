@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Routing;
+namespace Povium\Base\Routing;
 
-use Readigm\Base\Routing\Exception\NamedRouteNotFoundException;
+use Povium\Base\Routing\Exception\NamedRouteNotFoundException;
 
 class RouteCollection
 {

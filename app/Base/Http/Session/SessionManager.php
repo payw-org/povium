@@ -6,7 +6,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Http\Session;
+namespace Povium\Base\Http\Session;
 
 class SessionManager
 {

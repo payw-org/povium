@@ -6,10 +6,10 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Record\Factory;
+namespace Povium\Record\Factory;
 
-use Readigm\Base\Database\DBConnection;
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Database\DBConnection;
+use Povium\Base\Factory\AbstractChildFactory;
 
 abstract class AbstractRecordManagerFactory extends AbstractChildFactory
 {

@@ -6,13 +6,13 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Factory;
+namespace Povium\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Base\Routing\Validator\RedirectURIValidator;
-use Readigm\Http\Controller\Authentication\LoginController;
-use Readigm\Http\Controller\Authentication\RegisterController;
-use Readigm\Security\Auth\Authenticator;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Routing\Validator\RedirectURIValidator;
+use Povium\Http\Controller\Authentication\LoginController;
+use Povium\Http\Controller\Authentication\RegisterController;
+use Povium\Security\Auth\Authenticator;
 
 class RegisterMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {

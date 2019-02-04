@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Provider;
+namespace Povium\Provider;
 
-use Readigm\Base\Http\Session\SessionManager;
+use Povium\Base\Http\Session\SessionManager;
 
 class SessionServiceProvider extends AbstractServiceProvider
 {

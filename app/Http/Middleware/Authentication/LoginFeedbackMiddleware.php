@@ -6,11 +6,11 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Authentication;
+namespace Povium\Http\Middleware\Authentication;
 
-use Readigm\Http\Middleware\AbstractAjaxMiddleware;
-use Readigm\Http\Controller\Authentication\LoginFormValidationController;
-use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
+use Povium\Http\Middleware\AbstractAjaxMiddleware;
+use Povium\Http\Controller\Authentication\LoginFormValidationController;
+use Povium\Http\Middleware\Converter\CamelToSnakeConverter;
 
 class LoginFeedbackMiddleware extends AbstractAjaxMiddleware
 {

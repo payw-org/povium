@@ -8,11 +8,11 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Factory;
+namespace Povium\Base\Factory;
 
-use Readigm\Base\Factory\Exception\NonexistentTypeException;
-use Readigm\Base\Factory\Exception\UnregisteredTypeException;
-use Readigm\Loader\ConfigLoader;
+use Povium\Base\Factory\Exception\NonexistentTypeException;
+use Povium\Base\Factory\Exception\UnregisteredTypeException;
+use Povium\Loader\ConfigLoader;
 
 class MasterFactory implements FactoryInterface
 {

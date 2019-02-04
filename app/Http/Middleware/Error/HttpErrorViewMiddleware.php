@@ -6,11 +6,11 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Error;
+namespace Povium\Http\Middleware\Error;
 
-use Readigm\Base\Http\Exception\HttpException;
-use Readigm\Http\Controller\Error\HttpErrorViewController;
-use Readigm\Http\Middleware\AbstractViewMiddleware;
+use Povium\Base\Http\Exception\HttpException;
+use Povium\Http\Controller\Error\HttpErrorViewController;
+use Povium\Http\Middleware\AbstractViewMiddleware;
 
 class HttpErrorViewMiddleware extends AbstractViewMiddleware
 {

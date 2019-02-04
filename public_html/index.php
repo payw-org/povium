@@ -1,6 +1,6 @@
 <?php
 /**
- * Readigm web
+ * Povium web
  *
  * @author 		H.Chihoon
  * @copyright 	2019 Payw

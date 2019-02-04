@@ -6,11 +6,11 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\Validator\UserInfo;
+namespace Povium\Security\Validator\UserInfo;
 
-use Readigm\Validator\ValidatorInterface;
-use Readigm\Validator\DuplicateCheckerInterface;
-use Readigm\Security\User\UserManager;
+use Povium\Validator\ValidatorInterface;
+use Povium\Validator\DuplicateCheckerInterface;
+use Povium\Security\User\UserManager;
 
 abstract class UserInfoDuplicateValidator implements ValidatorInterface, DuplicateCheckerInterface
 {

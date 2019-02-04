@@ -6,7 +6,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Loader\Database;
+namespace Povium\Loader\Database;
 
 class SQLLoader
 {

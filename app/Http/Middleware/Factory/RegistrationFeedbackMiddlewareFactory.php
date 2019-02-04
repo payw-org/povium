@@ -6,10 +6,10 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Factory;
+namespace Povium\Http\Middleware\Factory;
 
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Http\Controller\Authentication\RegistrationFormValidationController;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\Authentication\RegistrationFormValidationController;
 
 class RegistrationFeedbackMiddlewareFactory extends AbstractAjaxMiddlewareFactory
 {

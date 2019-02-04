@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\Validator\Factory;
+namespace Povium\Security\Validator\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 use ZxcvbnPhp\Zxcvbn;
 
 class PasswordValidatorFactory extends AbstractChildFactory

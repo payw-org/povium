@@ -6,12 +6,12 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Database\Factory;
+namespace Povium\Base\Database\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Database\DBConnection;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Loader\Database\SQLLoader;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Database\DBConnection;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Loader\Database\SQLLoader;
 
 class DBBuilderFactory extends AbstractChildFactory
 {

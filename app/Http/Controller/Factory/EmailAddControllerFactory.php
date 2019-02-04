@@ -6,12 +6,12 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Http\Controller\Factory;
+namespace Povium\Http\Controller\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Base\Database\DBConnection;
-use Readigm\Security\Validator\UserInfo\EmailValidator;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Database\DBConnection;
+use Povium\Security\Validator\UserInfo\EmailValidator;
 
 class EmailAddControllerFactory extends AbstractChildFactory
 {

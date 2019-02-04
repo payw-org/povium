@@ -6,15 +6,15 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Security\Auth\Factory;
+namespace Povium\Security\Auth\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Base\Database\DBConnection;
-use Readigm\Base\Http\Client;
-use Readigm\Base\Http\Session\SessionManager;
-use Readigm\Generator\RandomStringGenerator;
-use Readigm\Security\User\UserManager;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Database\DBConnection;
+use Povium\Base\Http\Client;
+use Povium\Base\Http\Session\SessionManager;
+use Povium\Generator\RandomStringGenerator;
+use Povium\Security\User\UserManager;
 
 class AuthenticatorFactory extends AbstractChildFactory
 {

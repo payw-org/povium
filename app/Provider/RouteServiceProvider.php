@@ -6,13 +6,13 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Provider;
+namespace Povium\Provider;
 
 use Philo\Blade\Blade;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Base\Routing\RouteCollection;
-use Readigm\Base\Routing\Router;
-use Readigm\Security\Auth\Authenticator;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Routing\RouteCollection;
+use Povium\Base\Routing\Router;
+use Povium\Security\Auth\Authenticator;
 
 class RouteServiceProvider extends AbstractServiceProvider
 {

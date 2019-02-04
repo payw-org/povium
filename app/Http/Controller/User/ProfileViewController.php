@@ -6,13 +6,13 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Http\Controller\User;
+namespace Povium\Http\Controller\User;
 
-use Readigm\Http\Controller\StandardViewController;
-use Readigm\Http\Controller\Exception\UserNotFoundException;
-use Readigm\Loader\Module\Globals\GlobalNavigationModuleLoader;
-use Readigm\Loader\Module\Profile\ProfileInfoModuleLoader;
-use Readigm\Security\User\UserManager;
+use Povium\Http\Controller\StandardViewController;
+use Povium\Http\Controller\Exception\UserNotFoundException;
+use Povium\Loader\Module\Globals\GlobalNavigationModuleLoader;
+use Povium\Loader\Module\Profile\ProfileInfoModuleLoader;
+use Povium\Security\User\UserManager;
 
 class ProfileViewController extends StandardViewController
 {

@@ -6,16 +6,16 @@
  * @copyright 	2019 Payw
  */
 
-namespace Readigm\Http\Controller\Post;
+namespace Povium\Http\Controller\Post;
 
-use Readigm\Publication\Validator\PostInfo\BodyValidator;
-use Readigm\Publication\Validator\PostInfo\ContentsValidator;
-use Readigm\Publication\Validator\PostInfo\IsPremiumValidator;
-use Readigm\Publication\Validator\PostInfo\SeriesIDValidator;
-use Readigm\Publication\Validator\PostInfo\SubtitleValidator;
-use Readigm\Publication\Validator\PostInfo\ThumbnailValidator;
-use Readigm\Publication\Validator\PostInfo\TitleValidator;
-use Readigm\Security\User\User;
+use Povium\Publication\Validator\PostInfo\BodyValidator;
+use Povium\Publication\Validator\PostInfo\ContentsValidator;
+use Povium\Publication\Validator\PostInfo\IsPremiumValidator;
+use Povium\Publication\Validator\PostInfo\SeriesIDValidator;
+use Povium\Publication\Validator\PostInfo\SubtitleValidator;
+use Povium\Publication\Validator\PostInfo\ThumbnailValidator;
+use Povium\Publication\Validator\PostInfo\TitleValidator;
+use Povium\Security\User\User;
 
 class PostFormValidationController
 {

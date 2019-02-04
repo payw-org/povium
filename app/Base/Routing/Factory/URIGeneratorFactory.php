@@ -6,9 +6,9 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Routing\Factory;
+namespace Povium\Base\Routing\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 
 class URIGeneratorFactory extends AbstractChildFactory
 {

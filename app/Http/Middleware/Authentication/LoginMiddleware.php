@@ -6,13 +6,13 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Http\Middleware\Authentication;
+namespace Povium\Http\Middleware\Authentication;
 
-use Readigm\Http\Middleware\AbstractAjaxMiddleware;
-use Readigm\Http\Middleware\Converter\CamelToSnakeConverter;
-use Readigm\Http\Middleware\RefererCheckerInterface;
-use Readigm\Http\Controller\Authentication\LoginController;
-use Readigm\Base\Routing\Validator\RedirectURIValidator;
+use Povium\Http\Middleware\AbstractAjaxMiddleware;
+use Povium\Http\Middleware\Converter\CamelToSnakeConverter;
+use Povium\Http\Middleware\RefererCheckerInterface;
+use Povium\Http\Controller\Authentication\LoginController;
+use Povium\Base\Routing\Validator\RedirectURIValidator;
 
 class LoginMiddleware extends AbstractAjaxMiddleware implements RefererCheckerInterface
 {

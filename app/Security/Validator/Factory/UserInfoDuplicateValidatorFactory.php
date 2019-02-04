@@ -7,11 +7,11 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Security\Validator\Factory;
+namespace Povium\Security\Validator\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Security\User\UserManager;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Security\User\UserManager;
 
 abstract class UserInfoDuplicateValidatorFactory extends AbstractChildFactory
 {

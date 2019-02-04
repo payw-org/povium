@@ -7,7 +7,7 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Routing\Exception;
+namespace Povium\Base\Routing\Exception;
 
 class MethodNotAllowedException extends \RuntimeException implements ExceptionInterface
 {

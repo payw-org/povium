@@ -6,13 +6,13 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Routing\Factory;
+namespace Povium\Base\Routing\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Base\Routing\Generator\URIGenerator;
-use Readigm\Base\Routing\Matcher\RequestMatcher;
-use Readigm\Base\Routing\Redirector\Redirector;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Base\Routing\Generator\URIGenerator;
+use Povium\Base\Routing\Matcher\RequestMatcher;
+use Povium\Base\Routing\Redirector\Redirector;
 
 class RouterFactory extends AbstractChildFactory
 {

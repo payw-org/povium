@@ -6,16 +6,16 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Routing\Generator;
+namespace Povium\Base\Routing\Generator;
 
-use Readigm\Base\Routing\Exception\NullPropertyException;
-use Readigm\Base\Routing\Exception\NamedRouteNotFoundException;
-use Readigm\Base\Routing\Exception\InvalidParameterException;
+use Povium\Base\Routing\Exception\NullPropertyException;
+use Povium\Base\Routing\Exception\NamedRouteNotFoundException;
+use Povium\Base\Routing\Exception\InvalidParameterException;
 
 interface URIGeneratorInterface
 {
 	/**
-	 * Generate as URL form. Ex) "https://readigm.com/foo/bar"
+	 * Generate as URL form. Ex) "https://povium.com/foo/bar"
 	 *
 	 * @var integer
 	 */

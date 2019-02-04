@@ -6,7 +6,7 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Base\Routing;
+namespace Povium\Base\Routing;
 
 class Route
 {

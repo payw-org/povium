@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Database;
+namespace Povium\Base\Database;
 
-use Readigm\Loader\Database\SQLLoader;
+use Povium\Loader\Database\SQLLoader;
 
 class DBBuilder
 {

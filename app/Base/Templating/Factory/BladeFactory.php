@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Base\Templating\Factory;
+namespace Povium\Base\Templating\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 
 class BladeFactory extends AbstractChildFactory
 {

@@ -6,9 +6,9 @@
  * @copyright	2019 Payw
  */
 
-namespace Readigm\Loader\Database\Factory;
+namespace Povium\Loader\Database\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\AbstractChildFactory;
 
 class SQLLoaderFactory extends AbstractChildFactory
 {

@@ -6,13 +6,13 @@
 * @copyright	2019 Payw
 */
 
-namespace Readigm\Http\Controller\Factory;
+namespace Povium\Http\Controller\Factory;
 
-use Readigm\Base\Factory\AbstractChildFactory;
-use Readigm\Base\Factory\MasterFactory;
-use Readigm\Http\Controller\Authentication\RegistrationFormValidationController;
-use Readigm\Security\Encoder\PasswordEncoder;
-use Readigm\Security\User\UserManager;
+use Povium\Base\Factory\AbstractChildFactory;
+use Povium\Base\Factory\MasterFactory;
+use Povium\Http\Controller\Authentication\RegistrationFormValidationController;
+use Povium\Security\Encoder\PasswordEncoder;
+use Povium\Security\User\UserManager;
 
 class RegisterControllerFactory extends AbstractChildFactory
 {

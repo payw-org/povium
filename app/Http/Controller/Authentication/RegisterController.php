@@ -6,10 +6,10 @@
 * @copyright 	2019 Payw
 */
 
-namespace Readigm\Http\Controller\Authentication;
+namespace Povium\Http\Controller\Authentication;
 
-use Readigm\Security\Encoder\PasswordEncoder;
-use Readigm\Security\User\UserManager;
+use Povium\Security\Encoder\PasswordEncoder;
+use Povium\Security\User\UserManager;
 
 class RegisterController
 {
