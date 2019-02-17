@@ -3,6 +3,15 @@ import { AT } from "./AvailableTypes"
 export default class TypeChecker {
 	constructor() {}
 
+	static isTopTag(type: string) {
+		type = type.toLowerCase()
+		if (AT.topTags.includes(type)) {
+			return true
+		} else {
+			return false
+		}
+	}
+
 	static isParagraph(type: string) {
 		type = type.toLowerCase()
 		return type === "p"
@@ -66,5 +75,14 @@ export default class TypeChecker {
 	static isListItem(type: string) {
 		type = type.toLowerCase()
 		return type === "li"
+	}
+
+	static isAvailbaleTag(tag: string) {
+		tag = tag.toLowerCase()
+		if (AT.availableTags.includes(tag)) {
+			return true
+		} else {
+			return false
+		}
 	}
 }

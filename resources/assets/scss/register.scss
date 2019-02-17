@@ -1,0 +1,152 @@
+@import "global-variables";
+@import "global-mixins";
+@import "login-register";
+
+#register-main {
+	width: calc(100% - 3.4rem);
+	max-width: 30rem;
+	margin: auto;
+	text-align: center;
+
+	.introduce-header {
+
+		margin-top: 2.5rem;
+		padding-bottom: 2rem;
+		border-bottom: 1px solid $white-blue;
+
+		.header-icon {
+			width: 5rem;
+			margin-bottom: 1rem;
+		}
+
+		h1 {
+			font-size: 2.5rem;
+		}
+
+		p {
+			font-size: 1.3rem;
+			font-weight: 300;
+			margin-top: 1rem;
+			color: #777777;
+		}
+	}
+
+	.provider {
+		width: 100%;
+		max-width: 20rem;
+		margin: auto;
+		padding: 1rem 0 2rem;
+		border-bottom: 1px solid $white-blue;
+
+		.input-wrapper {
+			margin-top: 1rem;
+
+			&.readable-id .icon {
+				background-image: url('/assets/images/input-icons/person.svg');
+			}
+			&.readable-id .reg-input {
+				text-transform: lowercase;
+			}
+
+			&.name .icon {
+				background-image: url('/assets/images/input-icons/nametag-icon.svg');
+			}
+
+			&.password .icon {
+				background-image: url('/assets/images/input-icons/lock-icon.svg');
+			}
+		}
+
+		.start {
+			margin-top: 2rem;
+		}
+
+
+	}
+
+	.already {
+		display: block;
+		margin-top: 1rem;
+
+		a {
+			color: darken($pvm-aqua, 7%);
+			font-weight: 500;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+
+	}
+
+	input.password {
+		padding-right: 3rem;
+	}
+
+	.strength {
+
+		display: flex;
+		margin-top: .1rem;
+		max-height: 1rem;
+		transition: max-height .2s ease, transform .2s ease;
+
+		&.hidden {
+			transform: scaleY(0);
+			max-height: 0;
+		}
+
+		.bar {
+			flex: 1;
+			height: .2rem;
+			background-color: $dark-white-blue;
+			border-radius: 50px;
+			margin: .3rem;
+			overflow: hidden;
+			position: relative;
+			-webkit-mask-image: -webkit-radial-gradient(white, black);
+
+			&::before {
+				content: "";
+				display: block;
+				// width: 100%;
+				// height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				transform: scaleX(0);
+				transform-origin: left;
+				background-color: black;
+				transition: transform .3s cubic-bezier(.94,.03,.14,.99);
+				transition: transform .15s linear;
+			}
+
+			&.active::before {
+				transform: scaleX(1);
+			}
+		}
+
+		.bar-0::before {
+			background-color: #ff5656;
+			background: linear-gradient(to right, #ffd900, #ffa600);
+		}
+
+		.bar-1::before {
+			background-color: #ffc845;
+			background: linear-gradient(to right, #ffa600, #ff6600);
+		}
+
+		.bar-2::before {
+			background-color: #31e498;
+			background: linear-gradient(to right, #ff6600, #ff0000);
+		}
+
+
+	}
+
+	.error-message {
+		@include error-message;
+	}
+}
+
+

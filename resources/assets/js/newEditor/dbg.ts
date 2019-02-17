@@ -1,6 +1,7 @@
 import SelectionManager from "./SelectionManager"
 import EditSession from "./EditSession";
 import Converter from "./Converter";
+import Paster from "./Paster";
 
 export const dbg = function() {
 	let d = document.querySelector(".debug")
@@ -21,5 +22,26 @@ export const dbg = function() {
 	})
 	d.querySelector(".converter-stringify").addEventListener("click", e => {
 		console.log(Converter.stringify(EditSession.nodeList))
+	})
+	d.querySelector(".fpa").addEventListener("click", e => {
+		// Converter.fixPasteArea()
+		let paster = new Paster()
+		paster.convert(document.querySelector("#paste-area"))
+	})
+	d.querySelector(".fpa-p1").addEventListener("click", e => {
+		let paster = new Paster()
+		paster.fixElement(document.querySelector("#paste-area"), 1)
+	})
+	d.querySelector(".fpa-p2").addEventListener("click", e => {
+		let paster = new Paster()
+		paster.fixElement(document.querySelector("#paste-area"), 2)
+	})
+	d.querySelector(".fpa-p3").addEventListener("click", e => {
+		let paster = new Paster()
+		paster.fixElement(document.querySelector("#paste-area"), 3)
+	})
+	d.querySelector(".fpa-p4").addEventListener("click", e => {
+		let paster = new Paster()
+		paster.fixElement(document.querySelector("#paste-area"), 4)
 	})
 }

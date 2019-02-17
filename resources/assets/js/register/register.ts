@@ -16,7 +16,11 @@ import PVMButton from "../PVMButton"
 					let self = this
 					let wait: NodeJS.Timeout
 
-					this.target.addEventListener("keyup", function() {
+					this.target.addEventListener("keyup", e => {
+						if (e.key === "Enter") {
+							startButton.click()
+							return
+						}
 						clearTimeout(wait)
 
 						var inputData = self.target.value
@@ -59,16 +63,6 @@ import PVMButton from "../PVMButton"
 			let readableIDInputObj = new RegInput(readableIDInputDOM)
 			let nameInputObj = new RegInput(nameInputDOM)
 			let passInputObj = new RegInput(passInputDOM)
-
-			let doms = [readableIDInputDOM, nameInputDOM, passInputDOM]
-
-			doms.forEach(dom => {
-				dom.addEventListener("keydown", e => {
-					if (e.keyCode === 13) {
-						startButton.click()
-					}
-				})
-			})
 
 			function checkValidation(allowEmpty: boolean = true) {
 				var inputData = {
@@ -131,8 +125,6 @@ import PVMButton from "../PVMButton"
 					console.log(data)
 					if (data !== "") {
 						if (data["err"]) {
-							console.log("error")
-
 							checkValidation(false)
 							// alert(data['msg'])
 							// setErrorMsg(data["msg"])

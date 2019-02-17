@@ -1,4 +1,4 @@
-require("../less/povium.style.less")
+// require("../less/povium.style.less")
 
 require("./globalscript")
 require("./globalnav")
@@ -13,7 +13,7 @@ window.addEventListener("load", e => {
 	let pjax = new Pjax({
 		elements: "a:not(.full-load)",
 		selectors: [
-			"title", "povium-app"
+			"title", "povium-app", "link", "script"
 		],
 		cacheBust: false
 	})

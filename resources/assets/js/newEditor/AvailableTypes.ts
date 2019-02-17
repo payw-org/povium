@@ -8,6 +8,14 @@ export const AT = {
 	textOnly: ["p", "h1", "h2", "h3", "blockquote", "li"],
 	textContained: ["p", "h1", "h2", "h3", "blockquote", "li", "image", "code"],
 	alignable: ["p", "h1", "h2", "h3"],
-	textStyle: ["b", "strong", "em", "i", "strikethrough"],
-	headings: ["h1", "h2", "h3"]
+	textStyle: ["b", "strong", "em", "i", "u", "strike", "a"],
+	headings: ["h1", "h2", "h3"],
+	availableTags: [
+		"p", "h1", "h2", "h3", "ul", "ol", "li", "blockquote",
+		"b", "strong", "i", "em", "u", "strike", "a",
+		"img", "code"
+	],
+	topTagsForPaster: [
+		"p", "h1", "h2", "h3", "blockquote", "ol", "ul", "li", "figure", "code", "img"
+	]
 }
