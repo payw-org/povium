@@ -15,7 +15,7 @@
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
     "@types/gsap": "^1.20.0",
-    "@types/node": "^10.12.18",
+    "@types/node": "^11.9.4",
     "autoprefixer": "^9.4.5",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.5",
@@ -31,7 +31,8 @@
     "ts-loader": "^5.3.3",
     "typescript": "^3.2.4",
     "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1"
+    "webpack-cli": "^3.2.1",
+    "webpack-notifier": "^1.7.0"
   },
   "scripts": {
     "webpack:build": "node_modules/.bin/webpack --config webpack.config.js",
@@ -44,8 +45,8 @@
     "frontend:watch": "node_modules/.bin/npm-run-all --parallel webpack:watch css:watch",
     "frontend:build": "node_modules/.bin/npm-run-all --parallel webpack:build css:build",
     "notify": "node notification.js hello world",
-		"css:watch": "node_modules/.bin/nodemon -e scss -x \"npm run autoprefix\"",
-		"style:watch": "npx npm-run-all --parallel sass:watch css:watch"
+    "css:watch": "node_modules/.bin/nodemon -e scss -x \"npm run autoprefix\"",
+    "style:watch": "npx npm-run-all --parallel sass:watch css:watch"
   },
   "browserslist": [
     "> 5%",
