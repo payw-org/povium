@@ -8,7 +8,7 @@ export default class Paster {
 
 	constructor() {}
 
-	convert(elm: HTMLElement) {
+	convert(elm: Element) {
 		this.pasteArea = elm
 
 		// this.loopChildren(elm, 1)
@@ -22,7 +22,7 @@ export default class Paster {
 		this.paste()
 	}
 
-	fixElement(fixingTarget: HTMLElement, phase: number) {
+	fixElement(fixingTarget: Element, phase: number) {
 		if (phase === 1) {
 			let allElems = fixingTarget.querySelectorAll("*")
 
