@@ -9,6 +9,7 @@ import TypeChecker from "./TypeChecker"
 import PVMImageNode from "./PVMImageNode"
 import PVMNode from "./PVMNode"
 import Converter from "./Converter"
+import Paster from "./Paster"
 
 export interface SelectionChangeEvent extends CustomEvent {
 	detail: {
@@ -178,7 +179,9 @@ export default class EventManager {
 		window.getSelection().addRange(range)
 
 		setTimeout(() => {
-			
+			let pasteArea = document.querySelector("#paste-area")
+			let paster = new Paster()
+			paster.convert(pasteArea)
 		}, 4)
 	}
 
