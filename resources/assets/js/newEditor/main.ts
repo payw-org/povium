@@ -2,6 +2,7 @@ import { detect } from "detect-browser"
 import { ErrorManager } from "./ErrorManager"
 import PVMEditor from "./PVMEditor"
 import { dbg } from "./dbg"
+import "../../scss/editor.scss"
 
 const browser = detect()
 // if (browser.name === "firefox" && parseInt(browser.version) < 69) {
