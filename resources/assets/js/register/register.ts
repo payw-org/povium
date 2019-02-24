@@ -2,7 +2,7 @@ import Axios from "axios"
 import TextInput from "../TextInput"
 import PVMButton from "../PVMButton"
 
-;["load", "pjax:complete"].forEach(eventName => {
+;["DOMContentLoaded", "pjax:complete"].forEach(eventName => {
 	window.addEventListener(eventName, e => {
 
 		if (document.querySelector("#register-main")) {
