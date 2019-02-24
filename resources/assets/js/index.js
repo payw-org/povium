@@ -1,4 +1,11 @@
-// require("../less/povium.style.less")
+import "../scss/globalstyle.scss"
+import "../scss/globalnav.scss"
+import "../scss/globalfooter.scss"
+// import "../scss/home.scss"
+import "../scss/home-new.scss"
+import "../scss/login.scss"
+import "../scss/register.scss"
+import "../scss/http-error.scss"
 
 require("./globalscript")
 require("./globalnav")
@@ -13,7 +20,7 @@ window.addEventListener("load", e => {
 	let pjax = new Pjax({
 		elements: "a:not(.full-load)",
 		selectors: [
-			"title", "povium-app", "link", "script"
+			"title", "povium-app"
 		],
 		cacheBust: false
 	})
