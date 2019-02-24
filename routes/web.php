@@ -24,7 +24,7 @@ $collection->get(
 		$view_config = $home_view_middleware->requestViewConfig();
 
 		echo $blade->view()->make(
-			'sections.home',
+			'sections.home-new',
 			$view_config
 		)->render();
 	}
