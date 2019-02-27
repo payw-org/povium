@@ -18,6 +18,14 @@ $pvm-animation: .5s cubic-bezier(0.68, 0.17, 0, 1);
 $responsive-width--small: 768px;
 $responsive-width--large: 1441px;
 
+$gn-width-step--1: 768px;
+$gn-width-step--2: 1000px;
+
 $mobile-width-threshold: 400px;
 
 $button-height: 2.7rem;
+
+// Fonts
+$font-display: sans-serif-display, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$font-text: sans-serif-text, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$font-mono: mono, 'Courier New', Courier, monospace;
