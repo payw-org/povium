@@ -1,15 +1,19 @@
 import "../scss/globalstyle.scss"
-import "../scss/globalnav.scss"
+// import "../scss/globalnav.scss"
+import "../scss/globalnav-new.scss"
 import "../scss/globalfooter.scss"
 // import "../scss/home.scss"
 import "../scss/home-new.scss"
+import "../scss/post-view.scss"
 import "../scss/login.scss"
 import "../scss/register.scss"
 import "../scss/http-error.scss"
 
 require("./globalscript")
-require("./globalnav")
-require("./home/homeController")
+// require("./globalnav")
+require("./globalnav-new")
+// require("./home/homeController")
+require("./home-new/home-new")
 require("./profile/profile-home")
 require("./login")
 require("./register/register")
@@ -20,7 +24,7 @@ window.addEventListener("load", e => {
 	let pjax = new Pjax({
 		elements: "a:not(.full-load)",
 		selectors: [
-			"title", "povium-app"
+			"title", "#povium-app-view"
 		],
 		cacheBust: false
 	})
