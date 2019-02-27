@@ -12,7 +12,8 @@ html {
 	text-size-adjust: 100%;
 	font-size: 100%; // 62.5% of 16px = 10px
 
-	background: $white-blue;
+	// background: $white-blue;
+	background-color: #fff;
 
 	word-wrap: break-word;
 	word-break: keep-all;
@@ -40,6 +41,31 @@ body {
 	overflow-x: hidden;
 	background: #fff;
 	transition: opacity 0.5s ease;
+}
+
+#povium-app-view {
+	display: block;
+	background-color: #fff;
+	transition: all 0.4s ease;
+
+	.post-view-active & {
+		// filter: blur(30px) saturate(130%);
+		// transform: scale(0.9);
+	}
+
+	#povium-content {
+		background-color: #fff;
+		margin-left: 15rem;
+		transition: margin 0.2s ease;
+
+		@include when-smaller-than($gn-width-step--2) {
+			margin-left: 5rem;
+		}
+
+		@include when-smaller-than($gn-width-step--1) {
+			margin-left: 0;
+		}
+	}
 }
 
 main {
