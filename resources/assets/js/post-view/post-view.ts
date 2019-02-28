@@ -16,6 +16,10 @@ export default class PostView {
 				}
 			})
 
+			document.querySelector("#post-view .close-handle").addEventListener("click", e => {
+				this.close()
+			})
+
 			this.eventAttached = true
 		}
 	}
