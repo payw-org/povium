@@ -15,7 +15,7 @@
 		@include('global-inclusion.global-script')
 	</head>
 
-	<body class="body">
+	<body>
 
 		<div id="povium-app-view">
 			@include('sections.globalnav-new')
