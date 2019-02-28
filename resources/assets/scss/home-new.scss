@@ -15,7 +15,7 @@
 			background-color: #fff;
 			position: sticky;
 			top: 0;
-			z-index: 1;
+			z-index: 8889;
 
 			.link {
 				transition: color 0.2s ease;
@@ -32,6 +32,53 @@
 			position: relative;
 			top: -17px;
 
+			&.btn-active {
+				.btn-container .scroll-btn {
+					opacity: 1;
+					pointer-events: all;
+					transform: scale(1);
+				}
+			}
+
+			.btn-container {
+				.scroll-btn {
+					width: 3rem;
+					height: 3rem;
+					background-color: #222;
+					border-radius: 50%;
+					position: absolute;
+					// top: calc(50% + 17px);
+					top: 50%;
+					transform: translateY(-50%);
+					z-index: 8888;
+					background-repeat: no-repeat;
+					background-position: center;
+					background-size: 20%;
+					transition: all 0.2s ease;
+					opacity: 0;
+					transform: scale(0.8);
+
+					&:hover {
+						transform: scale(1.1);
+					}
+
+					&:active {
+						transform: scale(0.9);
+					}
+				}
+
+				.left {
+					left: 1rem;
+					background-position: 47% center;
+					background-image: url("/assets/images/home/arrow-left.svg");
+				}
+				.right {
+					right: 1rem;
+					background-position: 53% center;
+					background-image: url("/assets/images/home/arrow-right.svg");
+				}
+			}
+
 			.post-container {
 				width: 100%;
 				white-space: nowrap;
@@ -41,6 +88,8 @@
 				padding-bottom: 3rem;
 				position: relative;
 				top: 17px;
+				padding-left: 0.5rem;
+				user-select: none;
 
 				.post-item {
 					display: inline-block;
@@ -65,7 +114,7 @@
 					}
 
 					&:first-child {
-						margin-left: 0.5rem;
+						// margin-left: 0.5rem;
 					}
 
 					&:last-child {
