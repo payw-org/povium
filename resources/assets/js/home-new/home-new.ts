@@ -17,11 +17,23 @@ class Home {
 	originScrollLeft: number
 
 	constructor() {
+		;["DOMContentLoaded", "pjax:complete"].forEach(eventName => {
+			window.addEventListener(eventName, e => {
+				document.querySelectorAll(".post-container").forEach(elm => {
+					let htmlElm = elm as HTMLElement
+					if (!htmlElm.onscroll) {
+						htmlElm.onscroll = e => {
+							this.analyzeScrollBtn(htmlElm.closest(".post-scroll-area"))
+						}
+					}
+				})
+			})
+		})
+
 		window.addEventListener("click", e => {
 			let target = e.target
 			if (target instanceof Element) {
 				if (target.closest(".post-item") && !this.postScrollMoved) {
-					console.log("clicked post item in home")
 					PostView.active(0)
 				} else if (target.closest(".post-scroll-area .scroll-btn")) {
 					if (target.closest(".post-scroll-area .scroll-btn.left")) {
@@ -74,6 +86,7 @@ class Home {
 						elm.classList.remove("btn-active")
 					})
 					target.closest(".post-scroll-area").classList.add("btn-active")
+					this.analyzeScrollBtn(target.closest(".post-scroll-area"))
 				}				
 			} else {
 				document.querySelectorAll(".post-scroll-area").forEach(elm => {
@@ -99,11 +112,11 @@ class Home {
 			newScrollLeft = (maxPostItemCount + leftedItemsCount - 1) * postItemWidth
 		} else if (direction === "left") {
 			newScrollLeft = (leftedItemsCount - maxPostItemCount - 1) * postItemWidth
-		}		
+		}
 
-		if (newScrollLeft > maxScrollLeft) {
+		if (newScrollLeft >= maxScrollLeft) {
 			newScrollLeft = maxScrollLeft
-		} else if (newScrollLeft < 0) {
+		} else if (newScrollLeft <= 0) {
 			newScrollLeft = 0
 		}
 
@@ -115,6 +128,22 @@ class Home {
 			ease: Power0.ease,
 			scrollLeft: amount
 		})
+	}
+
+	analyzeScrollBtn(elm: Element) {
+		let postContainer = elm.querySelector(".post-container")
+		if (postContainer.scrollLeft <= 1) {
+			elm.querySelector(".scroll-btn.left").classList.add("hidden")
+		} else {
+			elm.querySelector(".scroll-btn.left").classList.remove("hidden")
+		}
+
+		let maxScrollLeft = postContainer.scrollWidth - postContainer.clientWidth
+		if (postContainer.scrollLeft >= maxScrollLeft - 1) {
+			elm.querySelector(".scroll-btn.right").classList.add("hidden")
+		} else {
+			elm.querySelector(".scroll-btn.right").classList.remove("hidden")
+		}
 	}
 }
 
