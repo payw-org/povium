@@ -171,7 +171,7 @@ $search-font-size: floor($search-size / 2.5) + 1;
 	width: 100%;
 	margin: auto;
 	height: 27px;
-	background-image: url('/assets/images/readigm/readigm-logo.svg');
+	background-image: url('/assets/images/pvm-landscape.svg');
 	// background-size: 95% auto;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -186,7 +186,7 @@ $search-font-size: floor($search-size / 2.5) + 1;
 	}
 
 	@include responsive-small {
-		background-image: url('/assets/images/readigm/readigm-logo-curtail-color.svg');
+		background-image: url('/assets/images/pvm-icon.svg');
 		height: 35px;
 	}
 }

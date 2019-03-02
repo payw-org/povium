@@ -1,0 +1,122 @@
+@import "global-variables";
+@import "global-mixins";
+
+#globalnav {
+	position: fixed;
+	left: 0;
+	top: 0;
+	height: 100vh;
+	width: 15rem;
+	overflow-x: hidden;
+	overflow-y: auto;
+	border-right: 1px solid $white-blue;
+	transition: all .2s ease;
+	background-color: #fff;
+	z-index: 9999;
+
+	.narrow {
+		display: none;
+	}
+
+	@include when-smaller-than($gn-width-step--2) {
+		width: 5rem;
+	}
+
+	@include when-smaller-than($gn-width-step--1) {
+		transform: translateX(-100%);
+		width: 100%;
+		max-width: 15rem;
+		opacity: 0;
+	}
+
+	.gn-content {
+		padding: 3rem 0 5rem;
+
+		.logo-wrapper {
+			display: flex;
+			justify-content: center;
+		
+			.logo {
+				width: 3.5rem;
+				transition: width 0.2s ease;
+
+				@include when-smaller-than($gn-width-step--2) {
+					width: 2rem;
+				}
+			}
+		}
+		
+		.auth {
+			margin: auto;
+			margin-top: 2rem;
+		
+			.gn-btn {
+				display: block;
+				margin: auto;
+				margin-top: 0.5rem;
+				width: 8rem;
+				cursor: default;
+				transition: box-shadow 0.2s ease, width 0.2s ease;
+				white-space: nowrap;
+
+				&.sign-in {
+					background-image: url("/assets/images/gn/sign-in.svg");
+					background-repeat: no-repeat;
+					background-position: 45% center;
+					background-size: 0%;
+				}
+
+				&:hover {
+					box-shadow: inset 0 0 0 3px $pvm-violet;
+				}
+
+				&:active {
+					background-color: $pvm-violet;
+					color: #fff;
+				}
+
+				.label {
+					opacity: 1;
+				}
+
+				@include when-smaller-than($gn-width-step--2) {
+					width: 3rem;
+					height: 3rem;
+
+					&.sign-in {
+						background-size: 1.5rem auto;
+
+						&:active {
+							background-image: url("/assets/images/gn/sign-in_dark.svg");
+						}
+					}
+
+					&.register {
+						height: 0;
+						padding: 0;
+						opacity: 0;
+						visibility: hidden;
+						pointer-events: none;
+					}
+
+					.label {
+						opacity: 0;
+					}
+				}
+			}
+		}
+	}
+
+	.gn-btn {
+		border-radius: 50px;
+		background-color: $white-blue;
+		font-family: $font-display;
+		font-size: 1.2rem;
+		font-weight: 700;
+		padding: 0.8rem 1rem;
+		text-align: center;
+		cursor: pointer
+
+		
+	}
+}

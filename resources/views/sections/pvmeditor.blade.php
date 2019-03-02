@@ -4,6 +4,10 @@
 	<title>Povium | 에디터</title>
 @endsection
 
+@section('css_sub')
+	<link rel="stylesheet" href="/build/css/editor.new.built.css">
+@endsection
+
 @section('content')
 
 	<div id="post-editor">

@@ -17,14 +17,17 @@
 
 	<body>
 
-		<povium-app>
-			@include('sections.globalnav')
+		<div id="povium-app-view">
+			@include('sections.globalnav-new')
 
-			@yield('content')
+			<div id="povium-content">
+				@yield('content')
+				
+				@include('sections.globalfooter')
+			</div>
+		</div>
 
-			@include('sections.globalfooter')
-		</povium-app>
-
+		@include('sections.post-view')
 		
 	</body>
 

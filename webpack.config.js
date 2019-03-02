@@ -1,7 +1,9 @@
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+
 module.exports = {
 
 	entry: {
-		readigm: [
+		povium: [
 			'./resources/assets/js/index.js'
 		],
 		"editor.new": [
@@ -20,6 +22,12 @@ module.exports = {
 	resolve: {
 		extensions: [ '.js', '.ts' ]
 	},
+
+	plugins: [
+		new MiniCssExtractPlugin({
+			filename: "../css/[name].built.css"
+		})
+	],
 
 	module: {
 		rules: [
@@ -66,6 +74,27 @@ module.exports = {
 						}
 					},
 					'less-loader'
+				]
+			},
+			{
+				test: /\.scss$/,
+				use: [
+					{
+						loader: MiniCssExtractPlugin.loader
+					},
+					'css-loader',
+					{
+						loader: 'postcss-loader',
+						options: {
+							plugins: () => [
+								require('autoprefixer')
+								({
+									'browsers': ['> 1%', 'last 2 versions']
+								})
+							]
+						}
+					},
+					'sass-loader'
 				]
 			}
 		]
