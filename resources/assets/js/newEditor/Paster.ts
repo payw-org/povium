@@ -1,7 +1,9 @@
-import TypeChecker from "./TypeChecker";
-import { AT } from "./AvailableTypes";
-import NodeManager from "./NodeManager";
-import EditSession from "./EditSession";
+import TypeChecker from "./TypeChecker"
+import { AT } from "./AvailableTypes"
+import NodeManager from "./NodeManager"
+import EditSession from "./EditSession"
+import SelectionManager from "./SelectionManager"
+import PVMRange from "./PVMRange"
 
 export default class Paster {
 	pasteArea: Element
@@ -33,7 +35,6 @@ export default class Paster {
 				let tagName = elm.tagName.toLowerCase()
 
 				if (AT.availableTags.includes(tagName)) {
-					console.log(elm)
 					this.removeAllAttributes(elm)
 				} else {
 					if (elm.textContent === "") {
@@ -156,6 +157,47 @@ export default class Paster {
 
 	paste() {
 		let childNodes = this.pasteArea.childNodes
-		let insertingTarget = EditSession.currentState.node
+
+		// Process First Node
+		let sel = window.getSelection()
+		let range = sel.getRangeAt(0)
+		let firstChildNode = childNodes[0] as HTMLElement
+		let doc = new DOMParser().parseFromString(firstChildNode.innerHTML, "text/xml")
+		let frag = document.createDocumentFragment()
+
+		for (let i = 0; i < childNodes.length; i++) {
+			let childNode = childNodes[i]
+			let insertingTarget = EditSession.currentState.node
+			let nodeName = childNode.nodeName.toLowerCase()
+
+			if (nodeName === "ol" || nodeName === "ul") {
+				let listItems = childNode.childNodes
+				listItems.forEach(listItem => {
+					let insertingTarget = EditSession.currentState.node
+					let pvmNode = NodeManager.createNode("li", {
+						kind: nodeName,
+						html: (<HTMLElement> listItem).innerHTML
+					})
+					NodeManager.insertChildBefore(pvmNode, insertingTarget.nextSibling)
+					SelectionManager.setRange(new PVMRange({
+						startNode: pvmNode,
+						startOffset: pvmNode.getTextContent().length,
+						endNode: pvmNode,
+						endOffset: pvmNode.getTextContent().length
+					}))
+				})
+			} else {
+				let pvmNode = NodeManager.createNode(nodeName, {
+					html: (<HTMLElement> childNode).innerHTML
+				})
+				NodeManager.insertChildBefore(pvmNode, insertingTarget.nextSibling)
+				SelectionManager.setRange(new PVMRange({
+					startNode: pvmNode,
+					startOffset: pvmNode.getTextContent().length,
+					endNode: pvmNode,
+					endOffset: pvmNode.getTextContent().length
+				}))
+			}
+		}
 	}
 }
