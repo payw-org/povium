@@ -812,7 +812,7 @@ export default class EventManager {
 		// 	caret.classList.add("stay")
 		// }
 
-		console.log("Selection has been changed")
+		// console.log("Selection has been changed")
 
 		PopTool.togglePopTool()
 
