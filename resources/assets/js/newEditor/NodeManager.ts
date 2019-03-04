@@ -319,18 +319,20 @@ export default class NodeManager {
 
 	/**
 	 * Removes the node from the editor.
-	 * @param {PVMNode} node
+	 * @param {PVMNode} removingNode
 	 * @param {object} recordData { beforeRange, afterRange }
 	 */
-	public static removeChild(node: PVMNode) {
-		let index = this.getChildIndex(node)
+	public static removeChild(removingNode: PVMNode) {
+		let index = this.getChildIndex(removingNode)
+		let previousNode = removingNode.previousSibling
+		let nextNode = removingNode.nextSibling
 
-		if (node.previousSibling) {
-			node.previousSibling.nextSibling = node.nextSibling
+		if (removingNode.previousSibling) {
+			removingNode.previousSibling.nextSibling = removingNode.nextSibling
 		}
 
-		if (node.nextSibling) {
-			node.nextSibling.previousSibling = node.previousSibling
+		if (removingNode.nextSibling) {
+			removingNode.nextSibling.previousSibling = removingNode.previousSibling
 		}
 
 		// Process the js object
@@ -338,15 +340,26 @@ export default class NodeManager {
 		EditSession.nodeList[index].nextSibling = null
 		EditSession.nodeList.splice(index, 1)
 
-		// Process the dom. (view)
-		if (node.type === "li") {
-			let list = node.element.parentElement
-			list.removeChild(node.element)
+		// Process the dom (view)
+		if (removingNode.type === "li") {
+			let list = removingNode.element.parentElement
+			list.removeChild(removingNode.element)
 			if (list.querySelectorAll("li").length === 0) {
 				list.parentElement.removeChild(list)
 			}
 		} else {
-			node.element.parentElement.removeChild(node.element)
+			removingNode.element.parentElement.removeChild(removingNode.element)
+		}
+
+		// Process merging list item
+		if (
+			previousNode &&
+			previousNode.type === "li" &&
+			nextNode &&
+			nextNode.type === "li" &&
+			previousNode.kind === nextNode.kind
+		) {
+			this.mergeLists(previousNode.element.parentElement, nextNode.element.parentElement)
 		}
 	}
 
